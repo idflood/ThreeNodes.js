@@ -1,0 +1,73 @@
+body
+  background-color: $background_color
+  overflow: hidden
+  font-size: 11px
+  
+#container, #sidebar
+  position: absolute
+  top: 0
+  left: 0
+  
+#logo, #footer
+  display: none
+  visibility: hidden
+  
+$c: $background_color - #050505
+#container
+  width: 4000px
+  height: 4000px
+  
+  &.ui-state-active, &.ui-state-hover
+    background: $c
+    border: 0
+    padding: 0
+
+#container-wrapper
+  width: 100%
+  height: 1000px
+  position: relative
+  overflow: auto
+
+#sidebar
+  width: 220px
+  background: $background_color
+  +single-box-shadow(#222, -1px, 0, 10px)
+  border-right: 1px solid #373737
+  left: 0
+  //+single-box-shadow(#393939, -1px, 0, 155px, 0, inset)
+  
+.hidden-element
+  display: none  
+
+::-webkit-scrollbar-corner,
+::-webkit-resizer
+  background: transparent
+
+$s: 8px
+::-webkit-scrollbar 
+  width: $s
+  height: $s
+  
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment
+  height: 10px
+  display: block
+  background: transparent
+
+::-webkit-scrollbar-track-piece
+  background: #272727
+  border-radius: 6px
+  
+    
+::-webkit-scrollbar-thumb:vertical
+  height: 10px
+
+::-webkit-scrollbar-thumb:horizontal
+  width: 10px
+  
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal
+  background: #999
+  border-radius: 6px
+  &:hover
+    background: #aaa

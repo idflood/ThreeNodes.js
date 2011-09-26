@@ -1,0 +1,10 @@
+<ul>
+  {{each $data}}
+    <li>
+      ${ this }
+      <span class="renderTime" data-bind="visible: viewModel.showRenderTimes">
+          (child rendered at <span data-bind="text: new Date().getSeconds()"></span>)
+      </span>
+    </li>
+  {{/each}}
+</ul>

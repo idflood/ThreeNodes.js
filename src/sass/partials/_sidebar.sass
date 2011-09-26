@@ -1,0 +1,77 @@
+#sidebar
+  //overflow-y: scroll
+  //overflow-x: visible
+  //overflow: hidden
+  overflow: auto
+  ul
+    +no-bullets
+    
+  ul, li
+    +reset-box-model
+  > div
+    padding-right: 20px
+    margin-bottom: 40px
+  a
+    padding: 3px 10px
+    display: block
+    font-size: 11px
+  
+  #tab-new
+    li
+      //background: image-url("list-separator.png") no-repeat 0 0
+      border-top: 1px solid #444
+      &:first-child
+        border-top-color: #333
+        //background: transparent
+      
+  .ui-tabs-nav
+    @extend .mono-font
+    +reset-box-model
+    margin-left: 10px
+    margin-top: 5px
+    //border-bottom: 1px solid #222
+    margin-bottom: 10px
+    font-size: 11px
+    li
+      margin: 0
+    li a
+      padding: .2em 5px
+  #tab-new
+    h3
+      @extend .mono-font
+      color: #eee
+      font-size: 12px
+      margin-top: 20px
+      margin-bottom: 5px
+      margin-left: 10px
+      font-weight: bold
+    a
+      font-size: 10px
+      letter-spacing: 1px
+  .ui-tabs-panel
+    padding: 0.5em
+  &.ui-widget-content
+    padding: 0
+    
+#node_filter
+  padding: 5px 10px
+  background: #2a2a2a
+  font-size: 11px
+  width: 90%
+  border-radius: 5px
+  margin-bottom: 5px
+  outline: 0
+  
+#sidebar-toggle
+  $i: "toggle_black.png"
+  $p: 3px
+  height: image-height($i) + $p * 2
+  width: image-width($i) + $p * 2
+  background: image-url($i) $p $p no-repeat
+  position: absolute
+  top: 5px
+  left: 230px
+  cursor: pointer
+  +rotate(45deg)
+  &.toggle-closed
+    +rotate(0deg)

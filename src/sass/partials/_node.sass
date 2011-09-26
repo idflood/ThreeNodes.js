@@ -1,0 +1,89 @@
+$field-label-padding: 4px
+$field-button-size: 5px
+
+$c: 100
+.connection
+  stroke: rgb($c, $c, $c)
+  stroke-width: 1
+  
+
+input
+  width: 100%
+  border: 1px solid $node_color + #111
+  background: $node_color
+  font-size: 9px
+  color: #aaa
+  font-family: $blueprint-font-family
+.node
+  position: absolute
+  background: $node_color
+  color: #aaa
+  font-size: 10px
+  padding: 4px
+  +pie-clearfix
+  min-width: 80px
+  +border-radius(8px)
+  
+  .options
+    overflow: hidden
+    width: 100%
+  
+  .head
+    font-weight: normal
+    letter-spacing: 1px
+    text-align: center
+    @extend .mono-font
+  .head, .field
+    cursor: pointer
+  .field a
+    
+    display: inline-block
+    width: $field-button-size
+    height: $field-button-size
+    background: #555
+    +border-radius($field-button-size)
+  .field:hover
+    color: #fff
+    a
+      background: #fff
+  .field.field-target
+    a
+      background: $main_color
+  .inputs, .outputs
+    float: left
+    display: inline
+    width: 50%
+    color: #777
+  .inputs, .outputs, .center
+    & > div
+      height: 16px
+      display: inline-block
+      width: 100%
+      vertical-align: middle
+  .outputs > div
+    text-align: right
+  .inputs a
+    margin-right: $field-label-padding
+  .outputs a
+    margin-left: $field-label-padding
+
+.node-Merge, .node-Get
+  width: 80px
+
+.node-CubeGeometry, .node-Scene, .node-Object3D, .node-Mesh, .node-Camera, .node-PointLight
+  width: 130px
+
+.node-MeshBasicMaterial
+  width: 200px
+
+.node-Number, .node-Random, .node-Timer
+  width: 150px
+  .inputs, .outputs
+    width: 25%
+  .center
+    float: left
+    display: inline
+    width: 50%
+
+.node-Vector3
+  min-width: 110px

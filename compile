@@ -1,0 +1,49 @@
+#!/usr/bin/ruby
+
+require 'find'
+
+@haml_cmd = 'haml'
+@compass_cmd = 'compass compile'
+@coffee_cmd = 'cake build'
+
+files = {}
+
+def exec(cmd)
+  puts "# #{cmd}"
+  `#{cmd}`
+end
+
+def compile_file(f, file_out)
+  cmd = nil
+  
+  case f
+    when /\.coffee$/ : cmd = @coffee_cmd
+    when /\.haml$/
+      cmd = @haml_cmd
+      file_out["src/haml/"] = ""
+      file_out[".haml"] = ".html"
+      cmd += " " + f + " " + file_out
+    when /\.scss$/, /\.sass$/ : cmd = @compass_cmd
+  end
+  
+  if cmd != nil
+    exec cmd
+  end
+  
+end
+
+
+loop do
+  Find.find('src/') do |f|
+    ctime = File.ctime(f).to_i
+  
+    if ctime != files[f]
+      files[f] = ctime
+      f_out = f.clone
+    
+      compile_file f, f_out
+    end
+  end
+  
+  sleep 1
+end

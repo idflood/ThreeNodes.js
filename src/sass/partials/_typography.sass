@@ -1,0 +1,13 @@
+$a: #aaa
+$b: #fff
+body
+  +blueprint-typography(true)
+  color: #999
+  a, .ui-widget-content a
+    text-decoration: none
+    +link-colors($a, $b, $a, $a, $b)
+    
+
+  
+.mono-font
+  font-family: $mono
