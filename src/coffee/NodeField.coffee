@@ -13,6 +13,8 @@ class NodeField
   
   set: (v) =>
     @signal.dispatch(v)
+  get: () =>
+    @val
   
   render_button: =>
     if @is_output

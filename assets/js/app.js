@@ -226,6 +226,7 @@
       this.update_input_node = __bind(this.update_input_node, this);
       this.compute_value = __bind(this.compute_value, this);
       this.render_button = __bind(this.render_button, this);
+      this.get = __bind(this.get, this);
       this.set = __bind(this.set, this);
       self = this;
       this.signal = new signals.Signal();
@@ -239,6 +240,9 @@
     }
     NodeField.prototype.set = function(v) {
       return this.signal.dispatch(v);
+    };
+    NodeField.prototype.get = function() {
+      return this.val;
     };
     NodeField.prototype.render_button = function() {
       if (this.is_output) {
@@ -752,16 +756,16 @@
     NodeNumberSimple.prototype.compute = function() {
       var res;
       res = false;
-      switch ($.type(this.v_in.val)) {
+      switch ($.type(this.v_in.get())) {
         case "array":
           res = _.map(this.v_in.val, function(n, i) {
             return this.process_val(n, i);
           });
           break;
         default:
-          res = this.process_val(this.v_in.val, 0);
+          res = this.process_val(this.v_in.get(), 0);
       }
-      if (this.v_out.val !== res) {
+      if (this.v_out.get() !== res) {
         this.v_out.set(res);
       }
       return true;
@@ -798,7 +802,7 @@
       });
     }
     String.prototype.compute = function() {
-      return this.get_out("out").set(this.get_in("string"));
+      return this.get_out("out").set(this.get_in("string").get());
     };
     String.prototype.typename = function() {
       return "String";
@@ -869,7 +873,7 @@
       this.v_factor = this.addInput(new fields.types.Float("factor", 2));
     }
     Mult.prototype.process_val = function(num, i) {
-      return num * this.v_factor.val;
+      return num * this.v_factor.get();
     };
     Mult.prototype.typename = function() {
       return "Mult";
@@ -884,7 +888,7 @@
       this.v_inb = this.addInput(new fields.types.Float("in2", 0));
     }
     Max.prototype.process_val = function(num, i) {
-      return Math.max(num, this.v_inb.val);
+      return Math.max(num, this.v_inb.get());
     };
     Max.prototype.typename = function() {
       return "Max";
@@ -899,7 +903,7 @@
       this.v_inb = this.addInput(new fields.types.Float("in2", 0));
     }
     Min.prototype.process_val = function(num, i) {
-      return Math.min(num, this.v_inb.val);
+      return Math.min(num, this.v_inb.get());
     };
     Min.prototype.typename = function() {
       return "Min";
@@ -924,8 +928,8 @@
     }
     Random.prototype.compute = function() {
       var old;
-      old = this.get_out("out").val;
-      this.value = this.get_in("min").val + Math.random() * (this.get_in("max").val - this.get_in("min").val);
+      old = this.get_out("out").get();
+      this.value = this.get_in("min").get() + Math.random() * (this.get_in("max").get() - this.get_in("min").get());
       if (this.value !== old) {
         return this.get_out("out").set(this.value);
       }
@@ -977,12 +981,12 @@
     }
     Merge.prototype.compute = function() {
       var f, k, old;
-      old = this.get_out("out").val;
+      old = this.get_out("out").get();
       this.value = [];
       for (f in this.node_fields.inputs) {
         k = this.node_fields.inputs[f];
-        if (k.val !== null) {
-          this.value[this.value.length] = k.val;
+        if (k.get() !== null) {
+          this.value[this.value.length] = k.get();
         }
       }
       if (this.value !== old) {
@@ -1017,10 +1021,10 @@
     }
     Get.prototype.compute = function() {
       var arr, ind, old;
-      old = this.get_out("out").val;
+      old = this.get_out("out").get();
       this.value = false;
-      arr = this.get_in("array").val;
-      ind = parseInt(this.get_in("index").val);
+      arr = this.get_in("array").get();
+      ind = parseInt(this.get_in("index").get());
       if ($.type(arr) === "array") {
         this.value = arr[ind % arr.length];
       }
@@ -1058,15 +1062,15 @@
     };
     Timer.prototype.compute = function() {
       var diff, now, oldval;
-      oldval = this.get_out("out").val;
+      oldval = this.get_out("out").get();
       now = this.get_time();
-      if (this.get_in("pause").val === false) {
+      if (this.get_in("pause").get() === false) {
         this.counter += now - this.old;
       }
-      if (this.get_in("reset").val === true) {
+      if (this.get_in("reset").get() === true) {
         this.counter = 0;
       }
-      diff = this.get_in("max").val - this.counter;
+      diff = this.get_in("max").get() - this.counter;
       if (diff <= 0) {
         this.counter = 0;
       }
@@ -1104,10 +1108,10 @@
     }
     Vector2.prototype.compute = function() {
       var old;
-      old = this.get_out("xy").val;
-      this.value = this.get_in("xy").val;
+      old = this.get_out("xy").get();
+      this.value = this.get_in("xy").get();
       if (this.get_in("xy").connections.length === 0) {
-        this.value = new THREE.Vector2(this.get_in("x").val, this.get_in("y").val);
+        this.value = new THREE.Vector2(this.get_in("x").get(), this.get_in("y").get());
       }
       if (this.value !== old) {
         this.get_out("xy").set(this.value);
@@ -1148,10 +1152,10 @@
     }
     Vector3.prototype.compute = function() {
       var old;
-      old = this.get_out("xyz").val;
-      this.value = this.get_in("xyz").val;
+      old = this.get_out("xyz").get();
+      this.value = this.get_in("xyz").get();
       if (this.get_in("xyz").connections.length === 0) {
-        this.value = new THREE.Vector3(this.get_in("x").val, this.get_in("y").val, this.get_in("z").val);
+        this.value = new THREE.Vector3(this.get_in("x").get(), this.get_in("y").get(), this.get_in("z").get());
       }
       if (this.value !== old) {
         this.get_out("xyz").set(this.value);
@@ -1193,10 +1197,10 @@
     }
     Color.prototype.compute = function() {
       var old;
-      old = this.get_out("rgb").val;
-      this.value = this.get_in("rgb").val;
+      old = this.get_out("rgb").get();
+      this.value = this.get_in("rgb").get();
       if (this.get_in("rgb").connections.length === 0) {
-        this.value = new THREE.Color(this.get_in("r").val, this.get_in("g").val, this.get_in("b").val);
+        this.value = new THREE.Color(this.get_in("r").get(), this.get_in("g").get(), this.get_in("b").get());
       }
       if (this.value !== old) {
         this.get_out("rgb").set(this.value);
@@ -1293,7 +1297,7 @@
     Object3D.prototype.compute = function() {
       var child, ind, _i, _j, _len, _len2, _ref, _ref2;
       this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      _ref = this.get_in("children").val;
+      _ref = this.get_in("children").get();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         ind = this.ob.children.indexOf(child);
@@ -1326,7 +1330,7 @@
     Scene.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
       this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      childs_in = this.get_in("children").val;
+      childs_in = this.get_in("children").get();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -1456,13 +1460,13 @@
       this.win.document.body.appendChild(this.ob.domElement);
     }
     WebGLRenderer.prototype.apply_size = function() {
-      return this.ob.setSize(this.get_in("width").val, this.get_in("height").val);
+      return this.ob.setSize(this.get_in("width").get(), this.get_in("height").get());
     };
     WebGLRenderer.prototype.compute = function() {
       var cam, sce;
       this.apply_size();
-      sce = this.get_in("scene").val;
-      cam = this.get_in("camera").val;
+      sce = this.get_in("scene").get();
+      cam = this.get_in("camera").get();
       return this.ob.render(sce, cam);
     };
     WebGLRenderer.prototype.typename = function() {

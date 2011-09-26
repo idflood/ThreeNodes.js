@@ -167,10 +167,10 @@ class NodeNumberSimple extends NodeBase
   
   compute: =>
     res = false
-    switch $.type(@v_in.val)
+    switch $.type(@v_in.get())
       when "array" then res = _.map(@v_in.val, (n, i) -> @process_val(n, i))
-      else res = @process_val(@v_in.val, 0)
-    if @v_out.val != res
+      else res = @process_val(@v_in.get(), 0)
+    if @v_out.get() != res
       @v_out.set res
     true
 
@@ -191,7 +191,7 @@ class nodes.types.Base.String extends NodeBase
       outputs:
         "out": {type: "Any", val: @ob}
   compute: =>
-    @get_out("out").set @get_in("string")
+    @get_out("out").set @get_in("string").get()
   typename : => "String"
 
 class nodes.types.Math.Sin extends NodeNumberSimple
@@ -227,7 +227,7 @@ class nodes.types.Math.Mult extends NodeNumberSimple
     super x, y
     @v_factor = @addInput(new fields.types.Float("factor", 2))
   process_val: (num, i) =>
-    num * @v_factor.val
+    num * @v_factor.get()
   typename : => "Mult"
 
 class nodes.types.Math.Max extends NodeNumberSimple
@@ -235,7 +235,7 @@ class nodes.types.Math.Max extends NodeNumberSimple
     super x, y
     @v_inb = @addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
-    Math.max(num, @v_inb.val)
+    Math.max(num, @v_inb.get())
   typename : => "Max"
 
 class nodes.types.Math.Min extends NodeNumberSimple
@@ -243,7 +243,7 @@ class nodes.types.Math.Min extends NodeNumberSimple
     super x, y
     @v_inb = @addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
-    Math.min(num, @v_inb.val)
+    Math.min(num, @v_inb.get())
   typename : => "Min"
 
 class nodes.types.Utils.Random extends NodeBase
@@ -258,8 +258,8 @@ class nodes.types.Utils.Random extends NodeBase
     @add_center_textfield(@get_out("out"))
 
   compute: =>
-    old = @get_out("out").val
-    @value = @get_in("min").val + Math.random() * (@get_in("max").val - @get_in("min").val)
+    old = @get_out("out").get()
+    @value = @get_in("min").get() + Math.random() * (@get_in("max").get() - @get_in("min").get())
     if @value != old
       @get_out("out").set @value
   typename : => "Random"
@@ -279,12 +279,12 @@ class nodes.types.Utils.Merge extends NodeBase
         "out" : {type: "Array", val: []}
 
   compute: =>
-    old = @get_out("out").val
+    old = @get_out("out").get()
     @value = []
     for f of @node_fields.inputs
       k = @node_fields.inputs[f]
-      if k.val != null
-        @value[@value.length] = k.val
+      if k.get() != null
+        @value[@value.length] = k.get()
     if @value != old
       @get_out("out").set @value
   typename : => "Merge"
@@ -300,10 +300,10 @@ class nodes.types.Utils.Get extends NodeBase
         "out" : {type: "Any", val: null}
 
   compute: =>
-    old = @get_out("out").val
+    old = @get_out("out").get()
     @value = false
-    arr = @get_in("array").val
-    ind = parseInt(@get_in("index").val)
+    arr = @get_in("array").get()
+    ind = parseInt(@get_in("index").get())
     if $.type(arr) == "array"
       @value = arr[ind % arr.length]
     if @value != old
@@ -328,14 +328,14 @@ class nodes.types.Utils.Timer extends NodeBase
   get_time: => new Date().getTime()
     
   compute: =>
-    oldval = @get_out("out").val
+    oldval = @get_out("out").get()
     now = @get_time()
-    if @get_in("pause").val == false
+    if @get_in("pause").get() == false
       @counter += now - @old
-    if @get_in("reset").val == true
+    if @get_in("reset").get() == true
       @counter = 0
     
-    diff = @get_in("max").val - @counter
+    diff = @get_in("max").get() - @counter
     if diff <= 0
       #@counter = diff * -1
       @counter = 0
@@ -360,10 +360,10 @@ class nodes.types.Base.Vector2 extends NodeBase
         "y" : 0
   
   compute: =>
-    old = @get_out("xy").val
-    @value = @get_in("xy").val
+    old = @get_out("xy").get()
+    @value = @get_in("xy").get()
     if @get_in("xy").connections.length == 0
-      @value = new THREE.Vector2(@get_in("x").val, @get_in("y").val)
+      @value = new THREE.Vector2(@get_in("x").get(), @get_in("y").get())
     if @value != old
       #@v_out.signal.dispatch @value
       @get_out("xy").set @value
@@ -388,12 +388,12 @@ class nodes.types.Base.Vector3 extends NodeBase
         "z" : 0
   
   compute: =>
-    old = @get_out("xyz").val
-    @value = @get_in("xyz").val
+    old = @get_out("xyz").get()
+    @value = @get_in("xyz").get()
     if @get_in("xyz").connections.length == 0
       #@vec.set @v_in_x.val, @v_in_y.val, @v_in_z.val
       #@value = @vec
-      @value = new THREE.Vector3(@get_in("x").val, @get_in("y").val, @get_in("z").val)
+      @value = new THREE.Vector3(@get_in("x").get(), @get_in("y").get(), @get_in("z").get())
     if @value != old
       #@v_out.signal.dispatch @value
       @get_out("xyz").set @value
@@ -419,10 +419,10 @@ class nodes.types.Base.Color extends NodeBase
         "b": 0
   
   compute: =>
-    old = @get_out("rgb").val
-    @value = @get_in("rgb").val
+    old = @get_out("rgb").get()
+    @value = @get_in("rgb").get()
     if @get_in("rgb").connections.length == 0
-      @value = new THREE.Color(@get_in("r").val, @get_in("g").val, @get_in("b").val)
+      @value = new THREE.Color(@get_in("r").get(), @get_in("g").get(), @get_in("b").get())
     if @value != old
       @get_out("rgb").set @value
       @get_out("r").set @value.x
@@ -469,7 +469,7 @@ class nodes.types.Three.Object3D extends NodeBase
 
   compute: =>
     @apply_fields_to_val(@node_fields.inputs, @ob)
-    for child in @get_in("children").val
+    for child in @get_in("children").get()
       ind = @ob.children.indexOf(child)
       if ind == -1
         @ob.addChild(child)
@@ -487,7 +487,7 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
 
   compute: =>
     @apply_fields_to_val(@node_fields.inputs, @ob)
-    childs_in = @get_in("children").val
+    childs_in = @get_in("children").get()
     # remove old childs
     for child in @ob.children
       ind = childs_in.indexOf(child)
@@ -559,13 +559,13 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     @win.document.body.appendChild( @ob.domElement );
   
   apply_size: =>
-    @ob.setSize(@get_in("width").val, @get_in("height").val)
+    @ob.setSize(@get_in("width").get(), @get_in("height").get())
     
   compute: =>
     @apply_size()
     
-    sce = @get_in("scene").val
-    cam = @get_in("camera").val
+    sce = @get_in("scene").get()
+    cam = @get_in("camera").get()
     #if sce != false && cam != false
     @ob.render(sce, cam)
     #@get_out("out").set @ob
