@@ -157,15 +157,11 @@
       node_connections.push(this);
       this.from_field.add_connection(this);
       this.to_field.add_connection(this);
-      this.listener = function(v) {
-        return this.on_output_signal(v);
-      };
+      this.update();
       this.render();
-      this.from_field.signal.add(this.listener, this);
-      this.from_field.signal.dispatch(this.from_field.val);
     }
-    NodeConnection.prototype.on_output_signal = function(v) {
-      return this.to_field.signal.dispatch(v);
+    NodeConnection.prototype.update = function() {
+      return this.to_field.set(this.from_field.get());
     };
     NodeConnection.prototype.update_node_from = function() {
       return this.from_field.node.update();
@@ -189,7 +185,6 @@
       var ind;
       this.from_field.remove_connection(this);
       this.to_field.remove_connection(this);
-      this.from_field.signal.remove(this.listener);
       svg.remove(this.line);
       ind = node_connections.indexOf(this);
       if (ind !== -1) {
@@ -229,17 +224,27 @@
       this.get = __bind(this.get, this);
       this.set = __bind(this.set, this);
       self = this;
+      this.on_value_update_hooks = {};
       this.signal = new signals.Signal();
       this.node = false;
       this.is_output = false;
       this.connections = [];
-      this.signal.add(function(v) {
-        return self.on_value_changed(v);
-      });
-      this.signal.dispatch(this.val);
+      this.on_value_changed(this.val);
     }
     NodeField.prototype.set = function(v) {
-      return this.signal.dispatch(v);
+      var connection, hook, _i, _len, _ref;
+      this.on_value_changed(v);
+      for (hook in this.on_value_update_hooks) {
+        this.on_value_update_hooks[hook](v);
+      }
+      if (this.is_output === true) {
+        _ref = this.connections;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          connection = _ref[_i];
+          connection.update();
+        }
+      }
+      return true;
     };
     NodeField.prototype.get = function() {
       return this.val;
@@ -657,16 +662,16 @@
       var f_in;
       $(".options .center", this.main_view).append("<div><input type='text' id='f-txt-input-" + field.fid + "' /></div>");
       f_in = $("#f-txt-input-" + field.fid);
-      field.signal.add(function(v) {
+      field.on_value_update_hooks.update_center_textfield = function(v) {
         return f_in.val(v.toString().substring(0, 10));
-      });
-      f_in.val(field.val);
+      };
+      f_in.val(field.get());
       if (field.is_output === true) {
         return f_in.attr("disabled", "disabled");
       } else {
         return f_in.keypress(function(e) {
           if (e.which === 13) {
-            field.signal.dispatch($(this).val());
+            field.set($(this).val());
             return $(this).blur();
           }
         });
@@ -1200,13 +1205,13 @@
       old = this.get_out("rgb").get();
       this.value = this.get_in("rgb").get();
       if (this.get_in("rgb").connections.length === 0) {
-        this.value = new THREE.Color(this.get_in("r").get(), this.get_in("g").get(), this.get_in("b").get());
+        this.value = new THREE.Color().setRGB(this.get_in("r").get(), this.get_in("g").get(), this.get_in("b").get());
       }
       if (this.value !== old) {
         this.get_out("rgb").set(this.value);
-        this.get_out("r").set(this.value.x);
-        this.get_out("g").set(this.value.y);
-        return this.get_out("b").set(this.value.z);
+        this.get_out("r").set(this.value.r);
+        this.get_out("g").set(this.value.g);
+        return this.get_out("b").set(this.value.b);
       }
     };
     Color.prototype.typename = function() {
@@ -1434,6 +1439,8 @@
       this.compute = __bind(this.compute, this);
       this.apply_size = __bind(this.apply_size, this);      WebGLRenderer.__super__.constructor.call(this, x, y);
       this.ob = new THREE.WebGLRenderer();
+      this.width = 0;
+      this.height = 0;
       this.addFields({
         inputs: {
           "width": 800,
@@ -1460,7 +1467,14 @@
       this.win.document.body.appendChild(this.ob.domElement);
     }
     WebGLRenderer.prototype.apply_size = function() {
-      return this.ob.setSize(this.get_in("width").get(), this.get_in("height").get());
+      var h, w;
+      w = this.get_in('width').get();
+      h = this.get_in('height').get();
+      if (w !== this.width || h !== this.height) {
+        this.ob.setSize(w, h);
+      }
+      this.width = w;
+      return this.height = h;
     };
     WebGLRenderer.prototype.compute = function() {
       var cam, sce;

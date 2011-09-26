@@ -2,17 +2,22 @@ class NodeField
   @connections = false
   constructor: (@name, @val, @fid = get_uid()) ->
     self = this
-    
+    @on_value_update_hooks = {}
     @signal = new signals.Signal()
     @node = false
     @is_output = false
     @connections = []
     
-    @signal.add( (v) -> self.on_value_changed(v) )
-    @signal.dispatch @val
+    @on_value_changed(@val)
   
   set: (v) =>
-    @signal.dispatch(v)
+    @on_value_changed(v)
+    for hook of @on_value_update_hooks
+      @on_value_update_hooks[hook](v)
+    if @is_output == true
+      for connection in @connections
+        connection.update()
+    true
   get: () =>
     @val
   

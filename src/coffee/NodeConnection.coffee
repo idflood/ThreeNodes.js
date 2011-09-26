@@ -12,15 +12,11 @@ class NodeConnection
     node_connections.push(this)
     @from_field.add_connection(this)
     @to_field.add_connection(this)
-    @listener = (v) -> @on_output_signal(v)
-    
+    @update()
     @render()
-    @from_field.signal.add @listener, this
-    @from_field.signal.dispatch(@from_field.val)
-    
   
-  on_output_signal: (v) ->
-    @to_field.signal.dispatch(v)
+  update: () ->
+    @to_field.set(@from_field.get())
     
   update_node_from: () =>
     @from_field.node.update()
@@ -40,7 +36,7 @@ class NodeConnection
   remove: ->
     @from_field.remove_connection(this)
     @to_field.remove_connection(this)
-    @from_field.signal.remove @listener
+    #@from_field.signal.remove @listener
     svg.remove(@line)
     ind = node_connections.indexOf(this)
     if ind != -1

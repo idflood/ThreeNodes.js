@@ -94,15 +94,15 @@ class NodeBase
   add_center_textfield: (field) =>
     $(".options .center", @main_view).append("<div><input type='text' id='f-txt-input-#{field.fid}' /></div>")
     f_in = $("#f-txt-input-#{field.fid}")
-    field.signal.add (v) ->
+    field.on_value_update_hooks.update_center_textfield = (v) ->
       f_in.val(v.toString().substring(0, 10))
-    f_in.val(field.val)
+    f_in.val(field.get())
     if field.is_output == true
       f_in.attr("disabled", "disabled")
     else
       f_in.keypress (e) ->
         if e.which == 13
-          field.signal.dispatch($(this).val())
+          field.set($(this).val())
           $(this).blur()
 
   create_field_connection: (field) =>
@@ -422,12 +422,12 @@ class nodes.types.Base.Color extends NodeBase
     old = @get_out("rgb").get()
     @value = @get_in("rgb").get()
     if @get_in("rgb").connections.length == 0
-      @value = new THREE.Color(@get_in("r").get(), @get_in("g").get(), @get_in("b").get())
+      @value = new THREE.Color().setRGB(@get_in("r").get(), @get_in("g").get(), @get_in("b").get())
     if @value != old
       @get_out("rgb").set @value
-      @get_out("r").set @value.x
-      @get_out("g").set @value.y
-      @get_out("b").set @value.z
+      @get_out("r").set @value.r
+      @get_out("g").set @value.g
+      @get_out("b").set @value.b
   typename : -> "Color"
 
 class nodes.types.Geometry.CubeGeometry extends NodeBase
@@ -544,6 +544,8 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.WebGLRenderer()
+    @width = 0
+    @height = 0
     @addFields
       inputs:
         "width": 800
@@ -559,7 +561,12 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     @win.document.body.appendChild( @ob.domElement );
   
   apply_size: =>
-    @ob.setSize(@get_in("width").get(), @get_in("height").get())
+    w = @get_in('width').get()
+    h = @get_in('height').get()
+    if w != @width || h != @height
+      @ob.setSize(w, h)
+    @width = w
+    @height = h
     
   compute: =>
     @apply_size()
