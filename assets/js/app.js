@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeNumberSimple, animate, field_click_1, fields, get_uid, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, render, render_connections, svg, uid;
+  var NodeBase, NodeConnection, NodeField, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, render, render_connections, svg, uid;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -30,6 +30,19 @@
   };
   render = function() {
     return nodegraph.render();
+  };
+  flatArraysAreEquals = function(arr1, arr2) {
+    var i, k, _len;
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+    for (i = 0, _len = arr1.length; i < _len; i++) {
+      k = arr1[i];
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+    return true;
   };
   on_ui_window_resize = function() {
     var h, w;
@@ -328,7 +341,14 @@
       Array.__super__.constructor.apply(this, arguments);
     }
     Array.prototype.compute_value = function(val) {
-      return val;
+      if (!val ||  val === false) {
+        return [];
+      }
+      if ($.type(val) === "array") {
+        return val;
+      } else {
+        return [val];
+      }
     };
     Array.prototype.on_value_changed = function(val) {
       return this.val = this.compute_value(val);
@@ -530,6 +550,44 @@
     };
     return Camera;
   })();
+  fields.types.Mesh = (function() {
+    __extends(Mesh, NodeField);
+    function Mesh() {
+      this.compute_value = __bind(this.compute_value, this);
+      Mesh.__super__.constructor.apply(this, arguments);
+    }
+    Mesh.prototype.compute_value = function(val) {
+      var res;
+      res = false;
+      switch ($.type(val)) {
+        case "object":
+          if (val.constructor === THREE.Mesh) {
+            res = val;
+          }
+      }
+      return res;
+    };
+    return Mesh;
+  })();
+  fields.types.Geometry = (function() {
+    __extends(Geometry, NodeField);
+    function Geometry() {
+      this.compute_value = __bind(this.compute_value, this);
+      Geometry.__super__.constructor.apply(this, arguments);
+    }
+    Geometry.prototype.compute_value = function(val) {
+      var res;
+      res = false;
+      switch ($.type(val)) {
+        case "object":
+          if (val.constructor === THREE.Geometry) {
+            res = val;
+          }
+      }
+      return res;
+    };
+    return Geometry;
+  })();
   field_click_1 = false;
   NodeBase = (function() {
     function NodeBase(x, y) {
@@ -598,12 +656,15 @@
     NodeBase.prototype.get_out = function(n) {
       return this.node_fields_by_name.outputs[n];
     };
-    NodeBase.prototype.apply_fields_to_val = function(afields, target) {
+    NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions) {
       var f, nf, _results;
+      if (exceptions == null) {
+        exceptions = [];
+      }
       _results = [];
       for (f in afields) {
         nf = afields[f];
-        _results.push(nf.name !== "children" ? target[nf.name] = this.get_in(nf.name).val : void 0);
+        _results.push(exceptions.indexOf(nf.name) === -1 ? target[nf.name] = this.get_in(nf.name).val : void 0);
       }
       return _results;
     };
@@ -1256,7 +1317,7 @@
     }
     Object3D.prototype.compute = function() {
       var child, ind, _i, _j, _len, _len2, _ref, _ref2;
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
+      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children']);
       _ref = this.get_in("children").get();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -1312,7 +1373,7 @@
     CubeGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
-      if (new_cache !== this.cached) {
+      if (flatArraysAreEquals(new_cache, this.cached) === false) {
         this.ob = new THREE.CubeGeometry(this.get_in("width").get(), this.get_in("height").get(), this.get_in("depth").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get(), this.get_in("segments_depth").get(), this.get_in("flip").get());
       }
       this.apply_fields_to_val(this.node_fields.inputs, this.ob);
@@ -1351,8 +1412,9 @@
     SphereGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
-      if (new_cache !== this.cached) {
+      if (flatArraysAreEquals(new_cache, this.cached) === false) {
         this.ob = new THREE.SphereGeometry(this.get_in("radius").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get());
+        this.cached = new_cache;
       }
       this.apply_fields_to_val(this.node_fields.inputs, this.ob);
       return this.get_out("out").set(this.ob);
@@ -1371,7 +1433,7 @@
     }
     Scene.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
+      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children']);
       childs_in = this.get_in("children").get();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -1407,6 +1469,10 @@
       }));
       this.addFields({
         inputs: {
+          "geometry": {
+            type: "Any",
+            val: new THREE.CubeGeometry(200, 200, 200)
+          },
           "materials": {
             type: "Any",
             val: [
@@ -1420,9 +1486,14 @@
         }
       });
       this.get_out("out").set(this.ob);
+      this.geometry_cache = this.get_in('geometry').get().id;
     }
     Mesh.prototype.compute = function() {
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
+      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children', 'geometry']);
+      if (this.geometry_cache !== this.get_in('geometry').get().id) {
+        this.ob = new THREE.Mesh(this.get_in('geometry').get(), this.get_in('materials').get());
+        this.geometry_cache = this.get_in('geometry').get().id;
+      }
       return this.get_out("out").set(this.ob);
     };
     Mesh.prototype.typename = function() {

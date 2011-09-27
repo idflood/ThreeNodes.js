@@ -27,7 +27,17 @@ animate = () ->
 
 render = () ->
   nodegraph.render()
+
+flatArraysAreEquals = (arr1, arr2) ->
+  if arr1.length != arr2.length
+    return false
   
+  for k, i in arr1
+    if arr1[i] != arr2[i]
+      return false
+      
+  true
+
 on_ui_window_resize = () ->
   w = $(window).width() - 4
   h = $(window).height() - 4

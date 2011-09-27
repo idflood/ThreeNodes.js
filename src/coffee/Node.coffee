@@ -45,10 +45,10 @@ class NodeBase
   get_out: (n) =>
     @node_fields_by_name.outputs[n]
   
-  apply_fields_to_val: (afields, target) =>
+  apply_fields_to_val: (afields, target, exceptions = []) =>
     for f of afields
       nf = afields[f]
-      if nf.name != "children"
+      if exceptions.indexOf(nf.name) == -1
         target[nf.name] = @get_in(nf.name).val
   
   create_field_from_default_type: (fname, default_value) ->
@@ -448,7 +448,7 @@ class nodes.types.Three.Object3D extends NodeBase
         "out": {type: "Any", val: @ob}
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
+    @apply_fields_to_val(@node_fields.inputs, @ob, ['children'])
     for child in @get_in("children").get()
       ind = @ob.children.indexOf(child)
       if ind == -1
@@ -464,8 +464,6 @@ class nodes.types.Geometry.CubeGeometry extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
-    
-    #@value = 0
     @addFields
       inputs:
         "flip": -1
@@ -484,7 +482,7 @@ class nodes.types.Geometry.CubeGeometry extends NodeBase
 
   compute: =>
     new_cache = @get_cache_array()
-    if new_cache != @cached
+    if flatArraysAreEquals(new_cache, @cached) == false
       @ob = new THREE.CubeGeometry(@get_in("width").get(), @get_in("height").get(), @get_in("depth").get(), @get_in("segments_width").get(), @get_in("segments_height").get(), @get_in("segments_depth").get(), @get_in("flip").get())
     @apply_fields_to_val(@node_fields.inputs, @ob)
     @get_out("out").set @ob
@@ -510,8 +508,9 @@ class nodes.types.Geometry.SphereGeometry extends NodeBase
 
   compute: =>
     new_cache = @get_cache_array()
-    if new_cache != @cached
+    if flatArraysAreEquals(new_cache, @cached) == false
       @ob = new THREE.SphereGeometry(@get_in("radius").get(), @get_in("segments_width").get(), @get_in("segments_height").get())
+      @cached = new_cache
     @apply_fields_to_val(@node_fields.inputs, @ob)
     @get_out("out").set @ob
   typename : => "SphereGeometry"
@@ -522,7 +521,7 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
     @ob = new THREE.Scene()
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
+    @apply_fields_to_val(@node_fields.inputs, @ob, ['children'])
     childs_in = @get_in("children").get()
     # remove old childs
     for child in @ob.children
@@ -545,13 +544,19 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
     @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }))
     @addFields
       inputs:
-        #"geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
+        "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
         "materials": {type: "Any", val: [new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true })]}
         "overdraw": false
     @get_out("out").set @ob
+    @geometry_cache = @get_in('geometry').get().id
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
+    @apply_fields_to_val(@node_fields.inputs, @ob, ['children', 'geometry'])
+    if @geometry_cache != @get_in('geometry').get().id
+      @ob = new THREE.Mesh(@get_in('geometry').get(), @get_in('materials').get())
+      @geometry_cache = @get_in('geometry').get().id
+      
+      
     @get_out("out").set @ob
   typename : => "Mesh"
 

@@ -67,7 +67,12 @@ class fields.types.Any extends NodeField
     
 class fields.types.Array extends NodeField
   compute_value : (val) =>
-    val
+    if !val || val == false
+      return []
+    if $.type(val) == "array"
+      val
+    else
+      [val]
   on_value_changed : (val) =>
     @val = @compute_value(val)
     
@@ -147,5 +152,19 @@ class fields.types.Camera extends NodeField
     res = false
     switch $.type(val)
       when "object" then if val.constructor == THREE.Camera
+        res = val
+    res
+class fields.types.Mesh extends NodeField
+  compute_value : (val) =>
+    res = false
+    switch $.type(val)
+      when "object" then if val.constructor == THREE.Mesh
+        res = val
+    res
+class fields.types.Geometry extends NodeField
+  compute_value : (val) =>
+    res = false
+    switch $.type(val)
+      when "object" then if val.constructor == THREE.Geometry
         res = val
     res
