@@ -1219,51 +1219,6 @@
     };
     return Color;
   })();
-  nodes.types.Geometry.CubeGeometry = (function() {
-    __extends(CubeGeometry, NodeBase);
-    function CubeGeometry(x, y) {
-      this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      CubeGeometry.__super__.constructor.call(this, x, y);
-      this.ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1);
-      this.addFields({
-        inputs: {
-          "materials": {
-            type: "Array",
-            val: []
-          },
-          "flip": -1,
-          "position": {
-            type: "Vector3",
-            val: new THREE.Vector3()
-          },
-          "rotation": {
-            type: "Vector3",
-            val: new THREE.Vector3()
-          },
-          "scale": {
-            type: "Vector3",
-            val: new THREE.Vector3(1, 1, 1)
-          },
-          "doubleSided": false,
-          "visible": true
-        },
-        outputs: {
-          "out": {
-            type: "Any",
-            val: this.ob
-          }
-        }
-      });
-    }
-    CubeGeometry.prototype.compute = function() {
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      return this.get_out("out").set(this.ob);
-    };
-    CubeGeometry.prototype.typename = function() {
-      return "CubeGeometry";
-    };
-    return CubeGeometry;
-  })();
   nodes.types.Three.Object3D = (function() {
     __extends(Object3D, NodeBase);
     function Object3D(x, y) {
@@ -1324,6 +1279,88 @@
       return "Object3D";
     };
     return Object3D;
+  })();
+  nodes.types.Geometry.CubeGeometry = (function() {
+    __extends(CubeGeometry, NodeBase);
+    function CubeGeometry(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);      CubeGeometry.__super__.constructor.call(this, x, y);
+      this.ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1);
+      this.addFields({
+        inputs: {
+          "flip": -1,
+          "width": 100,
+          "height": 100,
+          "depth": 100,
+          "segments_width": 1,
+          "segments_height": 1,
+          "segments_depth": 1
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      this.cached = this.get_cache_array();
+    }
+    CubeGeometry.prototype.get_cache_array = function() {
+      return [this.get_in("width").get(), this.get_in("height").get(), this.get_in("depth").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get(), this.get_in("segments_depth").get(), this.get_in("flip").get()];
+    };
+    CubeGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (new_cache !== this.cached) {
+        this.ob = new THREE.CubeGeometry(this.get_in("width").get(), this.get_in("height").get(), this.get_in("depth").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get(), this.get_in("segments_depth").get(), this.get_in("flip").get());
+      }
+      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
+      return this.get_out("out").set(this.ob);
+    };
+    CubeGeometry.prototype.typename = function() {
+      return "CubeGeometry";
+    };
+    return CubeGeometry;
+  })();
+  nodes.types.Geometry.SphereGeometry = (function() {
+    __extends(SphereGeometry, NodeBase);
+    function SphereGeometry(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);      SphereGeometry.__super__.constructor.call(this, x, y);
+      this.ob = new THREE.SphereGeometry(100, 20, 20);
+      this.addFields({
+        inputs: {
+          "radius": 100,
+          "segments_width": 1,
+          "segments_height": 1
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      this.cached = this.get_cache_array();
+    }
+    SphereGeometry.prototype.get_cache_array = function() {
+      return [this.get_in("radius").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get()];
+    };
+    SphereGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (new_cache !== this.cached) {
+        this.ob = new THREE.SphereGeometry(this.get_in("radius").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get());
+      }
+      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
+      return this.get_out("out").set(this.ob);
+    };
+    SphereGeometry.prototype.typename = function() {
+      return "SphereGeometry";
+    };
+    return SphereGeometry;
   })();
   nodes.types.Three.Scene = (function() {
     __extends(Scene, nodes.types.Three.Object3D);

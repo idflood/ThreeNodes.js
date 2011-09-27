@@ -430,27 +430,7 @@ class nodes.types.Base.Color extends NodeBase
       @get_out("b").set @value.b
   typename : -> "Color"
 
-class nodes.types.Geometry.CubeGeometry extends NodeBase
-  constructor: (x, y) ->
-    super x, y
-    @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
-    #@value = 0
-    @addFields
-      inputs:
-        "materials": {type: "Array", val: []}
-        "flip": -1
-        "position": {type: "Vector3", val: new THREE.Vector3()}
-        "rotation": {type: "Vector3", val: new THREE.Vector3()}
-        "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
-        "doubleSided": false
-        "visible": true
-      outputs:
-        "out": {type: "Any", val: @ob}
 
-  compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
-    @get_out("out").set @ob
-  typename : => "CubeGeometry"
 
 class nodes.types.Three.Object3D extends NodeBase
   constructor: (x, y) ->
@@ -480,6 +460,62 @@ class nodes.types.Three.Object3D extends NodeBase
     @get_out("out").set @ob
   typename : => "Object3D"
   
+class nodes.types.Geometry.CubeGeometry extends NodeBase
+  constructor: (x, y) ->
+    super x, y
+    @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
+    
+    #@value = 0
+    @addFields
+      inputs:
+        "flip": -1
+        "width": 100,
+        "height": 100,
+        "depth": 100,
+        "segments_width": 1,
+        "segments_height": 1,
+        "segments_depth": 1,
+      outputs:
+        "out": {type: "Any", val: @ob}
+    @cached = @get_cache_array()
+  
+  get_cache_array: =>
+    [@get_in("width").get(), @get_in("height").get(), @get_in("depth").get(), @get_in("segments_width").get(), @get_in("segments_height").get(), @get_in("segments_depth").get(), @get_in("flip").get()]
+
+  compute: =>
+    new_cache = @get_cache_array()
+    if new_cache != @cached
+      @ob = new THREE.CubeGeometry(@get_in("width").get(), @get_in("height").get(), @get_in("depth").get(), @get_in("segments_width").get(), @get_in("segments_height").get(), @get_in("segments_depth").get(), @get_in("flip").get())
+    @apply_fields_to_val(@node_fields.inputs, @ob)
+    @get_out("out").set @ob
+  typename : => "CubeGeometry"
+
+class nodes.types.Geometry.SphereGeometry extends NodeBase
+  constructor: (x, y) ->
+    super x, y
+    @ob = new THREE.SphereGeometry(100, 20, 20)
+    
+    #@value = 0
+    @addFields
+      inputs:
+        "radius": 100,
+        "segments_width": 1,
+        "segments_height": 1,
+      outputs:
+        "out": {type: "Any", val: @ob}
+    @cached = @get_cache_array()
+  
+  get_cache_array: =>
+    [@get_in("radius").get(), @get_in("segments_width").get(), @get_in("segments_height").get()]
+
+  compute: =>
+    new_cache = @get_cache_array()
+    if new_cache != @cached
+      @ob = new THREE.SphereGeometry(@get_in("radius").get(), @get_in("segments_width").get(), @get_in("segments_height").get())
+    @apply_fields_to_val(@node_fields.inputs, @ob)
+    @get_out("out").set @ob
+  typename : => "SphereGeometry"
+
 class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   constructor: (x, y) ->
     super x, y
