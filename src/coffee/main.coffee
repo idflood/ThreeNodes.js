@@ -22,8 +22,8 @@ get_uid = () ->
 svg = false
 
 animate = () ->
-  requestAnimationFrame( animate )
   render()
+  requestAnimationFrame( animate )
 
 render = () ->
   nodegraph.render()

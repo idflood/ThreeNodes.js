@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, render, render_connections, svg, uid;
+  var NodeBase, NodeConnection, NodeField, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, render, render_connections, svg, uid;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -25,8 +25,8 @@
   };
   svg = false;
   animate = function() {
-    requestAnimationFrame(animate);
-    return render();
+    render();
+    return requestAnimationFrame(animate);
   };
   render = function() {
     return nodegraph.render();
@@ -1433,13 +1433,15 @@
     }
     Scene.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children']);
+      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children', 'lights']);
       childs_in = this.get_in("children").get();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         ind = childs_in.indexOf(child);
         if (ind === -1) {
+          console.log("remove");
+          console.log(child);
           this.ob.removeChild(child);
         }
       }
@@ -1487,12 +1489,14 @@
       });
       this.get_out("out").set(this.ob);
       this.geometry_cache = this.get_in('geometry').get().id;
+      this.materials_cache = this.get_in('materials').get();
     }
     Mesh.prototype.compute = function() {
       this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children', 'geometry']);
-      if (this.geometry_cache !== this.get_in('geometry').get().id) {
+      if (this.geometry_cache !== this.get_in('geometry').get().id || flatArraysAreEquals(this.materials_cache, this.get_in('materials').get()) === false) {
         this.ob = new THREE.Mesh(this.get_in('geometry').get(), this.get_in('materials').get());
         this.geometry_cache = this.get_in('geometry').get().id;
+        this.materials_cache = this.get_in('materials').get();
       }
       return this.get_out("out").set(this.ob);
     };
@@ -1632,11 +1636,33 @@
     };
     return PointLight;
   })();
+  NodeMaterialBase = (function() {
+    __extends(NodeMaterialBase, NodeBase);
+    function NodeMaterialBase(x, y) {
+      this.compute = __bind(this.compute, this);      NodeMaterialBase.__super__.constructor.call(this, x, y);
+      this.ob = false;
+      this.addFields({
+        inputs: {
+          "opacity": 1,
+          "transparent": false,
+          "depthTest": true,
+          "alphaTest": 0,
+          "polygonOffset": false,
+          "polygonOffsetFactor": 0,
+          "polygonOffsetUnits": 0
+        }
+      });
+    }
+    NodeMaterialBase.prototype.compute = function() {
+      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
+      return this.get_out("out").set(this.ob);
+    };
+    return NodeMaterialBase;
+  })();
   nodes.types.Materials.MeshBasicMaterial = (function() {
-    __extends(MeshBasicMaterial, NodeBase);
+    __extends(MeshBasicMaterial, NodeMaterialBase);
     function MeshBasicMaterial(x, y) {
-      this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      MeshBasicMaterial.__super__.constructor.call(this, x, y);
+      this.typename = __bind(this.typename, this);      MeshBasicMaterial.__super__.constructor.call(this, x, y);
       this.ob = new THREE.MeshBasicMaterial({
         color: 0xff0000
       });
@@ -1661,14 +1687,45 @@
         }
       });
     }
-    MeshBasicMaterial.prototype.compute = function() {
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      return this.get_out("out").set(this.ob);
-    };
     MeshBasicMaterial.prototype.typename = function() {
       return "MeshBasicMaterial";
     };
     return MeshBasicMaterial;
+  })();
+  nodes.types.Materials.MeshLambertMaterial = (function() {
+    __extends(MeshLambertMaterial, NodeMaterialBase);
+    function MeshLambertMaterial(x, y) {
+      this.typename = __bind(this.typename, this);      MeshLambertMaterial.__super__.constructor.call(this, x, y);
+      this.ob = new THREE.MeshLambertMaterial({
+        color: 0xff0000
+      });
+      this.addFields({
+        inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(1, 0, 0)
+          },
+          "reflectivity": 1,
+          "refractionRatio": 0.98,
+          "wireframe": false,
+          "vertexColors": {
+            type: "Any",
+            val: false
+          },
+          "skinning": false
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    }
+    MeshLambertMaterial.prototype.typename = function() {
+      return "MeshLambertMaterial";
+    };
+    return MeshLambertMaterial;
   })();
   init_tab_new_node = function() {
     var $container, node, nt;

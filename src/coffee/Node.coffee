@@ -496,9 +496,9 @@ class nodes.types.Geometry.SphereGeometry extends NodeBase
     #@value = 0
     @addFields
       inputs:
-        "radius": 100,
-        "segments_width": 1,
-        "segments_height": 1,
+        "radius": 100
+        "segments_width": 1
+        "segments_height": 1
       outputs:
         "out": {type: "Any", val: @ob}
     @cached = @get_cache_array()
@@ -519,14 +519,19 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.Scene()
+    #@addFields
+    #  inputs:
+    #    "lights": {type: "Array", val: []}
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob, ['children'])
+    @apply_fields_to_val(@node_fields.inputs, @ob, ['children', 'lights'])
     childs_in = @get_in("children").get()
     # remove old childs
     for child in @ob.children
       ind = childs_in.indexOf(child)
       if ind == -1
+        console.log "remove"
+        console.log child
         @ob.removeChild(child)
     
     #add new childs
@@ -535,6 +540,8 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
       if ind == -1
         console.log child
         @ob.addChild(child)
+        
+    
     @get_out("out").set @ob
   typename : => "Scene"
 
@@ -549,14 +556,14 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
         "overdraw": false
     @get_out("out").set @ob
     @geometry_cache = @get_in('geometry').get().id
+    @materials_cache = @get_in('materials').get()
 
   compute: =>
     @apply_fields_to_val(@node_fields.inputs, @ob, ['children', 'geometry'])
-    if @geometry_cache != @get_in('geometry').get().id
+    if @geometry_cache != @get_in('geometry').get().id || flatArraysAreEquals(@materials_cache, @get_in('materials').get()) == false
       @ob = new THREE.Mesh(@get_in('geometry').get(), @get_in('materials').get())
       @geometry_cache = @get_in('geometry').get().id
-      
-      
+      @materials_cache = @get_in('materials').get()
     @get_out("out").set @ob
   typename : => "Mesh"
 
@@ -637,7 +644,25 @@ class nodes.types.Three.PointLight extends NodeBase
     @get_out("out").set @ob
   typename : => "PointLight"
 
-class nodes.types.Materials.MeshBasicMaterial extends NodeBase
+class NodeMaterialBase extends NodeBase
+  constructor: (x, y) ->
+    super x, y
+    @ob = false
+    @addFields
+      inputs:
+        "opacity": 1
+        "transparent": false
+        "depthTest": true
+        #"blending": THREE.NormalBlending
+        "alphaTest": 0
+        "polygonOffset": false
+        "polygonOffsetFactor": 0
+        "polygonOffsetUnits": 0
+  compute: =>
+    @apply_fields_to_val(@node_fields.inputs, @ob)
+    @get_out("out").set @ob
+
+class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
@@ -653,10 +678,30 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeBase
       outputs:
         "out": {type: "Any", val: @ob}
   
-  compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
-    @get_out("out").set @ob
+  #compute: =>
+  #  @apply_fields_to_val(@node_fields.inputs, @ob)
+  #  @get_out("out").set @ob
   typename : => "MeshBasicMaterial"
 
+#https://github.com/mrdoob/three.js/blob/master/src/materials/MeshLambertMaterial.js
+class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
+  constructor: (x, y) ->
+    super x, y
+    @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
+    @addFields
+      inputs:
+        "color": {type: "Color", val: new THREE.Color(1, 0, 0)}
+        "reflectivity": 1
+        "refractionRatio": 0.98
+        "wireframe": false
+        "vertexColors": {type: "Any", val: false}
+        "skinning": false
+      outputs:
+        "out": {type: "Any", val: @ob}
+  
+  #compute: =>
+  #  @apply_fields_to_val(@node_fields.inputs, @ob)
+  #  @get_out("out").set @ob
+  typename : => "MeshLambertMaterial"
 
 
