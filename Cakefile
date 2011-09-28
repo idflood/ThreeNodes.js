@@ -7,6 +7,7 @@ appFiles  = [
   'main'
   'NodeConnection'
   'NodeField'
+  'NodeFieldRack'
   'Node'
   'Sidebar'
   'NodeGraph'

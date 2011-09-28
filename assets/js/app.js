@@ -1,6 +1,6 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, render, render_connections, svg, uid;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, implements, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, render, render_connections, svg, uid;
+  var __slice = Array.prototype.slice, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
@@ -25,6 +25,38 @@
     }
     return true;
   };
+  implements = function() {
+    var classes, getter, klass, prop, setter, _i, _len;
+    classes = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    for (_i = 0, _len = classes.length; _i < _len; _i++) {
+      klass = classes[_i];
+      for (prop in klass) {
+        this[prop] = klass[prop];
+      }
+      for (prop in klass.prototype) {
+        getter = klass.prototype.__lookupGetter__(prop);
+        setter = klass.prototype.__lookupSetter__(prop);
+        if (getter || setter) {
+          if (getter) {
+            this.prototype.__defineGetter__(prop, getter);
+          }
+          if (setter) {
+            this.prototype.__defineSetter__(prop, setter);
+          }
+        } else {
+          this.prototype[prop] = klass.prototype[prop];
+        }
+      }
+    }
+    return this;
+  };
+  if (Object.defineProperty) {
+    Object.defineProperty(Function.prototype, "implements", {
+      value: implements
+    });
+  } else {
+    Function.prototype.implements = implements;
+  }
   nodes = {};
   nodes.list = [];
   nodes.types = {};
@@ -519,50 +551,32 @@
     };
     return Geometry;
   })();
-  field_click_1 = false;
-  NodeBase = (function() {
-    function NodeBase(x, y) {
-      this.x = x;
-      this.y = y;
-      this.init = __bind(this.init, this);
-      this.remove_connection = __bind(this.remove_connection, this);
-      this.add_out_connection = __bind(this.add_out_connection, this);
-      this.add_field_listener = __bind(this.add_field_listener, this);
-      this.create_field_connection = __bind(this.create_field_connection, this);
+  NodeFieldRack = (function() {
+    function NodeFieldRack(node) {
+      this.node = node;
       this.add_center_textfield = __bind(this.add_center_textfield, this);
+      this.addFields = __bind(this.addFields, this);
       this.addOutput = __bind(this.addOutput, this);
       this.addInput = __bind(this.addInput, this);
-      this.addFields = __bind(this.addFields, this);
-      this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
-      this.get_out = __bind(this.get_out, this);
-      this.get_in = __bind(this.get_in, this);
-      this.update = __bind(this.update, this);
-      this.compute = __bind(this.compute, this);
       this.update_inputs = __bind(this.update_inputs, this);
-      this.has_out_connection = __bind(this.has_out_connection, this);
-      this.typename = __bind(this.typename, this);
-      this.nid = get_uid();
-      this.container = $("#container");
-      this.out_connections = [];
       this.node_fields = {};
       this.node_fields.inputs = {};
       this.node_fields.outputs = {};
       this.node_fields_by_name = {};
       this.node_fields_by_name.inputs = {};
       this.node_fields_by_name.outputs = {};
-      this.value = false;
-      this.name = false;
-      this.main_view = false;
-      this.updated = false;
-      this.init();
     }
-    NodeBase.prototype.typename = function() {
-      return "Node";
+    NodeFieldRack.prototype.get = function(key, is_out) {
+      if (is_out == null) {
+        is_out = false;
+      }
+      if (is_out === true) {
+        return this.node_fields_by_name.outputs[key];
+      } else {
+        return this.node_fields_by_name.inputs[key];
+      }
     };
-    NodeBase.prototype.has_out_connection = function() {
-      return this.out_connections.length !== 0;
-    };
-    NodeBase.prototype.update_inputs = function() {
+    NodeFieldRack.prototype.update_inputs = function() {
       var f, _results;
       _results = [];
       for (f in this.node_fields.inputs) {
@@ -570,50 +584,24 @@
       }
       return _results;
     };
-    NodeBase.prototype.compute = function() {
-      return this.value = this.value;
+    NodeFieldRack.prototype.addInput = function(field) {
+      field.node = this.node;
+      this.node_fields.inputs["fid-" + field.fid] = field;
+      this.node_fields_by_name.inputs[field.name] = field;
+      $(".inputs", this.node.main_view).append(field.render_button());
+      this.node.add_field_listener($("#fid-" + field.fid));
+      return field;
     };
-    NodeBase.prototype.update = function() {
-      if (this.updated === true) {
-        return true;
-      }
-      this.updated = true;
-      this.update_inputs();
-      return this.compute();
+    NodeFieldRack.prototype.addOutput = function(field) {
+      field.node = this.node;
+      field.is_output = true;
+      this.node_fields.outputs["fid-" + field.fid] = field;
+      this.node_fields_by_name.outputs[field.name] = field;
+      $(".outputs", this.node.main_view).append(field.render_button());
+      this.node.add_field_listener($("#fid-" + field.fid));
+      return field;
     };
-    NodeBase.prototype.get_in = function(n) {
-      return this.node_fields_by_name.inputs[n];
-    };
-    NodeBase.prototype.get_out = function(n) {
-      return this.node_fields_by_name.outputs[n];
-    };
-    NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions) {
-      var f, nf, _results;
-      if (exceptions == null) {
-        exceptions = [];
-      }
-      _results = [];
-      for (f in afields) {
-        nf = afields[f];
-        _results.push(exceptions.indexOf(nf.name) === -1 ? target[nf.name] = this.get_in(nf.name).val : void 0);
-      }
-      return _results;
-    };
-    NodeBase.prototype.create_field_from_default_type = function(fname, default_value) {
-      var ftype;
-      ftype = (function() {
-        switch ($.type(default_value)) {
-          case "number":
-            return "Float";
-          case "boolean":
-            return "Bool";
-          default:
-            return "String";
-        }
-      })();
-      return new fields.types[ftype](fname, default_value);
-    };
-    NodeBase.prototype.addFields = function(fields_array) {
+    NodeFieldRack.prototype.addFields = function(fields_array) {
       var dir, f, fname, k;
       for (dir in fields_array) {
         for (fname in fields_array[dir]) {
@@ -633,26 +621,9 @@
       }
       return false;
     };
-    NodeBase.prototype.addInput = function(field) {
-      field.node = this;
-      this.node_fields.inputs["fid-" + field.fid] = field;
-      this.node_fields_by_name.inputs[field.name] = field;
-      $(".inputs", this.main_view).append(field.render_button());
-      this.add_field_listener($("#fid-" + field.fid));
-      return field;
-    };
-    NodeBase.prototype.addOutput = function(field) {
-      field.node = this;
-      field.is_output = true;
-      this.node_fields.outputs["fid-" + field.fid] = field;
-      this.node_fields_by_name.outputs[field.name] = field;
-      $(".outputs", this.main_view).append(field.render_button());
-      this.add_field_listener($("#fid-" + field.fid));
-      return field;
-    };
-    NodeBase.prototype.add_center_textfield = function(field) {
+    NodeFieldRack.prototype.add_center_textfield = function(field) {
       var f_in;
-      $(".options .center", this.main_view).append("<div><input type='text' id='f-txt-input-" + field.fid + "' /></div>");
+      $(".options .center", this.node.main_view).append("<div><input type='text' id='f-txt-input-" + field.fid + "' /></div>");
       f_in = $("#f-txt-input-" + field.fid);
       field.on_value_update_hooks.update_center_textfield = function(v) {
         return f_in.val(v.toString().substring(0, 10));
@@ -668,6 +639,90 @@
           }
         });
       }
+    };
+    NodeFieldRack.prototype.create_field_from_default_type = function(fname, default_value) {
+      var ftype;
+      ftype = (function() {
+        switch ($.type(default_value)) {
+          case "number":
+            return "Float";
+          case "boolean":
+            return "Bool";
+          default:
+            return "String";
+        }
+      })();
+      return new fields.types[ftype](fname, default_value);
+    };
+    return NodeFieldRack;
+  })();
+  field_click_1 = false;
+  NodeBase = (function() {
+    function NodeBase(x, y) {
+      this.x = x;
+      this.y = y;
+      this.init = __bind(this.init, this);
+      this.remove_connection = __bind(this.remove_connection, this);
+      this.add_out_connection = __bind(this.add_out_connection, this);
+      this.add_field_listener = __bind(this.add_field_listener, this);
+      this.create_field_connection = __bind(this.create_field_connection, this);
+      this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
+      this.update = __bind(this.update, this);
+      this.compute = __bind(this.compute, this);
+      this.has_out_connection = __bind(this.has_out_connection, this);
+      this.typename = __bind(this.typename, this);
+      this.nid = get_uid();
+      this.container = $("#container");
+      this.out_connections = [];
+      this.rack = new NodeFieldRack(this);
+      this.value = false;
+      this.name = false;
+      this.main_view = false;
+      this.updated = false;
+      this.init();
+    }
+    NodeBase.prototype.typename = function() {
+      return "Node";
+    };
+    NodeBase.prototype.has_out_connection = function() {
+      return this.out_connections.length !== 0;
+    };
+    NodeBase.prototype.compute = function() {
+      return this.value = this.value;
+    };
+    NodeBase.prototype.update = function() {
+      if (this.updated === true) {
+        return true;
+      }
+      this.updated = true;
+      this.rack.update_inputs();
+      return this.compute();
+    };
+    NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions) {
+      var f, nf, _results;
+      if (exceptions == null) {
+        exceptions = [];
+      }
+      _results = [];
+      for (f in afields) {
+        nf = afields[f];
+        _results.push(exceptions.indexOf(nf.name) === -1 ? target[nf.name] = this.rack.get(nf.name).val : void 0);
+      }
+      return _results;
+    };
+    NodeBase.prototype.create_field_from_default_type = function(fname, default_value) {
+      var ftype;
+      ftype = (function() {
+        switch ($.type(default_value)) {
+          case "number":
+            return "Float";
+          case "boolean":
+            return "Bool";
+          default:
+            return "String";
+        }
+      })();
+      return new fields.types[ftype](fname, default_value);
     };
     NodeBase.prototype.create_field_connection = function(field) {
       var f, field_click_2;
@@ -689,7 +744,7 @@
       self = this;
       f_name = $field.attr("id");
       f_type = $field.parent().attr("class");
-      field = this.node_fields[f_type][f_name];
+      field = this.rack.node_fields[f_type][f_name];
       return $field.click(function(e) {
         e.preventDefault();
         if (e.shiftKey === true) {
@@ -744,8 +799,8 @@
       this.compute = __bind(this.compute, this);
       this.process_val = __bind(this.process_val, this);      NodeNumberSimple.__super__.constructor.call(this, x, y);
       this.value = 0;
-      this.v_in = this.addInput(new fields.types.Float("in", 0));
-      this.v_out = this.addOutput(new fields.types.Float("out", 0));
+      this.v_in = this.rack.addInput(new fields.types.Float("in", 0));
+      this.v_out = this.rack.addOutput(new fields.types.Float("out", 0));
     }
     NodeNumberSimple.prototype.process_val = function(num, i) {
       return num;
@@ -773,7 +828,7 @@
     __extends(Number, NodeNumberSimple);
     function Number(x, y) {
       this.typename = __bind(this.typename, this);      Number.__super__.constructor.call(this, x, y);
-      this.add_center_textfield(this.v_in);
+      this.rack.add_center_textfield(this.v_in);
     }
     Number.prototype.typename = function() {
       return "Number";
@@ -786,7 +841,7 @@
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      String.__super__.constructor.call(this, x, y);
       this.value = "";
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "string": ""
         },
@@ -799,7 +854,7 @@
       });
     }
     String.prototype.compute = function() {
-      return this.get_out("out").set(this.get_in("string").get());
+      return this.rack.get("out", true).set(this.rack.get("string").get());
     };
     String.prototype.typename = function() {
       return "String";
@@ -867,7 +922,7 @@
     function Mult(x, y) {
       this.typename = __bind(this.typename, this);
       this.process_val = __bind(this.process_val, this);      Mult.__super__.constructor.call(this, x, y);
-      this.v_factor = this.addInput(new fields.types.Float("factor", 2));
+      this.v_factor = this.rack.addInput(new fields.types.Float("factor", 2));
     }
     Mult.prototype.process_val = function(num, i) {
       return num * this.v_factor.get();
@@ -882,7 +937,7 @@
     function Max(x, y) {
       this.typename = __bind(this.typename, this);
       this.process_val = __bind(this.process_val, this);      Max.__super__.constructor.call(this, x, y);
-      this.v_inb = this.addInput(new fields.types.Float("in2", 0));
+      this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
     }
     Max.prototype.process_val = function(num, i) {
       return Math.max(num, this.v_inb.get());
@@ -897,7 +952,7 @@
     function Min(x, y) {
       this.typename = __bind(this.typename, this);
       this.process_val = __bind(this.process_val, this);      Min.__super__.constructor.call(this, x, y);
-      this.v_inb = this.addInput(new fields.types.Float("in2", 0));
+      this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
     }
     Min.prototype.process_val = function(num, i) {
       return Math.min(num, this.v_inb.get());
@@ -912,7 +967,7 @@
     function Random(x, y) {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      Random.__super__.constructor.call(this, x, y);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "min": 0,
           "max": 1
@@ -921,14 +976,14 @@
           "out": 0
         }
       });
-      this.add_center_textfield(this.get_out("out"));
+      this.rack.add_center_textfield(this.rack.get("out", true));
     }
     Random.prototype.compute = function() {
       var old;
-      old = this.get_out("out").get();
-      this.value = this.get_in("min").get() + Math.random() * (this.get_in("max").get() - this.get_in("min").get());
+      old = this.rack.get("out", true).get();
+      this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
       if (this.value !== old) {
-        return this.get_out("out").set(this.value);
+        return this.rack.get("out", true).set(this.value);
       }
     };
     Random.prototype.typename = function() {
@@ -941,7 +996,7 @@
     function Merge(x, y) {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      Merge.__super__.constructor.call(this, x, y);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "in0": {
             type: "Any",
@@ -978,16 +1033,16 @@
     }
     Merge.prototype.compute = function() {
       var f, k, old;
-      old = this.get_out("out").get();
+      old = this.rack.get("out", true).get();
       this.value = [];
-      for (f in this.node_fields.inputs) {
-        k = this.node_fields.inputs[f];
+      for (f in this.rack.node_fields.inputs) {
+        k = this.rack.node_fields.inputs[f];
         if (k.get() !== null) {
           this.value[this.value.length] = k.get();
         }
       }
       if (this.value !== old) {
-        return this.get_out("out").set(this.value);
+        return this.rack.get("out", true).set(this.value);
       }
     };
     Merge.prototype.typename = function() {
@@ -1000,7 +1055,7 @@
     function Get(x, y) {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      Get.__super__.constructor.call(this, x, y);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "array": {
             type: "Array",
@@ -1018,15 +1073,15 @@
     }
     Get.prototype.compute = function() {
       var arr, ind, old;
-      old = this.get_out("out").get();
+      old = this.rack.get("out", true).get();
       this.value = false;
-      arr = this.get_in("array").get();
-      ind = parseInt(this.get_in("index").get());
+      arr = this.rack.get("array").get();
+      ind = parseInt(this.rack.get("index").get());
       if ($.type(arr) === "array") {
         this.value = arr[ind % arr.length];
       }
       if (this.value !== old) {
-        return this.get_out("out").set(this.value);
+        return this.rack.get("out", true).set(this.value);
       }
     };
     Get.prototype.typename = function() {
@@ -1042,7 +1097,7 @@
       this.get_time = __bind(this.get_time, this);      Timer.__super__.constructor.call(this, x, y);
       this.old = this.get_time();
       this.counter = 0;
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "reset": false,
           "pause": false,
@@ -1052,27 +1107,27 @@
           "out": 0
         }
       });
-      this.add_center_textfield(this.get_out("out"));
+      this.rack.add_center_textfield(this.rack.get("out", true));
     }
     Timer.prototype.get_time = function() {
       return new Date().getTime();
     };
     Timer.prototype.compute = function() {
       var diff, now, oldval;
-      oldval = this.get_out("out").get();
+      oldval = this.rack.get("out", true).get();
       now = this.get_time();
-      if (this.get_in("pause").get() === false) {
+      if (this.rack.get("pause").get() === false) {
         this.counter += now - this.old;
       }
-      if (this.get_in("reset").get() === true) {
+      if (this.rack.get("reset").get() === true) {
         this.counter = 0;
       }
-      diff = this.get_in("max").get() - this.counter;
+      diff = this.rack.get("max").get() - this.counter;
       if (diff <= 0) {
         this.counter = 0;
       }
       this.old = now;
-      return this.get_out("out").set(this.counter);
+      return this.rack.get("out", true).set(this.counter);
     };
     Timer.prototype.typename = function() {
       return "Timer";
@@ -1084,7 +1139,7 @@
     function Vector2(x, y) {
       this.compute = __bind(this.compute, this);      Vector2.__super__.constructor.call(this, x, y);
       this.vec = new THREE.Vector2(0, 0);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "xy": {
             type: "Vector2",
@@ -1105,15 +1160,15 @@
     }
     Vector2.prototype.compute = function() {
       var old;
-      old = this.get_out("xy").get();
-      this.value = this.get_in("xy").get();
-      if (this.get_in("xy").connections.length === 0) {
-        this.value = new THREE.Vector2(this.get_in("x").get(), this.get_in("y").get());
+      old = this.rack.get("xy", true).get();
+      this.value = this.rack.get("xy").get();
+      if (this.rack.get("xy").connections.length === 0) {
+        this.value = new THREE.Vector2(this.rack.get("x").get(), this.rack.get("y").get());
       }
       if (this.value !== old) {
-        this.get_out("xy").set(this.value);
-        this.get_out("x").set(this.value.x);
-        return this.get_out("y").set(this.value.y);
+        this.rack.get("xy", true).set(this.value);
+        this.rack.get("x", true).set(this.value.x);
+        return this.rack.get("y", true).set(this.value.y);
       }
     };
     Vector2.prototype.typename = function() {
@@ -1126,7 +1181,7 @@
     function Vector3(x, y) {
       this.compute = __bind(this.compute, this);      Vector3.__super__.constructor.call(this, x, y);
       this.vec = new THREE.Vector3(0, 0, 0);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "xyz": {
             type: "Vector3",
@@ -1149,16 +1204,16 @@
     }
     Vector3.prototype.compute = function() {
       var old;
-      old = this.get_out("xyz").get();
-      this.value = this.get_in("xyz").get();
-      if (this.get_in("xyz").connections.length === 0) {
-        this.value = new THREE.Vector3(this.get_in("x").get(), this.get_in("y").get(), this.get_in("z").get());
+      old = this.rack.get("xyz", true).get();
+      this.value = this.rack.get("xyz").get();
+      if (this.rack.get("xyz").connections.length === 0) {
+        this.value = new THREE.Vector3(this.rack.get("x").get(), this.rack.get("y").get(), this.rack.get("z").get());
       }
       if (this.value !== old) {
-        this.get_out("xyz").set(this.value);
-        this.get_out("x").set(this.value.x);
-        this.get_out("y").set(this.value.y);
-        return this.get_out("z").set(this.value.z);
+        this.rack.get("xyz", true).set(this.value);
+        this.rack.get("x", true).set(this.value.x);
+        this.rack.get("y", true).set(this.value.y);
+        return this.rack.get("z", true).set(this.value.z);
       }
     };
     Vector3.prototype.typename = function() {
@@ -1171,7 +1226,7 @@
     function Color(x, y) {
       this.compute = __bind(this.compute, this);      Color.__super__.constructor.call(this, x, y);
       this.vec = new THREE.Color(1, 0, 0);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "rgb": {
             type: "Color",
@@ -1194,16 +1249,16 @@
     }
     Color.prototype.compute = function() {
       var old;
-      old = this.get_out("rgb").get();
-      this.value = this.get_in("rgb").get();
-      if (this.get_in("rgb").connections.length === 0) {
-        this.value = new THREE.Color().setRGB(this.get_in("r").get(), this.get_in("g").get(), this.get_in("b").get());
+      old = this.rack.get("rgb", true).get();
+      this.value = this.rack.get("rgb").get();
+      if (this.rack.get("rgb").connections.length === 0) {
+        this.value = new THREE.Color().setRGB(this.rack.get("r").get(), this.rack.get("g").get(), this.rack.get("b").get());
       }
       if (this.value !== old) {
-        this.get_out("rgb").set(this.value);
-        this.get_out("r").set(this.value.r);
-        this.get_out("g").set(this.value.g);
-        return this.get_out("b").set(this.value.b);
+        this.rack.get("rgb", true).set(this.value);
+        this.rack.get("r", true).set(this.value.r);
+        this.rack.get("g", true).set(this.value.g);
+        return this.rack.get("b", true).set(this.value.b);
       }
     };
     Color.prototype.typename = function() {
@@ -1217,7 +1272,7 @@
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      Object3D.__super__.constructor.call(this, x, y);
       this.ob = new THREE.Object3D();
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "children": {
             type: "Array",
@@ -1248,8 +1303,8 @@
     }
     Object3D.prototype.compute = function() {
       var child, ind, _i, _j, _len, _len2, _ref, _ref2;
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children']);
-      _ref = this.get_in("children").get();
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
+      _ref = this.rack.get("children").get();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         ind = this.ob.children.indexOf(child);
@@ -1260,12 +1315,12 @@
       _ref2 = this.ob.children;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         child = _ref2[_j];
-        ind = this.get_in("children").val.indexOf(child);
+        ind = this.rack.get("children").val.indexOf(child);
         if (ind !== -1) {
           this.ob.removeChild(child);
         }
       }
-      return this.get_out("out").set(this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     Object3D.prototype.typename = function() {
       return "Object3D";
@@ -1279,7 +1334,7 @@
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);      CubeGeometry.__super__.constructor.call(this, x, y);
       this.ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "flip": -1,
           "width": 100,
@@ -1299,16 +1354,16 @@
       this.cached = this.get_cache_array();
     }
     CubeGeometry.prototype.get_cache_array = function() {
-      return [this.get_in("width").get(), this.get_in("height").get(), this.get_in("depth").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get(), this.get_in("segments_depth").get(), this.get_in("flip").get()];
+      return [this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get()];
     };
     CubeGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.CubeGeometry(this.get_in("width").get(), this.get_in("height").get(), this.get_in("depth").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get(), this.get_in("segments_depth").get(), this.get_in("flip").get());
+        this.ob = new THREE.CubeGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get());
       }
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      return this.get_out("out").set(this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     CubeGeometry.prototype.typename = function() {
       return "CubeGeometry";
@@ -1322,7 +1377,7 @@
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);      SphereGeometry.__super__.constructor.call(this, x, y);
       this.ob = new THREE.SphereGeometry(100, 20, 20);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "radius": 100,
           "segments_width": 1,
@@ -1338,17 +1393,17 @@
       this.cached = this.get_cache_array();
     }
     SphereGeometry.prototype.get_cache_array = function() {
-      return [this.get_in("radius").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get()];
+      return [this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get()];
     };
     SphereGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.SphereGeometry(this.get_in("radius").get(), this.get_in("segments_width").get(), this.get_in("segments_height").get());
+        this.ob = new THREE.SphereGeometry(this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
         this.cached = new_cache;
       }
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      return this.get_out("out").set(this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     SphereGeometry.prototype.typename = function() {
       return "SphereGeometry";
@@ -1364,8 +1419,8 @@
     }
     Scene.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children', 'lights']);
-      childs_in = this.get_in("children").get();
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
+      childs_in = this.rack.get("children").get();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -1384,7 +1439,7 @@
           this.ob.addChild(child);
         }
       }
-      return this.get_out("out").set(this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     Scene.prototype.typename = function() {
       return "Scene";
@@ -1400,7 +1455,7 @@
         color: 0xff0000,
         wireframe: true
       }));
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "geometry": {
             type: "Any",
@@ -1418,18 +1473,18 @@
           "overdraw": false
         }
       });
-      this.get_out("out").set(this.ob);
-      this.geometry_cache = this.get_in('geometry').get().id;
-      this.materials_cache = this.get_in('materials').get();
+      this.rack.get("out", true).set(this.ob);
+      this.geometry_cache = this.rack.get('geometry').get().id;
+      this.materials_cache = this.rack.get('materials').get();
     }
     Mesh.prototype.compute = function() {
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob, ['children', 'geometry']);
-      if (this.geometry_cache !== this.get_in('geometry').get().id || flatArraysAreEquals(this.materials_cache, this.get_in('materials').get()) === false) {
-        this.ob = new THREE.Mesh(this.get_in('geometry').get(), this.get_in('materials').get());
-        this.geometry_cache = this.get_in('geometry').get().id;
-        this.materials_cache = this.get_in('materials').get();
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
+      if (this.geometry_cache !== this.rack.get('geometry').get().id || flatArraysAreEquals(this.materials_cache, this.rack.get('materials').get()) === false) {
+        this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('materials').get());
+        this.geometry_cache = this.rack.get('geometry').get().id;
+        this.materials_cache = this.rack.get('materials').get();
       }
-      return this.get_out("out").set(this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     Mesh.prototype.typename = function() {
       return "Mesh";
@@ -1442,7 +1497,7 @@
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      Camera.__super__.constructor.call(this, x, y);
       this.ob = new THREE.Camera();
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "fov": 50,
           "aspect": 1,
@@ -1467,8 +1522,8 @@
       });
     }
     Camera.prototype.compute = function() {
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      return this.get_out("out").set(this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     Camera.prototype.typename = function() {
       return "Camera";
@@ -1484,7 +1539,7 @@
       this.ob = new THREE.WebGLRenderer();
       this.width = 0;
       this.height = 0;
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "width": 800,
           "height": 600,
@@ -1505,14 +1560,14 @@
         }
       });
       this.apply_size();
-      this.get_in("camera").val.position.z = 1000;
+      this.rack.get("camera").val.position.z = 1000;
       this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false");
       this.win.document.body.appendChild(this.ob.domElement);
     }
     WebGLRenderer.prototype.apply_size = function() {
       var h, w;
-      w = this.get_in('width').get();
-      h = this.get_in('height').get();
+      w = this.rack.get('width').get();
+      h = this.rack.get('height').get();
       if (w !== this.width || h !== this.height) {
         this.ob.setSize(w, h);
       }
@@ -1522,8 +1577,8 @@
     WebGLRenderer.prototype.compute = function() {
       var cam, sce;
       this.apply_size();
-      sce = this.get_in("scene").get();
-      cam = this.get_in("camera").get();
+      sce = this.rack.get("scene").get();
+      cam = this.rack.get("camera").get();
       return this.ob.render(sce, cam);
     };
     WebGLRenderer.prototype.typename = function() {
@@ -1537,7 +1592,7 @@
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      PointLight.__super__.constructor.call(this, x, y);
       this.ob = new THREE.PointLight(0xffffff);
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1559,8 +1614,8 @@
       });
     }
     PointLight.prototype.compute = function() {
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      return this.get_out("out").set(this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     PointLight.prototype.typename = function() {
       return "PointLight";
@@ -1572,7 +1627,7 @@
     function NodeMaterialBase(x, y) {
       this.compute = __bind(this.compute, this);      NodeMaterialBase.__super__.constructor.call(this, x, y);
       this.ob = false;
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "opacity": 1,
           "transparent": false,
@@ -1585,8 +1640,8 @@
       });
     }
     NodeMaterialBase.prototype.compute = function() {
-      this.apply_fields_to_val(this.node_fields.inputs, this.ob);
-      return this.get_out("out").set(this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     return NodeMaterialBase;
   })();
@@ -1597,7 +1652,7 @@
       this.ob = new THREE.MeshBasicMaterial({
         color: 0xff0000
       });
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1630,7 +1685,7 @@
       this.ob = new THREE.MeshLambertMaterial({
         color: 0xff0000
       });
-      this.addFields({
+      this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",

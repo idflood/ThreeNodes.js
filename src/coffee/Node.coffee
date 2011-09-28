@@ -5,12 +5,7 @@ class NodeBase
     @nid = get_uid()
     @container = $("#container")
     @out_connections = []
-    @node_fields = {}
-    @node_fields.inputs = {}
-    @node_fields.outputs = {}
-    @node_fields_by_name = {}
-    @node_fields_by_name.inputs = {}
-    @node_fields_by_name.outputs = {}
+    @rack = new NodeFieldRack(this)
     @value = false
     @name = false
     @main_view = false
@@ -19,13 +14,8 @@ class NodeBase
     
   typename: => "Node"
   
-  
   has_out_connection: () =>
     @out_connections.length != 0
-  
-  update_inputs: =>
-    for f of @node_fields.inputs
-      @node_fields.inputs[f].update_input_node()
   
   compute: () =>
     @value = @value
@@ -35,21 +25,15 @@ class NodeBase
       return true
     @updated = true
     # update all input fields ( if they have connections they take care themselft to update their source node)
-    @update_inputs()
+    @rack.update_inputs()
     # update node output values based on inputs
     @compute()
-  
-  get_in: (n) =>
-    @node_fields_by_name.inputs[n]
-  
-  get_out: (n) =>
-    @node_fields_by_name.outputs[n]
   
   apply_fields_to_val: (afields, target, exceptions = []) =>
     for f of afields
       nf = afields[f]
       if exceptions.indexOf(nf.name) == -1
-        target[nf.name] = @get_in(nf.name).val
+        target[nf.name] = @rack.get(nf.name).val
   
   create_field_from_default_type: (fname, default_value) ->
     ftype = switch $.type(default_value)
@@ -58,52 +42,8 @@ class NodeBase
       else "String"
     new fields.types[ftype](fname, default_value)
   
-  addFields: (fields_array) =>
-    for dir of fields_array
-      # dir = inputs / outputs
-      for fname of fields_array[dir]
-        k = fields_array[dir][fname]
-        f = false
-        if $.type(k) == "object"
-          f = new fields.types[k.type](fname, k.val)
-        else
-          f = @create_field_from_default_type(fname, k)
-        if dir == "inputs"
-          @addInput(f)
-        else
-          @addOutput(f)
-    false
+  
     
-  addInput: (field) =>
-    field.node = this
-    @node_fields.inputs["fid-" + field.fid] = field
-    @node_fields_by_name.inputs[field.name] = field
-    $(".inputs", @main_view).append(field.render_button())
-    @add_field_listener($("#fid-#{field.fid}"))
-    field
-  
-  addOutput: (field) =>
-    field.node = this
-    field.is_output = true
-    @node_fields.outputs["fid-" + field.fid] = field
-    @node_fields_by_name.outputs[field.name] = field
-    $(".outputs", @main_view).append(field.render_button())
-    @add_field_listener($("#fid-#{field.fid}"))
-    field
-  
-  add_center_textfield: (field) =>
-    $(".options .center", @main_view).append("<div><input type='text' id='f-txt-input-#{field.fid}' /></div>")
-    f_in = $("#f-txt-input-#{field.fid}")
-    field.on_value_update_hooks.update_center_textfield = (v) ->
-      f_in.val(v.toString().substring(0, 10))
-    f_in.val(field.get())
-    if field.is_output == true
-      f_in.attr("disabled", "disabled")
-    else
-      f_in.keypress (e) ->
-        if e.which == 13
-          field.set($(this).val())
-          $(this).blur()
 
   create_field_connection: (field) =>
     f = this
@@ -122,7 +62,7 @@ class NodeBase
     self = this
     f_name = $field.attr("id")
     f_type = $field.parent().attr("class")
-    field = @node_fields[f_type][f_name]
+    field = @rack.node_fields[f_type][f_name]
     $field.click (e) ->
       e.preventDefault()
       if e.shiftKey == true
@@ -159,8 +99,8 @@ class NodeNumberSimple extends NodeBase
   constructor: (x, y) ->
     super x, y
     @value = 0
-    @v_in = @addInput(new fields.types.Float("in", 0))
-    @v_out = @addOutput(new fields.types.Float("out", 0))
+    @v_in = @rack.addInput(new fields.types.Float("in", 0))
+    @v_out = @rack.addOutput(new fields.types.Float("out", 0))
   
   process_val: (num, i) =>
     num
@@ -177,7 +117,7 @@ class NodeNumberSimple extends NodeBase
 class nodes.types.Base.Number extends NodeNumberSimple
   constructor: (x, y) ->
     super x, y
-    @add_center_textfield(@v_in)
+    @rack.add_center_textfield(@v_in)
   
   typename : => "Number"
 
@@ -185,13 +125,13 @@ class nodes.types.Base.String extends NodeBase
   constructor: (x, y) ->
     super x, y
     @value = ""
-    @addFields
+    @rack.addFields
       inputs:
         "string": ""
       outputs:
         "out": {type: "Any", val: @ob}
   compute: =>
-    @get_out("out").set @get_in("string").get()
+    @rack.get("out", true).set @rack.get("string").get()
   typename : => "String"
 
 class nodes.types.Math.Sin extends NodeNumberSimple
@@ -225,7 +165,7 @@ class nodes.types.Math.Round extends NodeNumberSimple
 class nodes.types.Math.Mult extends NodeNumberSimple
   constructor: (x, y) ->
     super x, y
-    @v_factor = @addInput(new fields.types.Float("factor", 2))
+    @v_factor = @rack.addInput(new fields.types.Float("factor", 2))
   process_val: (num, i) =>
     num * @v_factor.get()
   typename : => "Mult"
@@ -233,7 +173,7 @@ class nodes.types.Math.Mult extends NodeNumberSimple
 class nodes.types.Math.Max extends NodeNumberSimple
   constructor: (x, y) ->
     super x, y
-    @v_inb = @addInput(new fields.types.Float("in2", 0))
+    @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
     Math.max(num, @v_inb.get())
   typename : => "Max"
@@ -241,7 +181,7 @@ class nodes.types.Math.Max extends NodeNumberSimple
 class nodes.types.Math.Min extends NodeNumberSimple
   constructor: (x, y) ->
     super x, y
-    @v_inb = @addInput(new fields.types.Float("in2", 0))
+    @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
     Math.min(num, @v_inb.get())
   typename : => "Min"
@@ -249,25 +189,25 @@ class nodes.types.Math.Min extends NodeNumberSimple
 class nodes.types.Utils.Random extends NodeBase
   constructor: (x, y) ->
     super x, y
-    @addFields
+    @rack.addFields
       inputs:
         "min" : 0
         "max" : 1
       outputs:
         "out" : 0
-    @add_center_textfield(@get_out("out"))
+    @rack.add_center_textfield(@rack.get("out", true))
 
   compute: =>
-    old = @get_out("out").get()
-    @value = @get_in("min").get() + Math.random() * (@get_in("max").get() - @get_in("min").get())
+    old = @rack.get("out", true).get()
+    @value = @rack.get("min").get() + Math.random() * (@rack.get("max").get() - @rack.get("min").get())
     if @value != old
-      @get_out("out").set @value
+      @rack.get("out", true).set @value
   typename : => "Random"
 
 class nodes.types.Utils.Merge extends NodeBase
   constructor: (x, y) ->
     super x, y
-    @addFields
+    @rack.addFields
       inputs:
         "in0" : {type: "Any", val: null}
         "in1" : {type: "Any", val: null}
@@ -279,20 +219,20 @@ class nodes.types.Utils.Merge extends NodeBase
         "out" : {type: "Array", val: []}
 
   compute: =>
-    old = @get_out("out").get()
+    old = @rack.get("out", true).get()
     @value = []
-    for f of @node_fields.inputs
-      k = @node_fields.inputs[f]
+    for f of @rack.node_fields.inputs
+      k = @rack.node_fields.inputs[f]
       if k.get() != null
         @value[@value.length] = k.get()
     if @value != old
-      @get_out("out").set @value
+      @rack.get("out", true).set @value
   typename : => "Merge"
 
 class nodes.types.Utils.Get extends NodeBase
   constructor: (x, y) ->
     super x, y
-    @addFields
+    @rack.addFields
       inputs:
         "array" : {type: "Array", val: null}
         "index" : 0
@@ -300,14 +240,14 @@ class nodes.types.Utils.Get extends NodeBase
         "out" : {type: "Any", val: null}
 
   compute: =>
-    old = @get_out("out").get()
+    old = @rack.get("out", true).get()
     @value = false
-    arr = @get_in("array").get()
-    ind = parseInt(@get_in("index").get())
+    arr = @rack.get("array").get()
+    ind = parseInt(@rack.get("index").get())
     if $.type(arr) == "array"
       @value = arr[ind % arr.length]
     if @value != old
-      @get_out("out").set @value
+      @rack.get("out", true).set @value
   typename : => "Get"
 
 class nodes.types.Utils.Timer extends NodeBase
@@ -315,7 +255,7 @@ class nodes.types.Utils.Timer extends NodeBase
     super x, y
     @old = @get_time()
     @counter = 0
-    @addFields
+    @rack.addFields
       inputs:
         "reset" : false
         "pause" : false
@@ -323,33 +263,33 @@ class nodes.types.Utils.Timer extends NodeBase
       outputs:
         "out" : 0
     
-    @add_center_textfield(@get_out("out"))
+    @rack.add_center_textfield(@rack.get("out", true))
   
   get_time: => new Date().getTime()
     
   compute: =>
-    oldval = @get_out("out").get()
+    oldval = @rack.get("out", true).get()
     now = @get_time()
-    if @get_in("pause").get() == false
+    if @rack.get("pause").get() == false
       @counter += now - @old
-    if @get_in("reset").get() == true
+    if @rack.get("reset").get() == true
       @counter = 0
     
-    diff = @get_in("max").get() - @counter
+    diff = @rack.get("max").get() - @counter
     if diff <= 0
       #@counter = diff * -1
       @counter = 0
     @old = now
 
     #if @counter != oldval
-    @get_out("out").set @counter
+    @rack.get("out", true).set @counter
   typename : => "Timer"
 
 class nodes.types.Base.Vector2 extends NodeBase
   constructor: (x, y) ->
     super x, y
     @vec = new THREE.Vector2(0, 0)
-    @addFields
+    @rack.addFields
       inputs:
         "xy" : {type: "Vector2", val: false}
         "x" : 0
@@ -360,22 +300,22 @@ class nodes.types.Base.Vector2 extends NodeBase
         "y" : 0
   
   compute: =>
-    old = @get_out("xy").get()
-    @value = @get_in("xy").get()
-    if @get_in("xy").connections.length == 0
-      @value = new THREE.Vector2(@get_in("x").get(), @get_in("y").get())
+    old = @rack.get("xy", true).get()
+    @value = @rack.get("xy").get()
+    if @rack.get("xy").connections.length == 0
+      @value = new THREE.Vector2(@rack.get("x").get(), @rack.get("y").get())
     if @value != old
       #@v_out.signal.dispatch @value
-      @get_out("xy").set @value
-      @get_out("x").set @value.x
-      @get_out("y").set @value.y
+      @rack.get("xy", true).set @value
+      @rack.get("x", true).set @value.x
+      @rack.get("y", true).set @value.y
   typename : -> "Vector2"
 
 class nodes.types.Base.Vector3 extends NodeBase
   constructor: (x, y) ->
     super x, y
     @vec = new THREE.Vector3(0, 0, 0)
-    @addFields
+    @rack.addFields
       inputs:
         "xyz" : {type: "Vector3", val: false}
         "x" : 0
@@ -388,25 +328,25 @@ class nodes.types.Base.Vector3 extends NodeBase
         "z" : 0
   
   compute: =>
-    old = @get_out("xyz").get()
-    @value = @get_in("xyz").get()
-    if @get_in("xyz").connections.length == 0
+    old = @rack.get("xyz", true).get()
+    @value = @rack.get("xyz").get()
+    if @rack.get("xyz").connections.length == 0
       #@vec.set @v_in_x.val, @v_in_y.val, @v_in_z.val
       #@value = @vec
-      @value = new THREE.Vector3(@get_in("x").get(), @get_in("y").get(), @get_in("z").get())
+      @value = new THREE.Vector3(@rack.get("x").get(), @rack.get("y").get(), @rack.get("z").get())
     if @value != old
       #@v_out.signal.dispatch @value
-      @get_out("xyz").set @value
-      @get_out("x").set @value.x
-      @get_out("y").set @value.y
-      @get_out("z").set @value.z
+      @rack.get("xyz", true).set @value
+      @rack.get("x", true).set @value.x
+      @rack.get("y", true).set @value.y
+      @rack.get("z", true).set @value.z
   typename : -> "Vector3"
 
 class nodes.types.Base.Color extends NodeBase
   constructor: (x, y) ->
     super x, y
     @vec = new THREE.Color(1, 0, 0)
-    @addFields
+    @rack.addFields
       inputs:
         "rgb": {type: "Color", val: false}
         "r": 0
@@ -419,15 +359,15 @@ class nodes.types.Base.Color extends NodeBase
         "b": 0
   
   compute: =>
-    old = @get_out("rgb").get()
-    @value = @get_in("rgb").get()
-    if @get_in("rgb").connections.length == 0
-      @value = new THREE.Color().setRGB(@get_in("r").get(), @get_in("g").get(), @get_in("b").get())
+    old = @rack.get("rgb", true).get()
+    @value = @rack.get("rgb").get()
+    if @rack.get("rgb").connections.length == 0
+      @value = new THREE.Color().setRGB(@rack.get("r").get(), @rack.get("g").get(), @rack.get("b").get())
     if @value != old
-      @get_out("rgb").set @value
-      @get_out("r").set @value.r
-      @get_out("g").set @value.g
-      @get_out("b").set @value.b
+      @rack.get("rgb", true).set @value
+      @rack.get("r", true).set @value.r
+      @rack.get("g", true).set @value.g
+      @rack.get("b", true).set @value.b
   typename : -> "Color"
 
 
@@ -436,7 +376,7 @@ class nodes.types.Three.Object3D extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.Object3D()
-    @addFields
+    @rack.addFields
       inputs:
         "children": {type: "Array", val: []}
         "position": {type: "Vector3", val: new THREE.Vector3()}
@@ -448,23 +388,23 @@ class nodes.types.Three.Object3D extends NodeBase
         "out": {type: "Any", val: @ob}
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob, ['children'])
-    for child in @get_in("children").get()
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
+    for child in @rack.get("children").get()
       ind = @ob.children.indexOf(child)
       if ind == -1
         @ob.addChild(child)
     for child in @ob.children
-      ind = @get_in("children").val.indexOf(child)
+      ind = @rack.get("children").val.indexOf(child)
       if ind != -1
         @ob.removeChild(child)
-    @get_out("out").set @ob
+    @rack.get("out", true).set @ob
   typename : => "Object3D"
   
 class nodes.types.Geometry.CubeGeometry extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
-    @addFields
+    @rack.addFields
       inputs:
         "flip": -1
         "width": 100,
@@ -478,14 +418,14 @@ class nodes.types.Geometry.CubeGeometry extends NodeBase
     @cached = @get_cache_array()
   
   get_cache_array: =>
-    [@get_in("width").get(), @get_in("height").get(), @get_in("depth").get(), @get_in("segments_width").get(), @get_in("segments_height").get(), @get_in("segments_depth").get(), @get_in("flip").get()]
+    [@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get()]
 
   compute: =>
     new_cache = @get_cache_array()
     if flatArraysAreEquals(new_cache, @cached) == false
-      @ob = new THREE.CubeGeometry(@get_in("width").get(), @get_in("height").get(), @get_in("depth").get(), @get_in("segments_width").get(), @get_in("segments_height").get(), @get_in("segments_depth").get(), @get_in("flip").get())
-    @apply_fields_to_val(@node_fields.inputs, @ob)
-    @get_out("out").set @ob
+      @ob = new THREE.CubeGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get())
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
   typename : => "CubeGeometry"
 
 class nodes.types.Geometry.SphereGeometry extends NodeBase
@@ -494,7 +434,7 @@ class nodes.types.Geometry.SphereGeometry extends NodeBase
     @ob = new THREE.SphereGeometry(100, 20, 20)
     
     #@value = 0
-    @addFields
+    @rack.addFields
       inputs:
         "radius": 100
         "segments_width": 1
@@ -504,28 +444,28 @@ class nodes.types.Geometry.SphereGeometry extends NodeBase
     @cached = @get_cache_array()
   
   get_cache_array: =>
-    [@get_in("radius").get(), @get_in("segments_width").get(), @get_in("segments_height").get()]
+    [@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get()]
 
   compute: =>
     new_cache = @get_cache_array()
     if flatArraysAreEquals(new_cache, @cached) == false
-      @ob = new THREE.SphereGeometry(@get_in("radius").get(), @get_in("segments_width").get(), @get_in("segments_height").get())
+      @ob = new THREE.SphereGeometry(@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
       @cached = new_cache
-    @apply_fields_to_val(@node_fields.inputs, @ob)
-    @get_out("out").set @ob
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
   typename : => "SphereGeometry"
 
 class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.Scene()
-    #@addFields
+    #@rack.addFields
     #  inputs:
     #    "lights": {type: "Array", val: []}
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob, ['children', 'lights'])
-    childs_in = @get_in("children").get()
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
+    childs_in = @rack.get("children").get()
     # remove old childs
     for child in @ob.children
       ind = childs_in.indexOf(child)
@@ -542,36 +482,36 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
         @ob.addChild(child)
         
     
-    @get_out("out").set @ob
+    @rack.get("out", true).set @ob
   typename : => "Scene"
 
 class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }))
-    @addFields
+    @rack.addFields
       inputs:
         "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
         "materials": {type: "Any", val: [new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true })]}
         "overdraw": false
-    @get_out("out").set @ob
-    @geometry_cache = @get_in('geometry').get().id
-    @materials_cache = @get_in('materials').get()
+    @rack.get("out", true).set @ob
+    @geometry_cache = @rack.get('geometry').get().id
+    @materials_cache = @rack.get('materials').get()
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob, ['children', 'geometry'])
-    if @geometry_cache != @get_in('geometry').get().id || flatArraysAreEquals(@materials_cache, @get_in('materials').get()) == false
-      @ob = new THREE.Mesh(@get_in('geometry').get(), @get_in('materials').get())
-      @geometry_cache = @get_in('geometry').get().id
-      @materials_cache = @get_in('materials').get()
-    @get_out("out").set @ob
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry'])
+    if @geometry_cache != @rack.get('geometry').get().id || flatArraysAreEquals(@materials_cache, @rack.get('materials').get()) == false
+      @ob = new THREE.Mesh(@rack.get('geometry').get(), @rack.get('materials').get())
+      @geometry_cache = @rack.get('geometry').get().id
+      @materials_cache = @rack.get('materials').get()
+    @rack.get("out", true).set @ob
   typename : => "Mesh"
 
 class nodes.types.Three.Camera extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.Camera()
-    @addFields
+    @rack.addFields
       inputs:
         "fov": 50
         "aspect": 1
@@ -584,8 +524,8 @@ class nodes.types.Three.Camera extends NodeBase
         "out": {type: "Any", val: @ob}
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
-    @get_out("out").set @ob
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
   typename : => "Camera"
 
 class nodes.types.Three.WebGLRenderer extends NodeBase
@@ -594,7 +534,7 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     @ob = new THREE.WebGLRenderer()
     @width = 0
     @height = 0
-    @addFields
+    @rack.addFields
       inputs:
         "width": 800
         "height": 600
@@ -603,14 +543,14 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
       outputs:
         "out": {type: "Any", val: @ob}
     @apply_size()
-    @get_in("camera").val.position.z = 1000
+    @rack.get("camera").val.position.z = 1000
     
     @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false")
     @win.document.body.appendChild( @ob.domElement );
   
   apply_size: =>
-    w = @get_in('width').get()
-    h = @get_in('height').get()
+    w = @rack.get('width').get()
+    h = @rack.get('height').get()
     if w != @width || h != @height
       @ob.setSize(w, h)
     @width = w
@@ -619,18 +559,18 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
   compute: =>
     @apply_size()
     
-    sce = @get_in("scene").get()
-    cam = @get_in("camera").get()
+    sce = @rack.get("scene").get()
+    cam = @rack.get("camera").get()
     #if sce != false && cam != false
     @ob.render(sce, cam)
-    #@get_out("out").set @ob
+    #@rack.get("out", true).set @ob
   typename : => "WebGLRenderer"
 
 class nodes.types.Three.PointLight extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.PointLight(0xffffff)
-    @addFields
+    @rack.addFields
       inputs:
         "color": {type: "Color", val: new THREE.Color(1, 1, 1)}
         "position": {type: "Vector3", val: new THREE.Vector3()}
@@ -640,15 +580,15 @@ class nodes.types.Three.PointLight extends NodeBase
         "out": {type: "Any", val: @ob}
 
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
-    @get_out("out").set @ob
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
   typename : => "PointLight"
 
 class NodeMaterialBase extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = false
-    @addFields
+    @rack.addFields
       inputs:
         "opacity": 1
         "transparent": false
@@ -659,14 +599,14 @@ class NodeMaterialBase extends NodeBase
         "polygonOffsetFactor": 0
         "polygonOffsetUnits": 0
   compute: =>
-    @apply_fields_to_val(@node_fields.inputs, @ob)
-    @get_out("out").set @ob
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
 
 class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
-    @addFields
+    @rack.addFields
       inputs:
         "color": {type: "Color", val: new THREE.Color(1, 0, 0)}
         "reflectivity": 1
@@ -679,8 +619,8 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
         "out": {type: "Any", val: @ob}
   
   #compute: =>
-  #  @apply_fields_to_val(@node_fields.inputs, @ob)
-  #  @get_out("out").set @ob
+  #  @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+  #  @rack.get("out", true).set @ob
   typename : => "MeshBasicMaterial"
 
 #https://github.com/mrdoob/three.js/blob/master/src/materials/MeshLambertMaterial.js
@@ -688,7 +628,7 @@ class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
-    @addFields
+    @rack.addFields
       inputs:
         "color": {type: "Color", val: new THREE.Color(1, 0, 0)}
         "reflectivity": 1
@@ -700,8 +640,8 @@ class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
         "out": {type: "Any", val: @ob}
   
   #compute: =>
-  #  @apply_fields_to_val(@node_fields.inputs, @ob)
-  #  @get_out("out").set @ob
+  #  @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+  #  @rack.get("out", true).set @ob
   typename : => "MeshLambertMaterial"
 
 
