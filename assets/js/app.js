@@ -8,28 +8,9 @@
     child.__super__ = parent.prototype;
     return child;
   };
-  nodes = {};
-  nodes.list = [];
-  nodes.types = {};
-  nodes.types.Base = {};
-  nodes.types.Math = {};
-  nodes.types.Utils = {};
-  nodes.types.Geometry = {};
-  nodes.types.Three = {};
-  nodes.types.Materials = {};
-  fields = {};
-  fields.types = {};
   uid = 0;
   get_uid = function() {
     return uid += 1;
-  };
-  svg = false;
-  animate = function() {
-    render();
-    return requestAnimationFrame(animate);
-  };
-  render = function() {
-    return nodegraph.render();
   };
   flatArraysAreEquals = function(arr1, arr2) {
     var i, k, _len;
@@ -44,6 +25,25 @@
     }
     return true;
   };
+  nodes = {};
+  nodes.list = [];
+  nodes.types = {};
+  nodes.types.Base = {};
+  nodes.types.Math = {};
+  nodes.types.Utils = {};
+  nodes.types.Geometry = {};
+  nodes.types.Three = {};
+  nodes.types.Materials = {};
+  fields = {};
+  fields.types = {};
+  svg = false;
+  animate = function() {
+    render();
+    return requestAnimationFrame(animate);
+  };
+  render = function() {
+    return nodegraph.render();
+  };
   on_ui_window_resize = function() {
     var h, w;
     w = $(window).width() - 4;
@@ -53,75 +53,6 @@
       height: h
     });
     return $("#sidebar").css("height", h);
-  };
-  make_sidebar_toggle = function() {
-    return $("#sidebar-toggle").click(function(e) {
-      var $t, o;
-      $t = $("#sidebar");
-      o = 10;
-      if ($t.position().left < -20) {
-        $("#sidebar-toggle").removeClass("toggle-closed");
-        $t.animate({
-          left: 0
-        }, {
-          queue: false,
-          duration: 140
-        }, "swing");
-        return $("#sidebar-toggle").animate({
-          left: 220 + o
-        }, {
-          queue: false,
-          duration: 80
-        }, "swing");
-      } else {
-        $("#sidebar-toggle").addClass("toggle-closed");
-        $t.animate({
-          left: -220
-        }, {
-          queue: false,
-          duration: 120
-        }, "swing");
-        return $("#sidebar-toggle").animate({
-          left: o
-        }, {
-          queue: false,
-          duration: 180
-        }, "swing");
-      }
-    });
-  };
-  init_sidebar_search = function() {
-    var toggle_class;
-    toggle_class = "hidden-element";
-    return $("#node_filter").keyup(function(e) {
-      var v;
-      v = $.trim($("#node_filter").val()).toLowerCase();
-      if (v === "") {
-        return $("#tab-new li").removeClass(toggle_class);
-      } else {
-        return $("#tab-new li").each(function(el) {
-          var has_visible_items, s, ul;
-          s = $.trim($("a", this).html()).toLowerCase();
-          if (s.indexOf(v) !== -1) {
-            return $(this).removeClass(toggle_class);
-          } else {
-            $(this).addClass(toggle_class);
-            ul = $(this).parent();
-            has_visible_items = false;
-            ul.children().each(function() {
-              if ($(this).hasClass(toggle_class) === false) {
-                return has_visible_items = true;
-              }
-            });
-            if (has_visible_items === false) {
-              return ul.prev().addClass(toggle_class);
-            } else {
-              return ul.prev().removeClass(toggle_class);
-            }
-          }
-        });
-      }
-    });
   };
   $(document).ready(function() {
     var f1;
@@ -1727,6 +1658,75 @@
     };
     return MeshLambertMaterial;
   })();
+  make_sidebar_toggle = function() {
+    return $("#sidebar-toggle").click(function(e) {
+      var $t, o;
+      $t = $("#sidebar");
+      o = 10;
+      if ($t.position().left < -20) {
+        $("#sidebar-toggle").removeClass("toggle-closed");
+        $t.animate({
+          left: 0
+        }, {
+          queue: false,
+          duration: 140
+        }, "swing");
+        return $("#sidebar-toggle").animate({
+          left: 220 + o
+        }, {
+          queue: false,
+          duration: 80
+        }, "swing");
+      } else {
+        $("#sidebar-toggle").addClass("toggle-closed");
+        $t.animate({
+          left: -220
+        }, {
+          queue: false,
+          duration: 120
+        }, "swing");
+        return $("#sidebar-toggle").animate({
+          left: o
+        }, {
+          queue: false,
+          duration: 180
+        }, "swing");
+      }
+    });
+  };
+  init_sidebar_search = function() {
+    var toggle_class;
+    toggle_class = "hidden-element";
+    return $("#node_filter").keyup(function(e) {
+      var v;
+      v = $.trim($("#node_filter").val()).toLowerCase();
+      if (v === "") {
+        return $("#tab-new li").removeClass(toggle_class);
+      } else {
+        return $("#tab-new li").each(function(el) {
+          var has_visible_items, s, ul;
+          s = $.trim($("a", this).html()).toLowerCase();
+          if (s.indexOf(v) !== -1) {
+            return $(this).removeClass(toggle_class);
+          } else {
+            $(this).addClass(toggle_class);
+            ul = $(this).parent();
+            has_visible_items = false;
+            ul.children().each(function() {
+              if ($(this).hasClass(toggle_class) === false) {
+                return has_visible_items = true;
+              }
+            });
+            if (has_visible_items === false) {
+              return ul.prev().addClass(toggle_class);
+            } else {
+              return ul.prev().removeClass(toggle_class);
+            }
+          }
+        });
+      }
+    });
+  };
   init_tab_new_node = function() {
     var $container, node, nt;
     $container = $("#tab-new");
