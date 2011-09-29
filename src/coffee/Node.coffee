@@ -84,6 +84,9 @@ class NodeBase
     $(".head", @main_view).dblclick (e) ->
       $(".options", n.main_view).animate {height: 'toggle'}, 120, () ->
         render_connections()
+        
+    $(".head", @main_view).click (e) ->
+      n.rack.render_sidebar()
 
 class NodeNumberSimple extends NodeBase
   constructor: (x, y) ->

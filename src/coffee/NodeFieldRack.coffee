@@ -50,6 +50,14 @@ class NodeFieldRack
           @addOutput(f)
     false
     
+  render_sidebar: () =>
+    $target = $("#tab-attribute")
+    $target.html("");
+    for f of @node_fields.inputs
+      console.log @node_fields.inputs[f]
+      @node_fields.inputs[f].render_sidebar()
+    false
+  
   add_center_textfield: (field) =>
     $(".options .center", @node.main_view).append("<div><input type='text' id='f-txt-input-#{field.fid}' /></div>")
     f_in = $("#f-txt-input-#{field.fid}")

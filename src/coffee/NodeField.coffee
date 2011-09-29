@@ -21,6 +21,9 @@ class NodeField
   get: () =>
     @val
   
+  render_sidebar: =>
+    false
+  
   render_button: =>
     if @is_output
       return "<div id='fid-#{@fid}' class='field field-#{@name}' rel='#{@name}'>#{@name}<a href='#'></a></div>"
@@ -86,6 +89,22 @@ class fields.types.Bool extends NodeField
     res
 
 class fields.types.Float extends NodeField
+  render_sidebar: =>
+    self = this
+    $cont = $("#tab-attribute")
+    $cont.append("<div id='side-field-" + @fid + "'></div>")
+    $target = $("#side-field-#{@fid}")
+    $target.append("<h3>#{@name}</h3>")
+    $target.append("<div><input type='text' id='side-field-txt-input-#{@fid}' /></div>")
+    f_in = $("#side-field-txt-input-#{@fid}")
+    @on_value_update_hooks.update_sidebar_textfield = (v) ->
+      f_in.val(v.toString().substring(0, 10))
+    f_in.val(@get())
+    f_in.keypress (e) ->
+      if e.which == 13
+        self.set($(this).val())
+        $(this).blur()
+    false
   compute_value : (val) =>
     res = false
     switch $.type(val)

@@ -197,6 +197,7 @@
       this.update_input_node = __bind(this.update_input_node, this);
       this.compute_value = __bind(this.compute_value, this);
       this.render_button = __bind(this.render_button, this);
+      this.render_sidebar = __bind(this.render_sidebar, this);
       this.get = __bind(this.get, this);
       this.set = __bind(this.set, this);
       self = this;
@@ -224,6 +225,9 @@
     };
     NodeField.prototype.get = function() {
       return this.val;
+    };
+    NodeField.prototype.render_sidebar = function() {
+      return false;
     };
     NodeField.prototype.render_button = function() {
       if (this.is_output) {
@@ -345,8 +349,30 @@
     __extends(Float, NodeField);
     function Float() {
       this.compute_value = __bind(this.compute_value, this);
+      this.render_sidebar = __bind(this.render_sidebar, this);
       Float.__super__.constructor.apply(this, arguments);
     }
+    Float.prototype.render_sidebar = function() {
+      var $cont, $target, f_in, self;
+      self = this;
+      $cont = $("#tab-attribute");
+      $cont.append("<div id='side-field-" + this.fid + "'></div>");
+      $target = $("#side-field-" + this.fid);
+      $target.append("<h3>" + this.name + "</h3>");
+      $target.append("<div><input type='text' id='side-field-txt-input-" + this.fid + "' /></div>");
+      f_in = $("#side-field-txt-input-" + this.fid);
+      this.on_value_update_hooks.update_sidebar_textfield = function(v) {
+        return f_in.val(v.toString().substring(0, 10));
+      };
+      f_in.val(this.get());
+      f_in.keypress(function(e) {
+        if (e.which === 13) {
+          self.set($(this).val());
+          return $(this).blur();
+        }
+      });
+      return false;
+    };
     Float.prototype.compute_value = function(val) {
       var res;
       res = false;
@@ -555,6 +581,7 @@
     function NodeFieldRack(node) {
       this.node = node;
       this.add_center_textfield = __bind(this.add_center_textfield, this);
+      this.render_sidebar = __bind(this.render_sidebar, this);
       this.addFields = __bind(this.addFields, this);
       this.addOutput = __bind(this.addOutput, this);
       this.addInput = __bind(this.addInput, this);
@@ -618,6 +645,16 @@
             this.addOutput(f);
           }
         }
+      }
+      return false;
+    };
+    NodeFieldRack.prototype.render_sidebar = function() {
+      var $target, f;
+      $target = $("#tab-attribute");
+      $target.html("");
+      for (f in this.node_fields.inputs) {
+        console.log(this.node_fields.inputs[f]);
+        this.node_fields.inputs[f].render_sidebar();
       }
       return false;
     };
@@ -769,12 +806,15 @@
           return render_connections();
         }
       });
-      return $(".head", this.main_view).dblclick(function(e) {
+      $(".head", this.main_view).dblclick(function(e) {
         return $(".options", n.main_view).animate({
           height: 'toggle'
         }, 120, function() {
           return render_connections();
         });
+      });
+      return $(".head", this.main_view).click(function(e) {
+        return n.rack.render_sidebar();
       });
     };
     return NodeBase;
