@@ -903,6 +903,49 @@
     };
     return Round;
   })();
+  nodes.types.Math.Ceil = (function() {
+    __extends(Ceil, NodeNumberSimple);
+    function Ceil(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.process_val = __bind(this.process_val, this);      Ceil.__super__.constructor.call(this, x, y);
+    }
+    Ceil.prototype.process_val = function(num, i) {
+      return Math.ceil(num);
+    };
+    Ceil.prototype.typename = function() {
+      return "Ceil";
+    };
+    return Ceil;
+  })();
+  nodes.types.Math.Floor = (function() {
+    __extends(Floor, NodeNumberSimple);
+    function Floor(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.process_val = __bind(this.process_val, this);      Floor.__super__.constructor.call(this, x, y);
+    }
+    Floor.prototype.process_val = function(num, i) {
+      return Math.floor(num);
+    };
+    Floor.prototype.typename = function() {
+      return "Floor";
+    };
+    return Floor;
+  })();
+  nodes.types.Math.Mod = (function() {
+    __extends(Mod, NodeNumberSimple);
+    function Mod(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.process_val = __bind(this.process_val, this);      Mod.__super__.constructor.call(this, x, y);
+      this.v_valy = this.rack.addInput(new fields.types.Float("y", 2));
+    }
+    Mod.prototype.process_val = function(num, i) {
+      return num % this.v_valy.get();
+    };
+    Mod.prototype.typename = function() {
+      return "Mod";
+    };
+    return Mod;
+  })();
   nodes.types.Math.Mult = (function() {
     __extends(Mult, NodeNumberSimple);
     function Mult(x, y) {
@@ -918,21 +961,6 @@
     };
     return Mult;
   })();
-  nodes.types.Math.Max = (function() {
-    __extends(Max, NodeNumberSimple);
-    function Max(x, y) {
-      this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Max.__super__.constructor.call(this, x, y);
-      this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
-    }
-    Max.prototype.process_val = function(num, i) {
-      return Math.max(num, this.v_inb.get());
-    };
-    Max.prototype.typename = function() {
-      return "Max";
-    };
-    return Max;
-  })();
   nodes.types.Math.Min = (function() {
     __extends(Min, NodeNumberSimple);
     function Min(x, y) {
@@ -947,6 +975,21 @@
       return "Min";
     };
     return Min;
+  })();
+  nodes.types.Math.Max = (function() {
+    __extends(Max, NodeNumberSimple);
+    function Max(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.process_val = __bind(this.process_val, this);      Max.__super__.constructor.call(this, x, y);
+      this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+    }
+    Max.prototype.process_val = function(num, i) {
+      return Math.max(num, this.v_inb.get());
+    };
+    Max.prototype.typename = function() {
+      return "Max";
+    };
+    return Max;
   })();
   nodes.types.Utils.Random = (function() {
     __extends(Random, NodeBase);

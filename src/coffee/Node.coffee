@@ -152,6 +152,28 @@ class nodes.types.Math.Round extends NodeNumberSimple
     Math.round(num)
   typename : => "Round"
 
+class nodes.types.Math.Ceil extends NodeNumberSimple
+  constructor: (x, y) ->
+    super x, y
+  process_val: (num, i) =>
+    Math.ceil(num)
+  typename : => "Ceil"
+
+class nodes.types.Math.Floor extends NodeNumberSimple
+  constructor: (x, y) ->
+    super x, y
+  process_val: (num, i) =>
+    Math.floor(num)
+  typename : => "Floor"
+
+class nodes.types.Math.Mod extends NodeNumberSimple
+  constructor: (x, y) ->
+    super x, y
+    @v_valy = @rack.addInput(new fields.types.Float("y", 2))
+  process_val: (num, i) =>
+    num % @v_valy.get()
+  typename : => "Mod"
+
 class nodes.types.Math.Mult extends NodeNumberSimple
   constructor: (x, y) ->
     super x, y
@@ -160,14 +182,6 @@ class nodes.types.Math.Mult extends NodeNumberSimple
     num * @v_factor.get()
   typename : => "Mult"
 
-class nodes.types.Math.Max extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
-    @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
-  process_val: (num, i) =>
-    Math.max(num, @v_inb.get())
-  typename : => "Max"
-
 class nodes.types.Math.Min extends NodeNumberSimple
   constructor: (x, y) ->
     super x, y
@@ -175,6 +189,14 @@ class nodes.types.Math.Min extends NodeNumberSimple
   process_val: (num, i) =>
     Math.min(num, @v_inb.get())
   typename : => "Min"
+
+class nodes.types.Math.Max extends NodeNumberSimple
+  constructor: (x, y) ->
+    super x, y
+    @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
+  process_val: (num, i) =>
+    Math.max(num, @v_inb.get())
+  typename : => "Max"
 
 class nodes.types.Utils.Random extends NodeBase
   constructor: (x, y) ->
