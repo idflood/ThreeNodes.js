@@ -35,16 +35,6 @@ class NodeBase
       if exceptions.indexOf(nf.name) == -1
         target[nf.name] = @rack.get(nf.name).val
   
-  create_field_from_default_type: (fname, default_value) ->
-    ftype = switch $.type(default_value)
-      when "number" then "Float"
-      when "boolean" then "Bool"
-      else "String"
-    new fields.types[ftype](fname, default_value)
-  
-  
-    
-
   create_field_connection: (field) =>
     f = this
     if field_click_1 == false
@@ -492,7 +482,7 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
     @rack.addFields
       inputs:
         "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
-        "materials": {type: "Any", val: [new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true })]}
+        "materials": {type: "Array", val: [new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true })]}
         "overdraw": false
     @rack.get("out", true).set @ob
     @geometry_cache = @rack.get('geometry').get().id

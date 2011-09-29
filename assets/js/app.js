@@ -710,20 +710,6 @@
       }
       return _results;
     };
-    NodeBase.prototype.create_field_from_default_type = function(fname, default_value) {
-      var ftype;
-      ftype = (function() {
-        switch ($.type(default_value)) {
-          case "number":
-            return "Float";
-          case "boolean":
-            return "Bool";
-          default:
-            return "String";
-        }
-      })();
-      return new fields.types[ftype](fname, default_value);
-    };
     NodeBase.prototype.create_field_connection = function(field) {
       var f, field_click_2;
       f = this;
@@ -1462,7 +1448,7 @@
             val: new THREE.CubeGeometry(200, 200, 200)
           },
           "materials": {
-            type: "Any",
+            type: "Array",
             val: [
               new THREE.MeshBasicMaterial({
                 color: 0xff0000,
