@@ -584,7 +584,7 @@ class nodes.types.Three.PointLight extends NodeBase
     @ob = new THREE.PointLight(0xffffff)
     @rack.addFields
       inputs:
-        "color": {type: "Color", val: new THREE.Color(1, 1, 1)}
+        "color": {type: "Color", val: new THREE.Color(0xffffff)}
         "position": {type: "Vector3", val: new THREE.Vector3()}
         "intensity": 1
         "distance": 0

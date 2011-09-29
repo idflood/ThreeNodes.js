@@ -1625,7 +1625,7 @@
         inputs: {
           "color": {
             type: "Color",
-            val: new THREE.Color(1, 1, 1)
+            val: new THREE.Color(0xffffff)
           },
           "position": {
             type: "Vector3",
