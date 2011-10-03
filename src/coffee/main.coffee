@@ -7,6 +7,7 @@ nodes.types.Utils = {}
 nodes.types.Geometry = {}
 nodes.types.Three = {}
 nodes.types.Materials = {}
+nodes.types.Lights = {}
 
 fields = {}
 fields.types = {}
@@ -15,6 +16,30 @@ fields.types = {}
 #http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
 svg = false
+
+
+ws = null
+host = "localhost"
+port = 8080
+socket = "p5websocket"
+
+init_websocket = () ->
+  console.log("trying to open a websocket")
+  _socket = !socket ? "" : "/" + socket
+  ws = new WebSocket("ws://" + host + ":" + port + _socket)
+  ws.onopen = () ->
+    console.log("opened")
+    ws.send('Ping')
+
+  ws.onerror = (e) ->
+    console.log('WebSocket did close ',e)
+  
+  ws.onerror = (error) ->
+    console.log('WebSocket Error ' + error)
+
+  ws.onmessage = (e) ->
+    console.log('Server: ' + e.data)
+
 
 animate = () ->
   render()
@@ -53,3 +78,4 @@ $(document).ready ->
   $(window).resize on_ui_window_resize
   on_ui_window_resize()
   init_sidebar_search()
+  init_websocket()

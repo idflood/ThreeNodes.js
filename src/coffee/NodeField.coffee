@@ -156,7 +156,7 @@ class fields.types.Object3D extends NodeField
   compute_value : (val) =>
     res = false
     switch $.type(val)
-      when "object" then if val.constructor == THREE.Object3D
+      when "object" then if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
         res = val
     res
 class fields.types.Scene extends NodeField
@@ -177,13 +177,13 @@ class fields.types.Mesh extends NodeField
   compute_value : (val) =>
     res = false
     switch $.type(val)
-      when "object" then if val.constructor == THREE.Mesh
+      when "object" then if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
         res = val
     res
 class fields.types.Geometry extends NodeField
   compute_value : (val) =>
     res = false
     switch $.type(val)
-      when "object" then if val.constructor == THREE.Geometry
+      when "object" then if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
         res = val
     res

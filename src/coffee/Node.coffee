@@ -24,7 +24,7 @@ class NodeBase
     if @updated == true
       return true
     @updated = true
-    # update all input fields ( if they have connections they take care themselft to update their source node)
+    # update all input fields and their connected node source
     @rack.update_inputs()
     # update node output values based on inputs
     @compute()
@@ -238,7 +238,7 @@ class nodes.types.Utils.Merge extends NodeBase
     @value = []
     for f of @rack.node_fields.inputs
       k = @rack.node_fields.inputs[f]
-      if k.get() != null
+      if k.get() != null && k.connections.length > 0
         @value[@value.length] = k.get()
     if @value != old
       @rack.get("out", true).set @value
@@ -265,6 +265,17 @@ class nodes.types.Utils.Get extends NodeBase
       @rack.get("out", true).set @value
   typename : => "Get"
 
+class nodes.types.Utils.SoundInput extends NodeBase
+  constructor: (x, y) ->
+    super x, y
+    @counter = 0
+    @rack.addFields
+      outputs:
+        "out" : 0
+    @rack.add_center_textfield(@rack.get("out", true))
+  compute: () =>
+    @rack.get("out", true).set @counter
+
 class nodes.types.Utils.Timer extends NodeBase
   constructor: (x, y) ->
     super x, y
@@ -277,7 +288,6 @@ class nodes.types.Utils.Timer extends NodeBase
         "max" : 99999999999
       outputs:
         "out" : 0
-    
     @rack.add_center_textfield(@rack.get("out", true))
   
   get_time: => new Date().getTime()
@@ -295,9 +305,8 @@ class nodes.types.Utils.Timer extends NodeBase
       #@counter = diff * -1
       @counter = 0
     @old = now
-
-    #if @counter != oldval
     @rack.get("out", true).set @counter
+  
   typename : => "Timer"
 
 class nodes.types.Base.Vector2 extends NodeBase
@@ -399,6 +408,8 @@ class nodes.types.Three.Object3D extends NodeBase
         "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
         "doubleSided": false
         "visible": true
+        "castShadow": false
+        "receiveShadow": false
       outputs:
         "out": {type: "Any", val: @ob}
 
@@ -477,37 +488,58 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
     #@rack.addFields
     #  inputs:
     #    "lights": {type: "Array", val: []}
+    #@obl = new THREE.PointLight(0xffffff)
+    #@obl.position.y = 300
+    #@obo = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
+    #@obo.position.y = -300
 
-  compute: =>
-    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
+  apply_children: =>
     childs_in = @rack.get("children").get()
+    #console.log childs_in
     # remove old childs
     for child in @ob.children
       ind = childs_in.indexOf(child)
-      if ind == -1
+      if child && ind == -1 && child instanceof THREE.Light == false
         console.log "remove"
         console.log child
         @ob.removeChild(child)
-    
+        
+    for child in @ob.children
+      ind = childs_in.indexOf(child)
+      if child && ind == -1 && child instanceof THREE.Light == true
+        console.log "remove light"
+        console.log child
+        @ob.removeLight(child)
+        
     #add new childs
     for child in childs_in
-      ind = @ob.children.indexOf(child)
-      if ind == -1
-        console.log child
-        @ob.addChild(child)
-        
-    
+      if child instanceof THREE.Light == true
+        ind = @ob.children.indexOf(child)
+        if ind == -1
+          console.log "light"
+          console.log child
+          @ob.addLight(child)
+          console.log @ob.children
+      else
+        ind = @ob.children.indexOf(child)
+        if ind == -1
+          console.log child
+          @ob.addChild(child)
+        #@ob.addChild(child)
+  compute: =>
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
+    @apply_children()
     @rack.get("out", true).set @ob
   typename : => "Scene"
 
 class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
   constructor: (x, y) ->
     super x, y
-    @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }))
+    @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
     @rack.addFields
       inputs:
         "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
-        "materials": {type: "Array", val: [new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true })]}
+        "materials": {type: "Array", val: [new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false })]}
         "overdraw": false
     @rack.get("out", true).set @ob
     @geometry_cache = @rack.get('geometry').get().id
@@ -581,16 +613,17 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     #@rack.get("out", true).set @ob
   typename : => "WebGLRenderer"
 
-class nodes.types.Three.PointLight extends NodeBase
+class nodes.types.Lights.PointLight extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = new THREE.PointLight(0xffffff)
+    
     @rack.addFields
       inputs:
-        "color": {type: "Color", val: new THREE.Color(0xffffff)}
-        "position": {type: "Vector3", val: new THREE.Vector3()}
-        "intensity": 1
-        "distance": 0
+        #"color": {type: "Color", val: new THREE.Color(0xffffff)}
+        "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
+        #"intensity": 1
+        #"distance": 0
       outputs:
         "out": {type: "Any", val: @ob}
 
@@ -598,6 +631,43 @@ class nodes.types.Three.PointLight extends NodeBase
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
   typename : => "PointLight"
+
+class nodes.types.Lights.DirectionalLight extends NodeBase
+  constructor: (x, y) ->
+    super x, y
+    @ob = new THREE.DirectionalLight(0xffffff)
+    
+    @rack.addFields
+      inputs:
+        "color": {type: "Color", val: new THREE.Color(0xffffff)}
+        "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
+        #"intensity": 1
+        #"distance": 0
+      outputs:
+        "out": {type: "Any", val: @ob}
+
+  compute: =>
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
+  typename : => "DirectionalLight"
+
+class nodes.types.Lights.AmbientLight extends NodeBase
+  constructor: (x, y) ->
+    super x, y
+    @ob = new THREE.AmbientLight(0xffffff)
+    
+    @rack.addFields
+      inputs:
+        "color": {type: "Color", val: new THREE.Color(0xffffff)}
+        #"intensity": 1
+        #"distance": 0
+      outputs:
+        "out": {type: "Any", val: @ob}
+
+  compute: =>
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
+  typename : => "AmbientLight"
 
 class NodeMaterialBase extends NodeBase
   constructor: (x, y) ->

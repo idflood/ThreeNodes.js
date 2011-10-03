@@ -1,6 +1,6 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, implements, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, render, render_connections, svg, uid;
-  var __slice = Array.prototype.slice, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar_search, init_tab_new_node, init_websocket, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, render_connections, socket, svg, uid, ws;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
@@ -25,38 +25,6 @@
     }
     return true;
   };
-  implements = function() {
-    var classes, getter, klass, prop, setter, _i, _len;
-    classes = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    for (_i = 0, _len = classes.length; _i < _len; _i++) {
-      klass = classes[_i];
-      for (prop in klass) {
-        this[prop] = klass[prop];
-      }
-      for (prop in klass.prototype) {
-        getter = klass.prototype.__lookupGetter__(prop);
-        setter = klass.prototype.__lookupSetter__(prop);
-        if (getter || setter) {
-          if (getter) {
-            this.prototype.__defineGetter__(prop, getter);
-          }
-          if (setter) {
-            this.prototype.__defineSetter__(prop, setter);
-          }
-        } else {
-          this.prototype[prop] = klass.prototype[prop];
-        }
-      }
-    }
-    return this;
-  };
-  if (Object.defineProperty) {
-    Object.defineProperty(Function.prototype, "implements", {
-      value: implements
-    });
-  } else {
-    Function.prototype.implements = implements;
-  }
   nodes = {};
   nodes.list = [];
   nodes.types = {};
@@ -66,9 +34,35 @@
   nodes.types.Geometry = {};
   nodes.types.Three = {};
   nodes.types.Materials = {};
+  nodes.types.Lights = {};
   fields = {};
   fields.types = {};
   svg = false;
+  ws = null;
+  host = "localhost";
+  port = 8080;
+  socket = "p5websocket";
+  init_websocket = function() {
+    var _ref, _socket;
+    console.log("trying to open a websocket");
+    _socket = (_ref = !socket) != null ? _ref : {
+      "": "/" + socket
+    };
+    ws = new WebSocket("ws://" + host + ":" + port + _socket);
+    ws.onopen = function() {
+      console.log("opened");
+      return ws.send('Ping');
+    };
+    ws.onerror = function(e) {
+      return console.log('WebSocket did close ', e);
+    };
+    ws.onerror = function(error) {
+      return console.log('WebSocket Error ' + error);
+    };
+    return ws.onmessage = function(e) {
+      return console.log('Server: ' + e.data);
+    };
+  };
   animate = function() {
     render();
     return requestAnimationFrame(animate);
@@ -107,7 +101,8 @@
     animate();
     $(window).resize(on_ui_window_resize);
     on_ui_window_resize();
-    return init_sidebar_search();
+    init_sidebar_search();
+    return init_websocket();
   });
   node_connections = [];
   render_connections = function() {
@@ -493,7 +488,7 @@
       res = false;
       switch ($.type(val)) {
         case "object":
-          if (val.constructor === THREE.Object3D) {
+          if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
             res = val;
           }
       }
@@ -550,7 +545,7 @@
       res = false;
       switch ($.type(val)) {
         case "object":
-          if (val.constructor === THREE.Mesh) {
+          if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
             res = val;
           }
       }
@@ -569,7 +564,7 @@
       res = false;
       switch ($.type(val)) {
         case "object":
-          if (val.constructor === THREE.Geometry) {
+          if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
             res = val;
           }
       }
@@ -1106,7 +1101,7 @@
       this.value = [];
       for (f in this.rack.node_fields.inputs) {
         k = this.rack.node_fields.inputs[f];
-        if (k.get() !== null) {
+        if (k.get() !== null && k.connections.length > 0) {
           this.value[this.value.length] = k.get();
         }
       }
@@ -1157,6 +1152,23 @@
       return "Get";
     };
     return Get;
+  })();
+  nodes.types.Utils.SoundInput = (function() {
+    __extends(SoundInput, NodeBase);
+    function SoundInput(x, y) {
+      this.compute = __bind(this.compute, this);      SoundInput.__super__.constructor.call(this, x, y);
+      this.counter = 0;
+      this.rack.addFields({
+        outputs: {
+          "out": 0
+        }
+      });
+      this.rack.add_center_textfield(this.rack.get("out", true));
+    }
+    SoundInput.prototype.compute = function() {
+      return this.rack.get("out", true).set(this.counter);
+    };
+    return SoundInput;
   })();
   nodes.types.Utils.Timer = (function() {
     __extends(Timer, NodeBase);
@@ -1360,7 +1372,9 @@
             val: new THREE.Vector3(1, 1, 1)
           },
           "doubleSided": false,
-          "visible": true
+          "visible": true,
+          "castShadow": false,
+          "receiveShadow": false
         },
         outputs: {
           "out": {
@@ -1483,31 +1497,43 @@
     __extends(Scene, nodes.types.Three.Object3D);
     function Scene(x, y) {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      Scene.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.apply_children = __bind(this.apply_children, this);      Scene.__super__.constructor.call(this, x, y);
       this.ob = new THREE.Scene();
     }
-    Scene.prototype.compute = function() {
-      var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
+    Scene.prototype.apply_children = function() {
+      var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
       childs_in = this.rack.get("children").get();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         ind = childs_in.indexOf(child);
-        if (ind === -1) {
+        if (child && ind === -1 && child instanceof THREE.Light === false) {
           console.log("remove");
           console.log(child);
           this.ob.removeChild(child);
         }
       }
-      for (_j = 0, _len2 = childs_in.length; _j < _len2; _j++) {
-        child = childs_in[_j];
-        ind = this.ob.children.indexOf(child);
-        if (ind === -1) {
+      _ref2 = this.ob.children;
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        child = _ref2[_j];
+        ind = childs_in.indexOf(child);
+        if (child && ind === -1 && child instanceof THREE.Light === true) {
+          console.log("remove light");
           console.log(child);
-          this.ob.addChild(child);
+          this.ob.removeLight(child);
         }
       }
+      _results = [];
+      for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
+        child = childs_in[_k];
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("light"), console.log(child), this.ob.addLight(child), console.log(this.ob.children)) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log(child), this.ob.addChild(child)) : void 0));
+      }
+      return _results;
+    };
+    Scene.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
+      this.apply_children();
       return this.rack.get("out", true).set(this.ob);
     };
     Scene.prototype.typename = function() {
@@ -1520,9 +1546,9 @@
     function Mesh(x, y) {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);      Mesh.__super__.constructor.call(this, x, y);
-      this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshBasicMaterial({
+      this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
         color: 0xff0000,
-        wireframe: true
+        wireframe: false
       }));
       this.rack.addFields({
         inputs: {
@@ -1533,9 +1559,9 @@
           "materials": {
             type: "Array",
             val: [
-              new THREE.MeshBasicMaterial({
+              new THREE.MeshLambertMaterial({
                 color: 0xff0000,
-                wireframe: true
+                wireframe: false
               })
             ]
           },
@@ -1655,7 +1681,7 @@
     };
     return WebGLRenderer;
   })();
-  nodes.types.Three.PointLight = (function() {
+  nodes.types.Lights.PointLight = (function() {
     __extends(PointLight, NodeBase);
     function PointLight(x, y) {
       this.typename = __bind(this.typename, this);
@@ -1663,16 +1689,10 @@
       this.ob = new THREE.PointLight(0xffffff);
       this.rack.addFields({
         inputs: {
-          "color": {
-            type: "Color",
-            val: new THREE.Color(0xffffff)
-          },
           "position": {
             type: "Vector3",
-            val: new THREE.Vector3()
-          },
-          "intensity": 1,
-          "distance": 0
+            val: new THREE.Vector3(0, 300, 0)
+          }
         },
         outputs: {
           "out": {
@@ -1690,6 +1710,70 @@
       return "PointLight";
     };
     return PointLight;
+  })();
+  nodes.types.Lights.DirectionalLight = (function() {
+    __extends(DirectionalLight, NodeBase);
+    function DirectionalLight(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.compute = __bind(this.compute, this);      DirectionalLight.__super__.constructor.call(this, x, y);
+      this.ob = new THREE.DirectionalLight(0xffffff);
+      this.rack.addFields({
+        inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(0xffffff)
+          },
+          "position": {
+            type: "Vector3",
+            val: new THREE.Vector3(0, 300, 0)
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    }
+    DirectionalLight.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
+    };
+    DirectionalLight.prototype.typename = function() {
+      return "DirectionalLight";
+    };
+    return DirectionalLight;
+  })();
+  nodes.types.Lights.AmbientLight = (function() {
+    __extends(AmbientLight, NodeBase);
+    function AmbientLight(x, y) {
+      this.typename = __bind(this.typename, this);
+      this.compute = __bind(this.compute, this);      AmbientLight.__super__.constructor.call(this, x, y);
+      this.ob = new THREE.AmbientLight(0xffffff);
+      this.rack.addFields({
+        inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(0xffffff)
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    }
+    AmbientLight.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
+    };
+    AmbientLight.prototype.typename = function() {
+      return "AmbientLight";
+    };
+    return AmbientLight;
   })();
   NodeMaterialBase = (function() {
     __extends(NodeMaterialBase, NodeBase);
