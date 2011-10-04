@@ -89,7 +89,7 @@ class NodeBase
       stop: () ->
         self.render_connections()
     $(".head", @main_view).dblclick (e) ->
-      $(".options", n.main_view).animate {height: 'toggle'}, 120, () ->
+      $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
         self.render_connections()
         
     $(".head", @main_view).click (e) ->

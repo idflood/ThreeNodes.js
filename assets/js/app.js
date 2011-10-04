@@ -823,7 +823,7 @@
         }
       });
       $(".head", this.main_view).dblclick(function(e) {
-        return $(".options", n.main_view).animate({
+        return $(".options", self.main_view).animate({
           height: 'toggle'
         }, 120, function() {
           return self.render_connections();
