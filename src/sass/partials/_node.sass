@@ -5,7 +5,6 @@ $c: 100
 .connection
   stroke: rgb($c, $c, $c)
   stroke-width: 1
-  
 
 input
   width: 100%
@@ -46,7 +45,7 @@ input
     color: #fff
     a
       background: #fff
-  .field.field-target
+  .field.field-possible-target
     a
       background: $main_color
   .inputs, .outputs
@@ -70,11 +69,14 @@ input
 .node-Merge, .node-Get
   width: 80px
 
-.node-CubeGeometry, .node-Scene, .node-Object3D, .node-Mesh, .node-Camera, .node-PointLight
-  width: 130px
+.node-Camera, .node-PointLight
+  width: 140px
 
-.node-MeshLambertMaterial, .node-MeshBasicMaterial
+.node-MeshLambertMaterial, .node-MeshBasicMaterial, .node-CubeGeometry
   width: 230px
+
+.node-Object3D, .node-Mesh, .node-Scene
+  width: 200px
 
 .node-Number, .node-Random, .node-Timer
   width: 150px

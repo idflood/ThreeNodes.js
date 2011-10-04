@@ -41,11 +41,11 @@ class NodeBase
       field_click_1 = field
       $(".inputs .field").filter () ->
         $(this).parent().parent().parent().attr("id") != "nid-#{f.nid}"
-      .addClass "field-target"
+      .addClass "field-possible-target"
     else
       field_click_2 = field
       new NodeConnection(field_click_1, field_click_2)
-      $(".field").removeClass "field-target"
+      $(".field").removeClass "field-possible-target"
       field_click_1 = false
       
   render_connections: () =>
