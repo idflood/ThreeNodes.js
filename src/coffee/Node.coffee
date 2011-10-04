@@ -627,10 +627,10 @@ class nodes.types.Lights.PointLight extends NodeBase
     
     @rack.addFields
       inputs:
-        #"color": {type: "Color", val: new THREE.Color(0xffffff)}
+        "color": {type: "Color", val: new THREE.Color(0xffffff)}
         "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
-        #"intensity": 1
-        #"distance": 0
+        "intensity": 1
+        "distance": 0
       outputs:
         "out": {type: "Any", val: @ob}
 
@@ -648,8 +648,8 @@ class nodes.types.Lights.DirectionalLight extends NodeBase
       inputs:
         "color": {type: "Color", val: new THREE.Color(0xffffff)}
         "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
-        #"intensity": 1
-        #"distance": 0
+        "intensity": 1
+        "distance": 0
       outputs:
         "out": {type: "Any", val: @ob}
 
@@ -666,8 +666,8 @@ class nodes.types.Lights.AmbientLight extends NodeBase
     @rack.addFields
       inputs:
         "color": {type: "Color", val: new THREE.Color(0xffffff)}
-        #"intensity": 1
-        #"distance": 0
+        "intensity": 1
+        "distance": 0
       outputs:
         "out": {type: "Any", val: @ob}
 
@@ -680,6 +680,7 @@ class NodeMaterialBase extends NodeBase
   constructor: (x, y) ->
     super x, y
     @ob = false
+    webgl_materials_node[webgl_materials_node.length] = this
     @rack.addFields
       inputs:
         "opacity": 1

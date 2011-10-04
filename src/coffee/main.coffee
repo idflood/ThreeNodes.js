@@ -12,6 +12,8 @@ nodes.types.Lights = {}
 fields = {}
 fields.types = {}
 
+webgl_materials_node = []
+
 #http://www.w3.org/TR/file-writer-api/
 #http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
@@ -69,6 +71,12 @@ $(document).ready ->
     fx:
       opacity: 'toggle'
       duration: 100
+
+  $(".rebuild_shaders").click (e) ->
+    for n in webgl_materials_node
+      n.ob.program = false
+      
+
   console.log("starting...")
   init_tab_new_node()
   animate()

@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, socket, svg, uid, ws;
+  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, socket, svg, uid, webgl_materials_node, ws;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -37,6 +37,7 @@
   nodes.types.Lights = {};
   fields = {};
   fields.types = {};
+  webgl_materials_node = [];
   svg = false;
   ws = null;
   host = "localhost";
@@ -70,6 +71,15 @@
         opacity: 'toggle',
         duration: 100
       }
+    });
+    $(".rebuild_shaders").click(function(e) {
+      var n, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = webgl_materials_node.length; _i < _len; _i++) {
+        n = webgl_materials_node[_i];
+        _results.push(n.ob.program = false);
+      }
+      return _results;
     });
     console.log("starting...");
     init_tab_new_node();
@@ -1700,10 +1710,16 @@
       this.ob = new THREE.PointLight(0xffffff);
       this.rack.addFields({
         inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(0xffffff)
+          },
           "position": {
             type: "Vector3",
             val: new THREE.Vector3(0, 300, 0)
-          }
+          },
+          "intensity": 1,
+          "distance": 0
         },
         outputs: {
           "out": {
@@ -1737,7 +1753,9 @@
           "position": {
             type: "Vector3",
             val: new THREE.Vector3(0, 300, 0)
-          }
+          },
+          "intensity": 1,
+          "distance": 0
         },
         outputs: {
           "out": {
@@ -1767,7 +1785,9 @@
           "color": {
             type: "Color",
             val: new THREE.Color(0xffffff)
-          }
+          },
+          "intensity": 1,
+          "distance": 0
         },
         outputs: {
           "out": {
@@ -1791,6 +1811,7 @@
     function NodeMaterialBase(x, y) {
       this.compute = __bind(this.compute, this);      NodeMaterialBase.__super__.constructor.call(this, x, y);
       this.ob = false;
+      webgl_materials_node[webgl_materials_node.length] = this;
       this.rack.addFields({
         inputs: {
           "opacity": 1,

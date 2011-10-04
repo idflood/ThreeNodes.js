@@ -34,17 +34,19 @@
         %li
           %a{:href => "#tab-attribute"} Attribute
         %li
-          %a{:href => "#tab-file"} File
+          %a{:href => "#tab-system"} System
       #tab-attribute
         empty...
       #tab-new
         %input#node_filter{:type => "input", :placeholder => "Search"}
-      #tab-file
+      #tab-system
         %ul
           %li
             %a.open_file{:href => "#"} Open File
           %li
             %a.save_file{:href => "#"} Save File
+          %li
+            %a.rebuild_shaders{:href => "#"} Rebuild shaders
     #sidebar-toggle
       
     %footer#footer
