@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar_search, init_tab_new_node, init_websocket, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, render_connections, socket, svg, uid, ws;
+  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, socket, svg, uid, ws;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -42,27 +42,6 @@
   host = "localhost";
   port = 8080;
   socket = "p5websocket";
-  init_websocket = function() {
-    var _ref, _socket;
-    console.log("trying to open a websocket");
-    _socket = (_ref = !socket) != null ? _ref : {
-      "": "/" + socket
-    };
-    ws = new WebSocket("ws://" + host + ":" + port + _socket);
-    ws.onopen = function() {
-      console.log("opened");
-      return ws.send('Ping');
-    };
-    ws.onerror = function(e) {
-      return console.log('WebSocket did close ', e);
-    };
-    ws.onerror = function(error) {
-      return console.log('WebSocket Error ' + error);
-    };
-    return ws.onmessage = function(e) {
-      return console.log('Server: ' + e.data);
-    };
-  };
   animate = function() {
     render();
     return requestAnimationFrame(animate);
@@ -82,11 +61,7 @@
   };
   $(document).ready(function() {
     var f1;
-    $("#graph").svg({
-      onLoad: function(s) {
-        return svg = s;
-      }
-    });
+    svg = Raphael("graph", 4000, 4000);
     make_sidebar_toggle();
     f1 = new fields.types.Float("test", 0.4);
     f1.signal.dispatch(42.0);
@@ -101,19 +76,9 @@
     animate();
     $(window).resize(on_ui_window_resize);
     on_ui_window_resize();
-    init_sidebar_search();
-    return init_websocket();
+    return init_sidebar_search();
   });
   node_connections = [];
-  render_connections = function() {
-    var connection, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = node_connections.length; _i < _len; _i++) {
-      connection = node_connections[_i];
-      _results.push(connection.render());
-    }
-    return _results;
-  };
   NodeConnection = (function() {
     function NodeConnection(from_field, to_field) {
       this.from_field = from_field;
@@ -121,16 +86,32 @@
       this.update_node_from = __bind(this.update_node_from, this);
       this.cid = get_uid();
       this.container = $("#graph");
-      this.line = svg.line(0, 0, 0, 0, {
-        id: "line-" + this.cid,
-        "class": "connection"
-      });
+      this.line = false;
       node_connections.push(this);
       this.from_field.add_connection(this);
       this.to_field.add_connection(this);
       this.update();
       this.render();
     }
+    NodeConnection.prototype.get_path = function() {
+      var diffx, diffy, f1, f2, min_diff, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
+      f1 = this.get_field_position(this.from_field);
+      f2 = this.get_field_position(this.to_field);
+      ofx = $("#container-wrapper").scrollLeft();
+      ofy = $("#container-wrapper").scrollTop();
+      x1 = f1.left + ofx;
+      y1 = f1.top + ofy;
+      x4 = f2.left + ofx;
+      y4 = f2.top + ofy;
+      min_diff = 42;
+      diffx = Math.max(min_diff, x4 - x1);
+      diffy = Math.max(min_diff, y4 - y1);
+      x2 = x1 + diffx * 0.5;
+      y2 = y1;
+      x3 = x4 - diffx * 0.5;
+      y3 = y4;
+      return ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
+    };
     NodeConnection.prototype.update = function() {
       return this.to_field.set(this.from_field.get());
     };
@@ -156,7 +137,8 @@
       var ind;
       this.from_field.remove_connection(this);
       this.to_field.remove_connection(this);
-      svg.remove(this.line);
+      this.line.remove();
+      this.line = false;
       ind = node_connections.indexOf(this);
       if (ind !== -1) {
         node_connections.splice(ind, 1);
@@ -164,17 +146,18 @@
       return false;
     };
     NodeConnection.prototype.render = function() {
-      var f1, f2, ofx, ofy;
-      f1 = this.get_field_position(this.from_field);
-      f2 = this.get_field_position(this.to_field);
-      ofx = $("#container-wrapper").scrollLeft();
-      ofy = $("#container-wrapper").scrollTop();
-      return $("#line-" + this.cid).attr({
-        x1: f1.left + ofx,
-        y1: f1.top + ofy,
-        x2: f2.left + ofx,
-        y2: f2.top + ofy
-      });
+      var color;
+      if (this.line && this.line.attrs) {
+        return this.line.attr({
+          path: this.get_path()
+        });
+      } else {
+        color = "#555";
+        return this.line = svg.path(this.get_path()).attr({
+          stroke: color,
+          fill: "none"
+        });
+      }
     };
     return NodeConnection;
   })();
@@ -193,6 +176,7 @@
       this.compute_value = __bind(this.compute_value, this);
       this.render_button = __bind(this.render_button, this);
       this.render_sidebar = __bind(this.render_sidebar, this);
+      this.render_connections = __bind(this.render_connections, this);
       this.get = __bind(this.get, this);
       this.set = __bind(this.set, this);
       self = this;
@@ -220,6 +204,15 @@
     };
     NodeField.prototype.get = function() {
       return this.val;
+    };
+    NodeField.prototype.render_connections = function() {
+      var connection, _i, _len, _ref;
+      _ref = this.connections;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        connection = _ref[_i];
+        connection.render();
+      }
+      return true;
     };
     NodeField.prototype.render_sidebar = function() {
       return false;
@@ -581,6 +574,7 @@
       this.addOutput = __bind(this.addOutput, this);
       this.addInput = __bind(this.addInput, this);
       this.update_inputs = __bind(this.update_inputs, this);
+      this.render_connections = __bind(this.render_connections, this);
       this.node_fields = {};
       this.node_fields.inputs = {};
       this.node_fields.outputs = {};
@@ -597,6 +591,16 @@
       } else {
         return this.node_fields_by_name.inputs[key];
       }
+    };
+    NodeFieldRack.prototype.render_connections = function() {
+      var f;
+      for (f in this.node_fields.inputs) {
+        this.node_fields.inputs[f].render_connections();
+      }
+      for (f in this.node_fields.outputs) {
+        this.node_fields.outputs[f].render_connections();
+      }
+      return true;
     };
     NodeFieldRack.prototype.update_inputs = function() {
       var f, _results;
@@ -697,6 +701,7 @@
       this.remove_connection = __bind(this.remove_connection, this);
       this.add_out_connection = __bind(this.add_out_connection, this);
       this.add_field_listener = __bind(this.add_field_listener, this);
+      this.render_connections = __bind(this.render_connections, this);
       this.create_field_connection = __bind(this.create_field_connection, this);
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
       this.update = __bind(this.update, this);
@@ -757,13 +762,16 @@
         return field_click_1 = false;
       }
     };
+    NodeBase.prototype.render_connections = function() {
+      return this.rack.render_connections();
+    };
     NodeBase.prototype.add_field_listener = function($field) {
       var f_name, f_type, field, self;
       self = this;
       f_name = $field.attr("id");
       f_type = $field.parent().attr("class");
       field = this.rack.node_fields[f_type][f_name];
-      return $field.click(function(e) {
+      $field.click(function(e) {
         e.preventDefault();
         if (e.shiftKey === true) {
           return field.remove_connections();
@@ -771,22 +779,25 @@
           return self.create_field_connection(field);
         }
       });
+      return this;
     };
     NodeBase.prototype.add_out_connection = function(c, field) {
       if (this.out_connections.indexOf(c) === -1) {
-        return this.out_connections.push(c);
+        this.out_connections.push(c);
       }
+      return c;
     };
     NodeBase.prototype.remove_connection = function(c) {
       var c_index;
       c_index = this.out_connections.indexOf(c);
       if (c_index !== -1) {
-        return this.out_connections.splice(c_index, 1);
+        this.out_connections.splice(c_index, 1);
       }
+      return c;
     };
     NodeBase.prototype.init = function() {
-      var n;
-      n = this;
+      var self;
+      self = this;
       this.container.append("<div id='nid-" + this.nid + "' class='node node-" + (this.typename()) + "'><div class='head'>" + (this.typename()) + "</div><div class='options'><div class='inputs'></div><div class='center'></div><div class='outputs'></div></div></div>");
       this.main_view = $("#nid-" + this.nid);
       this.main_view.css({
@@ -795,21 +806,21 @@
       });
       this.main_view.draggable({
         drag: function() {
-          return render_connections();
+          return self.render_connections();
         },
         stop: function() {
-          return render_connections();
+          return self.render_connections();
         }
       });
       $(".head", this.main_view).dblclick(function(e) {
         return $(".options", n.main_view).animate({
           height: 'toggle'
         }, 120, function() {
-          return render_connections();
+          return self.render_connections();
         });
       });
       return $(".head", this.main_view).click(function(e) {
-        return n.rack.render_sidebar();
+        return self.rack.render_sidebar();
       });
     };
     return NodeBase;

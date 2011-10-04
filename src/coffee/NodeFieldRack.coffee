@@ -13,6 +13,13 @@ class NodeFieldRack
     else
       @node_fields_by_name.inputs[key]
   
+  render_connections: =>
+    for f of @node_fields.inputs
+      @node_fields.inputs[f].render_connections()
+    for f of @node_fields.outputs
+      @node_fields.outputs[f].render_connections()
+    true
+  
   update_inputs: =>
     for f of @node_fields.inputs
       @node_fields.inputs[f].update_input_node()

@@ -18,8 +18,14 @@ class NodeField
       for connection in @connections
         connection.update()
     true
+
   get: () =>
     @val
+    
+  render_connections: () =>
+    for connection in @connections
+        connection.render()
+    true
   
   render_sidebar: =>
     false

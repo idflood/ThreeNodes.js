@@ -48,6 +48,10 @@ class NodeBase
       $(".field").removeClass "field-target"
       field_click_1 = false
       
+  render_connections: () =>
+    @rack.render_connections()
+    #svg.safari()
+  
   add_field_listener: ($field) =>
     self = this
     f_name = $field.attr("id")
@@ -59,18 +63,21 @@ class NodeBase
         field.remove_connections()
       else
         self.create_field_connection(field)
-  
+    this
+    
   add_out_connection: (c, field) =>
     if @out_connections.indexOf(c) == -1
       @out_connections.push(c)
-      
+    c
+
   remove_connection: (c) =>
     c_index = @out_connections.indexOf(c)
     if c_index != -1
       @out_connections.splice(c_index, 1)
-      
+    c
+
   init: () =>
-    n = this
+    self = this
     @container.append "<div id='nid-#{@nid}' class='node node-#{@typename()}'><div class='head'>#{@typename()}</div><div class='options'><div class='inputs'></div><div class='center'></div><div class='outputs'></div></div></div>"
     @main_view = $("#nid-#{@nid}")
     @main_view.css
@@ -78,15 +85,15 @@ class NodeBase
       top: @y
     @main_view.draggable
       drag: () ->
-        render_connections()
+        self.render_connections()
       stop: () ->
-        render_connections()
+        self.render_connections()
     $(".head", @main_view).dblclick (e) ->
       $(".options", n.main_view).animate {height: 'toggle'}, 120, () ->
-        render_connections()
+        self.render_connections()
         
     $(".head", @main_view).click (e) ->
-      n.rack.render_sidebar()
+      self.rack.render_sidebar()
 
 class NodeNumberSimple extends NodeBase
   constructor: (x, y) ->

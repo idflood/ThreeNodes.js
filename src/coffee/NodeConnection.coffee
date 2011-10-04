@@ -1,19 +1,35 @@
 node_connections = []
 
-render_connections = () ->
-  for connection in node_connections
-    connection.render()
-
 class NodeConnection
   constructor: (@from_field, @to_field) ->
     @cid = get_uid()
     @container = $("#graph")
-    @line = svg.line(0, 0, 0, 0, {id: "line-#{@cid}", class: "connection"})
+    @line = false
     node_connections.push(this)
     @from_field.add_connection(this)
     @to_field.add_connection(this)
     @update()
     @render()
+  
+  get_path: () ->
+    f1 = @get_field_position(@from_field)
+    f2 = @get_field_position(@to_field)
+    ofx = $("#container-wrapper").scrollLeft()
+    ofy = $("#container-wrapper").scrollTop()
+    x1 = f1.left + ofx
+    y1 = f1.top + ofy
+    x4 = f2.left + ofx
+    y4 = f2.top + ofy
+    min_diff = 42
+    diffx = Math.max(min_diff, x4 - x1)
+    diffy = Math.max(min_diff, y4 - y1)
+    
+    x2 = x1 + diffx * 0.5
+    y2 = y1
+    x3 = x4 - diffx * 0.5
+    y3 = y4
+    
+    ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
   
   update: () ->
     @to_field.set(@from_field.get())
@@ -37,19 +53,19 @@ class NodeConnection
     @from_field.remove_connection(this)
     @to_field.remove_connection(this)
     #@from_field.signal.remove @listener
-    svg.remove(@line)
+    @line.remove()
+    @line = false
     ind = node_connections.indexOf(this)
     if ind != -1
       node_connections.splice(ind, 1)
     false
   render: ->
-    f1 = @get_field_position(@from_field)
-    f2 = @get_field_position(@to_field)
-    ofx = $("#container-wrapper").scrollLeft()
-    ofy = $("#container-wrapper").scrollTop()
-    $("#line-#{@cid}").attr
-      x1: f1.left + ofx
-      y1: f1.top + ofy
-      x2: f2.left + ofx
-      y2: f2.top + ofy
-      
+    if @line && @line.attrs
+      @line.attr
+        path: @get_path()
+    else
+      color = "#555"
+      @line = svg.path(@get_path()).attr
+        stroke: color
+        fill: "none"
+    

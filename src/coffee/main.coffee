@@ -23,22 +23,22 @@ host = "localhost"
 port = 8080
 socket = "p5websocket"
 
-init_websocket = () ->
-  console.log("trying to open a websocket")
-  _socket = !socket ? "" : "/" + socket
-  ws = new WebSocket("ws://" + host + ":" + port + _socket)
-  ws.onopen = () ->
-    console.log("opened")
-    ws.send('Ping')
+#init_websocket = () ->
+#  console.log("trying to open a websocket")
+#  ws = new WebSocket("ws://" + host + ":" + port + _socket)
+#  _socket = !socket ? "" : "/" + socket
+#  ws.onopen = () ->
+#    console.log("opened")
+#    ws.send('Ping')
 
-  ws.onerror = (e) ->
-    console.log('WebSocket did close ',e)
+#  ws.onerror = (e) ->
+#    console.log('WebSocket did close ',e)
   
-  ws.onerror = (error) ->
-    console.log('WebSocket Error ' + error)
+#  ws.onerror = (error) ->
+#    console.log('WebSocket Error ' + error)
 
-  ws.onmessage = (e) ->
-    console.log('Server: ' + e.data)
+#  ws.onmessage = (e) ->
+#    console.log('Server: ' + e.data)
 
 
 animate = () ->
@@ -59,9 +59,7 @@ on_ui_window_resize = () ->
 
   
 $(document).ready ->
-  $("#graph").svg
-    onLoad: (s) ->
-      svg = s
+  svg = Raphael("graph", 4000, 4000)
   make_sidebar_toggle()
   
   f1 = new fields.types.Float("test", 0.4)
@@ -78,4 +76,4 @@ $(document).ready ->
   $(window).resize on_ui_window_resize
   on_ui_window_resize()
   init_sidebar_search()
-  init_websocket()
+  #init_websocket()
