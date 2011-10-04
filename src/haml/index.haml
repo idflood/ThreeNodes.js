@@ -13,6 +13,8 @@
     %script{:charset => "utf-8", :src => "assets/js/libs/koExternalTemplateEngine.js"}
     %script{:charset => "utf-8", :src => "assets/js/libs/signals.min.js"}
     %script{:charset => "utf-8", :src => "assets/js/libs/underscore-min.js"}
+    %script{:charset => "utf-8", :src => "assets/js/libs/BlobBuilder.min.js"}
+    %script{:charset => "utf-8", :src => "assets/js/libs/FileSaver.min.js"}
     %script{:charset => "utf-8", :src => "assets/js/app.js"}
     %script{:charset => "utf-8", :src => "http://localhost:8001/vogue-client.js"}
     
@@ -43,6 +45,7 @@
         %ul
           %li
             %a.open_file{:href => "#"} Open File
+            %input#main_file_input_open.hidden-element{:type => "file", :multiple => "false"}
           %li
             %a.save_file{:href => "#"} Save File
           %li

@@ -1,4 +1,34 @@
-make_sidebar_toggle = () ->
+init_sidebar = () ->
+  init_sidebar_tab_new_node()
+  init_sidebar_search()
+  init_sidebar_toggle()
+  init_sidebar_tabs()
+  init_sidebar_tab_system()
+
+init_sidebar_tab_system = () ->
+  $(".open_file").click (e) ->
+    e.preventDefault()
+    load_local_file()
+
+  $(".save_file").click (e) ->
+    e.preventDefault()
+    save_local_file()
+
+  $("#main_file_input_open").change load_local_file_input_changed
+
+  $(".rebuild_shaders").click (e) ->
+    e.preventDefault()
+    for n in webgl_materials_node
+      n.ob.program = false
+    false
+
+init_sidebar_tabs = () ->
+  $("#sidebar").tabs
+    fx:
+      opacity: 'toggle'
+      duration: 100
+
+init_sidebar_toggle = () ->
   $("#sidebar-toggle").click (e) ->
     $t = $("#sidebar")
     o = 10
@@ -34,7 +64,7 @@ init_sidebar_search = () ->
           else
             ul.prev().removeClass toggle_class
               
-init_tab_new_node = () ->
+init_sidebar_tab_new_node = () ->
   $container = $("#tab-new")
   for nt of nodes.types
     $container.append("<h3>#{nt}</h3><ul id='nodetype-#{nt}'></ul>")

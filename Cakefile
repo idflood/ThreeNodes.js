@@ -11,6 +11,7 @@ appFiles  = [
   'Node'
   'Sidebar'
   'NodeGraph'
+  'File'
 ]
 
 

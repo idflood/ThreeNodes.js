@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar_search, init_tab_new_node, make_sidebar_toggle, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, socket, svg, uid, webgl_materials_node, ws;
+  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, load_local_file, load_local_file_input_changed, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, save_local_file, socket, svg, uid, webgl_materials_node, ws;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -61,32 +61,11 @@
     return $("#sidebar").css("height", h);
   };
   $(document).ready(function() {
-    var f1;
     svg = Raphael("graph", 4000, 4000);
-    make_sidebar_toggle();
-    f1 = new fields.types.Float("test", 0.4);
-    f1.signal.dispatch(42.0);
-    $("#sidebar").tabs({
-      fx: {
-        opacity: 'toggle',
-        duration: 100
-      }
-    });
-    $(".rebuild_shaders").click(function(e) {
-      var n, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = webgl_materials_node.length; _i < _len; _i++) {
-        n = webgl_materials_node[_i];
-        _results.push(n.ob.program = false);
-      }
-      return _results;
-    });
-    console.log("starting...");
-    init_tab_new_node();
+    init_sidebar();
     animate();
     $(window).resize(on_ui_window_resize);
-    on_ui_window_resize();
-    return init_sidebar_search();
+    return on_ui_window_resize();
   });
   node_connections = [];
   NodeConnection = (function() {
@@ -1898,7 +1877,42 @@
     };
     return MeshLambertMaterial;
   })();
-  make_sidebar_toggle = function() {
+  init_sidebar = function() {
+    init_sidebar_tab_new_node();
+    init_sidebar_search();
+    init_sidebar_toggle();
+    init_sidebar_tabs();
+    return init_sidebar_tab_system();
+  };
+  init_sidebar_tab_system = function() {
+    $(".open_file").click(function(e) {
+      e.preventDefault();
+      return load_local_file();
+    });
+    $(".save_file").click(function(e) {
+      e.preventDefault();
+      return save_local_file();
+    });
+    $("#main_file_input_open").change(load_local_file_input_changed);
+    return $(".rebuild_shaders").click(function(e) {
+      var n, _i, _len;
+      e.preventDefault();
+      for (_i = 0, _len = webgl_materials_node.length; _i < _len; _i++) {
+        n = webgl_materials_node[_i];
+        n.ob.program = false;
+      }
+      return false;
+    });
+  };
+  init_sidebar_tabs = function() {
+    return $("#sidebar").tabs({
+      fx: {
+        opacity: 'toggle',
+        duration: 100
+      }
+    });
+  };
+  init_sidebar_toggle = function() {
     return $("#sidebar-toggle").click(function(e) {
       var $t, o;
       $t = $("#sidebar");
@@ -1967,7 +1981,7 @@
       }
     });
   };
-  init_tab_new_node = function() {
+  init_sidebar_tab_new_node = function() {
     var $container, node, nt;
     $container = $("#tab-new");
     for (nt in nodes.types) {
@@ -2017,5 +2031,29 @@
       node.updated = false;
     }
     return true;
+  };
+  save_local_file = function() {
+    var bb, fileSaver;
+    bb = new BlobBuilder();
+    console.log(window);
+    bb.append("<app><nodes><node>Lorem ipsum 42</node></nodes></app>");
+    return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.xml");
+  };
+  load_local_file = function() {
+    return $("#main_file_input_open").click();
+  };
+  load_local_file_input_changed = function(e) {
+    var file, reader;
+    console.log("loading file");
+    file = this.files[0];
+    reader = new FileReader();
+    reader.onload = function(e) {
+      var loaded_data, txt;
+      txt = e.target.result;
+      console.log(txt);
+      loaded_data = $(txt);
+      return console.log(loaded_data);
+    };
+    return reader.readAsText(file, "UTF-8");
   };
 }).call(this);

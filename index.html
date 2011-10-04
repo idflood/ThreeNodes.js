@@ -13,6 +13,8 @@
     <script charset='utf-8' src='assets/js/libs/koExternalTemplateEngine.js'></script>
     <script charset='utf-8' src='assets/js/libs/signals.min.js'></script>
     <script charset='utf-8' src='assets/js/libs/underscore-min.js'></script>
+    <script charset='utf-8' src='assets/js/libs/BlobBuilder.min.js'></script>
+    <script charset='utf-8' src='assets/js/libs/FileSaver.min.js'></script>
     <script charset='utf-8' src='assets/js/app.js'></script>
     <script charset='utf-8' src='http://localhost:8001/vogue-client.js'></script>
     <link href='assets/css/screen.css' media='all' rel='stylesheet' type='text/css' />
@@ -49,6 +51,7 @@
         <ul>
           <li>
             <a class='open_file' href='#'>Open File</a>
+            <input class='hidden-element' id='main_file_input_open' multiple='false' type='file' />
           </li>
           <li>
             <a class='save_file' href='#'>Save File</a>
