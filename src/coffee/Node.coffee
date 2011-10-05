@@ -1,8 +1,12 @@
 field_click_1 = false
 
 class NodeBase 
-  constructor: (@x, @y) ->
-    @nid = get_uid()
+  constructor: (@x, @y, @inXML = false) ->
+    if @inXML
+      @nid = parseInt @inXML.attr("nid")
+      uid = @nid
+    else
+      @nid = get_uid()
     @container = $("#container")
     @out_connections = []
     @rack = new NodeFieldRack(this)
@@ -11,6 +15,7 @@ class NodeBase
     @main_view = false
     @updated = false
     @init()
+    @inXML = false
     
   typename: => "Node"
   
@@ -20,6 +25,11 @@ class NodeBase
   compute: () =>
     @value = @value
   
+  remove: () =>
+    @main_view.remove()
+    # todo: maybe remove fields
+    # todo: remove sidebar attributes if this is the selected node
+  
   update: () =>
     if @updated == true
       return true
@@ -28,6 +38,10 @@ class NodeBase
     @rack.update_inputs()
     # update node output values based on inputs
     @compute()
+  
+  toXML: () =>
+    pos = @main_view.position()
+    "<node nid='#{@nid}' type='#{@typename()}' x='#{pos.left}' y='#{pos.top}'>#{@rack.toXML()}</node>"
   
   apply_fields_to_val: (afields, target, exceptions = []) =>
     for f of afields

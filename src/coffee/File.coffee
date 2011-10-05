@@ -1,27 +1,71 @@
-#some refs
-# http://www.w3.org/TR/2011/WD-file-writer-api-20110419/#examples
-# https://developer.mozilla.org/en/Using_files_from_web_applications
-# http://stackoverflow.com/questions/5744064/html5-file-api-reading-in-an-xml-text-file-and-displaying-it-on-the-page
-# http://stackoverflow.com/questions/1290321/convert-string-to-xml-document-in-javascript
-# http://www.html5rocks.com/en/tutorials/file/dndfiles/
-
 save_local_file = () ->
   bb = new BlobBuilder()
   console.log window
-  bb.append("<app><nodes><node>Lorem ipsum 42</node></nodes></app>")
-  fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.xml")
+  bb.append('<?xml version="1.0" encoding="UTF-8"?>')
+  bb.append("<app>")
 
-load_local_file = () ->
-  $("#main_file_input_open").click()
+  bb.append("<uid last='#{uid}'>")
+
+  bb.append("<nodes>")
+  for node in nodegraph.nodes
+    bb.append(node.toXML())
+  bb.append("</nodes>")
+  
+  bb.append("<connections>")
+  for c in node_connections
+    bb.append(c.toXML())
+  bb.append("</connections>")
+  
+  bb.append("</app>")
+  fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.xml")
   
 load_local_file_input_changed = (e) ->
-  console.log "loading file"
+  remove_all_connections()
+  remove_all_nodes()
+  reset_global_variables()
   file = this.files[0]
   reader = new FileReader()
   reader.onload = (e) ->
     txt = e.target.result
-    console.log txt
     loaded_data = $(txt)
-    console.log loaded_data
+    
+    $("node", loaded_data).each () ->
+      $this = $(this)
+      x = parseInt $this.attr("x")
+      y = parseInt $this.attr("y")
+      nid = parseInt $this.attr("nid")
+      type = $this.attr("type")
+      component = nodegraph.get_component_by_type(type)
+      n = nodegraph.create_node(component, type, x, y, $this)
+    
+    $("connection", loaded_data).each () ->
+      $this = $(this)
+      from = parseInt $this.attr("from")
+      to = parseInt $this.attr("to")
+      cid = parseInt $this.attr("id")
+      from = nodes.fields[from.toString()]
+      to = nodes.fields[to.toString()]
+      c = new NodeConnection(from, to, cid)
+      
+    uid = parseInt $("uid", loaded_data)[0].attr("last")
   reader.readAsText(file, "UTF-8")
   
+remove_all_nodes = () ->
+  $("#tab-attribute").html("")
+  for node in nodegraph.nodes
+    node.remove()
+remove_all_connections = () ->
+  for c in node_connections
+    c.remove()
+
+reset_global_variables = () ->
+  uid = 0
+  node_connections = []
+  nodegraph.nodes = []
+  nodes = {}
+  nodes.fields = {}
+  nodes.list = []
+  fields = {}
+  fields.types = {}
+
+  webgl_materials_node = []

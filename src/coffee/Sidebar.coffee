@@ -8,7 +8,7 @@ init_sidebar = () ->
 init_sidebar_tab_system = () ->
   $(".open_file").click (e) ->
     e.preventDefault()
-    load_local_file()
+    $("#main_file_input_open").click()
 
   $(".save_file").click (e) ->
     e.preventDefault()

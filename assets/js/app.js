@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, load_local_file, load_local_file_input_changed, node_connections, nodegraph, nodes, on_ui_window_resize, port, render, save_local_file, socket, svg, uid, webgl_materials_node, ws;
+  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, load_local_file_input_changed, node_connections, nodegraph, nodes, on_ui_window_resize, port, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, socket, svg, uid, webgl_materials_node, ws;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -26,6 +26,7 @@
     return true;
   };
   nodes = {};
+  nodes.fields = {};
   nodes.list = [];
   nodes.types = {};
   nodes.types.Base = {};
@@ -69,11 +70,11 @@
   });
   node_connections = [];
   NodeConnection = (function() {
-    function NodeConnection(from_field, to_field) {
+    function NodeConnection(from_field, to_field, cid) {
       this.from_field = from_field;
       this.to_field = to_field;
+      this.cid = cid != null ? cid : get_uid();
       this.update_node_from = __bind(this.update_node_from, this);
-      this.cid = get_uid();
       this.container = $("#graph");
       this.line = false;
       node_connections.push(this);
@@ -100,6 +101,9 @@
       x3 = x4 - diffx * 0.5;
       y3 = y4;
       return ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
+    };
+    NodeConnection.prototype.toXML = function() {
+      return "<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>";
     };
     NodeConnection.prototype.update = function() {
       return this.to_field.set(this.from_field.get());
@@ -166,6 +170,7 @@
       this.render_button = __bind(this.render_button, this);
       this.render_sidebar = __bind(this.render_sidebar, this);
       this.render_connections = __bind(this.render_connections, this);
+      this.toXML = __bind(this.toXML, this);
       this.get = __bind(this.get, this);
       this.set = __bind(this.set, this);
       self = this;
@@ -174,6 +179,7 @@
       this.node = false;
       this.is_output = false;
       this.connections = [];
+      nodes.fields[this.fid] = this;
       this.on_value_changed(this.val);
     }
     NodeField.prototype.set = function(v) {
@@ -193,6 +199,9 @@
     };
     NodeField.prototype.get = function() {
       return this.val;
+    };
+    NodeField.prototype.toXML = function() {
+      return "<field fid='" + this.fid + "' val='" + (this.get()) + "'/>";
     };
     NodeField.prototype.render_connections = function() {
       var connection, _i, _len, _ref;
@@ -563,6 +572,7 @@
       this.addOutput = __bind(this.addOutput, this);
       this.addInput = __bind(this.addInput, this);
       this.update_inputs = __bind(this.update_inputs, this);
+      this.toXML = __bind(this.toXML, this);
       this.render_connections = __bind(this.render_connections, this);
       this.node_fields = {};
       this.node_fields.inputs = {};
@@ -590,6 +600,15 @@
         this.node_fields.outputs[f].render_connections();
       }
       return true;
+    };
+    NodeFieldRack.prototype.toXML = function() {
+      var f, res;
+      res = "<in>";
+      for (f in this.node_fields.inputs) {
+        res += this.node_fields.inputs[f].toXML();
+      }
+      res += "</in>";
+      return res;
     };
     NodeFieldRack.prototype.update_inputs = function() {
       var f, _results;
@@ -683,9 +702,10 @@
   })();
   field_click_1 = false;
   NodeBase = (function() {
-    function NodeBase(x, y) {
+    function NodeBase(x, y, inXML) {
       this.x = x;
       this.y = y;
+      this.inXML = inXML != null ? inXML : false;
       this.init = __bind(this.init, this);
       this.remove_connection = __bind(this.remove_connection, this);
       this.add_out_connection = __bind(this.add_out_connection, this);
@@ -693,11 +713,18 @@
       this.render_connections = __bind(this.render_connections, this);
       this.create_field_connection = __bind(this.create_field_connection, this);
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
+      this.toXML = __bind(this.toXML, this);
       this.update = __bind(this.update, this);
+      this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
       this.has_out_connection = __bind(this.has_out_connection, this);
       this.typename = __bind(this.typename, this);
-      this.nid = get_uid();
+      if (this.inXML) {
+        this.nid = parseInt(this.inXML.attr("nid"));
+        uid = this.nid;
+      } else {
+        this.nid = get_uid();
+      }
       this.container = $("#container");
       this.out_connections = [];
       this.rack = new NodeFieldRack(this);
@@ -706,6 +733,7 @@
       this.main_view = false;
       this.updated = false;
       this.init();
+      this.inXML = false;
     }
     NodeBase.prototype.typename = function() {
       return "Node";
@@ -716,6 +744,9 @@
     NodeBase.prototype.compute = function() {
       return this.value = this.value;
     };
+    NodeBase.prototype.remove = function() {
+      return this.main_view.remove();
+    };
     NodeBase.prototype.update = function() {
       if (this.updated === true) {
         return true;
@@ -723,6 +754,11 @@
       this.updated = true;
       this.rack.update_inputs();
       return this.compute();
+    };
+    NodeBase.prototype.toXML = function() {
+      var pos;
+      pos = this.main_view.position();
+      return "<node nid='" + this.nid + "' type='" + (this.typename()) + "' x='" + pos.left + "' y='" + pos.top + "'>" + (this.rack.toXML()) + "</node>";
     };
     NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions) {
       var f, nf, _results;
@@ -1887,7 +1923,7 @@
   init_sidebar_tab_system = function() {
     $(".open_file").click(function(e) {
       e.preventDefault();
-      return load_local_file();
+      return $("#main_file_input_open").click();
     });
     $(".save_file").click(function(e) {
       e.preventDefault();
@@ -2010,11 +2046,28 @@
   };
   nodegraph = {};
   nodegraph.nodes = [];
-  nodegraph.create_node = function(component, type, x, y) {
+  nodegraph.types = false;
+  nodegraph.create_node = function(component, type, x, y, inXML) {
     var n;
+    if (inXML == null) {
+      inXML = false;
+    }
     n = false;
-    n = new nodes.types[component][type](x, y);
-    return nodegraph.nodes.push(n);
+    n = new nodes.types[component][type](x, y, inXML);
+    nodegraph.nodes.push(n);
+    return n;
+  };
+  nodegraph.get_component_by_type = function(type) {
+    var comp, typ;
+    if (!nodegraph.types) {
+      nodegraph.types = {};
+      for (comp in nodes.types) {
+        for (typ in nodes.types[comp]) {
+          nodegraph.types[typ.toString()] = comp;
+        }
+      }
+    }
+    return nodegraph.types[type];
   };
   nodegraph.render = function() {
     var node, _i, _j, _len, _len2, _ref, _ref2;
@@ -2033,27 +2086,92 @@
     return true;
   };
   save_local_file = function() {
-    var bb, fileSaver;
+    var bb, c, fileSaver, node, _i, _j, _len, _len2, _ref;
     bb = new BlobBuilder();
     console.log(window);
-    bb.append("<app><nodes><node>Lorem ipsum 42</node></nodes></app>");
+    bb.append('<?xml version="1.0" encoding="UTF-8"?>');
+    bb.append("<app>");
+    bb.append("<uid last='" + uid + "'>");
+    bb.append("<nodes>");
+    _ref = nodegraph.nodes;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      node = _ref[_i];
+      bb.append(node.toXML());
+    }
+    bb.append("</nodes>");
+    bb.append("<connections>");
+    for (_j = 0, _len2 = node_connections.length; _j < _len2; _j++) {
+      c = node_connections[_j];
+      bb.append(c.toXML());
+    }
+    bb.append("</connections>");
+    bb.append("</app>");
     return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.xml");
-  };
-  load_local_file = function() {
-    return $("#main_file_input_open").click();
   };
   load_local_file_input_changed = function(e) {
     var file, reader;
-    console.log("loading file");
+    remove_all_connections();
+    remove_all_nodes();
+    reset_global_variables();
     file = this.files[0];
     reader = new FileReader();
     reader.onload = function(e) {
       var loaded_data, txt;
       txt = e.target.result;
-      console.log(txt);
       loaded_data = $(txt);
-      return console.log(loaded_data);
+      $("node", loaded_data).each(function() {
+        var $this, component, n, nid, type, x, y;
+        $this = $(this);
+        x = parseInt($this.attr("x"));
+        y = parseInt($this.attr("y"));
+        nid = parseInt($this.attr("nid"));
+        type = $this.attr("type");
+        component = nodegraph.get_component_by_type(type);
+        return n = nodegraph.create_node(component, type, x, y, $this);
+      });
+      $("connection", loaded_data).each(function() {
+        var $this, c, cid, from, to;
+        $this = $(this);
+        from = parseInt($this.attr("from"));
+        to = parseInt($this.attr("to"));
+        cid = parseInt($this.attr("id"));
+        from = nodes.fields[from.toString()];
+        to = nodes.fields[to.toString()];
+        return c = new NodeConnection(from, to, cid);
+      });
+      return uid = parseInt($("uid", loaded_data)[0].attr("last"));
     };
     return reader.readAsText(file, "UTF-8");
+  };
+  remove_all_nodes = function() {
+    var node, _i, _len, _ref, _results;
+    $("#tab-attribute").html("");
+    _ref = nodegraph.nodes;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      node = _ref[_i];
+      _results.push(node.remove());
+    }
+    return _results;
+  };
+  remove_all_connections = function() {
+    var c, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = node_connections.length; _i < _len; _i++) {
+      c = node_connections[_i];
+      _results.push(c.remove());
+    }
+    return _results;
+  };
+  reset_global_variables = function() {
+    uid = 0;
+    node_connections = [];
+    nodegraph.nodes = [];
+    nodes = {};
+    nodes.fields = {};
+    nodes.list = [];
+    fields = {};
+    fields.types = {};
+    return webgl_materials_node = [];
   };
 }).call(this);

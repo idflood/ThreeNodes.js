@@ -7,7 +7,7 @@ class NodeField
     @node = false
     @is_output = false
     @connections = []
-    
+    nodes.fields[@fid] = this
     @on_value_changed(@val)
   
   set: (v) =>
@@ -21,7 +21,10 @@ class NodeField
 
   get: () =>
     @val
-    
+  
+  toXML : () =>
+    "<field fid='#{@fid}' val='#{@get()}'/>"
+
   render_connections: () =>
     for connection in @connections
         connection.render()

@@ -1,4 +1,5 @@
 nodes = {}
+nodes.fields = {}
 nodes.list = []
 nodes.types = {}
 nodes.types.Base = {}

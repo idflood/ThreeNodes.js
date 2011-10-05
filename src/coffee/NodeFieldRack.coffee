@@ -20,6 +20,14 @@ class NodeFieldRack
       @node_fields.outputs[f].render_connections()
     true
   
+  toXML: =>
+    res = "<in>"
+    for f of @node_fields.inputs
+      res += @node_fields.inputs[f].toXML()
+    res += "</in>"
+    
+    res
+  
   update_inputs: =>
     for f of @node_fields.inputs
       @node_fields.inputs[f].update_input_node()
