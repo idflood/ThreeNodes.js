@@ -6,6 +6,11 @@ init_sidebar = () ->
   init_sidebar_tab_system()
 
 init_sidebar_tab_system = () ->
+  $(".new_file").click (e) ->
+    e.preventDefault()
+    remove_all_connections()
+    remove_all_nodes()
+    
   $(".open_file").click (e) ->
     e.preventDefault()
     $("#main_file_input_open").click()

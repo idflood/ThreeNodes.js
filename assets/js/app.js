@@ -2157,6 +2157,11 @@
     return init_sidebar_tab_system();
   };
   init_sidebar_tab_system = function() {
+    $(".new_file").click(function(e) {
+      e.preventDefault();
+      remove_all_connections();
+      return remove_all_nodes();
+    });
     $(".open_file").click(function(e) {
       e.preventDefault();
       return $("#main_file_input_open").click();
@@ -2380,24 +2385,20 @@
     return reader.readAsText(file, "UTF-8");
   };
   remove_all_nodes = function() {
-    var node, _i, _len, _ref, _results;
+    var node, _i, _len, _ref;
     $("#tab-attribute").html("");
     _ref = nodegraph.nodes;
-    _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       node = _ref[_i];
-      _results.push(node.remove());
+      node.remove();
     }
-    return _results;
+    return true;
   };
   remove_all_connections = function() {
-    var c, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = node_connections.length; _i < _len; _i++) {
-      c = node_connections[_i];
-      _results.push(c.remove());
+    while (node_connections.length > 0) {
+      node_connections[0].remove();
     }
-    return _results;
+    return true;
   };
   reset_global_variables = function() {
     uid = 0;

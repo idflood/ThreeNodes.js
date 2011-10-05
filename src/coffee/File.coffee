@@ -53,9 +53,11 @@ remove_all_nodes = () ->
   $("#tab-attribute").html("")
   for node in nodegraph.nodes
     node.remove()
+  true
 remove_all_connections = () ->
-  for c in node_connections
-    c.remove()
+  while node_connections.length > 0
+    node_connections[0].remove()
+  true
 
 reset_global_variables = () ->
   uid = 0
