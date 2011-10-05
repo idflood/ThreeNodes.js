@@ -11,7 +11,7 @@ class NodeField
     @on_value_changed(@val)
   
   set: (v) =>
-    @on_value_changed(v)
+    v = @on_value_changed(v)
     for hook of @on_value_update_hooks
       @on_value_update_hooks[hook](v)
     if @is_output == true
@@ -95,6 +95,30 @@ class fields.types.Bool extends NodeField
       when "boolean" then res = val
       when "number" then res = val != 0
       when "string" then res = val == "1"
+    res
+
+class fields.types.String extends NodeField
+  render_sidebar: =>
+    self = this
+    $cont = $("#tab-attribute")
+    $cont.append("<div id='side-field-" + @fid + "'></div>")
+    $target = $("#side-field-#{@fid}")
+    $target.append("<h3>#{@name}</h3>")
+    $target.append("<div><input type='text' id='side-field-txt-input-#{@fid}' /></div>")
+    f_in = $("#side-field-txt-input-#{@fid}")
+    @on_value_update_hooks.update_sidebar_textfield = (v) ->
+      f_in.val(v.toString())
+    f_in.val(@get())
+    f_in.keypress (e) ->
+      if e.which == 13
+        self.set($(this).val())
+        $(this).blur()
+    false
+  compute_value : (val) =>
+    res = false
+    switch $.type(val)
+      when "number" then res = val.toString
+      when "string" then res = val
     res
 
 class fields.types.Float extends NodeField

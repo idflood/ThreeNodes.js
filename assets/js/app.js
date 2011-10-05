@@ -184,7 +184,7 @@
     }
     NodeField.prototype.set = function(v) {
       var connection, hook, _i, _len, _ref;
-      this.on_value_changed(v);
+      v = this.on_value_changed(v);
       for (hook in this.on_value_update_hooks) {
         this.on_value_update_hooks[hook](v);
       }
@@ -330,6 +330,48 @@
       return res;
     };
     return Bool;
+  })();
+  fields.types.String = (function() {
+    __extends(String, NodeField);
+    function String() {
+      this.compute_value = __bind(this.compute_value, this);
+      this.render_sidebar = __bind(this.render_sidebar, this);
+      String.__super__.constructor.apply(this, arguments);
+    }
+    String.prototype.render_sidebar = function() {
+      var $cont, $target, f_in, self;
+      self = this;
+      $cont = $("#tab-attribute");
+      $cont.append("<div id='side-field-" + this.fid + "'></div>");
+      $target = $("#side-field-" + this.fid);
+      $target.append("<h3>" + this.name + "</h3>");
+      $target.append("<div><input type='text' id='side-field-txt-input-" + this.fid + "' /></div>");
+      f_in = $("#side-field-txt-input-" + this.fid);
+      this.on_value_update_hooks.update_sidebar_textfield = function(v) {
+        return f_in.val(v.toString());
+      };
+      f_in.val(this.get());
+      f_in.keypress(function(e) {
+        if (e.which === 13) {
+          self.set($(this).val());
+          return $(this).blur();
+        }
+      });
+      return false;
+    };
+    String.prototype.compute_value = function(val) {
+      var res;
+      res = false;
+      switch ($.type(val)) {
+        case "number":
+          res = val.toString;
+          break;
+        case "string":
+          res = val;
+      }
+      return res;
+    };
+    return String;
   })();
   fields.types.Float = (function() {
     __extends(Float, NodeField);
@@ -2270,6 +2312,7 @@
       revert: "valid",
       opacity: 0.7,
       helper: "clone",
+      revertDuration: 0,
       start: function(event, ui) {
         return $("#sidebar").hide();
       }

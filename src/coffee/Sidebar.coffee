@@ -79,6 +79,7 @@ init_sidebar_tab_new_node = () ->
     revert: "valid"
     opacity: 0.7
     helper: "clone"
+    revertDuration: 0
     start: (event, ui) ->
       #$("#sidebar").animate({left: -170}, { queue: false, duration: 80 }, "swing")
       $("#sidebar").hide()
