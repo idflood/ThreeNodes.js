@@ -9,7 +9,7 @@ nodegraph.create_node = (component, type, x, y, inXML = false) ->
   n
 
 nodegraph.get_component_by_type = (type) ->
-  if !nodegraph.types
+  if nodegraph.types == false
     nodegraph.types = {}
     for comp of nodes.types
       for typ of nodes.types[comp]

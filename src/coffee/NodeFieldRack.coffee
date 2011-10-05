@@ -21,12 +21,25 @@ class NodeFieldRack
     true
   
   toXML: =>
-    res = "<in>"
+    res = "\t\t<in>\n"
     for f of @node_fields.inputs
       res += @node_fields.inputs[f].toXML()
-    res += "</in>"
+    res += "\t\t</in>\n"
     
+    res += "\t\t<out>\n"
+    for f of @node_fields.outputs
+      res += @node_fields.outputs[f].toXML()
+    res += "\t\t</out>\n"
     res
+  
+  fromXML: (data) =>
+    self = this
+    console.log data
+    $("in field", data).each () ->
+      console.log this
+      f = self.node_fields.inputs["fid-" + $(this).attr("fid")]
+      if f
+        f.set($(this).attr("val"))
   
   update_inputs: =>
     for f of @node_fields.inputs

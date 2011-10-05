@@ -1,20 +1,20 @@
 save_local_file = () ->
   bb = new BlobBuilder()
   console.log window
-  bb.append('<?xml version="1.0" encoding="UTF-8"?>')
-  bb.append("<app>")
+  bb.append('<?xml version="1.0" encoding="UTF-8"?>\n')
+  bb.append("<app>\n")
 
-  bb.append("<uid last='#{uid}'>")
+  bb.append("\t<uid last='#{uid}' />\n")
 
-  bb.append("<nodes>")
+  bb.append("\t<nodes>\n")
   for node in nodegraph.nodes
     bb.append(node.toXML())
-  bb.append("</nodes>")
+  bb.append("\t</nodes>\n")
   
-  bb.append("<connections>")
+  bb.append("\t<connections>\n")
   for c in node_connections
     bb.append(c.toXML())
-  bb.append("</connections>")
+  bb.append("\t</connections>\n")
   
   bb.append("</app>")
   fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.xml")
@@ -46,8 +46,7 @@ load_local_file_input_changed = (e) ->
       from = nodes.fields[from.toString()]
       to = nodes.fields[to.toString()]
       c = new NodeConnection(from, to, cid)
-      
-    uid = parseInt $("uid", loaded_data)[0].attr("last")
+    uid = parseInt $("uid", loaded_data).attr("last")
   reader.readAsText(file, "UTF-8")
   
 remove_all_nodes = () ->
@@ -62,10 +61,7 @@ reset_global_variables = () ->
   uid = 0
   node_connections = []
   nodegraph.nodes = []
-  nodes = {}
   nodes.fields = {}
   nodes.list = []
-  fields = {}
-  fields.types = {}
 
   webgl_materials_node = []

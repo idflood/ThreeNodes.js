@@ -103,7 +103,7 @@
       return ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
     };
     NodeConnection.prototype.toXML = function() {
-      return "<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>";
+      return "\t\t<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>\n";
     };
     NodeConnection.prototype.update = function() {
       return this.to_field.set(this.from_field.get());
@@ -201,7 +201,7 @@
       return this.val;
     };
     NodeField.prototype.toXML = function() {
-      return "<field fid='" + this.fid + "' val='" + (this.get()) + "'/>";
+      return "\t\t\t<field fid='" + this.fid + "' val='" + (this.get()) + "'/>\n";
     };
     NodeField.prototype.render_connections = function() {
       var connection, _i, _len, _ref;
@@ -572,6 +572,7 @@
       this.addOutput = __bind(this.addOutput, this);
       this.addInput = __bind(this.addInput, this);
       this.update_inputs = __bind(this.update_inputs, this);
+      this.fromXML = __bind(this.fromXML, this);
       this.toXML = __bind(this.toXML, this);
       this.render_connections = __bind(this.render_connections, this);
       this.node_fields = {};
@@ -603,12 +604,30 @@
     };
     NodeFieldRack.prototype.toXML = function() {
       var f, res;
-      res = "<in>";
+      res = "\t\t<in>\n";
       for (f in this.node_fields.inputs) {
         res += this.node_fields.inputs[f].toXML();
       }
-      res += "</in>";
+      res += "\t\t</in>\n";
+      res += "\t\t<out>\n";
+      for (f in this.node_fields.outputs) {
+        res += this.node_fields.outputs[f].toXML();
+      }
+      res += "\t\t</out>\n";
       return res;
+    };
+    NodeFieldRack.prototype.fromXML = function(data) {
+      var self;
+      self = this;
+      console.log(data);
+      return $("in field", data).each(function() {
+        var f;
+        console.log(this);
+        f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
+        if (f) {
+          return f.set($(this).attr("val"));
+        }
+      });
     };
     NodeFieldRack.prototype.update_inputs = function() {
       var f, _results;
@@ -718,6 +737,7 @@
       this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
       this.has_out_connection = __bind(this.has_out_connection, this);
+      this.set_fields = __bind(this.set_fields, this);
       this.typename = __bind(this.typename, this);
       if (this.inXML) {
         this.nid = parseInt(this.inXML.attr("nid"));
@@ -727,17 +747,21 @@
       }
       this.container = $("#container");
       this.out_connections = [];
-      this.rack = new NodeFieldRack(this);
+      this.rack = new NodeFieldRack(this, this.inXML);
       this.value = false;
       this.name = false;
       this.main_view = false;
       this.updated = false;
       this.init();
-      this.inXML = false;
+      this.set_fields();
+      if (this.inXML !== false) {
+        this.rack.fromXML(this.inXML);
+      }
     }
     NodeBase.prototype.typename = function() {
       return "Node";
     };
+    NodeBase.prototype.set_fields = function() {};
     NodeBase.prototype.has_out_connection = function() {
       return this.out_connections.length !== 0;
     };
@@ -758,7 +782,7 @@
     NodeBase.prototype.toXML = function() {
       var pos;
       pos = this.main_view.position();
-      return "<node nid='" + this.nid + "' type='" + (this.typename()) + "' x='" + pos.left + "' y='" + pos.top + "'>" + (this.rack.toXML()) + "</node>";
+      return "\t\t\t<node nid='" + this.nid + "' type='" + (this.typename()) + "' x='" + pos.left + "' y='" + pos.top + "'>" + (this.rack.toXML()) + "</node>\n";
     };
     NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions) {
       var f, nf, _results;
@@ -852,13 +876,21 @@
   })();
   NodeNumberSimple = (function() {
     __extends(NodeNumberSimple, NodeBase);
-    function NodeNumberSimple(x, y) {
+    function NodeNumberSimple() {
       this.compute = __bind(this.compute, this);
-      this.process_val = __bind(this.process_val, this);      NodeNumberSimple.__super__.constructor.call(this, x, y);
-      this.value = 0;
-      this.v_in = this.rack.addInput(new fields.types.Float("in", 0));
-      this.v_out = this.rack.addOutput(new fields.types.Float("out", 0));
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      this.init = __bind(this.init, this);
+      NodeNumberSimple.__super__.constructor.apply(this, arguments);
     }
+    NodeNumberSimple.prototype.init = function() {
+      NodeNumberSimple.__super__.init.apply(this, arguments);
+      return this.value = 0;
+    };
+    NodeNumberSimple.prototype.set_fields = function() {
+      this.v_in = this.rack.addInput(new fields.types.Float("in", 0));
+      return this.v_out = this.rack.addOutput(new fields.types.Float("out", 0));
+    };
     NodeNumberSimple.prototype.process_val = function(num, i) {
       return num;
     };
@@ -883,10 +915,15 @@
   })();
   nodes.types.Base.Number = (function() {
     __extends(Number, NodeNumberSimple);
-    function Number(x, y) {
-      this.typename = __bind(this.typename, this);      Number.__super__.constructor.call(this, x, y);
-      this.rack.add_center_textfield(this.v_in);
+    function Number() {
+      this.typename = __bind(this.typename, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Number.__super__.constructor.apply(this, arguments);
     }
+    Number.prototype.set_fields = function() {
+      Number.__super__.set_fields.apply(this, arguments);
+      return this.rack.add_center_textfield(this.v_in);
+    };
     Number.prototype.typename = function() {
       return "Number";
     };
@@ -894,11 +931,19 @@
   })();
   nodes.types.Base.String = (function() {
     __extends(String, NodeBase);
-    function String(x, y) {
+    function String() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      String.__super__.constructor.call(this, x, y);
-      this.value = "";
-      this.rack.addFields({
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      this.init = __bind(this.init, this);
+      String.__super__.constructor.apply(this, arguments);
+    }
+    String.prototype.init = function() {
+      String.__super__.init.apply(this, arguments);
+      return this.value = "";
+    };
+    String.prototype.set_fields = function() {
+      return this.rack.addFields({
         inputs: {
           "string": ""
         },
@@ -909,7 +954,7 @@
           }
         }
       });
-    }
+    };
     String.prototype.compute = function() {
       return this.rack.get("out", true).set(this.rack.get("string").get());
     };
@@ -920,9 +965,10 @@
   })();
   nodes.types.Math.Sin = (function() {
     __extends(Sin, NodeNumberSimple);
-    function Sin(x, y) {
+    function Sin() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Sin.__super__.constructor.call(this, x, y);
+      this.process_val = __bind(this.process_val, this);
+      Sin.__super__.constructor.apply(this, arguments);
     }
     Sin.prototype.process_val = function(num, i) {
       return Math.sin(num);
@@ -934,9 +980,10 @@
   })();
   nodes.types.Math.Cos = (function() {
     __extends(Cos, NodeNumberSimple);
-    function Cos(x, y) {
+    function Cos() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Cos.__super__.constructor.call(this, x, y);
+      this.process_val = __bind(this.process_val, this);
+      Cos.__super__.constructor.apply(this, arguments);
     }
     Cos.prototype.process_val = function(num, i) {
       return Math.cos(num);
@@ -948,9 +995,10 @@
   })();
   nodes.types.Math.Tan = (function() {
     __extends(Tan, NodeNumberSimple);
-    function Tan(x, y) {
+    function Tan() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Tan.__super__.constructor.call(this, x, y);
+      this.process_val = __bind(this.process_val, this);
+      Tan.__super__.constructor.apply(this, arguments);
     }
     Tan.prototype.process_val = function(num, i) {
       return Math.tan(num);
@@ -962,9 +1010,10 @@
   })();
   nodes.types.Math.Round = (function() {
     __extends(Round, NodeNumberSimple);
-    function Round(x, y) {
+    function Round() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Round.__super__.constructor.call(this, x, y);
+      this.process_val = __bind(this.process_val, this);
+      Round.__super__.constructor.apply(this, arguments);
     }
     Round.prototype.process_val = function(num, i) {
       return Math.round(num);
@@ -976,9 +1025,10 @@
   })();
   nodes.types.Math.Ceil = (function() {
     __extends(Ceil, NodeNumberSimple);
-    function Ceil(x, y) {
+    function Ceil() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Ceil.__super__.constructor.call(this, x, y);
+      this.process_val = __bind(this.process_val, this);
+      Ceil.__super__.constructor.apply(this, arguments);
     }
     Ceil.prototype.process_val = function(num, i) {
       return Math.ceil(num);
@@ -990,9 +1040,10 @@
   })();
   nodes.types.Math.Floor = (function() {
     __extends(Floor, NodeNumberSimple);
-    function Floor(x, y) {
+    function Floor() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Floor.__super__.constructor.call(this, x, y);
+      this.process_val = __bind(this.process_val, this);
+      Floor.__super__.constructor.apply(this, arguments);
     }
     Floor.prototype.process_val = function(num, i) {
       return Math.floor(num);
@@ -1004,11 +1055,16 @@
   })();
   nodes.types.Math.Mod = (function() {
     __extends(Mod, NodeNumberSimple);
-    function Mod(x, y) {
+    function Mod() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Mod.__super__.constructor.call(this, x, y);
-      this.v_valy = this.rack.addInput(new fields.types.Float("y", 2));
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Mod.__super__.constructor.apply(this, arguments);
     }
+    Mod.prototype.set_fields = function() {
+      Mod.__super__.set_fields.apply(this, arguments);
+      return this.v_valy = this.rack.addInput(new fields.types.Float("y", 2));
+    };
     Mod.prototype.process_val = function(num, i) {
       return num % this.v_valy.get();
     };
@@ -1017,13 +1073,58 @@
     };
     return Mod;
   })();
+  nodes.types.Math.Add = (function() {
+    __extends(Add, NodeNumberSimple);
+    function Add() {
+      this.typename = __bind(this.typename, this);
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Add.__super__.constructor.apply(this, arguments);
+    }
+    Add.prototype.set_fields = function() {
+      Add.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
+    };
+    Add.prototype.process_val = function(num, i) {
+      return num + this.v_factor.get();
+    };
+    Add.prototype.typename = function() {
+      return "Add";
+    };
+    return Add;
+  })();
+  nodes.types.Math.Subtract = (function() {
+    __extends(Subtract, NodeNumberSimple);
+    function Subtract() {
+      this.typename = __bind(this.typename, this);
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Subtract.__super__.constructor.apply(this, arguments);
+    }
+    Subtract.prototype.set_fields = function() {
+      Subtract.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
+    };
+    Subtract.prototype.process_val = function(num, i) {
+      return num - this.v_factor.get();
+    };
+    Subtract.prototype.typename = function() {
+      return "Subtract";
+    };
+    return Subtract;
+  })();
   nodes.types.Math.Mult = (function() {
     __extends(Mult, NodeNumberSimple);
-    function Mult(x, y) {
+    function Mult() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Mult.__super__.constructor.call(this, x, y);
-      this.v_factor = this.rack.addInput(new fields.types.Float("factor", 2));
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Mult.__super__.constructor.apply(this, arguments);
     }
+    Mult.prototype.set_fields = function() {
+      Mult.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("factor", 2));
+    };
     Mult.prototype.process_val = function(num, i) {
       return num * this.v_factor.get();
     };
@@ -1032,13 +1133,38 @@
     };
     return Mult;
   })();
+  nodes.types.Math.Divide = (function() {
+    __extends(Divide, NodeNumberSimple);
+    function Divide() {
+      this.typename = __bind(this.typename, this);
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Divide.__super__.constructor.apply(this, arguments);
+    }
+    Divide.prototype.set_fields = function() {
+      Divide.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 2));
+    };
+    Divide.prototype.process_val = function(num, i) {
+      return num / this.v_factor.get();
+    };
+    Divide.prototype.typename = function() {
+      return "Divide";
+    };
+    return Divide;
+  })();
   nodes.types.Math.Min = (function() {
     __extends(Min, NodeNumberSimple);
-    function Min(x, y) {
+    function Min() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Min.__super__.constructor.call(this, x, y);
-      this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Min.__super__.constructor.apply(this, arguments);
     }
+    Min.prototype.set_fields = function() {
+      Min.__super__.set_fields.apply(this, arguments);
+      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+    };
     Min.prototype.process_val = function(num, i) {
       return Math.min(num, this.v_inb.get());
     };
@@ -1049,11 +1175,16 @@
   })();
   nodes.types.Math.Max = (function() {
     __extends(Max, NodeNumberSimple);
-    function Max(x, y) {
+    function Max() {
       this.typename = __bind(this.typename, this);
-      this.process_val = __bind(this.process_val, this);      Max.__super__.constructor.call(this, x, y);
-      this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Max.__super__.constructor.apply(this, arguments);
     }
+    Max.prototype.set_fields = function() {
+      Max.__super__.set_fields.apply(this, arguments);
+      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+    };
     Max.prototype.process_val = function(num, i) {
       return Math.max(num, this.v_inb.get());
     };
@@ -1064,9 +1195,14 @@
   })();
   nodes.types.Utils.Random = (function() {
     __extends(Random, NodeBase);
-    function Random(x, y) {
+    function Random() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      Random.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Random.__super__.constructor.apply(this, arguments);
+    }
+    Random.prototype.set_fields = function() {
+      Random.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
         inputs: {
           "min": 0,
@@ -1076,8 +1212,8 @@
           "out": 0
         }
       });
-      this.rack.add_center_textfield(this.rack.get("out", true));
-    }
+      return this.rack.add_center_textfield(this.rack.get("out", true));
+    };
     Random.prototype.compute = function() {
       var old;
       old = this.rack.get("out", true).get();
@@ -1093,10 +1229,15 @@
   })();
   nodes.types.Utils.Merge = (function() {
     __extends(Merge, NodeBase);
-    function Merge(x, y) {
+    function Merge() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      Merge.__super__.constructor.call(this, x, y);
-      this.rack.addFields({
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Merge.__super__.constructor.apply(this, arguments);
+    }
+    Merge.prototype.set_fields = function() {
+      Merge.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
         inputs: {
           "in0": {
             type: "Any",
@@ -1130,7 +1271,7 @@
           }
         }
       });
-    }
+    };
     Merge.prototype.compute = function() {
       var f, k, old;
       old = this.rack.get("out", true).get();
@@ -1152,10 +1293,15 @@
   })();
   nodes.types.Utils.Get = (function() {
     __extends(Get, NodeBase);
-    function Get(x, y) {
+    function Get() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      Get.__super__.constructor.call(this, x, y);
-      this.rack.addFields({
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Get.__super__.constructor.apply(this, arguments);
+    }
+    Get.prototype.set_fields = function() {
+      Get.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
         inputs: {
           "array": {
             type: "Array",
@@ -1170,7 +1316,7 @@
           }
         }
       });
-    }
+    };
     Get.prototype.compute = function() {
       var arr, ind, old;
       old = this.rack.get("out", true).get();
@@ -1191,16 +1337,21 @@
   })();
   nodes.types.Utils.SoundInput = (function() {
     __extends(SoundInput, NodeBase);
-    function SoundInput(x, y) {
-      this.compute = __bind(this.compute, this);      SoundInput.__super__.constructor.call(this, x, y);
+    function SoundInput() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SoundInput.__super__.constructor.apply(this, arguments);
+    }
+    SoundInput.prototype.set_fields = function() {
+      SoundInput.__super__.set_fields.apply(this, arguments);
       this.counter = 0;
       this.rack.addFields({
         outputs: {
           "out": 0
         }
       });
-      this.rack.add_center_textfield(this.rack.get("out", true));
-    }
+      return this.rack.add_center_textfield(this.rack.get("out", true));
+    };
     SoundInput.prototype.compute = function() {
       return this.rack.get("out", true).set(this.counter);
     };
@@ -1208,10 +1359,15 @@
   })();
   nodes.types.Utils.Timer = (function() {
     __extends(Timer, NodeBase);
-    function Timer(x, y) {
+    function Timer() {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);
-      this.get_time = __bind(this.get_time, this);      Timer.__super__.constructor.call(this, x, y);
+      this.get_time = __bind(this.get_time, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Timer.__super__.constructor.apply(this, arguments);
+    }
+    Timer.prototype.set_fields = function() {
+      Timer.__super__.set_fields.apply(this, arguments);
       this.old = this.get_time();
       this.counter = 0;
       this.rack.addFields({
@@ -1224,8 +1380,8 @@
           "out": 0
         }
       });
-      this.rack.add_center_textfield(this.rack.get("out", true));
-    }
+      return this.rack.add_center_textfield(this.rack.get("out", true));
+    };
     Timer.prototype.get_time = function() {
       return new Date().getTime();
     };
@@ -1253,10 +1409,15 @@
   })();
   nodes.types.Base.Vector2 = (function() {
     __extends(Vector2, NodeBase);
-    function Vector2(x, y) {
-      this.compute = __bind(this.compute, this);      Vector2.__super__.constructor.call(this, x, y);
+    function Vector2() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Vector2.__super__.constructor.apply(this, arguments);
+    }
+    Vector2.prototype.set_fields = function() {
+      Vector2.__super__.set_fields.apply(this, arguments);
       this.vec = new THREE.Vector2(0, 0);
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "xy": {
             type: "Vector2",
@@ -1274,7 +1435,7 @@
           "y": 0
         }
       });
-    }
+    };
     Vector2.prototype.compute = function() {
       var old;
       old = this.rack.get("xy", true).get();
@@ -1295,10 +1456,15 @@
   })();
   nodes.types.Base.Vector3 = (function() {
     __extends(Vector3, NodeBase);
-    function Vector3(x, y) {
-      this.compute = __bind(this.compute, this);      Vector3.__super__.constructor.call(this, x, y);
+    function Vector3() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Vector3.__super__.constructor.apply(this, arguments);
+    }
+    Vector3.prototype.set_fields = function() {
+      Vector3.__super__.set_fields.apply(this, arguments);
       this.vec = new THREE.Vector3(0, 0, 0);
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "xyz": {
             type: "Vector3",
@@ -1318,7 +1484,7 @@
           "z": 0
         }
       });
-    }
+    };
     Vector3.prototype.compute = function() {
       var old;
       old = this.rack.get("xyz", true).get();
@@ -1340,10 +1506,15 @@
   })();
   nodes.types.Base.Color = (function() {
     __extends(Color, NodeBase);
-    function Color(x, y) {
-      this.compute = __bind(this.compute, this);      Color.__super__.constructor.call(this, x, y);
+    function Color() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Color.__super__.constructor.apply(this, arguments);
+    }
+    Color.prototype.set_fields = function() {
+      Color.__super__.set_fields.apply(this, arguments);
       this.vec = new THREE.Color(1, 0, 0);
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "rgb": {
             type: "Color",
@@ -1363,7 +1534,7 @@
           "b": 0
         }
       });
-    }
+    };
     Color.prototype.compute = function() {
       var old;
       old = this.rack.get("rgb", true).get();
@@ -1385,11 +1556,16 @@
   })();
   nodes.types.Three.Object3D = (function() {
     __extends(Object3D, NodeBase);
-    function Object3D(x, y) {
+    function Object3D() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      Object3D.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Object3D.__super__.constructor.apply(this, arguments);
+    }
+    Object3D.prototype.set_fields = function() {
+      Object3D.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.Object3D();
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "children": {
             type: "Array",
@@ -1419,7 +1595,7 @@
           }
         }
       });
-    }
+    };
     Object3D.prototype.compute = function() {
       var child, ind, _i, _j, _len, _len2, _ref, _ref2;
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
@@ -1448,10 +1624,15 @@
   })();
   nodes.types.Geometry.CubeGeometry = (function() {
     __extends(CubeGeometry, NodeBase);
-    function CubeGeometry(x, y) {
+    function CubeGeometry() {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);
-      this.get_cache_array = __bind(this.get_cache_array, this);      CubeGeometry.__super__.constructor.call(this, x, y);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      CubeGeometry.__super__.constructor.apply(this, arguments);
+    }
+    CubeGeometry.prototype.set_fields = function() {
+      CubeGeometry.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1);
       this.rack.addFields({
         inputs: {
@@ -1470,8 +1651,8 @@
           }
         }
       });
-      this.cached = this.get_cache_array();
-    }
+      return this.cached = this.get_cache_array();
+    };
     CubeGeometry.prototype.get_cache_array = function() {
       return [this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get()];
     };
@@ -1491,10 +1672,15 @@
   })();
   nodes.types.Geometry.SphereGeometry = (function() {
     __extends(SphereGeometry, NodeBase);
-    function SphereGeometry(x, y) {
+    function SphereGeometry() {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);
-      this.get_cache_array = __bind(this.get_cache_array, this);      SphereGeometry.__super__.constructor.call(this, x, y);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SphereGeometry.__super__.constructor.apply(this, arguments);
+    }
+    SphereGeometry.prototype.set_fields = function() {
+      SphereGeometry.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.SphereGeometry(100, 20, 20);
       this.rack.addFields({
         inputs: {
@@ -1509,8 +1695,8 @@
           }
         }
       });
-      this.cached = this.get_cache_array();
-    }
+      return this.cached = this.get_cache_array();
+    };
     SphereGeometry.prototype.get_cache_array = function() {
       return [this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get()];
     };
@@ -1531,12 +1717,17 @@
   })();
   nodes.types.Three.Scene = (function() {
     __extends(Scene, nodes.types.Three.Object3D);
-    function Scene(x, y) {
+    function Scene() {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);
-      this.apply_children = __bind(this.apply_children, this);      Scene.__super__.constructor.call(this, x, y);
-      this.ob = new THREE.Scene();
+      this.apply_children = __bind(this.apply_children, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Scene.__super__.constructor.apply(this, arguments);
     }
+    Scene.prototype.set_fields = function() {
+      Scene.__super__.set_fields.apply(this, arguments);
+      return this.ob = new THREE.Scene();
+    };
     Scene.prototype.apply_children = function() {
       var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
       childs_in = this.rack.get("children").get();
@@ -1579,9 +1770,14 @@
   })();
   nodes.types.Three.Mesh = (function() {
     __extends(Mesh, nodes.types.Three.Object3D);
-    function Mesh(x, y) {
+    function Mesh() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      Mesh.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Mesh.__super__.constructor.apply(this, arguments);
+    }
+    Mesh.prototype.set_fields = function() {
+      Mesh.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
         color: 0xff0000,
         wireframe: false
@@ -1606,8 +1802,8 @@
       });
       this.rack.get("out", true).set(this.ob);
       this.geometry_cache = this.rack.get('geometry').get().id;
-      this.materials_cache = this.rack.get('materials').get();
-    }
+      return this.materials_cache = this.rack.get('materials').get();
+    };
     Mesh.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
       if (this.geometry_cache !== this.rack.get('geometry').get().id || flatArraysAreEquals(this.materials_cache, this.rack.get('materials').get()) === false) {
@@ -1624,11 +1820,16 @@
   })();
   nodes.types.Three.Camera = (function() {
     __extends(Camera, NodeBase);
-    function Camera(x, y) {
+    function Camera() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      Camera.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Camera.__super__.constructor.apply(this, arguments);
+    }
+    Camera.prototype.set_fields = function() {
+      Camera.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.Camera();
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "fov": 50,
           "aspect": 1,
@@ -1651,7 +1852,7 @@
           }
         }
       });
-    }
+    };
     Camera.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.get("out", true).set(this.ob);
@@ -1663,10 +1864,15 @@
   })();
   nodes.types.Three.WebGLRenderer = (function() {
     __extends(WebGLRenderer, NodeBase);
-    function WebGLRenderer(x, y) {
+    function WebGLRenderer() {
       this.typename = __bind(this.typename, this);
       this.compute = __bind(this.compute, this);
-      this.apply_size = __bind(this.apply_size, this);      WebGLRenderer.__super__.constructor.call(this, x, y);
+      this.apply_size = __bind(this.apply_size, this);
+      this.set_fields = __bind(this.set_fields, this);
+      WebGLRenderer.__super__.constructor.apply(this, arguments);
+    }
+    WebGLRenderer.prototype.set_fields = function() {
+      WebGLRenderer.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.WebGLRenderer();
       this.width = 0;
       this.height = 0;
@@ -1693,8 +1899,8 @@
       this.apply_size();
       this.rack.get("camera").val.position.z = 1000;
       this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false");
-      this.win.document.body.appendChild(this.ob.domElement);
-    }
+      return this.win.document.body.appendChild(this.ob.domElement);
+    };
     WebGLRenderer.prototype.apply_size = function() {
       var h, w;
       w = this.rack.get('width').get();
@@ -1719,11 +1925,16 @@
   })();
   nodes.types.Lights.PointLight = (function() {
     __extends(PointLight, NodeBase);
-    function PointLight(x, y) {
+    function PointLight() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      PointLight.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      PointLight.__super__.constructor.apply(this, arguments);
+    }
+    PointLight.prototype.set_fields = function() {
+      PointLight.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.PointLight(0xffffff);
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1743,7 +1954,7 @@
           }
         }
       });
-    }
+    };
     PointLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.get("out", true).set(this.ob);
@@ -1755,11 +1966,16 @@
   })();
   nodes.types.Lights.DirectionalLight = (function() {
     __extends(DirectionalLight, NodeBase);
-    function DirectionalLight(x, y) {
+    function DirectionalLight() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      DirectionalLight.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      DirectionalLight.__super__.constructor.apply(this, arguments);
+    }
+    DirectionalLight.prototype.set_fields = function() {
+      DirectionalLight.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.DirectionalLight(0xffffff);
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1779,7 +1995,7 @@
           }
         }
       });
-    }
+    };
     DirectionalLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.get("out", true).set(this.ob);
@@ -1791,11 +2007,16 @@
   })();
   nodes.types.Lights.AmbientLight = (function() {
     __extends(AmbientLight, NodeBase);
-    function AmbientLight(x, y) {
+    function AmbientLight() {
       this.typename = __bind(this.typename, this);
-      this.compute = __bind(this.compute, this);      AmbientLight.__super__.constructor.call(this, x, y);
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      AmbientLight.__super__.constructor.apply(this, arguments);
+    }
+    AmbientLight.prototype.set_fields = function() {
+      AmbientLight.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.AmbientLight(0xffffff);
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1811,7 +2032,7 @@
           }
         }
       });
-    }
+    };
     AmbientLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.get("out", true).set(this.ob);
@@ -1823,11 +2044,16 @@
   })();
   NodeMaterialBase = (function() {
     __extends(NodeMaterialBase, NodeBase);
-    function NodeMaterialBase(x, y) {
-      this.compute = __bind(this.compute, this);      NodeMaterialBase.__super__.constructor.call(this, x, y);
+    function NodeMaterialBase() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      NodeMaterialBase.__super__.constructor.apply(this, arguments);
+    }
+    NodeMaterialBase.prototype.set_fields = function() {
+      NodeMaterialBase.__super__.set_fields.apply(this, arguments);
       this.ob = false;
       webgl_materials_node[webgl_materials_node.length] = this;
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "opacity": 1,
           "transparent": false,
@@ -1838,7 +2064,7 @@
           "polygonOffsetUnits": 0
         }
       });
-    }
+    };
     NodeMaterialBase.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.get("out", true).set(this.ob);
@@ -1847,12 +2073,17 @@
   })();
   nodes.types.Materials.MeshBasicMaterial = (function() {
     __extends(MeshBasicMaterial, NodeMaterialBase);
-    function MeshBasicMaterial(x, y) {
-      this.typename = __bind(this.typename, this);      MeshBasicMaterial.__super__.constructor.call(this, x, y);
+    function MeshBasicMaterial() {
+      this.typename = __bind(this.typename, this);
+      this.set_fields = __bind(this.set_fields, this);
+      MeshBasicMaterial.__super__.constructor.apply(this, arguments);
+    }
+    MeshBasicMaterial.prototype.set_fields = function() {
+      MeshBasicMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.MeshBasicMaterial({
         color: 0xff0000
       });
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1872,7 +2103,7 @@
           }
         }
       });
-    }
+    };
     MeshBasicMaterial.prototype.typename = function() {
       return "MeshBasicMaterial";
     };
@@ -1880,12 +2111,17 @@
   })();
   nodes.types.Materials.MeshLambertMaterial = (function() {
     __extends(MeshLambertMaterial, NodeMaterialBase);
-    function MeshLambertMaterial(x, y) {
-      this.typename = __bind(this.typename, this);      MeshLambertMaterial.__super__.constructor.call(this, x, y);
+    function MeshLambertMaterial() {
+      this.typename = __bind(this.typename, this);
+      this.set_fields = __bind(this.set_fields, this);
+      MeshLambertMaterial.__super__.constructor.apply(this, arguments);
+    }
+    MeshLambertMaterial.prototype.set_fields = function() {
+      MeshLambertMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.MeshLambertMaterial({
         color: 0xff0000
       });
-      this.rack.addFields({
+      return this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1907,7 +2143,7 @@
           }
         }
       });
-    }
+    };
     MeshLambertMaterial.prototype.typename = function() {
       return "MeshLambertMaterial";
     };
@@ -2059,7 +2295,7 @@
   };
   nodegraph.get_component_by_type = function(type) {
     var comp, typ;
-    if (!nodegraph.types) {
+    if (nodegraph.types === false) {
       nodegraph.types = {};
       for (comp in nodes.types) {
         for (typ in nodes.types[comp]) {
@@ -2089,22 +2325,22 @@
     var bb, c, fileSaver, node, _i, _j, _len, _len2, _ref;
     bb = new BlobBuilder();
     console.log(window);
-    bb.append('<?xml version="1.0" encoding="UTF-8"?>');
-    bb.append("<app>");
-    bb.append("<uid last='" + uid + "'>");
-    bb.append("<nodes>");
+    bb.append('<?xml version="1.0" encoding="UTF-8"?>\n');
+    bb.append("<app>\n");
+    bb.append("\t<uid last='" + uid + "' />\n");
+    bb.append("\t<nodes>\n");
     _ref = nodegraph.nodes;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       node = _ref[_i];
       bb.append(node.toXML());
     }
-    bb.append("</nodes>");
-    bb.append("<connections>");
+    bb.append("\t</nodes>\n");
+    bb.append("\t<connections>\n");
     for (_j = 0, _len2 = node_connections.length; _j < _len2; _j++) {
       c = node_connections[_j];
       bb.append(c.toXML());
     }
-    bb.append("</connections>");
+    bb.append("\t</connections>\n");
     bb.append("</app>");
     return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.xml");
   };
@@ -2139,7 +2375,7 @@
         to = nodes.fields[to.toString()];
         return c = new NodeConnection(from, to, cid);
       });
-      return uid = parseInt($("uid", loaded_data)[0].attr("last"));
+      return uid = parseInt($("uid", loaded_data).attr("last"));
     };
     return reader.readAsText(file, "UTF-8");
   };
@@ -2167,11 +2403,8 @@
     uid = 0;
     node_connections = [];
     nodegraph.nodes = [];
-    nodes = {};
     nodes.fields = {};
     nodes.list = [];
-    fields = {};
-    fields.types = {};
     return webgl_materials_node = [];
   };
 }).call(this);

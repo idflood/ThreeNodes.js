@@ -9,15 +9,20 @@ class NodeBase
       @nid = get_uid()
     @container = $("#container")
     @out_connections = []
-    @rack = new NodeFieldRack(this)
+    @rack = new NodeFieldRack(this, @inXML)
     @value = false
     @name = false
     @main_view = false
     @updated = false
     @init()
-    @inXML = false
+    @set_fields()
+    if @inXML != false
+      @rack.fromXML(@inXML)
     
   typename: => "Node"
+  
+  set_fields: =>
+    # to implement
   
   has_out_connection: () =>
     @out_connections.length != 0
@@ -41,7 +46,7 @@ class NodeBase
   
   toXML: () =>
     pos = @main_view.position()
-    "<node nid='#{@nid}' type='#{@typename()}' x='#{pos.left}' y='#{pos.top}'>#{@rack.toXML()}</node>"
+    "\t\t\t<node nid='#{@nid}' type='#{@typename()}' x='#{pos.left}' y='#{pos.top}'>#{@rack.toXML()}</node>\n"
   
   apply_fields_to_val: (afields, target, exceptions = []) =>
     for f of afields
@@ -110,12 +115,14 @@ class NodeBase
       self.rack.render_sidebar()
 
 class NodeNumberSimple extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  init: =>
+    super
     @value = 0
+    
+  set_fields: =>
     @v_in = @rack.addInput(new fields.types.Float("in", 0))
     @v_out = @rack.addOutput(new fields.types.Float("out", 0))
-  
+    
   process_val: (num, i) =>
     num
   
@@ -129,16 +136,17 @@ class NodeNumberSimple extends NodeBase
     true
 
 class nodes.types.Base.Number extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @rack.add_center_textfield(@v_in)
-  
   typename : => "Number"
 
 class nodes.types.Base.String extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  init: =>
+    super
     @value = ""
+    
+  set_fields: =>
     @rack.addFields
       inputs:
         "string": ""
@@ -149,82 +157,94 @@ class nodes.types.Base.String extends NodeBase
   typename : => "String"
 
 class nodes.types.Math.Sin extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
   process_val: (num, i) =>
     Math.sin(num)
   typename : => "Sin"
 
 class nodes.types.Math.Cos extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
   process_val: (num, i) =>
     Math.cos(num)
   typename : => "Cos"
 
 class nodes.types.Math.Tan extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
   process_val: (num, i) =>
     Math.tan(num)
   typename : => "Tan"
 
 class nodes.types.Math.Round extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
   process_val: (num, i) =>
     Math.round(num)
   typename : => "Round"
 
 class nodes.types.Math.Ceil extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
   process_val: (num, i) =>
     Math.ceil(num)
   typename : => "Ceil"
 
 class nodes.types.Math.Floor extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
   process_val: (num, i) =>
     Math.floor(num)
   typename : => "Floor"
 
 class nodes.types.Math.Mod extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @v_valy = @rack.addInput(new fields.types.Float("y", 2))
   process_val: (num, i) =>
     num % @v_valy.get()
   typename : => "Mod"
 
+class nodes.types.Math.Add extends NodeNumberSimple
+  set_fields: =>
+    super
+    @v_factor = @rack.addInput(new fields.types.Float("y", 1))
+  process_val: (num, i) =>
+    num + @v_factor.get()
+  typename : => "Add"
+
+class nodes.types.Math.Subtract extends NodeNumberSimple
+  set_fields: =>
+    super
+    @v_factor = @rack.addInput(new fields.types.Float("y", 1))
+  process_val: (num, i) =>
+    num - @v_factor.get()
+  typename : => "Subtract"
+ 
 class nodes.types.Math.Mult extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @v_factor = @rack.addInput(new fields.types.Float("factor", 2))
   process_val: (num, i) =>
     num * @v_factor.get()
   typename : => "Mult"
 
+class nodes.types.Math.Divide extends NodeNumberSimple
+  set_fields: =>
+    super
+    @v_factor = @rack.addInput(new fields.types.Float("y", 2))
+  process_val: (num, i) =>
+    num / @v_factor.get()
+  typename : => "Divide"
+  
 class nodes.types.Math.Min extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
     Math.min(num, @v_inb.get())
   typename : => "Min"
 
 class nodes.types.Math.Max extends NodeNumberSimple
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
     Math.max(num, @v_inb.get())
   typename : => "Max"
 
 class nodes.types.Utils.Random extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @rack.addFields
       inputs:
         "min" : 0
@@ -241,8 +261,8 @@ class nodes.types.Utils.Random extends NodeBase
   typename : => "Random"
 
 class nodes.types.Utils.Merge extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @rack.addFields
       inputs:
         "in0" : {type: "Any", val: null}
@@ -266,8 +286,8 @@ class nodes.types.Utils.Merge extends NodeBase
   typename : => "Merge"
 
 class nodes.types.Utils.Get extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @rack.addFields
       inputs:
         "array" : {type: "Array", val: null}
@@ -287,8 +307,8 @@ class nodes.types.Utils.Get extends NodeBase
   typename : => "Get"
 
 class nodes.types.Utils.SoundInput extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @counter = 0
     @rack.addFields
       outputs:
@@ -298,8 +318,8 @@ class nodes.types.Utils.SoundInput extends NodeBase
     @rack.get("out", true).set @counter
 
 class nodes.types.Utils.Timer extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @old = @get_time()
     @counter = 0
     @rack.addFields
@@ -331,8 +351,8 @@ class nodes.types.Utils.Timer extends NodeBase
   typename : => "Timer"
 
 class nodes.types.Base.Vector2 extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @vec = new THREE.Vector2(0, 0)
     @rack.addFields
       inputs:
@@ -357,8 +377,8 @@ class nodes.types.Base.Vector2 extends NodeBase
   typename : -> "Vector2"
 
 class nodes.types.Base.Vector3 extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @vec = new THREE.Vector3(0, 0, 0)
     @rack.addFields
       inputs:
@@ -388,8 +408,8 @@ class nodes.types.Base.Vector3 extends NodeBase
   typename : -> "Vector3"
 
 class nodes.types.Base.Color extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @vec = new THREE.Color(1, 0, 0)
     @rack.addFields
       inputs:
@@ -418,8 +438,8 @@ class nodes.types.Base.Color extends NodeBase
 
 
 class nodes.types.Three.Object3D extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.Object3D()
     @rack.addFields
       inputs:
@@ -448,8 +468,8 @@ class nodes.types.Three.Object3D extends NodeBase
   typename : => "Object3D"
   
 class nodes.types.Geometry.CubeGeometry extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
     @rack.addFields
       inputs:
@@ -476,8 +496,8 @@ class nodes.types.Geometry.CubeGeometry extends NodeBase
   typename : => "CubeGeometry"
 
 class nodes.types.Geometry.SphereGeometry extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.SphereGeometry(100, 20, 20)
     
     #@value = 0
@@ -503,8 +523,8 @@ class nodes.types.Geometry.SphereGeometry extends NodeBase
   typename : => "SphereGeometry"
 
 class nodes.types.Three.Scene extends nodes.types.Three.Object3D
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.Scene()
     #@rack.addFields
     #  inputs:
@@ -554,8 +574,8 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   typename : => "Scene"
 
 class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
     @rack.addFields
       inputs:
@@ -576,8 +596,8 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
   typename : => "Mesh"
 
 class nodes.types.Three.Camera extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.Camera()
     @rack.addFields
       inputs:
@@ -597,8 +617,8 @@ class nodes.types.Three.Camera extends NodeBase
   typename : => "Camera"
 
 class nodes.types.Three.WebGLRenderer extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.WebGLRenderer()
     @width = 0
     @height = 0
@@ -635,8 +655,8 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
   typename : => "WebGLRenderer"
 
 class nodes.types.Lights.PointLight extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.PointLight(0xffffff)
     
     @rack.addFields
@@ -654,8 +674,8 @@ class nodes.types.Lights.PointLight extends NodeBase
   typename : => "PointLight"
 
 class nodes.types.Lights.DirectionalLight extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.DirectionalLight(0xffffff)
     
     @rack.addFields
@@ -673,8 +693,8 @@ class nodes.types.Lights.DirectionalLight extends NodeBase
   typename : => "DirectionalLight"
 
 class nodes.types.Lights.AmbientLight extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.AmbientLight(0xffffff)
     
     @rack.addFields
@@ -691,8 +711,8 @@ class nodes.types.Lights.AmbientLight extends NodeBase
   typename : => "AmbientLight"
 
 class NodeMaterialBase extends NodeBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = false
     webgl_materials_node[webgl_materials_node.length] = this
     @rack.addFields
@@ -710,8 +730,8 @@ class NodeMaterialBase extends NodeBase
     @rack.get("out", true).set @ob
 
 class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
     @rack.addFields
       inputs:
@@ -732,8 +752,8 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
 
 #https://github.com/mrdoob/three.js/blob/master/src/materials/MeshLambertMaterial.js
 class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
-  constructor: (x, y) ->
-    super x, y
+  set_fields: =>
+    super
     @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
     @rack.addFields
       inputs:

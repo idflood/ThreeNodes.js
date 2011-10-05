@@ -23,7 +23,7 @@ class NodeField
     @val
   
   toXML : () =>
-    "<field fid='#{@fid}' val='#{@get()}'/>"
+    "\t\t\t<field fid='#{@fid}' val='#{@get()}'/>\n"
 
   render_connections: () =>
     for connection in @connections
