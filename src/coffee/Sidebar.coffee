@@ -8,8 +8,7 @@ init_sidebar = () ->
 init_sidebar_tab_system = () ->
   $(".new_file").click (e) ->
     e.preventDefault()
-    remove_all_connections()
-    remove_all_nodes()
+    clear_workspace()
     
   $(".open_file").click (e) ->
     e.preventDefault()

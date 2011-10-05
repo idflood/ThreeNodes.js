@@ -20,9 +20,7 @@ save_local_file = () ->
   fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.xml")
   
 load_local_file_input_changed = (e) ->
-  remove_all_connections()
-  remove_all_nodes()
-  reset_global_variables()
+  clear_workspace()
   file = this.files[0]
   reader = new FileReader()
   reader.onload = (e) ->
@@ -48,6 +46,11 @@ load_local_file_input_changed = (e) ->
       c = new NodeConnection(from, to, cid)
     uid = parseInt $("uid", loaded_data).attr("last")
   reader.readAsText(file, "UTF-8")
+  
+clear_workspace = () ->
+  remove_all_connections()
+  remove_all_nodes()
+  reset_global_variables()
   
 remove_all_nodes = () ->
   $("#tab-attribute").html("")

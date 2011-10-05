@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, load_local_file_input_changed, node_connections, nodegraph, nodes, on_ui_window_resize, port, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, socket, svg, uid, webgl_materials_node, ws;
+  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, clear_workspace, field_click_1, fields, flatArraysAreEquals, get_uid, host, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, load_local_file_input_changed, node_connections, nodegraph, nodes, on_ui_window_resize, port, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, socket, svg, uid, webgl_materials_node, ws;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -2159,8 +2159,7 @@
   init_sidebar_tab_system = function() {
     $(".new_file").click(function(e) {
       e.preventDefault();
-      remove_all_connections();
-      return remove_all_nodes();
+      return clear_workspace();
     });
     $(".open_file").click(function(e) {
       e.preventDefault();
@@ -2351,9 +2350,7 @@
   };
   load_local_file_input_changed = function(e) {
     var file, reader;
-    remove_all_connections();
-    remove_all_nodes();
-    reset_global_variables();
+    clear_workspace();
     file = this.files[0];
     reader = new FileReader();
     reader.onload = function(e) {
@@ -2383,6 +2380,11 @@
       return uid = parseInt($("uid", loaded_data).attr("last"));
     };
     return reader.readAsText(file, "UTF-8");
+  };
+  clear_workspace = function() {
+    remove_all_connections();
+    remove_all_nodes();
+    return reset_global_variables();
   };
   remove_all_nodes = function() {
     var node, _i, _len, _ref;
