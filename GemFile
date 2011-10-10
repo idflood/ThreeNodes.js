@@ -1,0 +1,8 @@
+source 'http://rubygems.org'
+source "http://gems.github.com"
+
+
+gem 'socket.io'
+gem 'express'
+gem 'sass'
+gem 'coffee-script'

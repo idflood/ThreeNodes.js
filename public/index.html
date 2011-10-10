@@ -2,7 +2,7 @@
 <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
   <head>
     <meta content='text/html;charset=UTF-8' http-equiv='content-type' />
-    <title>ThreeNodes.js::alpha</title>
+    <title>ThreeNodes.js::alpha 1</title>
     <script charset='utf-8' src='assets/js/libs/jquery-1.6.4.min.js'></script>
     <script charset='utf-8' src='assets/js/libs/jquery-ui/js/jquery-ui-1.8.16.custom.min.js'></script>
     <script charset='utf-8' src='assets/js/libs/raphael-min.js'></script>
@@ -15,6 +15,7 @@
     <script charset='utf-8' src='assets/js/libs/underscore-min.js'></script>
     <script charset='utf-8' src='assets/js/libs/BlobBuilder.min.js'></script>
     <script charset='utf-8' src='assets/js/libs/FileSaver.min.js'></script>
+    <script charset='utf-8' src='assets/js/libs/sockjs-latest.min.js'></script>
     <script charset='utf-8' src='assets/js/app.js'></script>
     <script charset='utf-8' src='http://localhost:8001/vogue-client.js'></script>
     <link href='assets/css/screen.css' media='all' rel='stylesheet' type='text/css' />
@@ -24,6 +25,7 @@
     <header>
       <div id='logo'><h1>ThreeNodes.js::alpha</h1></div>
     </header>
+    <object data='assets/flash/SpectrumAnalyzer.swf' height='300' id='sound-input-flash' type='application/x-shockwave-flash' width='630'></object>
     <div id='container-wrapper'>
       <div id='container'>
         <div id='graph'></div>
@@ -54,7 +56,7 @@
           </li>
           <li>
             <a class='open_file' href='#'>Open File</a>
-            <input class='hidden-element' id='main_file_input_open' multiple='false' type='file' />
+            <input id='main_file_input_open' multiple='false' type='file' />
           </li>
           <li>
             <a class='save_file' href='#'>Save File</a>

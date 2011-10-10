@@ -16,12 +16,12 @@ appFiles  = [
 
 
 process = (filename, appContents)->
-  fs.writeFile 'assets/js/' + filename + '.coffee', appContents.join('\n\n'), 'utf8', (err) ->
+  fs.writeFile 'public/assets/js/' + filename + '.coffee', appContents.join('\n\n'), 'utf8', (err) ->
     throw err if err
-    exec 'coffee --compile assets/js/' + filename + '.coffee', (err, stdout, stderr) ->
+    exec 'coffee --compile public/assets/js/' + filename + '.coffee', (err, stdout, stderr) ->
       throw err if err
       console.log stdout + stderr
-      fs.unlink 'assets/js/' + filename + '.coffee', (err) ->
+      fs.unlink 'public/assets/js/' + filename + '.coffee', (err) ->
         throw err if err
         console.log 'Done.'
 

@@ -1,10 +1,34 @@
+import processing.core.*; 
+import processing.xml.*; 
+
+import ddf.minim.*; 
+import ddf.minim.analysis.*; 
+
+import net.tootallnate.websocket.*; 
+
+import java.applet.*; 
+import java.awt.Dimension; 
+import java.awt.Frame; 
+import java.awt.event.MouseEvent; 
+import java.awt.event.KeyEvent; 
+import java.awt.event.FocusEvent; 
+import java.awt.Image; 
+import java.io.*; 
+import java.net.*; 
+import java.text.*; 
+import java.util.*; 
+import java.util.zip.*; 
+import java.util.regex.*; 
+
+public class NodeSoundInput extends PApplet {
+
 // websocket
-import muthesius.net.*;
-import org.webbitserver.*;
+//import muthesius.net.*;
+//import org.webbitserver.*;
 
 // sound
-import ddf.minim.*;
-import ddf.minim.analysis.*;
+
+
 
 AudioPlayer player;
 Minim minim;
@@ -21,6 +45,18 @@ AudioInput in;
 
 float snd_beat_alpha, snd_snare_alpha, snd_kick_alpha, snd_hat_alpha;
 
+public float getKick() {
+  return snd_kick_alpha;
+}
+
+public float get_snare() {
+  return snd_snare_alpha;
+}
+
+public float get_hat() {
+  return snd_hat_alpha;
+}
+
 int kick_min = 1;
 int kick_max = 4;
 int snare_low = 11;
@@ -35,16 +71,16 @@ int columnCenter = 220;
 int columnRight = 430;
 
 
-WebSocketP5 socket;
+//WebSocketP5 socket;
 
 boolean use_line_in = true;
 
-void setup() {
+public void setup() {
   size(630, 300, P2D);
   frame.setLocation(800, 517);
   frameRate(30);
   
-  socket = new WebSocketP5(this,8080);
+  //socket = new WebSocketP5(this,8080);
   
   minim = new Minim(this);
   if (use_line_in == true) {
@@ -76,11 +112,11 @@ void setup() {
 }
 
 
-void draw()
+public void draw()
 {
   int offsetX = 40;
   smooth();
-  float decay = 0.9;
+  float decay = 0.9f;
   background(0);
   //stroke(255);
   if (use_line_in == true) {
@@ -132,11 +168,11 @@ void draw()
   snd_kick_alpha *= decay;
   snd_snare_alpha *= decay;
   snd_hat_alpha *= decay;
-  
-  socket.broadcast("hello from processing!" + snd_kick_alpha);
+  println(snd_kick_alpha);
+  //socket.broadcast("hello from processing!" + snd_kick_alpha);
 }
 
-void stop()
+public void stop()
 {
   // always close Minim audio classes when you are done with them
   if( use_line_in == true){
@@ -146,14 +182,10 @@ void stop()
   }
   
   minim.stop();
-  socket.stop();
+  //socket.stop();
   super.stop();
 }
-
-void mousePressed(){
-  socket.broadcast("hello from processing!");
-}
-
+/*
 void websocketOnMessage(WebSocketConnection con, String msg){
 	println(msg);
 }
@@ -164,4 +196,49 @@ void websocketOnOpen(WebSocketConnection con){
 
 void websocketOnClosed(WebSocketConnection con){
   println("A client left");
+}*/
+class BeatListener implements AudioListener
+{
+  private BeatDetect beat;
+  private AudioInput source;
+  private AudioPlayer source2;
+  private boolean is_input = false;
+  
+  BeatListener(BeatDetect beat, AudioInput source)
+  {
+    this.is_input = true;
+    this.source = source;
+    this.source.addListener(this);
+    this.beat = beat;
+  }
+  
+  BeatListener(BeatDetect beat, AudioPlayer source)
+  {
+    this.source2 = source;
+    this.source2.addListener(this);
+    this.beat = beat;
+  }
+  
+  public void samples(float[] samps)
+  {
+    if(is_input){
+      beat.detect(source.left);
+    }else{
+      beat.detect(source2.left);
+    }
+    
+  }
+  
+  public void samples(float[] sampsL, float[] sampsR)
+  {
+    if(is_input){
+      beat.detect(source.left);
+    }else{
+      beat.detect(source2.left);
+    }
+  }
+}
+  static public void main(String args[]) {
+    PApplet.main(new String[] { "--bgcolor=#FFFFFF", "NodeSoundInput" });
+  }
 }

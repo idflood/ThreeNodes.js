@@ -19,7 +19,7 @@ class NodeBase
     if @inXML != false
       @rack.fromXML(@inXML)
     
-  typename: => "Node"
+  typename: => String(@constructor.name)
   
   set_fields: =>
     # to implement
@@ -139,7 +139,6 @@ class nodes.types.Base.Number extends NodeNumberSimple
   set_fields: =>
     super
     @rack.add_center_textfield(@v_in)
-  typename : => "Number"
 
 class nodes.types.Base.String extends NodeBase
   init: =>
@@ -154,37 +153,30 @@ class nodes.types.Base.String extends NodeBase
         "out": {type: "Any", val: @ob}
   compute: =>
     @rack.get("out", true).set @rack.get("string").get()
-  typename : => "String"
 
 class nodes.types.Math.Sin extends NodeNumberSimple
   process_val: (num, i) =>
     Math.sin(num)
-  typename : => "Sin"
 
 class nodes.types.Math.Cos extends NodeNumberSimple
   process_val: (num, i) =>
     Math.cos(num)
-  typename : => "Cos"
 
 class nodes.types.Math.Tan extends NodeNumberSimple
   process_val: (num, i) =>
     Math.tan(num)
-  typename : => "Tan"
 
 class nodes.types.Math.Round extends NodeNumberSimple
   process_val: (num, i) =>
     Math.round(num)
-  typename : => "Round"
 
 class nodes.types.Math.Ceil extends NodeNumberSimple
   process_val: (num, i) =>
     Math.ceil(num)
-  typename : => "Ceil"
 
 class nodes.types.Math.Floor extends NodeNumberSimple
   process_val: (num, i) =>
     Math.floor(num)
-  typename : => "Floor"
 
 class nodes.types.Math.Mod extends NodeNumberSimple
   set_fields: =>
@@ -192,7 +184,6 @@ class nodes.types.Math.Mod extends NodeNumberSimple
     @v_valy = @rack.addInput(new fields.types.Float("y", 2))
   process_val: (num, i) =>
     num % @v_valy.get()
-  typename : => "Mod"
 
 class nodes.types.Math.Add extends NodeNumberSimple
   set_fields: =>
@@ -200,7 +191,6 @@ class nodes.types.Math.Add extends NodeNumberSimple
     @v_factor = @rack.addInput(new fields.types.Float("y", 1))
   process_val: (num, i) =>
     num + @v_factor.get()
-  typename : => "Add"
 
 class nodes.types.Math.Subtract extends NodeNumberSimple
   set_fields: =>
@@ -208,15 +198,13 @@ class nodes.types.Math.Subtract extends NodeNumberSimple
     @v_factor = @rack.addInput(new fields.types.Float("y", 1))
   process_val: (num, i) =>
     num - @v_factor.get()
-  typename : => "Subtract"
- 
+
 class nodes.types.Math.Mult extends NodeNumberSimple
   set_fields: =>
     super
     @v_factor = @rack.addInput(new fields.types.Float("factor", 2))
   process_val: (num, i) =>
     num * @v_factor.get()
-  typename : => "Mult"
 
 class nodes.types.Math.Divide extends NodeNumberSimple
   set_fields: =>
@@ -224,15 +212,13 @@ class nodes.types.Math.Divide extends NodeNumberSimple
     @v_factor = @rack.addInput(new fields.types.Float("y", 2))
   process_val: (num, i) =>
     num / @v_factor.get()
-  typename : => "Divide"
-  
+
 class nodes.types.Math.Min extends NodeNumberSimple
   set_fields: =>
     super
     @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
     Math.min(num, @v_inb.get())
-  typename : => "Min"
 
 class nodes.types.Math.Max extends NodeNumberSimple
   set_fields: =>
@@ -240,7 +226,6 @@ class nodes.types.Math.Max extends NodeNumberSimple
     @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
   process_val: (num, i) =>
     Math.max(num, @v_inb.get())
-  typename : => "Max"
 
 class nodes.types.Utils.Random extends NodeBase
   set_fields: =>
@@ -258,7 +243,6 @@ class nodes.types.Utils.Random extends NodeBase
     @value = @rack.get("min").get() + Math.random() * (@rack.get("max").get() - @rack.get("min").get())
     if @value != old
       @rack.get("out", true).set @value
-  typename : => "Random"
 
 class nodes.types.Utils.Merge extends NodeBase
   set_fields: =>
@@ -283,7 +267,6 @@ class nodes.types.Utils.Merge extends NodeBase
         @value[@value.length] = k.get()
     if @value != old
       @rack.get("out", true).set @value
-  typename : => "Merge"
 
 class nodes.types.Utils.Get extends NodeBase
   set_fields: =>
@@ -304,7 +287,6 @@ class nodes.types.Utils.Get extends NodeBase
       @value = arr[ind % arr.length]
     if @value != old
       @rack.get("out", true).set @value
-  typename : => "Get"
 
 class nodes.types.Utils.SoundInput extends NodeBase
   set_fields: =>
@@ -312,10 +294,14 @@ class nodes.types.Utils.SoundInput extends NodeBase
     @counter = 0
     @rack.addFields
       outputs:
-        "out" : 0
-    @rack.add_center_textfield(@rack.get("out", true))
+        "low" : 0
+        "medium" : 0
+        "high" : 0
   compute: () =>
-    @rack.get("out", true).set @counter
+    @rack.get("low", true).set flash_sound_value[2 % flash_sound_value.length]
+    @rack.get("medium", true).set flash_sound_value[9 % flash_sound_value.length]
+    @rack.get("high", true).set flash_sound_value[14 % flash_sound_value.length]
+  
 
 class nodes.types.Utils.Timer extends NodeBase
   set_fields: =>
@@ -347,8 +333,6 @@ class nodes.types.Utils.Timer extends NodeBase
       @counter = 0
     @old = now
     @rack.get("out", true).set @counter
-  
-  typename : => "Timer"
 
 class nodes.types.Base.Vector2 extends NodeBase
   set_fields: =>
@@ -374,7 +358,6 @@ class nodes.types.Base.Vector2 extends NodeBase
       @rack.get("xy", true).set @value
       @rack.get("x", true).set @value.x
       @rack.get("y", true).set @value.y
-  typename : -> "Vector2"
 
 class nodes.types.Base.Vector3 extends NodeBase
   set_fields: =>
@@ -405,7 +388,6 @@ class nodes.types.Base.Vector3 extends NodeBase
       @rack.get("x", true).set @value.x
       @rack.get("y", true).set @value.y
       @rack.get("z", true).set @value.z
-  typename : -> "Vector3"
 
 class nodes.types.Base.Color extends NodeBase
   set_fields: =>
@@ -433,9 +415,6 @@ class nodes.types.Base.Color extends NodeBase
       @rack.get("r", true).set @value.r
       @rack.get("g", true).set @value.g
       @rack.get("b", true).set @value.b
-  typename : -> "Color"
-
-
 
 class nodes.types.Three.Object3D extends NodeBase
   set_fields: =>
@@ -465,8 +444,7 @@ class nodes.types.Three.Object3D extends NodeBase
       if ind != -1
         @ob.removeChild(child)
     @rack.get("out", true).set @ob
-  typename : => "Object3D"
-  
+
 class nodes.types.Geometry.CubeGeometry extends NodeBase
   set_fields: =>
     super
@@ -493,7 +471,6 @@ class nodes.types.Geometry.CubeGeometry extends NodeBase
       @ob = new THREE.CubeGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get())
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
-  typename : => "CubeGeometry"
 
 class nodes.types.Geometry.SphereGeometry extends NodeBase
   set_fields: =>
@@ -520,7 +497,6 @@ class nodes.types.Geometry.SphereGeometry extends NodeBase
       @cached = new_cache
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
-  typename : => "SphereGeometry"
 
 class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   set_fields: =>
@@ -571,7 +547,6 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
     @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
     @apply_children()
     @rack.get("out", true).set @ob
-  typename : => "Scene"
 
 class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
   set_fields: =>
@@ -593,7 +568,6 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
       @geometry_cache = @rack.get('geometry').get().id
       @materials_cache = @rack.get('materials').get()
     @rack.get("out", true).set @ob
-  typename : => "Mesh"
 
 class nodes.types.Three.Camera extends NodeBase
   set_fields: =>
@@ -614,7 +588,6 @@ class nodes.types.Three.Camera extends NodeBase
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
-  typename : => "Camera"
 
 class nodes.types.Three.WebGLRenderer extends NodeBase
   set_fields: =>
@@ -632,11 +605,13 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
         "out": {type: "Any", val: @ob}
     @apply_size()
     @rack.get("camera").val.position.z = 1000
-    
+    console.log "xyz"
     @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false")
     @win.document.body.appendChild( @ob.domElement );
   
   apply_size: =>
+    if !@win
+      return false
     w = @rack.get('width').get()
     h = @rack.get('height').get()
     if w != @width || h != @height
@@ -652,7 +627,6 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     #if sce != false && cam != false
     @ob.render(sce, cam)
     #@rack.get("out", true).set @ob
-  typename : => "WebGLRenderer"
 
 class nodes.types.Lights.PointLight extends NodeBase
   set_fields: =>
@@ -671,7 +645,6 @@ class nodes.types.Lights.PointLight extends NodeBase
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
-  typename : => "PointLight"
 
 class nodes.types.Lights.DirectionalLight extends NodeBase
   set_fields: =>
@@ -690,7 +663,6 @@ class nodes.types.Lights.DirectionalLight extends NodeBase
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
-  typename : => "DirectionalLight"
 
 class nodes.types.Lights.AmbientLight extends NodeBase
   set_fields: =>
@@ -708,7 +680,6 @@ class nodes.types.Lights.AmbientLight extends NodeBase
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
-  typename : => "AmbientLight"
 
 class NodeMaterialBase extends NodeBase
   set_fields: =>
@@ -748,7 +719,6 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
   #compute: =>
   #  @apply_fields_to_val(@rack.node_fields.inputs, @ob)
   #  @rack.get("out", true).set @ob
-  typename : => "MeshBasicMaterial"
 
 #https://github.com/mrdoob/three.js/blob/master/src/materials/MeshLambertMaterial.js
 class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
@@ -769,6 +739,5 @@ class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
   #compute: =>
   #  @apply_fields_to_val(@rack.node_fields.inputs, @ob)
   #  @rack.get("out", true).set @ob
-  typename : => "MeshLambertMaterial"
 
 

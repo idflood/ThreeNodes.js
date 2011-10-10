@@ -20,7 +20,7 @@ def compile_file(f, file_out)
     when /\.coffee$/ : cmd = @coffee_cmd
     when /\.haml$/
       cmd = @haml_cmd
-      file_out["src/haml/"] = ""
+      file_out["src/haml/"] = "public/"
       file_out[".haml"] = ".html"
       cmd += " " + f + " " + file_out
     when /\.scss$/, /\.sass$/ : cmd = @compass_cmd

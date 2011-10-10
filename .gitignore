@@ -3,3 +3,4 @@ Thumbs.db
 .DS_Store
 .sass-cache/
 .project
+node_modules/

@@ -1,8 +1,10 @@
+- use_processing = false
+- use_flash = true
 !!! 5
 %html{:lang => "en", "xml:lang" => "en", :xmlns => "http://www.w3.org/1999/xhtml"}
   %head
     %meta{:content => "text/html;charset=UTF-8", "http-equiv" => "content-type"}/
-    %title ThreeNodes.js::alpha
+    %title ThreeNodes.js::alpha 1
     %script{:charset => "utf-8", :src => "assets/js/libs/jquery-1.6.4.min.js"}
     %script{:charset => "utf-8", :src => "assets/js/libs/jquery-ui/js/jquery-ui-1.8.16.custom.min.js"}
     %script{:charset => "utf-8", :src => "assets/js/libs/raphael-min.js"}
@@ -15,6 +17,7 @@
     %script{:charset => "utf-8", :src => "assets/js/libs/underscore-min.js"}
     %script{:charset => "utf-8", :src => "assets/js/libs/BlobBuilder.min.js"}
     %script{:charset => "utf-8", :src => "assets/js/libs/FileSaver.min.js"}
+    %script{:charset => "utf-8", :src => "assets/js/libs/sockjs-latest.min.js"}
     %script{:charset => "utf-8", :src => "assets/js/app.js"}
     %script{:charset => "utf-8", :src => "http://localhost:8001/vogue-client.js"}
     
@@ -26,6 +29,16 @@
     %header
       #logo<
         %h1< ThreeNodes.js::alpha
+    - if use_flash == true
+      %object#sound-input-flash{:type => "application/x-shockwave-flash", :width => "630", :height => "300", :data => "assets/flash/SpectrumAnalyzer.swf"}
+    - if use_processing == true
+      %object#sound-input{:type => "application/x-java-applet", :width => "630", :height => "300", :name => "sound_input"}
+        %param{:name => "codebase", :value => "assets/java/NodeSoundInput/applet/"}
+        %param{:name => "code", :value => "NodeSoundInput.class"}
+        %param{:name => "mayscript", :value => "true"}
+        %param{:name => "scriptable", :value => "true"}
+        %param{:name => "archive", :value => "NodeSoundInput.jar,jl1.0.jar,jsminim.jar,minim-spi.jar,minim.jar,mp3spi1.9.4.jar,tritonus_aos.jar,tritonus_share.jar,core.jar,WebSocket.jar"}
+    
     #container-wrapper
       #container
         #graph
@@ -47,7 +60,7 @@
             %a.new_file{:href => "#"} New File
           %li
             %a.open_file{:href => "#"} Open File
-            %input#main_file_input_open.hidden-element{:type => "file", :multiple => "false"}
+            %input#main_file_input_open{:type => "file", :multiple => "false"}
           %li
             %a.save_file{:href => "#"} Save File
           %li
