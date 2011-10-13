@@ -1,4 +1,5 @@
 #ThreeNodes.js
+<img src="http://github.com/idflood/ThreeNodes.js/raw/master/misc/screenshot1.jpg" width="720" height="406" alt="screenshot v 0.01">
 
 This is an attempt to make something like "vvvv" in javascript, html and webgl.
 
