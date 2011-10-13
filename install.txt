@@ -1,6 +1,0 @@
-1. install node.js
-2. install npm
-3. install compass/coffeescript
-4. install vogue.js
-5. cd in ThreeNodes
-6. npm install -d
