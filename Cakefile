@@ -9,11 +9,17 @@ appFiles  = [
   'NodeField'
   'NodeFieldRack'
   'Node'
+  'nodes/Base'
+  'nodes/Geometry'
+  'nodes/Lights'
+  'nodes/Materials'
+  'nodes/Math'
+  'nodes/Three'
+  'nodes/Utils'
   'Sidebar'
   'NodeGraph'
   'File'
 ]
-
 
 process = (filename, appContents)->
   fs.writeFile 'public/assets/js/' + filename + '.coffee', appContents.join('\n\n'), 'utf8', (err) ->
@@ -35,6 +41,3 @@ build_app = () ->
 
 task 'build', 'Build single application file from source files', ->
   build_app()
-  
-        
-  

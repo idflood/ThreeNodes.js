@@ -1027,385 +1027,6 @@
     };
     return String;
   })();
-  nodes.types.Math.Sin = (function() {
-    __extends(Sin, NodeNumberSimple);
-    function Sin() {
-      this.process_val = __bind(this.process_val, this);
-      Sin.__super__.constructor.apply(this, arguments);
-    }
-    Sin.prototype.process_val = function(num, i) {
-      return Math.sin(num);
-    };
-    return Sin;
-  })();
-  nodes.types.Math.Cos = (function() {
-    __extends(Cos, NodeNumberSimple);
-    function Cos() {
-      this.process_val = __bind(this.process_val, this);
-      Cos.__super__.constructor.apply(this, arguments);
-    }
-    Cos.prototype.process_val = function(num, i) {
-      return Math.cos(num);
-    };
-    return Cos;
-  })();
-  nodes.types.Math.Tan = (function() {
-    __extends(Tan, NodeNumberSimple);
-    function Tan() {
-      this.process_val = __bind(this.process_val, this);
-      Tan.__super__.constructor.apply(this, arguments);
-    }
-    Tan.prototype.process_val = function(num, i) {
-      return Math.tan(num);
-    };
-    return Tan;
-  })();
-  nodes.types.Math.Round = (function() {
-    __extends(Round, NodeNumberSimple);
-    function Round() {
-      this.process_val = __bind(this.process_val, this);
-      Round.__super__.constructor.apply(this, arguments);
-    }
-    Round.prototype.process_val = function(num, i) {
-      return Math.round(num);
-    };
-    return Round;
-  })();
-  nodes.types.Math.Ceil = (function() {
-    __extends(Ceil, NodeNumberSimple);
-    function Ceil() {
-      this.process_val = __bind(this.process_val, this);
-      Ceil.__super__.constructor.apply(this, arguments);
-    }
-    Ceil.prototype.process_val = function(num, i) {
-      return Math.ceil(num);
-    };
-    return Ceil;
-  })();
-  nodes.types.Math.Floor = (function() {
-    __extends(Floor, NodeNumberSimple);
-    function Floor() {
-      this.process_val = __bind(this.process_val, this);
-      Floor.__super__.constructor.apply(this, arguments);
-    }
-    Floor.prototype.process_val = function(num, i) {
-      return Math.floor(num);
-    };
-    return Floor;
-  })();
-  nodes.types.Math.Mod = (function() {
-    __extends(Mod, NodeNumberSimple);
-    function Mod() {
-      this.process_val = __bind(this.process_val, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Mod.__super__.constructor.apply(this, arguments);
-    }
-    Mod.prototype.set_fields = function() {
-      Mod.__super__.set_fields.apply(this, arguments);
-      return this.v_valy = this.rack.addInput(new fields.types.Float("y", 2));
-    };
-    Mod.prototype.process_val = function(num, i) {
-      return num % this.v_valy.get();
-    };
-    return Mod;
-  })();
-  nodes.types.Math.Add = (function() {
-    __extends(Add, NodeNumberSimple);
-    function Add() {
-      this.process_val = __bind(this.process_val, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Add.__super__.constructor.apply(this, arguments);
-    }
-    Add.prototype.set_fields = function() {
-      Add.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
-    };
-    Add.prototype.process_val = function(num, i) {
-      return num + this.v_factor.get();
-    };
-    return Add;
-  })();
-  nodes.types.Math.Subtract = (function() {
-    __extends(Subtract, NodeNumberSimple);
-    function Subtract() {
-      this.process_val = __bind(this.process_val, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Subtract.__super__.constructor.apply(this, arguments);
-    }
-    Subtract.prototype.set_fields = function() {
-      Subtract.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
-    };
-    Subtract.prototype.process_val = function(num, i) {
-      return num - this.v_factor.get();
-    };
-    return Subtract;
-  })();
-  nodes.types.Math.Mult = (function() {
-    __extends(Mult, NodeNumberSimple);
-    function Mult() {
-      this.process_val = __bind(this.process_val, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Mult.__super__.constructor.apply(this, arguments);
-    }
-    Mult.prototype.set_fields = function() {
-      Mult.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("factor", 2));
-    };
-    Mult.prototype.process_val = function(num, i) {
-      return num * this.v_factor.get();
-    };
-    return Mult;
-  })();
-  nodes.types.Math.Divide = (function() {
-    __extends(Divide, NodeNumberSimple);
-    function Divide() {
-      this.process_val = __bind(this.process_val, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Divide.__super__.constructor.apply(this, arguments);
-    }
-    Divide.prototype.set_fields = function() {
-      Divide.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 2));
-    };
-    Divide.prototype.process_val = function(num, i) {
-      return num / this.v_factor.get();
-    };
-    return Divide;
-  })();
-  nodes.types.Math.Min = (function() {
-    __extends(Min, NodeNumberSimple);
-    function Min() {
-      this.process_val = __bind(this.process_val, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Min.__super__.constructor.apply(this, arguments);
-    }
-    Min.prototype.set_fields = function() {
-      Min.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
-    };
-    Min.prototype.process_val = function(num, i) {
-      return Math.min(num, this.v_inb.get());
-    };
-    return Min;
-  })();
-  nodes.types.Math.Max = (function() {
-    __extends(Max, NodeNumberSimple);
-    function Max() {
-      this.process_val = __bind(this.process_val, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Max.__super__.constructor.apply(this, arguments);
-    }
-    Max.prototype.set_fields = function() {
-      Max.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
-    };
-    Max.prototype.process_val = function(num, i) {
-      return Math.max(num, this.v_inb.get());
-    };
-    return Max;
-  })();
-  nodes.types.Utils.Random = (function() {
-    __extends(Random, NodeBase);
-    function Random() {
-      this.compute = __bind(this.compute, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Random.__super__.constructor.apply(this, arguments);
-    }
-    Random.prototype.set_fields = function() {
-      Random.__super__.set_fields.apply(this, arguments);
-      this.rack.addFields({
-        inputs: {
-          "min": 0,
-          "max": 1
-        },
-        outputs: {
-          "out": 0
-        }
-      });
-      return this.rack.add_center_textfield(this.rack.get("out", true));
-    };
-    Random.prototype.compute = function() {
-      var old;
-      old = this.rack.get("out", true).get();
-      this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
-      if (this.value !== old) {
-        return this.rack.get("out", true).set(this.value);
-      }
-    };
-    return Random;
-  })();
-  nodes.types.Utils.Merge = (function() {
-    __extends(Merge, NodeBase);
-    function Merge() {
-      this.compute = __bind(this.compute, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Merge.__super__.constructor.apply(this, arguments);
-    }
-    Merge.prototype.set_fields = function() {
-      Merge.__super__.set_fields.apply(this, arguments);
-      return this.rack.addFields({
-        inputs: {
-          "in0": {
-            type: "Any",
-            val: null
-          },
-          "in1": {
-            type: "Any",
-            val: null
-          },
-          "in2": {
-            type: "Any",
-            val: null
-          },
-          "in3": {
-            type: "Any",
-            val: null
-          },
-          "in4": {
-            type: "Any",
-            val: null
-          },
-          "in5": {
-            type: "Any",
-            val: null
-          }
-        },
-        outputs: {
-          "out": {
-            type: "Array",
-            val: []
-          }
-        }
-      });
-    };
-    Merge.prototype.compute = function() {
-      var f, k, old;
-      old = this.rack.get("out", true).get();
-      this.value = [];
-      for (f in this.rack.node_fields.inputs) {
-        k = this.rack.node_fields.inputs[f];
-        if (k.get() !== null && k.connections.length > 0) {
-          this.value[this.value.length] = k.get();
-        }
-      }
-      if (this.value !== old) {
-        return this.rack.get("out", true).set(this.value);
-      }
-    };
-    return Merge;
-  })();
-  nodes.types.Utils.Get = (function() {
-    __extends(Get, NodeBase);
-    function Get() {
-      this.compute = __bind(this.compute, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Get.__super__.constructor.apply(this, arguments);
-    }
-    Get.prototype.set_fields = function() {
-      Get.__super__.set_fields.apply(this, arguments);
-      return this.rack.addFields({
-        inputs: {
-          "array": {
-            type: "Array",
-            val: null
-          },
-          "index": 0
-        },
-        outputs: {
-          "out": {
-            type: "Any",
-            val: null
-          }
-        }
-      });
-    };
-    Get.prototype.compute = function() {
-      var arr, ind, old;
-      old = this.rack.get("out", true).get();
-      this.value = false;
-      arr = this.rack.get("array").get();
-      ind = parseInt(this.rack.get("index").get());
-      if ($.type(arr) === "array") {
-        this.value = arr[ind % arr.length];
-      }
-      if (this.value !== old) {
-        return this.rack.get("out", true).set(this.value);
-      }
-    };
-    return Get;
-  })();
-  nodes.types.Utils.SoundInput = (function() {
-    __extends(SoundInput, NodeBase);
-    function SoundInput() {
-      this.compute = __bind(this.compute, this);
-      this.set_fields = __bind(this.set_fields, this);
-      SoundInput.__super__.constructor.apply(this, arguments);
-    }
-    SoundInput.prototype.set_fields = function() {
-      SoundInput.__super__.set_fields.apply(this, arguments);
-      this.counter = 0;
-      return this.rack.addFields({
-        outputs: {
-          "low": 0,
-          "medium": 0,
-          "high": 0
-        }
-      });
-    };
-    SoundInput.prototype.compute = function() {
-      this.rack.get("low", true).set(flash_sound_value[2 % flash_sound_value.length]);
-      this.rack.get("medium", true).set(flash_sound_value[9 % flash_sound_value.length]);
-      return this.rack.get("high", true).set(flash_sound_value[14 % flash_sound_value.length]);
-    };
-    return SoundInput;
-  })();
-  nodes.types.Utils.Timer = (function() {
-    __extends(Timer, NodeBase);
-    function Timer() {
-      this.compute = __bind(this.compute, this);
-      this.get_time = __bind(this.get_time, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Timer.__super__.constructor.apply(this, arguments);
-    }
-    Timer.prototype.set_fields = function() {
-      Timer.__super__.set_fields.apply(this, arguments);
-      this.old = this.get_time();
-      this.counter = 0;
-      this.rack.addFields({
-        inputs: {
-          "reset": false,
-          "pause": false,
-          "max": 99999999999
-        },
-        outputs: {
-          "out": 0
-        }
-      });
-      return this.rack.add_center_textfield(this.rack.get("out", true));
-    };
-    Timer.prototype.get_time = function() {
-      return new Date().getTime();
-    };
-    Timer.prototype.compute = function() {
-      var diff, now, oldval;
-      oldval = this.rack.get("out", true).get();
-      now = this.get_time();
-      if (this.rack.get("pause").get() === false) {
-        this.counter += now - this.old;
-      }
-      if (this.rack.get("reset").get() === true) {
-        this.counter = 0;
-      }
-      diff = this.rack.get("max").get() - this.counter;
-      if (diff <= 0) {
-        this.counter = 0;
-      }
-      this.old = now;
-      return this.rack.get("out", true).set(this.counter);
-    };
-    return Timer;
-  })();
   nodes.types.Base.Vector2 = (function() {
     __extends(Vector2, NodeBase);
     function Vector2() {
@@ -1544,70 +1165,6 @@
     };
     return Color;
   })();
-  nodes.types.Three.Object3D = (function() {
-    __extends(Object3D, NodeBase);
-    function Object3D() {
-      this.compute = __bind(this.compute, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Object3D.__super__.constructor.apply(this, arguments);
-    }
-    Object3D.prototype.set_fields = function() {
-      Object3D.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.Object3D();
-      return this.rack.addFields({
-        inputs: {
-          "children": {
-            type: "Array",
-            val: []
-          },
-          "position": {
-            type: "Vector3",
-            val: new THREE.Vector3()
-          },
-          "rotation": {
-            type: "Vector3",
-            val: new THREE.Vector3()
-          },
-          "scale": {
-            type: "Vector3",
-            val: new THREE.Vector3(1, 1, 1)
-          },
-          "doubleSided": false,
-          "visible": true,
-          "castShadow": false,
-          "receiveShadow": false
-        },
-        outputs: {
-          "out": {
-            type: "Any",
-            val: this.ob
-          }
-        }
-      });
-    };
-    Object3D.prototype.compute = function() {
-      var child, ind, _i, _j, _len, _len2, _ref, _ref2;
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
-      _ref = this.rack.get("children").get();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
-        ind = this.ob.children.indexOf(child);
-        if (ind === -1) {
-          this.ob.addChild(child);
-        }
-      }
-      _ref2 = this.ob.children;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        child = _ref2[_j];
-        ind = this.rack.get("children").val.indexOf(child);
-        if (ind !== -1) {
-          this.ob.removeChild(child);
-        }
-      }
-      return this.rack.get("out", true).set(this.ob);
-    };
-    return Object3D;
-  })();
   nodes.types.Geometry.CubeGeometry = (function() {
     __extends(CubeGeometry, NodeBase);
     function CubeGeometry() {
@@ -1692,202 +1249,6 @@
       return this.rack.get("out", true).set(this.ob);
     };
     return SphereGeometry;
-  })();
-  nodes.types.Three.Scene = (function() {
-    __extends(Scene, nodes.types.Three.Object3D);
-    function Scene() {
-      this.compute = __bind(this.compute, this);
-      this.apply_children = __bind(this.apply_children, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Scene.__super__.constructor.apply(this, arguments);
-    }
-    Scene.prototype.set_fields = function() {
-      Scene.__super__.set_fields.apply(this, arguments);
-      return this.ob = new THREE.Scene();
-    };
-    Scene.prototype.apply_children = function() {
-      var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
-      childs_in = this.rack.get("children").get();
-      _ref = this.ob.children;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
-        ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child instanceof THREE.Light === false) {
-          console.log("remove");
-          console.log(child);
-          this.ob.removeChild(child);
-        }
-      }
-      _ref2 = this.ob.children;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        child = _ref2[_j];
-        ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child instanceof THREE.Light === true) {
-          console.log("remove light");
-          console.log(child);
-          this.ob.removeLight(child);
-        }
-      }
-      _results = [];
-      for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
-        child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("light"), console.log(child), this.ob.addLight(child), console.log(this.ob.children)) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log(child), this.ob.addChild(child)) : void 0));
-      }
-      return _results;
-    };
-    Scene.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
-      this.apply_children();
-      return this.rack.get("out", true).set(this.ob);
-    };
-    return Scene;
-  })();
-  nodes.types.Three.Mesh = (function() {
-    __extends(Mesh, nodes.types.Three.Object3D);
-    function Mesh() {
-      this.compute = __bind(this.compute, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Mesh.__super__.constructor.apply(this, arguments);
-    }
-    Mesh.prototype.set_fields = function() {
-      Mesh.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
-        color: 0xff0000,
-        wireframe: false
-      }));
-      this.rack.addFields({
-        inputs: {
-          "geometry": {
-            type: "Any",
-            val: new THREE.CubeGeometry(200, 200, 200)
-          },
-          "materials": {
-            type: "Array",
-            val: [
-              new THREE.MeshLambertMaterial({
-                color: 0xff0000,
-                wireframe: false
-              })
-            ]
-          },
-          "overdraw": false
-        }
-      });
-      this.rack.get("out", true).set(this.ob);
-      this.geometry_cache = this.rack.get('geometry').get().id;
-      return this.materials_cache = this.rack.get('materials').get();
-    };
-    Mesh.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
-      if (this.geometry_cache !== this.rack.get('geometry').get().id || flatArraysAreEquals(this.materials_cache, this.rack.get('materials').get()) === false) {
-        this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('materials').get());
-        this.geometry_cache = this.rack.get('geometry').get().id;
-        this.materials_cache = this.rack.get('materials').get();
-      }
-      return this.rack.get("out", true).set(this.ob);
-    };
-    return Mesh;
-  })();
-  nodes.types.Three.Camera = (function() {
-    __extends(Camera, NodeBase);
-    function Camera() {
-      this.compute = __bind(this.compute, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Camera.__super__.constructor.apply(this, arguments);
-    }
-    Camera.prototype.set_fields = function() {
-      Camera.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.Camera();
-      return this.rack.addFields({
-        inputs: {
-          "fov": 50,
-          "aspect": 1,
-          "near": 0.1,
-          "far": 2000,
-          "position": {
-            type: "Vector3",
-            val: new THREE.Vector3()
-          },
-          "target": {
-            type: "Object3D",
-            val: new THREE.Object3D()
-          },
-          "useTarget": false
-        },
-        outputs: {
-          "out": {
-            type: "Any",
-            val: this.ob
-          }
-        }
-      });
-    };
-    Camera.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
-    };
-    return Camera;
-  })();
-  nodes.types.Three.WebGLRenderer = (function() {
-    __extends(WebGLRenderer, NodeBase);
-    function WebGLRenderer() {
-      this.compute = __bind(this.compute, this);
-      this.apply_size = __bind(this.apply_size, this);
-      this.set_fields = __bind(this.set_fields, this);
-      WebGLRenderer.__super__.constructor.apply(this, arguments);
-    }
-    WebGLRenderer.prototype.set_fields = function() {
-      WebGLRenderer.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.WebGLRenderer();
-      this.width = 0;
-      this.height = 0;
-      this.rack.addFields({
-        inputs: {
-          "width": 800,
-          "height": 600,
-          "scene": {
-            type: "Scene",
-            val: new THREE.Scene()
-          },
-          "camera": {
-            type: "Camera",
-            val: new THREE.Camera(75, 800 / 600, 1, 10000)
-          }
-        },
-        outputs: {
-          "out": {
-            type: "Any",
-            val: this.ob
-          }
-        }
-      });
-      this.apply_size();
-      this.rack.get("camera").val.position.z = 1000;
-      console.log("xyz");
-      this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false");
-      return this.win.document.body.appendChild(this.ob.domElement);
-    };
-    WebGLRenderer.prototype.apply_size = function() {
-      var h, w;
-      if (!this.win) {
-        return false;
-      }
-      w = this.rack.get('width').get();
-      h = this.rack.get('height').get();
-      if (w !== this.width || h !== this.height) {
-        this.ob.setSize(w, h);
-      }
-      this.width = w;
-      return this.height = h;
-    };
-    WebGLRenderer.prototype.compute = function() {
-      var cam, sce;
-      this.apply_size();
-      sce = this.rack.get("scene").get();
-      cam = this.rack.get("camera").get();
-      return this.ob.render(sce, cam);
-    };
-    return WebGLRenderer;
   })();
   nodes.types.Lights.PointLight = (function() {
     __extends(PointLight, NodeBase);
@@ -2094,6 +1455,645 @@
       });
     };
     return MeshLambertMaterial;
+  })();
+  nodes.types.Math.Sin = (function() {
+    __extends(Sin, NodeNumberSimple);
+    function Sin() {
+      this.process_val = __bind(this.process_val, this);
+      Sin.__super__.constructor.apply(this, arguments);
+    }
+    Sin.prototype.process_val = function(num, i) {
+      return Math.sin(num);
+    };
+    return Sin;
+  })();
+  nodes.types.Math.Cos = (function() {
+    __extends(Cos, NodeNumberSimple);
+    function Cos() {
+      this.process_val = __bind(this.process_val, this);
+      Cos.__super__.constructor.apply(this, arguments);
+    }
+    Cos.prototype.process_val = function(num, i) {
+      return Math.cos(num);
+    };
+    return Cos;
+  })();
+  nodes.types.Math.Tan = (function() {
+    __extends(Tan, NodeNumberSimple);
+    function Tan() {
+      this.process_val = __bind(this.process_val, this);
+      Tan.__super__.constructor.apply(this, arguments);
+    }
+    Tan.prototype.process_val = function(num, i) {
+      return Math.tan(num);
+    };
+    return Tan;
+  })();
+  nodes.types.Math.Round = (function() {
+    __extends(Round, NodeNumberSimple);
+    function Round() {
+      this.process_val = __bind(this.process_val, this);
+      Round.__super__.constructor.apply(this, arguments);
+    }
+    Round.prototype.process_val = function(num, i) {
+      return Math.round(num);
+    };
+    return Round;
+  })();
+  nodes.types.Math.Ceil = (function() {
+    __extends(Ceil, NodeNumberSimple);
+    function Ceil() {
+      this.process_val = __bind(this.process_val, this);
+      Ceil.__super__.constructor.apply(this, arguments);
+    }
+    Ceil.prototype.process_val = function(num, i) {
+      return Math.ceil(num);
+    };
+    return Ceil;
+  })();
+  nodes.types.Math.Floor = (function() {
+    __extends(Floor, NodeNumberSimple);
+    function Floor() {
+      this.process_val = __bind(this.process_val, this);
+      Floor.__super__.constructor.apply(this, arguments);
+    }
+    Floor.prototype.process_val = function(num, i) {
+      return Math.floor(num);
+    };
+    return Floor;
+  })();
+  nodes.types.Math.Mod = (function() {
+    __extends(Mod, NodeNumberSimple);
+    function Mod() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Mod.__super__.constructor.apply(this, arguments);
+    }
+    Mod.prototype.set_fields = function() {
+      Mod.__super__.set_fields.apply(this, arguments);
+      return this.v_valy = this.rack.addInput(new fields.types.Float("y", 2));
+    };
+    Mod.prototype.process_val = function(num, i) {
+      return num % this.v_valy.get();
+    };
+    return Mod;
+  })();
+  nodes.types.Math.Add = (function() {
+    __extends(Add, NodeNumberSimple);
+    function Add() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Add.__super__.constructor.apply(this, arguments);
+    }
+    Add.prototype.set_fields = function() {
+      Add.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
+    };
+    Add.prototype.process_val = function(num, i) {
+      return num + this.v_factor.get();
+    };
+    return Add;
+  })();
+  nodes.types.Math.Subtract = (function() {
+    __extends(Subtract, NodeNumberSimple);
+    function Subtract() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Subtract.__super__.constructor.apply(this, arguments);
+    }
+    Subtract.prototype.set_fields = function() {
+      Subtract.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
+    };
+    Subtract.prototype.process_val = function(num, i) {
+      return num - this.v_factor.get();
+    };
+    return Subtract;
+  })();
+  nodes.types.Math.Mult = (function() {
+    __extends(Mult, NodeNumberSimple);
+    function Mult() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Mult.__super__.constructor.apply(this, arguments);
+    }
+    Mult.prototype.set_fields = function() {
+      Mult.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("factor", 2));
+    };
+    Mult.prototype.process_val = function(num, i) {
+      return num * this.v_factor.get();
+    };
+    return Mult;
+  })();
+  nodes.types.Math.Divide = (function() {
+    __extends(Divide, NodeNumberSimple);
+    function Divide() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Divide.__super__.constructor.apply(this, arguments);
+    }
+    Divide.prototype.set_fields = function() {
+      Divide.__super__.set_fields.apply(this, arguments);
+      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 2));
+    };
+    Divide.prototype.process_val = function(num, i) {
+      return num / this.v_factor.get();
+    };
+    return Divide;
+  })();
+  nodes.types.Math.Min = (function() {
+    __extends(Min, NodeNumberSimple);
+    function Min() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Min.__super__.constructor.apply(this, arguments);
+    }
+    Min.prototype.set_fields = function() {
+      Min.__super__.set_fields.apply(this, arguments);
+      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+    };
+    Min.prototype.process_val = function(num, i) {
+      return Math.min(num, this.v_inb.get());
+    };
+    return Min;
+  })();
+  nodes.types.Math.Max = (function() {
+    __extends(Max, NodeNumberSimple);
+    function Max() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Max.__super__.constructor.apply(this, arguments);
+    }
+    Max.prototype.set_fields = function() {
+      Max.__super__.set_fields.apply(this, arguments);
+      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+    };
+    Max.prototype.process_val = function(num, i) {
+      return Math.max(num, this.v_inb.get());
+    };
+    return Max;
+  })();
+  nodes.types.Three.Object3D = (function() {
+    __extends(Object3D, NodeBase);
+    function Object3D() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Object3D.__super__.constructor.apply(this, arguments);
+    }
+    Object3D.prototype.set_fields = function() {
+      Object3D.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.Object3D();
+      return this.rack.addFields({
+        inputs: {
+          "children": {
+            type: "Array",
+            val: []
+          },
+          "position": {
+            type: "Vector3",
+            val: new THREE.Vector3()
+          },
+          "rotation": {
+            type: "Vector3",
+            val: new THREE.Vector3()
+          },
+          "scale": {
+            type: "Vector3",
+            val: new THREE.Vector3(1, 1, 1)
+          },
+          "doubleSided": false,
+          "visible": true,
+          "castShadow": false,
+          "receiveShadow": false
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    Object3D.prototype.compute = function() {
+      var child, ind, _i, _j, _len, _len2, _ref, _ref2;
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
+      _ref = this.rack.get("children").get();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        ind = this.ob.children.indexOf(child);
+        if (ind === -1) {
+          this.ob.addChild(child);
+        }
+      }
+      _ref2 = this.ob.children;
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        child = _ref2[_j];
+        ind = this.rack.get("children").val.indexOf(child);
+        if (ind !== -1) {
+          this.ob.removeChild(child);
+        }
+      }
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return Object3D;
+  })();
+  nodes.types.Three.Scene = (function() {
+    __extends(Scene, nodes.types.Three.Object3D);
+    function Scene() {
+      this.compute = __bind(this.compute, this);
+      this.apply_children = __bind(this.apply_children, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Scene.__super__.constructor.apply(this, arguments);
+    }
+    Scene.prototype.set_fields = function() {
+      Scene.__super__.set_fields.apply(this, arguments);
+      return this.ob = new THREE.Scene();
+    };
+    Scene.prototype.apply_children = function() {
+      var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
+      childs_in = this.rack.get("children").get();
+      _ref = this.ob.children;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        ind = childs_in.indexOf(child);
+        if (child && ind === -1 && child instanceof THREE.Light === false) {
+          console.log("remove");
+          console.log(child);
+          this.ob.removeChild(child);
+        }
+      }
+      _ref2 = this.ob.children;
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        child = _ref2[_j];
+        ind = childs_in.indexOf(child);
+        if (child && ind === -1 && child instanceof THREE.Light === true) {
+          console.log("remove light");
+          console.log(child);
+          this.ob.removeLight(child);
+        }
+      }
+      _results = [];
+      for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
+        child = childs_in[_k];
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("light"), console.log(child), this.ob.addLight(child), console.log(this.ob.children)) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log(child), this.ob.addChild(child)) : void 0));
+      }
+      return _results;
+    };
+    Scene.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
+      this.apply_children();
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return Scene;
+  })();
+  nodes.types.Three.Mesh = (function() {
+    __extends(Mesh, nodes.types.Three.Object3D);
+    function Mesh() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Mesh.__super__.constructor.apply(this, arguments);
+    }
+    Mesh.prototype.set_fields = function() {
+      Mesh.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+        wireframe: false
+      }));
+      this.rack.addFields({
+        inputs: {
+          "geometry": {
+            type: "Any",
+            val: new THREE.CubeGeometry(200, 200, 200)
+          },
+          "materials": {
+            type: "Array",
+            val: [
+              new THREE.MeshLambertMaterial({
+                color: 0xff0000,
+                wireframe: false
+              })
+            ]
+          },
+          "overdraw": false
+        }
+      });
+      this.rack.get("out", true).set(this.ob);
+      this.geometry_cache = this.rack.get('geometry').get().id;
+      return this.materials_cache = this.rack.get('materials').get();
+    };
+    Mesh.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
+      if (this.geometry_cache !== this.rack.get('geometry').get().id || flatArraysAreEquals(this.materials_cache, this.rack.get('materials').get()) === false) {
+        this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('materials').get());
+        this.geometry_cache = this.rack.get('geometry').get().id;
+        this.materials_cache = this.rack.get('materials').get();
+      }
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return Mesh;
+  })();
+  nodes.types.Three.Camera = (function() {
+    __extends(Camera, NodeBase);
+    function Camera() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Camera.__super__.constructor.apply(this, arguments);
+    }
+    Camera.prototype.set_fields = function() {
+      Camera.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.Camera();
+      return this.rack.addFields({
+        inputs: {
+          "fov": 50,
+          "aspect": 1,
+          "near": 0.1,
+          "far": 2000,
+          "position": {
+            type: "Vector3",
+            val: new THREE.Vector3()
+          },
+          "target": {
+            type: "Object3D",
+            val: new THREE.Object3D()
+          },
+          "useTarget": false
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    Camera.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return Camera;
+  })();
+  nodes.types.Three.WebGLRenderer = (function() {
+    __extends(WebGLRenderer, NodeBase);
+    function WebGLRenderer() {
+      this.compute = __bind(this.compute, this);
+      this.apply_size = __bind(this.apply_size, this);
+      this.set_fields = __bind(this.set_fields, this);
+      WebGLRenderer.__super__.constructor.apply(this, arguments);
+    }
+    WebGLRenderer.prototype.set_fields = function() {
+      WebGLRenderer.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.WebGLRenderer();
+      this.width = 0;
+      this.height = 0;
+      this.rack.addFields({
+        inputs: {
+          "width": 800,
+          "height": 600,
+          "scene": {
+            type: "Scene",
+            val: new THREE.Scene()
+          },
+          "camera": {
+            type: "Camera",
+            val: new THREE.Camera(75, 800 / 600, 1, 10000)
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      this.apply_size();
+      this.rack.get("camera").val.position.z = 1000;
+      console.log("xyz");
+      this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false");
+      return this.win.document.body.appendChild(this.ob.domElement);
+    };
+    WebGLRenderer.prototype.apply_size = function() {
+      var h, w;
+      if (!this.win) {
+        return false;
+      }
+      w = this.rack.get('width').get();
+      h = this.rack.get('height').get();
+      if (w !== this.width || h !== this.height) {
+        this.ob.setSize(w, h);
+      }
+      this.width = w;
+      return this.height = h;
+    };
+    WebGLRenderer.prototype.compute = function() {
+      var cam, sce;
+      this.apply_size();
+      sce = this.rack.get("scene").get();
+      cam = this.rack.get("camera").get();
+      return this.ob.render(sce, cam);
+    };
+    return WebGLRenderer;
+  })();
+  nodes.types.Utils.Random = (function() {
+    __extends(Random, NodeBase);
+    function Random() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Random.__super__.constructor.apply(this, arguments);
+    }
+    Random.prototype.set_fields = function() {
+      Random.__super__.set_fields.apply(this, arguments);
+      this.rack.addFields({
+        inputs: {
+          "min": 0,
+          "max": 1
+        },
+        outputs: {
+          "out": 0
+        }
+      });
+      return this.rack.add_center_textfield(this.rack.get("out", true));
+    };
+    Random.prototype.compute = function() {
+      var old;
+      old = this.rack.get("out", true).get();
+      this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
+      if (this.value !== old) {
+        return this.rack.get("out", true).set(this.value);
+      }
+    };
+    return Random;
+  })();
+  nodes.types.Utils.Merge = (function() {
+    __extends(Merge, NodeBase);
+    function Merge() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Merge.__super__.constructor.apply(this, arguments);
+    }
+    Merge.prototype.set_fields = function() {
+      Merge.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "in0": {
+            type: "Any",
+            val: null
+          },
+          "in1": {
+            type: "Any",
+            val: null
+          },
+          "in2": {
+            type: "Any",
+            val: null
+          },
+          "in3": {
+            type: "Any",
+            val: null
+          },
+          "in4": {
+            type: "Any",
+            val: null
+          },
+          "in5": {
+            type: "Any",
+            val: null
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Array",
+            val: []
+          }
+        }
+      });
+    };
+    Merge.prototype.compute = function() {
+      var f, k, old;
+      old = this.rack.get("out", true).get();
+      this.value = [];
+      for (f in this.rack.node_fields.inputs) {
+        k = this.rack.node_fields.inputs[f];
+        if (k.get() !== null && k.connections.length > 0) {
+          this.value[this.value.length] = k.get();
+        }
+      }
+      if (this.value !== old) {
+        return this.rack.get("out", true).set(this.value);
+      }
+    };
+    return Merge;
+  })();
+  nodes.types.Utils.Get = (function() {
+    __extends(Get, NodeBase);
+    function Get() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Get.__super__.constructor.apply(this, arguments);
+    }
+    Get.prototype.set_fields = function() {
+      Get.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "array": {
+            type: "Array",
+            val: null
+          },
+          "index": 0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: null
+          }
+        }
+      });
+    };
+    Get.prototype.compute = function() {
+      var arr, ind, old;
+      old = this.rack.get("out", true).get();
+      this.value = false;
+      arr = this.rack.get("array").get();
+      ind = parseInt(this.rack.get("index").get());
+      if ($.type(arr) === "array") {
+        this.value = arr[ind % arr.length];
+      }
+      if (this.value !== old) {
+        return this.rack.get("out", true).set(this.value);
+      }
+    };
+    return Get;
+  })();
+  nodes.types.Utils.SoundInput = (function() {
+    __extends(SoundInput, NodeBase);
+    function SoundInput() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SoundInput.__super__.constructor.apply(this, arguments);
+    }
+    SoundInput.prototype.set_fields = function() {
+      SoundInput.__super__.set_fields.apply(this, arguments);
+      this.counter = 0;
+      return this.rack.addFields({
+        outputs: {
+          "low": 0,
+          "medium": 0,
+          "high": 0
+        }
+      });
+    };
+    SoundInput.prototype.compute = function() {
+      this.rack.get("low", true).set(flash_sound_value[2 % flash_sound_value.length]);
+      this.rack.get("medium", true).set(flash_sound_value[9 % flash_sound_value.length]);
+      return this.rack.get("high", true).set(flash_sound_value[14 % flash_sound_value.length]);
+    };
+    return SoundInput;
+  })();
+  nodes.types.Utils.Timer = (function() {
+    __extends(Timer, NodeBase);
+    function Timer() {
+      this.compute = __bind(this.compute, this);
+      this.get_time = __bind(this.get_time, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Timer.__super__.constructor.apply(this, arguments);
+    }
+    Timer.prototype.set_fields = function() {
+      Timer.__super__.set_fields.apply(this, arguments);
+      this.old = this.get_time();
+      this.counter = 0;
+      this.rack.addFields({
+        inputs: {
+          "reset": false,
+          "pause": false,
+          "max": 99999999999
+        },
+        outputs: {
+          "out": 0
+        }
+      });
+      return this.rack.add_center_textfield(this.rack.get("out", true));
+    };
+    Timer.prototype.get_time = function() {
+      return new Date().getTime();
+    };
+    Timer.prototype.compute = function() {
+      var diff, now, oldval;
+      oldval = this.rack.get("out", true).get();
+      now = this.get_time();
+      if (this.rack.get("pause").get() === false) {
+        this.counter += now - this.old;
+      }
+      if (this.rack.get("reset").get() === true) {
+        this.counter = 0;
+      }
+      diff = this.rack.get("max").get() - this.counter;
+      if (diff <= 0) {
+        this.counter = 0;
+      }
+      this.old = now;
+      return this.rack.get("out", true).set(this.counter);
+    };
+    return Timer;
   })();
   init_sidebar = function() {
     init_sidebar_tab_new_node();
