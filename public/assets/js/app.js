@@ -690,13 +690,14 @@
     NodeFieldRack.prototype.fromXML = function(data) {
       var self;
       self = this;
-      console.log(data);
+      console.log(self);
       return $("in field", data).each(function() {
-        var f;
+        var f, field_val;
         console.log(this);
         f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
-        if (f) {
-          return f.set($(this).attr("val"));
+        field_val = $(this).attr("val");
+        if (f && field_val !== "[object Object]") {
+          return f.set(field_val);
         }
       });
     };

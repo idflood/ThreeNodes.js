@@ -34,12 +34,14 @@ class NodeFieldRack
   
   fromXML: (data) =>
     self = this
-    console.log data
+    console.log self
+    
     $("in field", data).each () ->
       console.log this
       f = self.node_fields.inputs["fid-" + $(this).attr("fid")]
-      if f
-        f.set($(this).attr("val"))
+      field_val = $(this).attr("val")
+      if f && field_val != "[object Object]"
+        f.set(field_val)
   
   update_inputs: =>
     for f of @node_fields.inputs
