@@ -1,6 +1,5 @@
 save_local_file = () ->
   bb = new BlobBuilder()
-  console.log window
   bb.append('<?xml version="1.0" encoding="UTF-8"?>\n')
   bb.append("<app>\n")
 

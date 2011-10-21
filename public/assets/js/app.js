@@ -99,8 +99,8 @@
   };
   on_ui_window_resize = function() {
     var h, w;
-    w = $(window).width() - 4;
-    h = $(window).height() - 4;
+    w = $(window).width();
+    h = $(window).height();
     $("#container-wrapper").css({
       width: w,
       height: h
@@ -701,10 +701,8 @@
     NodeFieldRack.prototype.fromXML = function(data) {
       var self;
       self = this;
-      console.log(self);
       return $("in field", data).each(function() {
         var f, field_val;
-        console.log(this);
         f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
         field_val = $(this).attr("val");
         if (f && field_val !== "[object Object]") {
@@ -762,7 +760,6 @@
       $target = $("#tab-attribute");
       $target.html("");
       for (f in this.node_fields.inputs) {
-        console.log(this.node_fields.inputs[f]);
         this.node_fields.inputs[f].render_sidebar();
       }
       return false;
@@ -1729,8 +1726,6 @@
         child = _ref[_i];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child instanceof THREE.Light === false) {
-          console.log("remove");
-          console.log(child);
           this.ob.removeChild(child);
         }
       }
@@ -1739,15 +1734,13 @@
         child = _ref2[_j];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child instanceof THREE.Light === true) {
-          console.log("remove light");
-          console.log(child);
           this.ob.removeLight(child);
         }
       }
       _results = [];
       for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
         child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("light"), console.log(child), this.ob.addLight(child), console.log(this.ob.children)) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log(child), this.ob.addChild(child)) : void 0));
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.addLight(child) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.addChild(child) : void 0));
       }
       return _results;
     };
@@ -1879,7 +1872,6 @@
       });
       this.apply_size();
       this.rack.get("camera").val.position.z = 1000;
-      console.log("xyz");
       this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false");
       return this.win.document.body.appendChild(this.ob.domElement);
     };
@@ -2286,7 +2278,6 @@
   save_local_file = function() {
     var bb, c, fileSaver, node, _i, _j, _len, _len2, _ref;
     bb = new BlobBuilder();
-    console.log(window);
     bb.append('<?xml version="1.0" encoding="UTF-8"?>\n');
     bb.append("<app>\n");
     bb.append("\t<uid last='" + uid + "' />\n");

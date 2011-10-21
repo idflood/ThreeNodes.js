@@ -41,20 +41,16 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
 
   apply_children: =>
     childs_in = @rack.get("children").get()
-    #console.log childs_in
+    
     # remove old childs
     for child in @ob.children
       ind = childs_in.indexOf(child)
       if child && ind == -1 && child instanceof THREE.Light == false
-        console.log "remove"
-        console.log child
         @ob.removeChild(child)
         
     for child in @ob.children
       ind = childs_in.indexOf(child)
       if child && ind == -1 && child instanceof THREE.Light == true
-        console.log "remove light"
-        console.log child
         @ob.removeLight(child)
         
     #add new childs
@@ -62,16 +58,12 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
       if child instanceof THREE.Light == true
         ind = @ob.children.indexOf(child)
         if ind == -1
-          console.log "light"
-          console.log child
           @ob.addLight(child)
-          console.log @ob.children
       else
         ind = @ob.children.indexOf(child)
         if ind == -1
-          console.log child
           @ob.addChild(child)
-        #@ob.addChild(child)
+
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
     @apply_children()
@@ -134,7 +126,6 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
         "out": {type: "Any", val: @ob}
     @apply_size()
     @rack.get("camera").val.position.z = 1000
-    console.log "xyz"
     @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false")
     @win.document.body.appendChild( @ob.domElement );
   

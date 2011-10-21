@@ -34,10 +34,8 @@ class NodeFieldRack
   
   fromXML: (data) =>
     self = this
-    console.log self
     
     $("in field", data).each () ->
-      console.log this
       f = self.node_fields.inputs["fid-" + $(this).attr("fid")]
       field_val = $(this).attr("val")
       if f && field_val != "[object Object]"
@@ -84,7 +82,6 @@ class NodeFieldRack
     $target = $("#tab-attribute")
     $target.html("");
     for f of @node_fields.inputs
-      console.log @node_fields.inputs[f]
       @node_fields.inputs[f].render_sidebar()
     false
   

@@ -57,8 +57,6 @@ require [
   "libs/FileSaver.min",
   "libs/sockjs-latest.min",
   "libs/signals.min",
-  #"libs/knockout-1.2.1",
-  #"libs/koExternalTemplateEngine",
   "libs/RequestAnimationFrame"
   ], init_app
 
@@ -99,8 +97,8 @@ render = () ->
       console.log "empty"
 
 on_ui_window_resize = () ->
-  w = $(window).width() - 4
-  h = $(window).height() - 4
+  w = $(window).width()
+  h = $(window).height()
   $("#container-wrapper").css
     width: w
     height: h
