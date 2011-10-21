@@ -34,11 +34,11 @@ class NodeField
     false
   
   render_button: =>
+    layout = node_field_in_template
     if @is_output
-      return "<div id='fid-#{@fid}' class='field field-#{@name}' rel='#{@name}'>#{@name}<a href='#'></a></div>"
-    else
-      return "<div id='fid-#{@fid}' class='field field-#{@name}' rel='#{@name}'><a href='#'></a>#{@name}</div>"
-  
+      layout = node_field_out_template
+    $.tmpl(layout, this)
+    
   compute_value : (val) =>
     val
   

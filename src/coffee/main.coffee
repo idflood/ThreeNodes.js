@@ -19,6 +19,45 @@ svg = false
 
 flash_sound_value = []
 
+node_template = false
+node_field_in_template = false
+node_field_out_template = false
+
+$ = false
+
+require [
+  # views
+  "text!templates/node.tmpl.html",
+  "text!templates/node_field_input.tmpl.html",
+  "text!templates/node_field_output.tmpl.html",
+  
+  # libraries
+  "order!libs/jquery-1.6.4.min",
+  "order!libs/jquery.tmpl.min",
+  "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
+  "order!libs/Three",
+  "order!libs/raphael-min",
+  "order!libs/underscore-min",
+  "order!libs/backbone",
+  "libs/BlobBuilder.min",
+  "libs/FileSaver.min",
+  "libs/sockjs-latest.min",
+  "libs/signals.min",
+  #"libs/knockout-1.2.1",
+  #"libs/koExternalTemplateEngine",
+  "libs/RequestAnimationFrame"
+  ], (_node_template, _node_field_in_template, _node_field_out_template) ->
+    $ = jQuery
+    node_template = _node_template
+    node_field_in_template = _node_field_in_template
+    node_field_out_template = _node_field_out_template
+    console.log "init..."
+    svg = Raphael("graph", 4000, 4000)
+    init_sidebar()
+    animate()
+    #init_websocket()
+    $(window).resize on_ui_window_resize
+    on_ui_window_resize()
 
 init_websocket = () ->
   webso = false
@@ -56,6 +95,7 @@ render = () ->
       console.log k
     catch e
       console.log "empty"
+
 on_ui_window_resize = () ->
   w = $(window).width() - 4
   h = $(window).height() - 4
@@ -63,12 +103,5 @@ on_ui_window_resize = () ->
     width: w
     height: h
   $("#sidebar").css("height", h)
+
   
-$(document).ready ->
-  svg = Raphael("graph", 4000, 4000)
-  init_sidebar()
-  animate()
-  
-  $(window).resize on_ui_window_resize
-  on_ui_window_resize()
-  #init_websocket()

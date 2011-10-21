@@ -1,5 +1,5 @@
 (function() {
-  var NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, clear_workspace, field_click_1, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_websocket, load_local_file_input_changed, node_connections, nodegraph, nodes, on_ui_window_resize, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, svg, uid, webgl_materials_node;
+  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, clear_workspace, field_click_1, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_websocket, load_local_file_input_changed, node_connections, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, svg, uid, webgl_materials_node;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -41,6 +41,22 @@
   webgl_materials_node = [];
   svg = false;
   flash_sound_value = [];
+  node_template = false;
+  node_field_in_template = false;
+  node_field_out_template = false;
+  $ = false;
+  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], function(_node_template, _node_field_in_template, _node_field_out_template) {
+    $ = jQuery;
+    node_template = _node_template;
+    node_field_in_template = _node_field_in_template;
+    node_field_out_template = _node_field_out_template;
+    console.log("init...");
+    svg = Raphael("graph", 4000, 4000);
+    init_sidebar();
+    animate();
+    $(window).resize(on_ui_window_resize);
+    return on_ui_window_resize();
+  });
   init_websocket = function() {
     var socket, webso;
     webso = false;
@@ -90,13 +106,6 @@
     });
     return $("#sidebar").css("height", h);
   };
-  $(document).ready(function() {
-    svg = Raphael("graph", 4000, 4000);
-    init_sidebar();
-    animate();
-    $(window).resize(on_ui_window_resize);
-    return on_ui_window_resize();
-  });
   node_connections = [];
   NodeConnection = (function() {
     function NodeConnection(from_field, to_field, cid) {
@@ -245,11 +254,12 @@
       return false;
     };
     NodeField.prototype.render_button = function() {
+      var layout;
+      layout = node_field_in_template;
       if (this.is_output) {
-        return "<div id='fid-" + this.fid + "' class='field field-" + this.name + "' rel='" + this.name + "'>" + this.name + "<a href='#'></a></div>";
-      } else {
-        return "<div id='fid-" + this.fid + "' class='field field-" + this.name + "' rel='" + this.name + "'><a href='#'></a>" + this.name + "</div>";
+        layout = node_field_out_template;
       }
+      return $.tmpl(layout, this);
     };
     NodeField.prototype.compute_value = function(val) {
       return val;
@@ -919,8 +929,8 @@
     NodeBase.prototype.init = function() {
       var self;
       self = this;
-      this.container.append("<div id='nid-" + this.nid + "' class='node node-" + (this.typename()) + "'><div class='head'>" + (this.typename()) + "</div><div class='options'><div class='inputs'></div><div class='center'></div><div class='outputs'></div></div></div>");
-      this.main_view = $("#nid-" + this.nid);
+      this.main_view = $.tmpl(node_template, this);
+      this.container.append(this.main_view);
       this.main_view.css({
         left: this.x,
         top: this.y

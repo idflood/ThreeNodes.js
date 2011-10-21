@@ -97,8 +97,8 @@ class NodeBase
 
   init: () =>
     self = this
-    @container.append "<div id='nid-#{@nid}' class='node node-#{@typename()}'><div class='head'>#{@typename()}</div><div class='options'><div class='inputs'></div><div class='center'></div><div class='outputs'></div></div></div>"
-    @main_view = $("#nid-#{@nid}")
+    @main_view = $.tmpl(node_template, this)
+    @container.append(@main_view)
     @main_view.css
       left: @x
       top: @y
@@ -134,7 +134,4 @@ class NodeNumberSimple extends NodeBase
     if @v_out.get() != res
       @v_out.set res
     true
-
-
-
 
