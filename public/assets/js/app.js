@@ -1,5 +1,5 @@
 (function() {
-  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, clear_workspace, field_click_1, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_websocket, load_local_file_input_changed, node_connections, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, svg, uid, webgl_materials_node;
+  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, clear_workspace, field_click_1, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_websocket, load_local_file_input_changed, node_connections, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, svg, uid, webgl_materials_node;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -45,7 +45,7 @@
   node_field_in_template = false;
   node_field_out_template = false;
   $ = false;
-  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], function(_node_template, _node_field_in_template, _node_field_out_template) {
+  init_app = function(_node_template, _node_field_in_template, _node_field_out_template) {
     $ = jQuery;
     node_template = _node_template;
     node_field_in_template = _node_field_in_template;
@@ -56,7 +56,8 @@
     animate();
     $(window).resize(on_ui_window_resize);
     return on_ui_window_resize();
-  });
+  };
+  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], init_app);
   init_websocket = function() {
     var socket, webso;
     webso = false;

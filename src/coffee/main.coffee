@@ -25,6 +25,20 @@ node_field_out_template = false
 
 $ = false
 
+init_app = (_node_template, _node_field_in_template, _node_field_out_template) ->
+  $ = jQuery
+  node_template = _node_template
+  node_field_in_template = _node_field_in_template
+  node_field_out_template = _node_field_out_template
+  
+  console.log "init..."
+  svg = Raphael("graph", 4000, 4000)
+  init_sidebar()
+  animate()
+  #init_websocket()
+  $(window).resize on_ui_window_resize
+  on_ui_window_resize()
+
 require [
   # views
   "text!templates/node.tmpl.html",
@@ -46,18 +60,7 @@ require [
   #"libs/knockout-1.2.1",
   #"libs/koExternalTemplateEngine",
   "libs/RequestAnimationFrame"
-  ], (_node_template, _node_field_in_template, _node_field_out_template) ->
-    $ = jQuery
-    node_template = _node_template
-    node_field_in_template = _node_field_in_template
-    node_field_out_template = _node_field_out_template
-    console.log "init..."
-    svg = Raphael("graph", 4000, 4000)
-    init_sidebar()
-    animate()
-    #init_websocket()
-    $(window).resize on_ui_window_resize
-    on_ui_window_resize()
+  ], init_app
 
 init_websocket = () ->
   webso = false
@@ -78,7 +81,6 @@ init_websocket = () ->
 
 animate = () ->
   render()
-  
   requestAnimationFrame( animate )
 
 @onSoundInput = (data) ->
