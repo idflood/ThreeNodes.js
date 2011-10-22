@@ -122,12 +122,18 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
         "height": 600
         "scene": {type: "Scene", val: new THREE.Scene()}
         "camera": {type: "Camera", val: new THREE.Camera(75, 800 / 600, 1, 10000)}
+        "bg_color": {type: "Color", val: new THREE.Color(0, 0, 0)}
       outputs:
         "out": {type: "Any", val: @ob}
     @apply_size()
     @rack.get("camera").val.position.z = 1000
-    @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false")
+    @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
     @win.document.body.appendChild( @ob.domElement );
+    @apply_bg_color()
+  
+  apply_bg_color: ->
+    $(@win.document.body).css
+      background: @rack.get('bg_color').get().getContextStyle()
   
   apply_size: =>
     if !@win
@@ -141,6 +147,7 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     
   compute: =>
     @apply_size()
+    @apply_bg_color()
     
     sce = @rack.get("scene").get()
     cam = @rack.get("camera").get()

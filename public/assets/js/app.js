@@ -1918,6 +1918,10 @@
           "camera": {
             type: "Camera",
             val: new THREE.Camera(75, 800 / 600, 1, 10000)
+          },
+          "bg_color": {
+            type: "Color",
+            val: new THREE.Color(0, 0, 0)
           }
         },
         outputs: {
@@ -1929,8 +1933,14 @@
       });
       this.apply_size();
       this.rack.get("camera").val.position.z = 1000;
-      this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false");
-      return this.win.document.body.appendChild(this.ob.domElement);
+      this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false");
+      this.win.document.body.appendChild(this.ob.domElement);
+      return this.apply_bg_color();
+    };
+    WebGLRenderer.prototype.apply_bg_color = function() {
+      return $(this.win.document.body).css({
+        background: this.rack.get('bg_color').get().getContextStyle()
+      });
     };
     WebGLRenderer.prototype.apply_size = function() {
       var h, w;
@@ -1948,6 +1958,7 @@
     WebGLRenderer.prototype.compute = function() {
       var cam, sce;
       this.apply_size();
+      this.apply_bg_color();
       sce = this.rack.get("scene").get();
       cam = this.rack.get("camera").get();
       return this.ob.render(sce, cam);
