@@ -885,13 +885,6 @@
     NodeBase.prototype.init_context_menu = function() {
       var self;
       self = this;
-      $(this.main_view).contextMenu({
-        menu: "node-context-menu"
-      }, function(action, el, pos) {
-        if (action === "remove_node") {
-          return self.remove();
-        }
-      });
       return $(".field", this.main_view).contextMenu({
         menu: "field-context-menu"
       }, function(action, el, pos) {
