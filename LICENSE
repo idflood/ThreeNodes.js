@@ -45,7 +45,15 @@ This program uses "backbone.js", Copyright (c) 2010 Jeremy Ashkenas, DocumentClo
 
 This program uses "compass", Copyright (c) 2009 Christopher M. Eppstein.
 
+This program uses "Raphaël", Copyright (c) 2008-2011 Dmitry Baranovskiy and Sencha Labs.
+
 This program uses "RequireJS", Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+
+This program uses "jQuery", Copyright (c) 2011 John Resig, http://jquery.com/
+
+This program uses "jQuery Templates Plugin", Copyright (c) Software Freedom Conservancy, Inc.
+
+This program uses "jQuery Context Menu Plugin", Copyright (c) Cory S.N. LaViska.
 
 This program uses "vogue", Copyright (c) 2011 Isaac Z. Schlueter,
 according to the terms of the MIT license.

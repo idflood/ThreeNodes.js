@@ -1,3 +1,5 @@
+html, body
+  height: 100%
 body
   background-color: $background_color
   overflow: hidden
@@ -7,8 +9,29 @@ body
   position: absolute
   top: 0
   left: 0
+
+#container-wrapper, #sidebar, #sidebar-toggle
+  display: none
+
+body
+  position: relative
   
-#logo, #footer
+body > header
+  $i: "logo.png"
+  left: 50%
+  top: 50%
+  margin-left: 0 - image-width($i) / 2
+  margin-top: 0 - image-height($i) / 2
+  height: image-height($i)
+  width: image-width($i)
+  background: image-url($i) 0 0 no-repeat
+  position: absolute
+  
+  h1
+    text-indent: -9999px
+    font-size: 0
+
+#footer
   display: none
   visibility: hidden
   
@@ -45,36 +68,17 @@ $c: $background_color - #050505
 
 .hidden-element
   display: none
-
-::-webkit-scrollbar-corner,
-::-webkit-resizer
-  background: transparent
-
-$s: 8px
-::-webkit-scrollbar 
-  width: $s
-  height: $s
   
-::-webkit-scrollbar-button:start:decrement,
-::-webkit-scrollbar-button:end:increment
-  height: 10px
-  display: block
-  background: transparent
-
-::-webkit-scrollbar-track-piece
-  background: #272727
-  border-radius: 6px
-  
-    
-::-webkit-scrollbar-thumb:vertical
-  height: 10px
-
-::-webkit-scrollbar-thumb:horizontal
-  width: 10px
-  
-::-webkit-scrollbar-thumb:vertical,
-::-webkit-scrollbar-thumb:horizontal
-  background: #999
-  border-radius: 6px
-  &:hover
-    background: #aaa
+.context-menu
+  position: absolute
+  top: -9999px
+  left: -9999px
+  background: #111
+  border-radius: 5px
+  +no-bullets
+  +reset-box-model
+  li a
+    padding: 2px 10px
+    display: block
+    font-size: 11px
+    @extend .mono-font

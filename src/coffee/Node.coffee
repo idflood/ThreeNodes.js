@@ -18,8 +18,18 @@ class NodeBase
     @set_fields()
     if @inXML != false
       @rack.fromXML(@inXML)
+    @init_context_menu()
     
   typename: => String(@constructor.name)
+  
+  init_context_menu: () =>
+    self = this
+    $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
+      if action == "remove_connection"
+        f_name = $(el).attr("id")
+        f_type = $(el).parent().attr("class")
+        field = self.rack.node_fields[f_type][f_name]
+        field.remove_connections()
   
   set_fields: =>
     # to implement
@@ -123,8 +133,7 @@ class NodeNumberSimple extends NodeBase
     @v_in = @rack.addInput(new fields.types.Float("in", 0))
     @v_out = @rack.addOutput(new fields.types.Float("out", 0))
     
-  process_val: (num, i) =>
-    num
+  process_val: (num, i) => num
   
   compute: =>
     res = false

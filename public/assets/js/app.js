@@ -1,5 +1,5 @@
 (function() {
-  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, animate, clear_workspace, field_click_1, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_websocket, load_local_file_input_changed, node_connections, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, svg, uid, webgl_materials_node;
+  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, add_window_resize_handler, animate, clear_workspace, field_click_1, field_context_menu, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_context_menus, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_ui, init_websocket, load_local_file_input_changed, node_connections, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, show_application, svg, uid, webgl_materials_node;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -25,65 +25,30 @@
     }
     return true;
   };
-  nodes = {};
-  nodes.fields = {};
-  nodes.list = [];
-  nodes.types = {};
-  nodes.types.Base = {};
-  nodes.types.Math = {};
-  nodes.types.Utils = {};
-  nodes.types.Geometry = {};
-  nodes.types.Three = {};
-  nodes.types.Materials = {};
-  nodes.types.Lights = {};
-  fields = {};
-  fields.types = {};
-  webgl_materials_node = [];
   svg = false;
-  flash_sound_value = [];
-  node_template = false;
-  node_field_in_template = false;
-  node_field_out_template = false;
-  $ = false;
-  init_app = function(_node_template, _node_field_in_template, _node_field_out_template) {
-    $ = jQuery;
-    node_template = _node_template;
-    node_field_in_template = _node_field_in_template;
-    node_field_out_template = _node_field_out_template;
-    console.log("init...");
+  init_ui = function() {
     svg = Raphael("graph", 4000, 4000);
     init_sidebar();
-    animate();
+    add_window_resize_handler();
+    init_context_menus();
+    return show_application();
+  };
+  init_context_menus = function() {
+    var menu_field;
+    menu_field = $.tmpl(field_context_menu, {});
+    return $("body").append(menu_field);
+  };
+  add_window_resize_handler = function() {
     $(window).resize(on_ui_window_resize);
     return on_ui_window_resize();
   };
-  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], init_app);
-  init_websocket = function() {
-    var socket, webso;
-    webso = false;
-    if (!WebSocket) {
-      webso = MozWebsocket;
-    } else {
-      webso = WebSocket;
-    }
-    console.log("trying to open a websocket2");
-    socket = new WebSocket("ws://localhost:8080/p5websocket");
-    socket.onmessage = function(data) {
-      console.log(data);
-      return console.log("ok");
-    };
-    socket.onerror = function() {
-      return console.log('socket close');
-    };
-    return true;
-  };
-  animate = function() {
-    render();
-    return requestAnimationFrame(animate);
-  };
-  this.onSoundInput = function(data) {
-    flash_sound_value = data.split('&');
-    return flash_sound_value.pop();
+  show_application = function() {
+    var delay_intro;
+    delay_intro = 500;
+    $("body > header").delay(delay_intro).fadeOut(0);
+    $("#sidebar").delay(delay_intro).fadeIn(0);
+    $("#container-wrapper").delay(delay_intro).fadeIn(0);
+    return $("#sidebar-toggle").delay(delay_intro).fadeIn(0);
   };
   render = function() {
     var k;
@@ -106,6 +71,64 @@
       height: h
     });
     return $("#sidebar").css("height", h);
+  };
+  animate = function() {
+    render();
+    return requestAnimationFrame(animate);
+  };
+  nodes = {};
+  nodes.fields = {};
+  nodes.list = [];
+  nodes.types = {};
+  nodes.types.Base = {};
+  nodes.types.Math = {};
+  nodes.types.Utils = {};
+  nodes.types.Geometry = {};
+  nodes.types.Three = {};
+  nodes.types.Materials = {};
+  nodes.types.Lights = {};
+  fields = {};
+  fields.types = {};
+  webgl_materials_node = [];
+  flash_sound_value = [];
+  node_template = false;
+  node_field_in_template = false;
+  node_field_out_template = false;
+  field_context_menu = false;
+  $ = false;
+  init_app = function(_node_template, _node_field_in_template, _node_field_out_template, _field_context_menu) {
+    $ = jQuery;
+    node_template = _node_template;
+    node_field_in_template = _node_field_in_template;
+    node_field_out_template = _node_field_out_template;
+    field_context_menu = _field_context_menu;
+    console.log("init...");
+    init_ui();
+    return animate();
+  };
+  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], init_app);
+  init_websocket = function() {
+    var socket, webso;
+    webso = false;
+    if (!WebSocket) {
+      webso = MozWebsocket;
+    } else {
+      webso = WebSocket;
+    }
+    console.log("trying to open a websocket2");
+    socket = new WebSocket("ws://localhost:8080/p5websocket");
+    socket.onmessage = function(data) {
+      console.log(data);
+      return console.log("ok");
+    };
+    socket.onerror = function() {
+      return console.log('socket close');
+    };
+    return true;
+  };
+  this.onSoundInput = function(data) {
+    flash_sound_value = data.split('&');
+    return flash_sound_value.pop();
   };
   node_connections = [];
   NodeConnection = (function() {
@@ -818,6 +841,7 @@
       this.compute = __bind(this.compute, this);
       this.has_out_connection = __bind(this.has_out_connection, this);
       this.set_fields = __bind(this.set_fields, this);
+      this.init_context_menu = __bind(this.init_context_menu, this);
       this.typename = __bind(this.typename, this);
       if (this.inXML) {
         this.nid = parseInt(this.inXML.attr("nid"));
@@ -837,9 +861,25 @@
       if (this.inXML !== false) {
         this.rack.fromXML(this.inXML);
       }
+      this.init_context_menu();
     }
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
+    };
+    NodeBase.prototype.init_context_menu = function() {
+      var self;
+      self = this;
+      return $(".field", this.main_view).contextMenu({
+        menu: "field-context-menu"
+      }, function(action, el, pos) {
+        var f_name, f_type, field;
+        if (action === "remove_connection") {
+          f_name = $(el).attr("id");
+          f_type = $(el).parent().attr("class");
+          field = self.rack.node_fields[f_type][f_name];
+          return field.remove_connections();
+        }
+      });
     };
     NodeBase.prototype.set_fields = function() {};
     NodeBase.prototype.has_out_connection = function() {

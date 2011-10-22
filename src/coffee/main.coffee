@@ -14,40 +14,37 @@ fields = {}
 fields.types = {}
 
 webgl_materials_node = []
-
-svg = false
-
 flash_sound_value = []
 
 node_template = false
 node_field_in_template = false
 node_field_out_template = false
-
+field_context_menu = false
 $ = false
 
-init_app = (_node_template, _node_field_in_template, _node_field_out_template) ->
+init_app = (_node_template, _node_field_in_template, _node_field_out_template, _field_context_menu) ->
   $ = jQuery
   node_template = _node_template
   node_field_in_template = _node_field_in_template
   node_field_out_template = _node_field_out_template
+  field_context_menu = _field_context_menu
   
   console.log "init..."
-  svg = Raphael("graph", 4000, 4000)
-  init_sidebar()
+  init_ui()
   animate()
   #init_websocket()
-  $(window).resize on_ui_window_resize
-  on_ui_window_resize()
 
 require [
   # views
   "text!templates/node.tmpl.html",
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
+  "text!templates/field_context_menu.tmpl.html",
   
   # libraries
   "order!libs/jquery-1.6.4.min",
   "order!libs/jquery.tmpl.min",
+  "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
   "order!libs/Three",
   "order!libs/raphael-min",
@@ -77,31 +74,8 @@ init_websocket = () ->
     console.log 'socket close'
   true
 
-animate = () ->
-  render()
-  requestAnimationFrame( animate )
-
 @onSoundInput = (data) ->
   #console.log data
   flash_sound_value = data.split('&')
   flash_sound_value.pop()
   #console.log flash_sound_value
-
-render = () ->
-  nodegraph.render()
-  if $("#sound-input").length > 0
-    try
-      k = document.sound_input.getKick()
-      console.log k
-    catch e
-      console.log "empty"
-
-on_ui_window_resize = () ->
-  w = $(window).width()
-  h = $(window).height()
-  $("#container-wrapper").css
-    width: w
-    height: h
-  $("#sidebar").css("height", h)
-
-  
