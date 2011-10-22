@@ -8,8 +8,11 @@ init_ui = () ->
   show_application()
 
 init_context_menus = () ->
-  menu_field = $.tmpl(field_context_menu, {})
-  $("body").append(menu_field)
+  menu_field_menu = $.tmpl(field_context_menu, {})
+  $("body").append(menu_field_menu)
+  
+  node_menu = $.tmpl(node_context_menu, {})
+  $("body").append(node_menu)
 
 add_window_resize_handler = () ->
   $(window).resize on_ui_window_resize

@@ -20,6 +20,12 @@ class NodeFieldRack
       @node_fields.outputs[f].render_connections()
     true
   
+  remove_all_connections: =>
+    for f of @node_fields.inputs
+      @node_fields.inputs[f].remove_connections()
+    for f of @node_fields.outputs
+      @node_fields.outputs[f].remove_connections()
+  
   toXML: =>
     res = "\t\t<in>\n"
     for f of @node_fields.inputs

@@ -24,6 +24,9 @@ class NodeBase
   
   init_context_menu: () =>
     self = this
+    $(@main_view).contextMenu {menu: "node-context-menu"}, (action, el, pos) ->
+      if action == "remove_node"
+        self.remove()
     $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
       if action == "remove_connection"
         f_name = $(el).attr("id")
@@ -41,6 +44,7 @@ class NodeBase
     @value = @value
   
   remove: () =>
+    @rack.remove_all_connections()
     @main_view.remove()
     # todo: maybe remove fields
     # todo: remove sidebar attributes if this is the selected node

@@ -20,14 +20,16 @@ node_template = false
 node_field_in_template = false
 node_field_out_template = false
 field_context_menu = false
+node_context_menu = false
 $ = false
 
-init_app = (_node_template, _node_field_in_template, _node_field_out_template, _field_context_menu) ->
+init_app = (_node_template, _node_field_in_template, _node_field_out_template, _field_context_menu, _node_context_menu) ->
   $ = jQuery
   node_template = _node_template
   node_field_in_template = _node_field_in_template
   node_field_out_template = _node_field_out_template
   field_context_menu = _field_context_menu
+  node_context_menu = _node_context_menu
   
   console.log "init..."
   init_ui()
@@ -40,6 +42,7 @@ require [
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
   "text!templates/field_context_menu.tmpl.html",
+  "text!templates/node_context_menu.tmpl.html",
   
   # libraries
   "order!libs/jquery-1.6.4.min",
