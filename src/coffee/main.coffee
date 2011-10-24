@@ -49,6 +49,7 @@ require [
   "order!libs/jquery.tmpl.min",
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
+  "order!libs/colorpicker/js/colorpicker",
   "order!libs/Three",
   "order!libs/raphael-min",
   "order!libs/underscore-min",

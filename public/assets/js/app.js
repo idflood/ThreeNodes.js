@@ -110,7 +110,7 @@
     init_ui();
     return animate();
   };
-  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], init_app);
+  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/colorpicker/js/colorpicker", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], init_app);
   init_websocket = function() {
     var socket, webso;
     webso = false;
@@ -1188,12 +1188,36 @@
     function Color() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
+      this.init_preview = __bind(this.init_preview, this);
       Color.__super__.constructor.apply(this, arguments);
     }
+    Color.prototype.init_preview = function() {
+      var col, self;
+      $(".center", this.main_view).append("<div class='color_preview'></div>");
+      col = this.rack.get("rgb").get();
+      self = this;
+      $(".color_preview", this.main_view).ColorPicker({
+        color: {
+          r: col.r * 255,
+          g: col.g * 255,
+          b: col.b * 255
+        },
+        onChange: function(hsb, hex, rgb) {
+          self.rack.get("r").set(rgb.r / 255);
+          self.rack.get("g").set(rgb.g / 255);
+          return self.rack.get("b").set(rgb.b / 255);
+        }
+      });
+      return self.rack.get("rgb", true).on_value_update_hooks.set_bg_color_preview = function(v) {
+        return $(".color_preview", self.main_view).css({
+          background: v.getContextStyle()
+        });
+      };
+    };
     Color.prototype.set_fields = function() {
       Color.__super__.set_fields.apply(this, arguments);
       this.vec = new THREE.Color(1, 0, 0);
-      return this.rack.addFields({
+      this.rack.addFields({
         inputs: {
           "rgb": {
             type: "Color",
@@ -1213,6 +1237,7 @@
           "b": 0
         }
       });
+      return this.init_preview();
     };
     Color.prototype.compute = function() {
       var old;

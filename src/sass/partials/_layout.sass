@@ -50,6 +50,7 @@ $c: $background_color - #050505
   height: 1000px
   position: relative
   overflow: auto
+  z-index: 1
 
 #sidebar
   width: 220px
@@ -57,6 +58,7 @@ $c: $background_color - #050505
   +single-box-shadow(#222, -1px, 0, 10px)
   border-right: 1px solid #373737
   left: 0
+  z-index: 10
   //+single-box-shadow(#393939, -1px, 0, 155px, 0, inset)
 
 
@@ -82,3 +84,6 @@ $c: $background_color - #050505
     display: block
     font-size: 11px
     @extend .mono-font
+
+.colorpicker
+  z-index: 9999

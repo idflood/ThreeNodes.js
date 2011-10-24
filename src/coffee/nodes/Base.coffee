@@ -73,6 +73,21 @@ class nodes.types.Base.Vector3 extends NodeBase
       @rack.get("z", true).set @value.z
 
 class nodes.types.Base.Color extends NodeBase
+  init_preview: () =>
+    $(".center", @main_view).append("<div class='color_preview'></div>")
+    col = @rack.get("rgb").get()
+    self = this
+    $(".color_preview", @main_view).ColorPicker
+      color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
+      onChange: (hsb, hex, rgb) ->
+        self.rack.get("r").set(rgb.r / 255)
+        self.rack.get("g").set(rgb.g / 255)
+        self.rack.get("b").set(rgb.b / 255)
+    # on output value change set preview color
+    self.rack.get("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) ->
+      $(".color_preview", self.main_view).css
+        background: v.getContextStyle()
+  
   set_fields: =>
     super
     @vec = new THREE.Color(1, 0, 0)
@@ -87,6 +102,7 @@ class nodes.types.Base.Color extends NodeBase
         "r": 0
         "g": 0
         "b": 0
+    @init_preview()
   
   compute: =>
     old = @rack.get("rgb", true).get()
