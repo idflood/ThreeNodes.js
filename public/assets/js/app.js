@@ -672,6 +672,25 @@
     };
     return Geometry;
   })();
+  fields.types.Texture = (function() {
+    __extends(Texture, NodeField);
+    function Texture() {
+      this.compute_value = __bind(this.compute_value, this);
+      Texture.__super__.constructor.apply(this, arguments);
+    }
+    Texture.prototype.compute_value = function(val) {
+      var res;
+      res = false;
+      switch ($.type(val)) {
+        case "object":
+          if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
+            res = val;
+          }
+      }
+      return res;
+    };
+    return Texture;
+  })();
   NodeFieldRack = (function() {
     function NodeFieldRack(node) {
       this.node = node;
@@ -1479,6 +1498,7 @@
   nodes.types.Materials.MeshBasicMaterial = (function() {
     __extends(MeshBasicMaterial, NodeMaterialBase);
     function MeshBasicMaterial() {
+      this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       MeshBasicMaterial.__super__.constructor.apply(this, arguments);
     }
@@ -1492,6 +1512,10 @@
           "color": {
             type: "Color",
             val: new THREE.Color(1, 0, 0)
+          },
+          "map": {
+            type: "Any",
+            val: false
           },
           "reflectivity": 1,
           "refractionRatio": 0.98,
@@ -1508,11 +1532,16 @@
         }
       });
     };
+    MeshBasicMaterial.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
+    };
     return MeshBasicMaterial;
   })();
   nodes.types.Materials.MeshLambertMaterial = (function() {
     __extends(MeshLambertMaterial, NodeMaterialBase);
     function MeshLambertMaterial() {
+      this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       MeshLambertMaterial.__super__.constructor.apply(this, arguments);
     }
@@ -1543,6 +1572,10 @@
           }
         }
       });
+    };
+    MeshLambertMaterial.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
     };
     return MeshLambertMaterial;
   })();
@@ -1918,6 +1951,48 @@
       return this.rack.get("out", true).set(this.ob);
     };
     return Camera;
+  })();
+  nodes.types.Three.Texture = (function() {
+    __extends(Texture, NodeBase);
+    function Texture() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Texture.__super__.constructor.apply(this, arguments);
+    }
+    Texture.prototype.set_fields = function() {
+      Texture.__super__.set_fields.apply(this, arguments);
+      this.ob = false;
+      this.cached = false;
+      return this.rack.addFields({
+        inputs: {
+          "image": {
+            type: "String",
+            val: false
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    Texture.prototype.compute = function() {
+      var current;
+      current = this.rack.get("image").get();
+      if (current && current !== "") {
+        if (this.cached === false ||  ($.type(this.cached) === "object" && this.cached.constructor === THREE.Texture && this.cached.image.src !== current)) {
+          this.ob = new THREE.ImageUtils.loadTexture(current);
+          console.log("new texture");
+          console.log(this.ob);
+          console.log(current);
+          this.cached = this.ob;
+        }
+      }
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return Texture;
   })();
   nodes.types.Three.WebGLRenderer = (function() {
     __extends(WebGLRenderer, NodeBase);

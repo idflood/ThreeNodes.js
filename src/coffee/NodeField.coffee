@@ -220,3 +220,10 @@ class fields.types.Geometry extends NodeField
       when "object" then if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
         res = val
     res
+class fields.types.Texture extends NodeField
+  compute_value : (val) =>
+    res = false
+    switch $.type(val)
+      when "object" then if val.constructor == THREE.Texture || val instanceof THREE.Texture
+        res = val
+    res

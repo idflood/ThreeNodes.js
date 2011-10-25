@@ -24,6 +24,7 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
     @rack.addFields
       inputs:
         "color": {type: "Color", val: new THREE.Color(1, 0, 0)}
+        "map": {type: "Any", val: false}
         "reflectivity": 1
         "refractionRatio": 0.98
         "wireframe": false
@@ -33,9 +34,9 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
       outputs:
         "out": {type: "Any", val: @ob}
   
-  #compute: =>
-  #  @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-  #  @rack.get("out", true).set @ob
+  compute: =>
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
 
 #https://github.com/mrdoob/three.js/blob/master/src/materials/MeshLambertMaterial.js
 class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
@@ -53,6 +54,6 @@ class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
       outputs:
         "out": {type: "Any", val: @ob}
   
-  #compute: =>
-  #  @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-  #  @rack.get("out", true).set @ob
+  compute: =>
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob

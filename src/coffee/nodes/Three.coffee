@@ -110,6 +110,30 @@ class nodes.types.Three.Camera extends NodeBase
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
 
+class nodes.types.Three.Texture extends NodeBase
+  set_fields: =>
+    super
+    @ob = false
+    @cached = false
+    @rack.addFields
+      inputs:
+        "image": {type: "String", val: false}
+      outputs:
+        "out": {type: "Any", val: @ob}
+
+  compute: =>
+    current = @rack.get("image").get()
+    if current && current != ""
+      if @cached == false || ($.type(@cached) == "object" && @cached.constructor == THREE.Texture && @cached.image.src != current)
+        #@ob = new THREE.Texture(current)
+        @ob = new THREE.ImageUtils.loadTexture(current)
+        console.log "new texture"
+        console.log @ob
+        console.log current
+        @cached = @ob
+        
+    @rack.get("out", true).set @ob
+    
 class nodes.types.Three.WebGLRenderer extends NodeBase
   set_fields: =>
     super

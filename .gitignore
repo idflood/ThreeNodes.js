@@ -4,3 +4,4 @@ Thumbs.db
 .sass-cache/
 .project
 node_modules/
+public/tmp/
