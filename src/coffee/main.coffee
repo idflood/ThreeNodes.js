@@ -78,6 +78,10 @@ init_websocket = () ->
     console.log 'socket close'
   true
 
+rebuild_all_shaders = () ->
+  for n in webgl_materials_node
+    n.ob.program = false
+
 @onSoundInput = (data) ->
   #console.log data
   flash_sound_value = data.split('&')

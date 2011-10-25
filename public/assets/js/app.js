@@ -1,5 +1,5 @@
 (function() {
-  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, add_window_resize_handler, animate, clear_workspace, field_click_1, field_context_menu, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_context_menus, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_ui, init_websocket, load_local_file_input_changed, node_connections, node_context_menu, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, show_application, svg, uid, webgl_materials_node;
+  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, add_window_resize_handler, animate, clear_workspace, field_click_1, field_context_menu, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_context_menus, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_ui, init_websocket, load_local_file_input_changed, node_connections, node_context_menu, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, rebuild_all_shaders, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, show_application, svg, uid, webgl_materials_node;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -129,6 +129,15 @@
       return console.log('socket close');
     };
     return true;
+  };
+  rebuild_all_shaders = function() {
+    var n, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = webgl_materials_node.length; _i < _len; _i++) {
+      n = webgl_materials_node[_i];
+      _results.push(n.ob.program = false);
+    }
+    return _results;
   };
   this.onSoundInput = function(data) {
     flash_sound_value = data.split('&');
@@ -1469,6 +1478,8 @@
   NodeMaterialBase = (function() {
     __extends(NodeMaterialBase, NodeBase);
     function NodeMaterialBase() {
+      this.input_value_has_changed = __bind(this.input_value_has_changed, this);
+      this.create_material_cache = __bind(this.create_material_cache, this);
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       NodeMaterialBase.__super__.constructor.apply(this, arguments);
@@ -1493,6 +1504,29 @@
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.get("out", true).set(this.ob);
     };
+    NodeMaterialBase.prototype.create_material_cache = function(values) {
+      var res, v, _i, _len;
+      res = {};
+      for (_i = 0, _len = values.length; _i < _len; _i++) {
+        v = values[_i];
+        res[v] = this.rack.get(v).get();
+      }
+      return res;
+    };
+    NodeMaterialBase.prototype.input_value_has_changed = function(values, cache) {
+      var v, v2, _i, _len;
+      if (cache == null) {
+        cache = this.material_cache;
+      }
+      for (_i = 0, _len = values.length; _i < _len; _i++) {
+        v = values[_i];
+        v2 = this.rack.get(v).get();
+        if (v2 !== cache[v]) {
+          return true;
+        }
+      }
+      return false;
+    };
     return NodeMaterialBase;
   })();
   nodes.types.Materials.MeshBasicMaterial = (function() {
@@ -1507,7 +1541,7 @@
       this.ob = new THREE.MeshBasicMaterial({
         color: 0xff0000
       });
-      return this.rack.addFields({
+      this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1531,9 +1565,17 @@
           }
         }
       });
+      this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
+      return this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
     };
     MeshBasicMaterial.prototype.compute = function() {
+      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
+        this.ob = new THREE.MeshBasicMaterial({
+          color: 0xff0000
+        });
+      }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
       return this.rack.get("out", true).set(this.ob);
     };
     return MeshBasicMaterial;
@@ -1550,7 +1592,7 @@
       this.ob = new THREE.MeshLambertMaterial({
         color: 0xff0000
       });
-      return this.rack.addFields({
+      this.rack.addFields({
         inputs: {
           "color": {
             type: "Color",
@@ -1572,9 +1614,17 @@
           }
         }
       });
+      this.vars_rebuild_shader_on_change = ["transparent", "depthTest"];
+      return this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
     };
     MeshLambertMaterial.prototype.compute = function() {
+      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
+        this.ob = new THREE.MeshLambertMaterial({
+          color: 0xff0000
+        });
+      }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
       return this.rack.get("out", true).set(this.ob);
     };
     return MeshLambertMaterial;
@@ -1855,7 +1905,7 @@
       _results = [];
       for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
         child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.addLight(child) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.addChild(child) : void 0));
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.addLight(child), rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.addChild(child) : void 0));
       }
       return _results;
     };
@@ -2288,12 +2338,8 @@
     });
     $("#main_file_input_open").change(load_local_file_input_changed);
     return $(".rebuild_shaders").click(function(e) {
-      var n, _i, _len;
       e.preventDefault();
-      for (_i = 0, _len = webgl_materials_node.length; _i < _len; _i++) {
-        n = webgl_materials_node[_i];
-        n.ob.program = false;
-      }
+      rebuild_all_shaders();
       return false;
     });
   };

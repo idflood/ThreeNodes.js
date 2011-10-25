@@ -59,6 +59,7 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
         ind = @ob.children.indexOf(child)
         if ind == -1
           @ob.addLight(child)
+          rebuild_all_shaders()
       else
         ind = @ob.children.indexOf(child)
         if ind == -1

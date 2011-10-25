@@ -13,9 +13,23 @@ class NodeMaterialBase extends NodeBase
         "polygonOffset": false
         "polygonOffsetFactor": 0
         "polygonOffsetUnits": 0
+  
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @rack.get("out", true).set @ob
+
+  create_material_cache: (values) =>
+    res = {}
+    for v in values
+      res[v] = @rack.get(v).get()
+    res
+  
+  input_value_has_changed: (values, cache = @material_cache) =>
+    for v in values
+      v2 = @rack.get(v).get()
+      if v2 != cache[v]
+        return true
+    false
 
 class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
   set_fields: =>
@@ -33,9 +47,14 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
         "skinning": false
       outputs:
         "out": {type: "Any", val: @ob}
+    @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
+    @material_cache = @create_material_cache(@vars_rebuild_shader_on_change)
   
   compute: =>
+    if @input_value_has_changed(@vars_rebuild_shader_on_change)
+      @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @material_cache = @create_material_cache(@vars_rebuild_shader_on_change)
     @rack.get("out", true).set @ob
 
 #https://github.com/mrdoob/three.js/blob/master/src/materials/MeshLambertMaterial.js
@@ -53,7 +72,12 @@ class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
         "skinning": false
       outputs:
         "out": {type: "Any", val: @ob}
+    @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
+    @material_cache = @create_material_cache(@vars_rebuild_shader_on_change)
   
   compute: =>
+    if @input_value_has_changed(@vars_rebuild_shader_on_change)
+      @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @material_cache = @create_material_cache(@vars_rebuild_shader_on_change)
     @rack.get("out", true).set @ob

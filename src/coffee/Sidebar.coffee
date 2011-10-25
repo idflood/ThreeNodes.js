@@ -22,8 +22,7 @@ init_sidebar_tab_system = () ->
 
   $(".rebuild_shaders").click (e) ->
     e.preventDefault()
-    for n in webgl_materials_node
-      n.ob.program = false
+    rebuild_all_shaders()
     false
 
 init_sidebar_tabs = () ->
