@@ -14,6 +14,8 @@ class nodes.types.Three.Object3D extends NodeBase
         "receiveShadow": false
       outputs:
         "out": {type: "Any", val: @ob}
+    @vars_shadow_options = ["castShadow", "receiveShadow"]
+    @shadow_cache = @create_cache_object(@vars_shadow_options)
 
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
@@ -84,11 +86,26 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
     @materials_cache = @rack.get('materials').get()
 
   compute: =>
+    needs_rebuild = false
+    
+    if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
+      console.log "on value changed: nodes.types.Three.Mesh"
+      console.log @ob
+      @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
+      needs_rebuild = true
+      
     @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry'])
+    
     if @geometry_cache != @rack.get('geometry').get().id || flatArraysAreEquals(@materials_cache, @rack.get('materials').get()) == false
       @ob = new THREE.Mesh(@rack.get('geometry').get(), @rack.get('materials').get())
       @geometry_cache = @rack.get('geometry').get().id
       @materials_cache = @rack.get('materials').get()
+    
+    @shadow_cache = @create_cache_object(@vars_shadow_options)
+    
+    if needs_rebuild == true
+      rebuild_all_shaders()
+    
     @rack.get("out", true).set @ob
 
 class nodes.types.Three.Camera extends NodeBase

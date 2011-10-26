@@ -79,6 +79,8 @@ init_websocket = () ->
   true
 
 rebuild_all_shaders = () ->
+  console.log "rebuilding shaders"
+  console.log webgl_materials_node
   for n in webgl_materials_node
     n.ob.program = false
 

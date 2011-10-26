@@ -132,6 +132,8 @@
   };
   rebuild_all_shaders = function() {
     var n, _i, _len, _results;
+    console.log("rebuilding shaders");
+    console.log(webgl_materials_node);
     _results = [];
     for (_i = 0, _len = webgl_materials_node.length; _i < _len; _i++) {
       n = webgl_materials_node[_i];
@@ -885,6 +887,8 @@
       this.compute = __bind(this.compute, this);
       this.has_out_connection = __bind(this.has_out_connection, this);
       this.set_fields = __bind(this.set_fields, this);
+      this.input_value_has_changed = __bind(this.input_value_has_changed, this);
+      this.create_cache_object = __bind(this.create_cache_object, this);
       this.init_context_menu = __bind(this.init_context_menu, this);
       this.typename = __bind(this.typename, this);
       if (this.inXML) {
@@ -924,6 +928,29 @@
           return field.remove_connections();
         }
       });
+    };
+    NodeBase.prototype.create_cache_object = function(values) {
+      var res, v, _i, _len;
+      res = {};
+      for (_i = 0, _len = values.length; _i < _len; _i++) {
+        v = values[_i];
+        res[v] = this.rack.get(v).get();
+      }
+      return res;
+    };
+    NodeBase.prototype.input_value_has_changed = function(values, cache) {
+      var v, v2, _i, _len;
+      if (cache == null) {
+        cache = this.material_cache;
+      }
+      for (_i = 0, _len = values.length; _i < _len; _i++) {
+        v = values[_i];
+        v2 = this.rack.get(v).get();
+        if (v2 !== cache[v]) {
+          return true;
+        }
+      }
+      return false;
     };
     NodeBase.prototype.set_fields = function() {};
     NodeBase.prototype.has_out_connection = function() {
@@ -1405,6 +1432,51 @@
     };
     return PointLight;
   })();
+  nodes.types.Lights.SpotLight = (function() {
+    __extends(SpotLight, NodeBase);
+    function SpotLight() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SpotLight.__super__.constructor.apply(this, arguments);
+    }
+    SpotLight.prototype.set_fields = function() {
+      SpotLight.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.SpotLight(0xffffff);
+      return this.rack.addFields({
+        inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(0xffffff)
+          },
+          "position": {
+            type: "Vector3",
+            val: new THREE.Vector3(0, 300, 0)
+          },
+          "target": {
+            type: "Any",
+            val: new THREE.Object3D()
+          },
+          "intensity": 1,
+          "distance": 0,
+          "castShadow": false
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    SpotLight.prototype.compute = function() {
+      if (this.rack.get("castShadow").get() !== this.ob.castShadow) {
+        rebuild_all_shaders();
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return SpotLight;
+  })();
   nodes.types.Lights.DirectionalLight = (function() {
     __extends(DirectionalLight, NodeBase);
     function DirectionalLight() {
@@ -1478,8 +1550,6 @@
   NodeMaterialBase = (function() {
     __extends(NodeMaterialBase, NodeBase);
     function NodeMaterialBase() {
-      this.input_value_has_changed = __bind(this.input_value_has_changed, this);
-      this.create_material_cache = __bind(this.create_material_cache, this);
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       NodeMaterialBase.__super__.constructor.apply(this, arguments);
@@ -1503,29 +1573,6 @@
     NodeMaterialBase.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.get("out", true).set(this.ob);
-    };
-    NodeMaterialBase.prototype.create_material_cache = function(values) {
-      var res, v, _i, _len;
-      res = {};
-      for (_i = 0, _len = values.length; _i < _len; _i++) {
-        v = values[_i];
-        res[v] = this.rack.get(v).get();
-      }
-      return res;
-    };
-    NodeMaterialBase.prototype.input_value_has_changed = function(values, cache) {
-      var v, v2, _i, _len;
-      if (cache == null) {
-        cache = this.material_cache;
-      }
-      for (_i = 0, _len = values.length; _i < _len; _i++) {
-        v = values[_i];
-        v2 = this.rack.get(v).get();
-        if (v2 !== cache[v]) {
-          return true;
-        }
-      }
-      return false;
     };
     return NodeMaterialBase;
   })();
@@ -1566,7 +1613,7 @@
         }
       });
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
-      return this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
+      return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     MeshBasicMaterial.prototype.compute = function() {
       if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
@@ -1575,7 +1622,7 @@
         });
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
+      this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
       return this.rack.get("out", true).set(this.ob);
     };
     return MeshBasicMaterial;
@@ -1615,7 +1662,7 @@
         }
       });
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest"];
-      return this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
+      return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     MeshLambertMaterial.prototype.compute = function() {
       if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
@@ -1624,7 +1671,7 @@
         });
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      this.material_cache = this.create_material_cache(this.vars_rebuild_shader_on_change);
+      this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
       return this.rack.get("out", true).set(this.ob);
     };
     return MeshLambertMaterial;
@@ -1817,7 +1864,7 @@
     Object3D.prototype.set_fields = function() {
       Object3D.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.Object3D();
-      return this.rack.addFields({
+      this.rack.addFields({
         inputs: {
           "children": {
             type: "Array",
@@ -1847,6 +1894,8 @@
           }
         }
       });
+      this.vars_shadow_options = ["castShadow", "receiveShadow"];
+      return this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
     };
     Object3D.prototype.compute = function() {
       var child, ind, _i, _j, _len, _len2, _ref, _ref2;
@@ -1952,11 +2001,26 @@
       return this.materials_cache = this.rack.get('materials').get();
     };
     Mesh.prototype.compute = function() {
+      var needs_rebuild;
+      needs_rebuild = false;
+      if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
+        console.log("on value changed: nodes.types.Three.Mesh");
+        console.log(this.ob);
+        this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
+          color: 0xff0000,
+          wireframe: false
+        }));
+        needs_rebuild = true;
+      }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
       if (this.geometry_cache !== this.rack.get('geometry').get().id || flatArraysAreEquals(this.materials_cache, this.rack.get('materials').get()) === false) {
         this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('materials').get());
         this.geometry_cache = this.rack.get('geometry').get().id;
         this.materials_cache = this.rack.get('materials').get();
+      }
+      this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
+      if (needs_rebuild === true) {
+        rebuild_all_shaders();
       }
       return this.rack.get("out", true).set(this.ob);
     };

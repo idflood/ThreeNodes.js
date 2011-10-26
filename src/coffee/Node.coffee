@@ -34,6 +34,19 @@ class NodeBase
         field = self.rack.node_fields[f_type][f_name]
         field.remove_connections()
   
+  create_cache_object: (values) =>
+    res = {}
+    for v in values
+      res[v] = @rack.get(v).get()
+    res
+  
+  input_value_has_changed: (values, cache = @material_cache) =>
+    for v in values
+      v2 = @rack.get(v).get()
+      if v2 != cache[v]
+        return true
+    false
+  
   set_fields: =>
     # to implement
   
