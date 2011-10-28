@@ -89,8 +89,6 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
     needs_rebuild = false
     
     if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
-      console.log "on value changed: nodes.types.Three.Mesh"
-      console.log @ob
       @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
       needs_rebuild = true
       
@@ -165,6 +163,12 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
         "scene": {type: "Scene", val: new THREE.Scene()}
         "camera": {type: "Camera", val: new THREE.Camera(75, 800 / 600, 1, 10000)}
         "bg_color": {type: "Color", val: new THREE.Color(0, 0, 0)}
+        "shadowCameraNear": 3
+        "shadowCameraFar": 3000
+        "shadowMapWidth": 512
+        "shadowMapHeight": 512
+        "shadowMapEnabled": false
+        "shadowMapSoft": true
       outputs:
         "out": {type: "Any", val: @ob}
     @apply_size()
@@ -190,7 +194,7 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
   compute: =>
     @apply_size()
     @apply_bg_color()
-    
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color'])
     sce = @rack.get("scene").get()
     cam = @rack.get("camera").get()
     #if sce != false && cam != false

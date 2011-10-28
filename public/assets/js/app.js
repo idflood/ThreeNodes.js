@@ -2004,8 +2004,6 @@
       var needs_rebuild;
       needs_rebuild = false;
       if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
-        console.log("on value changed: nodes.types.Three.Mesh");
-        console.log(this.ob);
         this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
           color: 0xff0000,
           wireframe: false
@@ -2136,7 +2134,13 @@
           "bg_color": {
             type: "Color",
             val: new THREE.Color(0, 0, 0)
-          }
+          },
+          "shadowCameraNear": 3,
+          "shadowCameraFar": 3000,
+          "shadowMapWidth": 512,
+          "shadowMapHeight": 512,
+          "shadowMapEnabled": false,
+          "shadowMapSoft": true
         },
         outputs: {
           "out": {
@@ -2173,6 +2177,7 @@
       var cam, sce;
       this.apply_size();
       this.apply_bg_color();
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color']);
       sce = this.rack.get("scene").get();
       cam = this.rack.get("camera").get();
       return this.ob.render(sce, cam);
