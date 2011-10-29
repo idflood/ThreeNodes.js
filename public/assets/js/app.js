@@ -1310,6 +1310,47 @@
     };
     return Color;
   })();
+  nodes.types.Geometry.PlaneGeometry = (function() {
+    __extends(PlaneGeometry, NodeBase);
+    function PlaneGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      PlaneGeometry.__super__.constructor.apply(this, arguments);
+    }
+    PlaneGeometry.prototype.set_fields = function() {
+      PlaneGeometry.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1);
+      this.rack.addFields({
+        inputs: {
+          "width": 100,
+          "height": 100,
+          "segments_width": 1,
+          "segments_height": 1
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cache_array();
+    };
+    PlaneGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get()];
+    };
+    PlaneGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (flatArraysAreEquals(new_cache, this.cached) === false) {
+        this.ob = new THREE.PlaneGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return PlaneGeometry;
+  })();
   nodes.types.Geometry.CubeGeometry = (function() {
     __extends(CubeGeometry, NodeBase);
     function CubeGeometry() {
@@ -2094,11 +2135,10 @@
       var current;
       current = this.rack.get("image").get();
       if (current && current !== "") {
-        if (this.cached === false ||  ($.type(this.cached) === "object" && this.cached.constructor === THREE.Texture && this.cached.image.src !== current)) {
+        if (this.cached === false ||  ($.type(this.cached) === "object" && this.cached.constructor === THREE.Texture && this.cached.image.attributes[0].nodeValue !== current)) {
           this.ob = new THREE.ImageUtils.loadTexture(current);
           console.log("new texture");
           console.log(this.ob);
-          console.log(current);
           this.cached = this.ob;
         }
       }

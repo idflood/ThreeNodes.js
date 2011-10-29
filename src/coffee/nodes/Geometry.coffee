@@ -1,3 +1,27 @@
+class nodes.types.Geometry.PlaneGeometry extends NodeBase
+  set_fields: =>
+    super
+    @ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1)
+    @rack.addFields
+      inputs:
+        "width": 100,
+        "height": 100,
+        "segments_width": 1,
+        "segments_height": 1,
+      outputs:
+        "out": {type: "Any", val: @ob}
+    @cached = @get_cache_array()
+  
+  get_cache_array: =>
+    [@rack.get("width").get(), @rack.get("height").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get()]
+
+  compute: =>
+    new_cache = @get_cache_array()
+    if flatArraysAreEquals(new_cache, @cached) == false
+      @ob = new THREE.PlaneGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+    @rack.get("out", true).set @ob
+
 class nodes.types.Geometry.CubeGeometry extends NodeBase
   set_fields: =>
     super

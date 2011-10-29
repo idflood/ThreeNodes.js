@@ -140,12 +140,11 @@ class nodes.types.Three.Texture extends NodeBase
   compute: =>
     current = @rack.get("image").get()
     if current && current != ""
-      if @cached == false || ($.type(@cached) == "object" && @cached.constructor == THREE.Texture && @cached.image.src != current)
+      if @cached == false || ($.type(@cached) == "object" && @cached.constructor == THREE.Texture && @cached.image.attributes[0].nodeValue != current)
         #@ob = new THREE.Texture(current)
         @ob = new THREE.ImageUtils.loadTexture(current)
         console.log "new texture"
         console.log @ob
-        console.log current
         @cached = @ob
         
     @rack.get("out", true).set @ob
