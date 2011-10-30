@@ -44,7 +44,6 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
     @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
     @rack.get("out", true).set @ob
 
-#https://github.com/mrdoob/three.js/blob/master/src/materials/MeshLambertMaterial.js
 class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
   set_fields: =>
     super

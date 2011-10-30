@@ -19,15 +19,23 @@ class nodes.types.Three.Object3D extends NodeBase
 
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
-    for child in @rack.get("children").get()
+    childs_in = @rack.get("children").get()
+    
+    # remove old childs
+    for child in @ob.children
+      ind = childs_in.indexOf(child)
+      if child && ind == -1 && child
+        console.log "object remove child"
+        console.log @ob
+        @ob.removeChild(child)
+    
+    #add new childs
+    for child in childs_in
       ind = @ob.children.indexOf(child)
       if ind == -1
+        console.log "object add child"
+        console.log @ob
         @ob.addChild(child)
-    for child in @ob.children
-      ind = @rack.get("children").val.indexOf(child)
-      if ind != -1
-        @ob.removeChild(child)
-    @rack.get("out", true).set @ob
 
 class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   set_fields: =>
@@ -48,6 +56,8 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
     for child in @ob.children
       ind = childs_in.indexOf(child)
       if child && ind == -1 && child instanceof THREE.Light == false
+        console.log "scene remove child"
+        console.log @ob
         @ob.removeChild(child)
         
     for child in @ob.children
@@ -65,6 +75,8 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
       else
         ind = @ob.children.indexOf(child)
         if ind == -1
+          console.log "scene add child"
+          console.log @ob
           @ob.addChild(child)
 
   compute: =>

@@ -1436,6 +1436,34 @@
     };
     return SphereGeometry;
   })();
+  /*
+  # todo: maybe use require to load the font as required
+  # see: https://github.com/idflood/three.js/blob/master/examples/canvas_geometry_text.html
+  class nodes.types.Geometry.TextGeometry extends NodeBase
+    set_fields: =>
+      super
+      @ob = new THREE.TextGeometry(".")
+      
+      # todo: implement other attributes (height, bevel, ...)
+      @rack.addFields
+        inputs:
+          "text": "."
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @cached = @get_cache_array()
+    
+    get_cache_array: =>
+      [@rack.get("text").get()]
+  
+    compute: =>
+      new_cache = @get_cache_array()
+      if flatArraysAreEquals(new_cache, @cached) == false
+        @ob = new THREE.SphereGeometry(@rack.get("text").get())
+        @cached = new_cache
+      #@apply_fields_to_val(@rack.node_fields.inputs, @ob, ["text"])
+      @rack.get("out", true).set @ob
+      
+  */
   nodes.types.Lights.PointLight = (function() {
     __extends(PointLight, NodeBase);
     function PointLight() {
@@ -1939,25 +1967,26 @@
       return this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
     };
     Object3D.prototype.compute = function() {
-      var child, ind, _i, _j, _len, _len2, _ref, _ref2;
+      var child, childs_in, ind, _i, _j, _len, _len2, _ref, _results;
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
-      _ref = this.rack.get("children").get();
+      childs_in = this.rack.get("children").get();
+      _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
-        ind = this.ob.children.indexOf(child);
-        if (ind === -1) {
-          this.ob.addChild(child);
-        }
-      }
-      _ref2 = this.ob.children;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        child = _ref2[_j];
-        ind = this.rack.get("children").val.indexOf(child);
-        if (ind !== -1) {
+        ind = childs_in.indexOf(child);
+        if (child && ind === -1 && child) {
+          console.log("object remove child");
+          console.log(this.ob);
           this.ob.removeChild(child);
         }
       }
-      return this.rack.get("out", true).set(this.ob);
+      _results = [];
+      for (_j = 0, _len2 = childs_in.length; _j < _len2; _j++) {
+        child = childs_in[_j];
+        ind = this.ob.children.indexOf(child);
+        _results.push(ind === -1 ? (console.log("object add child"), console.log(this.ob), this.ob.addChild(child)) : void 0);
+      }
+      return _results;
     };
     return Object3D;
   })();
@@ -1981,6 +2010,8 @@
         child = _ref[_i];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child instanceof THREE.Light === false) {
+          console.log("scene remove child");
+          console.log(this.ob);
           this.ob.removeChild(child);
         }
       }
@@ -1995,7 +2026,7 @@
       _results = [];
       for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
         child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.addLight(child), rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.addChild(child) : void 0));
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.addLight(child), rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("scene add child"), console.log(this.ob), this.ob.addChild(child)) : void 0));
       }
       return _results;
     };
