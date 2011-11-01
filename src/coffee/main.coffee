@@ -9,6 +9,7 @@ nodes.types.Geometry = {}
 nodes.types.Three = {}
 nodes.types.Materials = {}
 nodes.types.Lights = {}
+nodes.types.PostProcessing = {}
 
 fields = {}
 fields.types = {}
@@ -51,6 +52,12 @@ require [
   "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
   "order!libs/colorpicker/js/colorpicker",
   "order!libs/Three",
+  "order!libs/three-extras/js/ShaderExtras",
+  "order!libs/three-extras/js/postprocessing/EffectComposer",
+  "order!libs/three-extras/js/postprocessing/MaskPass",
+  "order!libs/three-extras/js/postprocessing/RenderPass",
+  "order!libs/three-extras/js/postprocessing/ShaderPass",
+  "order!libs/three-extras/js/postprocessing/BloomPass",
   "order!libs/raphael-min",
   "order!libs/underscore-min",
   "order!libs/backbone",
@@ -58,7 +65,7 @@ require [
   "libs/FileSaver.min",
   "libs/sockjs-latest.min",
   "libs/signals.min",
-  "libs/RequestAnimationFrame"
+  "libs/three-extras/js/RequestAnimationFrame"
   ], init_app
 
 init_websocket = () ->

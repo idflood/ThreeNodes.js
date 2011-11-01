@@ -89,6 +89,7 @@
   nodes.types.Three = {};
   nodes.types.Materials = {};
   nodes.types.Lights = {};
+  nodes.types.PostProcessing = {};
   fields = {};
   fields.types = {};
   webgl_materials_node = [];
@@ -110,7 +111,7 @@
     init_ui();
     return animate();
   };
-  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/colorpicker/js/colorpicker", "order!libs/Three", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/RequestAnimationFrame"], init_app);
+  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/colorpicker/js/colorpicker", "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/three-extras/js/RequestAnimationFrame"], init_app);
   init_websocket = function() {
     var socket, webso;
     webso = false;
@@ -1967,7 +1968,7 @@
       return this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
     };
     Object3D.prototype.compute = function() {
-      var child, childs_in, ind, _i, _j, _len, _len2, _ref, _results;
+      var child, childs_in, ind, _i, _j, _len, _len2, _ref;
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
       childs_in = this.rack.get("children").get();
       _ref = this.ob.children;
@@ -1980,13 +1981,16 @@
           this.ob.removeChild(child);
         }
       }
-      _results = [];
       for (_j = 0, _len2 = childs_in.length; _j < _len2; _j++) {
         child = childs_in[_j];
         ind = this.ob.children.indexOf(child);
-        _results.push(ind === -1 ? (console.log("object add child"), console.log(this.ob), this.ob.addChild(child)) : void 0);
+        if (ind === -1) {
+          console.log("object add child");
+          console.log(this.ob);
+          this.ob.addChild(child);
+        }
       }
-      return _results;
+      return this.rack.get("out", true).set(this.ob);
     };
     return Object3D;
   })();
@@ -2455,6 +2459,37 @@
       return this.rack.get("out", true).set(this.counter);
     };
     return Timer;
+  })();
+  nodes.types.PostProcessing.BloomPass = (function() {
+    __extends(BloomPass, NodeBase);
+    function BloomPass() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      BloomPass.__super__.constructor.apply(this, arguments);
+    }
+    BloomPass.prototype.set_fields = function() {
+      BloomPass.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.BloomPass(1.6);
+      return this.rack.addFields({
+        inputs: {
+          "strength": 1,
+          "kernelSize": 25,
+          "sigma": 4.0,
+          "resolution": 256
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    BloomPass.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return BloomPass;
   })();
   init_sidebar = function() {
     init_sidebar_tab_new_node();

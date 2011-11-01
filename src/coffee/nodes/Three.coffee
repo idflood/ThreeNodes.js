@@ -36,6 +36,8 @@ class nodes.types.Three.Object3D extends NodeBase
         console.log "object add child"
         console.log @ob
         @ob.addChild(child)
+    
+    @rack.get("out", true).set @ob
 
 class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   set_fields: =>
