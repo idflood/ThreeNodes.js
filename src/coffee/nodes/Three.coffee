@@ -60,26 +60,26 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
       if child && ind == -1 && child instanceof THREE.Light == false
         console.log "scene remove child"
         console.log @ob
-        @ob.removeChild(child)
+        @ob.remove(child)
         
     for child in @ob.children
       ind = childs_in.indexOf(child)
       if child && ind == -1 && child instanceof THREE.Light == true
-        @ob.removeLight(child)
+        @ob.remove(child)
         
     #add new childs
     for child in childs_in
       if child instanceof THREE.Light == true
         ind = @ob.children.indexOf(child)
         if ind == -1
-          @ob.addLight(child)
+          @ob.add(child)
           rebuild_all_shaders()
       else
         ind = @ob.children.indexOf(child)
         if ind == -1
           console.log "scene add child"
           console.log @ob
-          @ob.addChild(child)
+          @ob.add(child)
 
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
@@ -123,7 +123,7 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
 class nodes.types.Three.Camera extends NodeBase
   set_fields: =>
     super
-    @ob = new THREE.Camera()
+    @ob = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
     @rack.addFields
       inputs:
         "fov": 50
@@ -174,7 +174,7 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
         "width": 800
         "height": 600
         "scene": {type: "Scene", val: new THREE.Scene()}
-        "camera": {type: "Camera", val: new THREE.Camera(75, 800 / 600, 1, 10000)}
+        "camera": {type: "Camera", val: new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)}
         "bg_color": {type: "Color", val: new THREE.Color(0, 0, 0)}
         "shadowCameraNear": 3
         "shadowCameraFar": 3000

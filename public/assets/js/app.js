@@ -638,7 +638,7 @@
       res = false;
       switch ($.type(val)) {
         case "object":
-          if (val.constructor === THREE.Camera) {
+          if (val.constructor === THREE.Camera ||  val.constructor === THREE.PerspectiveCamera ||  val.constructor === THREE.OrthographicCamera) {
             res = val;
           }
       }
@@ -2016,7 +2016,7 @@
         if (child && ind === -1 && child instanceof THREE.Light === false) {
           console.log("scene remove child");
           console.log(this.ob);
-          this.ob.removeChild(child);
+          this.ob.remove(child);
         }
       }
       _ref2 = this.ob.children;
@@ -2024,13 +2024,13 @@
         child = _ref2[_j];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child instanceof THREE.Light === true) {
-          this.ob.removeLight(child);
+          this.ob.remove(child);
         }
       }
       _results = [];
       for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
         child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.addLight(child), rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("scene add child"), console.log(this.ob), this.ob.addChild(child)) : void 0));
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.add(child), rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("scene add child"), console.log(this.ob), this.ob.add(child)) : void 0));
       }
       return _results;
     };
@@ -2109,7 +2109,7 @@
     }
     Camera.prototype.set_fields = function() {
       Camera.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.Camera();
+      this.ob = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
       return this.rack.addFields({
         inputs: {
           "fov": 50,
@@ -2204,7 +2204,7 @@
           },
           "camera": {
             type: "Camera",
-            val: new THREE.Camera(75, 800 / 600, 1, 10000)
+            val: new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
           },
           "bg_color": {
             type: "Color",

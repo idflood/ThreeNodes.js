@@ -203,7 +203,7 @@ class fields.types.Camera extends NodeField
   compute_value : (val) =>
     res = false
     switch $.type(val)
-      when "object" then if val.constructor == THREE.Camera
+      when "object" then if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
         res = val
     res
 class fields.types.Mesh extends NodeField
