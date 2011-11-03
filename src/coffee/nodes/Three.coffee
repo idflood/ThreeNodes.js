@@ -191,11 +191,19 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     @rack.get("camera").val.position.z = 1000
     @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
     @win.document.body.appendChild( @ob.domElement );
+    $("*", @win.document).css
+      padding: 0
+      margin: 0
+    @old_bg = false
     @apply_bg_color()
   
   apply_bg_color: ->
-    $(@win.document.body).css
-      background: @rack.get('bg_color').get().getContextStyle()
+    new_val = @rack.get('bg_color').get().getContextStyle()
+    if @win && @old_bg != new_val
+      $(@win.document.body).css
+        background: new_val
+      @ob.setClearColor( @rack.get('bg_color').get(), 1 )
+      @old_bg = new_val
   
   apply_size: =>
     if !@win
@@ -230,5 +238,5 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     @ob.clear()
     renderModel.scene = current_scene
     renderModel.camera = current_camera
-    composer.render()
+    composer.render(0.05)
     #@rack.get("out", true).set @ob

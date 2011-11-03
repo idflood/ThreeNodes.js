@@ -118,7 +118,7 @@
     init_ui();
     return animate();
   };
-  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/colorpicker/js/colorpicker", "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/three-extras/js/RequestAnimationFrame"], init_app);
+  require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/colorpicker/js/colorpicker", "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/three-extras/js/postprocessing/FilmPass", "order!libs/three-extras/js/postprocessing/DotScreenPass", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/three-extras/js/RequestAnimationFrame"], init_app);
   init_websocket = function() {
     var socket, webso;
     webso = false;
@@ -898,6 +898,7 @@
       this.remove_connection = __bind(this.remove_connection, this);
       this.add_out_connection = __bind(this.add_out_connection, this);
       this.add_field_listener = __bind(this.add_field_listener, this);
+      this.get_cached_array = __bind(this.get_cached_array, this);
       this.render_connections = __bind(this.render_connections, this);
       this.create_field_connection = __bind(this.create_field_connection, this);
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
@@ -1025,6 +1026,16 @@
     };
     NodeBase.prototype.render_connections = function() {
       return this.rack.render_connections();
+    };
+    NodeBase.prototype.get_cached_array = function(vals) {
+      var res, v, _i, _len, _results;
+      res = [];
+      _results = [];
+      for (_i = 0, _len = vals.length; _i < _len; _i++) {
+        v = vals[_i];
+        _results.push(res[res.length] = this.rack.get(v).get());
+      }
+      return _results;
     };
     NodeBase.prototype.add_field_listener = function($field) {
       var f_name, f_type, field, self;
@@ -2253,12 +2264,23 @@
       this.rack.get("camera").val.position.z = 1000;
       this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false");
       this.win.document.body.appendChild(this.ob.domElement);
+      $("*", this.win.document).css({
+        padding: 0,
+        margin: 0
+      });
+      this.old_bg = false;
       return this.apply_bg_color();
     };
     WebGLRenderer.prototype.apply_bg_color = function() {
-      return $(this.win.document.body).css({
-        background: this.rack.get('bg_color').get().getContextStyle()
-      });
+      var new_val;
+      new_val = this.rack.get('bg_color').get().getContextStyle();
+      if (this.win && this.old_bg !== new_val) {
+        $(this.win.document.body).css({
+          background: new_val
+        });
+        this.ob.setClearColor(this.rack.get('bg_color').get(), 1);
+        return this.old_bg = new_val;
+      }
     };
     WebGLRenderer.prototype.apply_size = function() {
       var h, w;
@@ -2296,7 +2318,7 @@
       this.ob.clear();
       renderModel.scene = current_scene;
       renderModel.camera = current_camera;
-      return composer.render();
+      return composer.render(0.05);
     };
     return WebGLRenderer;
   })();
@@ -2506,7 +2528,6 @@
     function BloomPass() {
       this.compute = __bind(this.compute, this);
       this.value_has_changed = __bind(this.value_has_changed, this);
-      this.get_cached_array = __bind(this.get_cached_array, this);
       this.set_fields = __bind(this.set_fields, this);
       BloomPass.__super__.constructor.apply(this, arguments);
     }
@@ -2529,19 +2550,9 @@
       });
       return this.cached = this.get_cached_array(['strength', 'kernelSize', 'sigma', 'resolution']);
     };
-    BloomPass.prototype.get_cached_array = function(vals) {
-      var res, v, _i, _len, _results;
-      res = [];
-      _results = [];
-      for (_i = 0, _len = vals.length; _i < _len; _i++) {
-        v = vals[_i];
-        _results.push(res[res.lengt] = this.rack.get(v).get());
-      }
-      return _results;
-    };
     BloomPass.prototype.value_has_changed = function(vals) {
       var newvals;
-      newvals = this.get_cached_array(['strength', 'kernelSize', 'sigma', 'resolution']);
+      newvals = this.get_cached_array(vals);
       if (flatArraysAreEquals(newvals, this.cached) === false) {
         this.cached = newvals;
         return true;
@@ -2555,6 +2566,96 @@
       return this.rack.get("out", true).set(this.ob);
     };
     return BloomPass;
+  })();
+  nodes.types.PostProcessing.DotScreenPass = (function() {
+    __extends(DotScreenPass, NodeBase);
+    function DotScreenPass() {
+      this.compute = __bind(this.compute, this);
+      this.value_has_changed = __bind(this.value_has_changed, this);
+      this.set_fields = __bind(this.set_fields, this);
+      DotScreenPass.__super__.constructor.apply(this, arguments);
+    }
+    DotScreenPass.prototype.set_fields = function() {
+      DotScreenPass.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.DotScreenPass(new THREE.Vector2(0.5, 0.5));
+      this.rack.addFields({
+        inputs: {
+          "center": {
+            type: "Vector2",
+            val: new THREE.Vector2(0.5, 0.5)
+          },
+          "angle": 1.57,
+          "scale": 1.0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cached_array(['center', 'angle', 'scale']);
+    };
+    DotScreenPass.prototype.value_has_changed = function(vals) {
+      var newvals;
+      newvals = this.get_cached_array(vals);
+      if (flatArraysAreEquals(newvals, this.cached) === false) {
+        this.cached = newvals;
+        return true;
+      }
+      return false;
+    };
+    DotScreenPass.prototype.compute = function() {
+      if (this.value_has_changed(['center', 'angle', 'scale']) === true) {
+        this.ob = new THREE.DotScreenPass(this.rack.get("center").get(), this.rack.get('angle').get(), this.rack.get('scale').get());
+      }
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return DotScreenPass;
+  })();
+  nodes.types.PostProcessing.FilmPass = (function() {
+    __extends(FilmPass, NodeBase);
+    function FilmPass() {
+      this.compute = __bind(this.compute, this);
+      this.value_has_changed = __bind(this.value_has_changed, this);
+      this.set_fields = __bind(this.set_fields, this);
+      FilmPass.__super__.constructor.apply(this, arguments);
+    }
+    FilmPass.prototype.set_fields = function() {
+      FilmPass.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.FilmPass(0.5, 0.125, 2048, false);
+      this.rack.addFields({
+        inputs: {
+          "noiseIntensity": 0.5,
+          "scanlinesIntensity": 0.125,
+          "scanlinesCount": 2048,
+          "grayscale": false
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cached_array(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']);
+    };
+    FilmPass.prototype.value_has_changed = function(vals) {
+      var newvals;
+      newvals = this.get_cached_array(vals);
+      if (flatArraysAreEquals(newvals, this.cached) === false) {
+        this.cached = newvals;
+        return true;
+      }
+      return false;
+    };
+    FilmPass.prototype.compute = function() {
+      if (this.value_has_changed(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']) === true) {
+        this.ob = new THREE.FilmPass(this.rack.get("noiseIntensity").get(), this.rack.get('scanlinesIntensity').get(), this.rack.get('scanlinesCount').get(), this.rack.get('grayscale').get());
+      }
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return FilmPass;
   })();
   init_sidebar = function() {
     init_sidebar_tab_new_node();

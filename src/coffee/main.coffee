@@ -66,6 +66,8 @@ require [
   "order!libs/three-extras/js/postprocessing/RenderPass",
   "order!libs/three-extras/js/postprocessing/ShaderPass",
   "order!libs/three-extras/js/postprocessing/BloomPass",
+  "order!libs/three-extras/js/postprocessing/FilmPass",
+  "order!libs/three-extras/js/postprocessing/DotScreenPass",
   "order!libs/raphael-min",
   "order!libs/underscore-min",
   "order!libs/backbone",

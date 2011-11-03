@@ -98,6 +98,11 @@ class NodeBase
     @rack.render_connections()
     #svg.safari()
   
+  get_cached_array: (vals) =>
+    res = []
+    for v in vals
+      res[res.length] = @rack.get(v).get()
+  
   add_field_listener: ($field) =>
     self = this
     f_name = $field.attr("id")
