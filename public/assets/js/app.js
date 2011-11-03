@@ -85,6 +85,7 @@
   nodes.types.Base = {};
   nodes.types.Math = {};
   nodes.types.Utils = {};
+  nodes.types.Conditional = {};
   nodes.types.Geometry = {};
   nodes.types.Three = {};
   nodes.types.Materials = {};
@@ -2522,6 +2523,143 @@
       return this.rack.get("out", true).set(this.counter);
     };
     return Timer;
+  })();
+  nodes.types.Conditional.IfElse = (function() {
+    __extends(IfElse, NodeBase);
+    function IfElse() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      IfElse.__super__.constructor.apply(this, arguments);
+    }
+    IfElse.prototype.set_fields = function() {
+      IfElse.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "condition": false,
+          "val1": {
+            type: "Any",
+            val: 0.0
+          },
+          "val2": {
+            type: "Any",
+            val: 1.0
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: false
+          }
+        }
+      });
+    };
+    IfElse.prototype.compute = function() {
+      var cond, res;
+      cond = this.rack.get("condition").get();
+      if (cond === false) {
+        res = this.rack.get("val1").get();
+      } else {
+        res = this.rack.get("val2").get();
+      }
+      return this.rack.get("out", true).set(res);
+    };
+    return IfElse;
+  })();
+  nodes.types.Conditional.Equal = (function() {
+    __extends(Equal, NodeBase);
+    function Equal() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Equal.__super__.constructor.apply(this, arguments);
+    }
+    Equal.prototype.set_fields = function() {
+      Equal.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "val1": {
+            type: "Any",
+            val: 0.0
+          },
+          "val2": {
+            type: "Any",
+            val: 1.0
+          }
+        },
+        outputs: {
+          "out": false
+        }
+      });
+    };
+    Equal.prototype.compute = function() {
+      var res;
+      res = this.rack.get("val1").get() === this.rack.get("val2").get();
+      return this.rack.get("out", true).set(res);
+    };
+    return Equal;
+  })();
+  nodes.types.Conditional.Smaller = (function() {
+    __extends(Smaller, NodeBase);
+    function Smaller() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Smaller.__super__.constructor.apply(this, arguments);
+    }
+    Smaller.prototype.set_fields = function() {
+      Smaller.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "val1": {
+            type: "Float",
+            val: 0.0
+          },
+          "val2": {
+            type: "Float",
+            val: 1.0
+          }
+        },
+        outputs: {
+          "out": false
+        }
+      });
+    };
+    Smaller.prototype.compute = function() {
+      var res;
+      res = this.rack.get("val1").get() < this.rack.get("val2").get();
+      return this.rack.get("out", true).set(res);
+    };
+    return Smaller;
+  })();
+  nodes.types.Conditional.Greater = (function() {
+    __extends(Greater, NodeBase);
+    function Greater() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Greater.__super__.constructor.apply(this, arguments);
+    }
+    Greater.prototype.set_fields = function() {
+      Greater.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "val1": {
+            type: "Float",
+            val: 0.0
+          },
+          "val2": {
+            type: "Float",
+            val: 1.0
+          }
+        },
+        outputs: {
+          "out": false
+        }
+      });
+    };
+    Greater.prototype.compute = function() {
+      var res;
+      res = this.rack.get("val1").get() > this.rack.get("val2").get();
+      return this.rack.get("out", true).set(res);
+    };
+    return Greater;
   })();
   nodes.types.PostProcessing.BloomPass = (function() {
     __extends(BloomPass, NodeBase);

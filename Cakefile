@@ -17,6 +17,7 @@ appFiles  = [
   'nodes/Math'
   'nodes/Three'
   'nodes/Utils'
+  'nodes/Conditional'
   'nodes/PostProcessing'
   'Sidebar'
   'NodeGraph'

@@ -5,6 +5,7 @@ nodes.types = {}
 nodes.types.Base = {}
 nodes.types.Math = {}
 nodes.types.Utils = {}
+nodes.types.Conditional = {}
 nodes.types.Geometry = {}
 nodes.types.Three = {}
 nodes.types.Materials = {}
