@@ -1,5 +1,5 @@
 #ThreeNodes.js
-<img src="http://github.com/idflood/ThreeNodes.js/raw/master/misc/screenshot1.jpg" width="720" height="406" alt="screenshot v 0.01">
+<img src="http://github.com/idflood/ThreeNodes.js/raw/master/misc/screenshot1.jpg" width="900" height="489" alt="screenshot v 0.01">
 
 This is an attempt to make something like "vvvv" in javascript, html and webgl.
 
@@ -25,6 +25,6 @@ This is an attempt to make something like "vvvv" in javascript, html and webgl.
 ## Usage
 1. cd in ThreeNodes
 2. node server.js
-3. if vogue is installed open another terminal and simply call "vogue" in ThreeNodes directory
+3. if vogue is installed open another terminal and simply call "vogue" in ThreeNodes.js/public/ directory
 4. with firefox or chrome go to http://localhost:8042/
 5. allow this site to create popups (for webglrender node)
