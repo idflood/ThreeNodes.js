@@ -2795,6 +2795,68 @@
     };
     return FilmPass;
   })();
+  nodes.types.PostProcessing.VignettePass = (function() {
+    __extends(VignettePass, NodeBase);
+    function VignettePass() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      VignettePass.__super__.constructor.apply(this, arguments);
+    }
+    VignettePass.prototype.set_fields = function() {
+      var shader;
+      VignettePass.__super__.set_fields.apply(this, arguments);
+      shader = THREE.ShaderExtras["vignette"];
+      this.ob = new THREE.ShaderPass(shader);
+      return this.rack.addFields({
+        inputs: {
+          "offset": 1.0,
+          "darkness": 1.0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    VignettePass.prototype.compute = function() {
+      this.ob.uniforms["offset"].value = this.rack.get("offset").get();
+      this.ob.uniforms["darkness"].value = this.rack.get("darkness").get();
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return VignettePass;
+  })();
+  nodes.types.PostProcessing.BleachPass = (function() {
+    __extends(BleachPass, NodeBase);
+    function BleachPass() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      BleachPass.__super__.constructor.apply(this, arguments);
+    }
+    BleachPass.prototype.set_fields = function() {
+      var shader;
+      BleachPass.__super__.set_fields.apply(this, arguments);
+      shader = THREE.ShaderExtras["bleachbypass"];
+      this.ob = new THREE.ShaderPass(shader);
+      return this.rack.addFields({
+        inputs: {
+          "opacity": 0.95
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    BleachPass.prototype.compute = function() {
+      this.ob.uniforms["opacity"].value = this.rack.get("opacity").get();
+      return this.rack.get("out", true).set(this.ob);
+    };
+    return BleachPass;
+  })();
   init_sidebar = function() {
     init_sidebar_tab_new_node();
     init_sidebar_search();

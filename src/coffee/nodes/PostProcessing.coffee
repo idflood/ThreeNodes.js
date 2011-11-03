@@ -75,4 +75,35 @@ class nodes.types.PostProcessing.FilmPass extends NodeBase
     if @value_has_changed(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']) == true
       @ob = new THREE.FilmPass(@rack.get("noiseIntensity").get(), @rack.get('scanlinesIntensity').get(), @rack.get('scanlinesCount').get(), @rack.get('grayscale').get())
     @rack.get("out", true).set @ob
+
+class nodes.types.PostProcessing.VignettePass extends NodeBase
+  set_fields: =>
+    super
+    shader = THREE.ShaderExtras[ "vignette" ]
+    @ob = new THREE.ShaderPass( shader )
+    @rack.addFields
+      inputs:
+        "offset": 1.0
+        "darkness": 1.0
+      outputs:
+        "out": {type: "Any", val: @ob}
     
+  compute: =>
+    @ob.uniforms[ "offset" ].value = @rack.get("offset").get()
+    @ob.uniforms[ "darkness" ].value = @rack.get("darkness").get()
+    @rack.get("out", true).set @ob
+
+class nodes.types.PostProcessing.BleachPass extends NodeBase
+  set_fields: =>
+    super
+    shader = THREE.ShaderExtras[ "bleachbypass" ]
+    @ob = new THREE.ShaderPass( shader )
+    @rack.addFields
+      inputs:
+        "opacity": 0.95
+      outputs:
+        "out": {type: "Any", val: @ob}
+    
+  compute: =>
+    @ob.uniforms[ "opacity" ].value = @rack.get("opacity").get()
+    @rack.get("out", true).set @ob
