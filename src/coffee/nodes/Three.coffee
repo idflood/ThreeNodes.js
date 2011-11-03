@@ -43,6 +43,8 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   set_fields: =>
     super
     @ob = new THREE.Scene()
+    current_scene = @ob
+    
     #@rack.addFields
     #  inputs:
     #    "lights": {type: "Array", val: []}
@@ -166,7 +168,7 @@ class nodes.types.Three.Texture extends NodeBase
 class nodes.types.Three.WebGLRenderer extends NodeBase
   set_fields: =>
     super
-    @ob = new THREE.WebGLRenderer()
+    @ob = current_renderer
     @width = 0
     @height = 0
     @rack.addFields
@@ -176,6 +178,7 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
         "scene": {type: "Scene", val: new THREE.Scene()}
         "camera": {type: "Camera", val: new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)}
         "bg_color": {type: "Color", val: new THREE.Color(0, 0, 0)}
+        "postfx": {type: "Any", val: false}
         "shadowCameraNear": 3
         "shadowCameraFar": 3000
         "shadowMapWidth": 512
@@ -203,13 +206,29 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
       @ob.setSize(w, h)
     @width = w
     @height = h
+  
+  apply_post_fx: =>
+    fxs = @rack.get("postfx").get()
+    if fxs == false
+      fxs = []
+    fxs.unshift renderModel
+    fxs.push effectScreen
+    composer.passes = fxs
     
   compute: =>
     @apply_size()
     @apply_bg_color()
-    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color'])
+    @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
     sce = @rack.get("scene").get()
     cam = @rack.get("camera").get()
+    
+    current_camera = cam
+    current_scene = sce
     #if sce != false && cam != false
-    @ob.render(sce, cam)
+    #@ob.render(sce, cam)
+    @apply_post_fx()
+    @ob.clear()
+    renderModel.scene = current_scene
+    renderModel.camera = current_camera
+    composer.render()
     #@rack.get("out", true).set @ob

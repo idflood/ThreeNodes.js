@@ -14,6 +14,13 @@ nodes.types.PostProcessing = {}
 fields = {}
 fields.types = {}
 
+current_scene = false
+current_camera = false
+current_renderer = false
+effectScreen = false
+renderModel = false
+composer = false
+
 webgl_materials_node = []
 flash_sound_value = []
 
@@ -33,6 +40,7 @@ init_app = (_node_template, _node_field_in_template, _node_field_out_template, _
   node_context_menu = _node_context_menu
   
   console.log "init..."
+  init_webgl()
   init_ui()
   animate()
   #init_websocket()
@@ -84,6 +92,17 @@ init_websocket = () ->
   socket.onerror = () ->
     console.log 'socket close'
   true
+
+init_webgl = () ->
+  current_scene = new THREE.Scene()
+  current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
+  current_renderer = new THREE.WebGLRenderer
+    clearColor: 0x000000
+  current_renderer.autoClear = false
+  effectScreen = new THREE.ShaderPass( THREE.ShaderExtras[ "screen" ] )
+  effectScreen.renderToScreen = true
+  renderModel = new THREE.RenderPass( current_scene, current_camera )
+  composer = new THREE.EffectComposer( current_renderer )
 
 rebuild_all_shaders = () ->
   console.log "rebuilding shaders"

@@ -1,5 +1,5 @@
 (function() {
-  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, add_window_resize_handler, animate, clear_workspace, field_click_1, field_context_menu, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_context_menus, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_ui, init_websocket, load_local_file_input_changed, node_connections, node_context_menu, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, rebuild_all_shaders, remove_all_connections, remove_all_nodes, render, reset_global_variables, save_local_file, show_application, svg, uid, webgl_materials_node;
+  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, add_window_resize_handler, animate, clear_workspace, composer, current_camera, current_renderer, current_scene, effectScreen, field_click_1, field_context_menu, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_context_menus, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_ui, init_webgl, init_websocket, load_local_file_input_changed, node_connections, node_context_menu, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, rebuild_all_shaders, remove_all_connections, remove_all_nodes, render, renderModel, reset_global_variables, save_local_file, show_application, svg, uid, webgl_materials_node;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -92,6 +92,12 @@
   nodes.types.PostProcessing = {};
   fields = {};
   fields.types = {};
+  current_scene = false;
+  current_camera = false;
+  current_renderer = false;
+  effectScreen = false;
+  renderModel = false;
+  composer = false;
   webgl_materials_node = [];
   flash_sound_value = [];
   node_template = false;
@@ -108,6 +114,7 @@
     field_context_menu = _field_context_menu;
     node_context_menu = _node_context_menu;
     console.log("init...");
+    init_webgl();
     init_ui();
     return animate();
   };
@@ -130,6 +137,18 @@
       return console.log('socket close');
     };
     return true;
+  };
+  init_webgl = function() {
+    current_scene = new THREE.Scene();
+    current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
+    current_renderer = new THREE.WebGLRenderer({
+      clearColor: 0x000000
+    });
+    current_renderer.autoClear = false;
+    effectScreen = new THREE.ShaderPass(THREE.ShaderExtras["screen"]);
+    effectScreen.renderToScreen = true;
+    renderModel = new THREE.RenderPass(current_scene, current_camera);
+    return composer = new THREE.EffectComposer(current_renderer);
   };
   rebuild_all_shaders = function() {
     var n, _i, _len, _results;
@@ -2004,7 +2023,8 @@
     }
     Scene.prototype.set_fields = function() {
       Scene.__super__.set_fields.apply(this, arguments);
-      return this.ob = new THREE.Scene();
+      this.ob = new THREE.Scene();
+      return current_scene = this.ob;
     };
     Scene.prototype.apply_children = function() {
       var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
@@ -2185,13 +2205,14 @@
     __extends(WebGLRenderer, NodeBase);
     function WebGLRenderer() {
       this.compute = __bind(this.compute, this);
+      this.apply_post_fx = __bind(this.apply_post_fx, this);
       this.apply_size = __bind(this.apply_size, this);
       this.set_fields = __bind(this.set_fields, this);
       WebGLRenderer.__super__.constructor.apply(this, arguments);
     }
     WebGLRenderer.prototype.set_fields = function() {
       WebGLRenderer.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.WebGLRenderer();
+      this.ob = current_renderer;
       this.width = 0;
       this.height = 0;
       this.rack.addFields({
@@ -2209,6 +2230,10 @@
           "bg_color": {
             type: "Color",
             val: new THREE.Color(0, 0, 0)
+          },
+          "postfx": {
+            type: "Any",
+            val: false
           },
           "shadowCameraNear": 3,
           "shadowCameraFar": 3000,
@@ -2248,14 +2273,30 @@
       this.width = w;
       return this.height = h;
     };
+    WebGLRenderer.prototype.apply_post_fx = function() {
+      var fxs;
+      fxs = this.rack.get("postfx").get();
+      if (fxs === false) {
+        fxs = [];
+      }
+      fxs.unshift(renderModel);
+      fxs.push(effectScreen);
+      return composer.passes = fxs;
+    };
     WebGLRenderer.prototype.compute = function() {
       var cam, sce;
       this.apply_size();
       this.apply_bg_color();
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color']);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
       sce = this.rack.get("scene").get();
       cam = this.rack.get("camera").get();
-      return this.ob.render(sce, cam);
+      current_camera = cam;
+      current_scene = sce;
+      this.apply_post_fx();
+      this.ob.clear();
+      renderModel.scene = current_scene;
+      renderModel.camera = current_camera;
+      return composer.render();
     };
     return WebGLRenderer;
   })();
@@ -2464,15 +2505,17 @@
     __extends(BloomPass, NodeBase);
     function BloomPass() {
       this.compute = __bind(this.compute, this);
+      this.value_has_changed = __bind(this.value_has_changed, this);
+      this.get_cached_array = __bind(this.get_cached_array, this);
       this.set_fields = __bind(this.set_fields, this);
       BloomPass.__super__.constructor.apply(this, arguments);
     }
     BloomPass.prototype.set_fields = function() {
       BloomPass.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.BloomPass(1.6);
-      return this.rack.addFields({
+      this.rack.addFields({
         inputs: {
-          "strength": 1,
+          "strength": 1.6,
           "kernelSize": 25,
           "sigma": 4.0,
           "resolution": 256
@@ -2484,9 +2527,31 @@
           }
         }
       });
+      return this.cached = this.get_cached_array(['strength', 'kernelSize', 'sigma', 'resolution']);
+    };
+    BloomPass.prototype.get_cached_array = function(vals) {
+      var res, v, _i, _len, _results;
+      res = [];
+      _results = [];
+      for (_i = 0, _len = vals.length; _i < _len; _i++) {
+        v = vals[_i];
+        _results.push(res[res.lengt] = this.rack.get(v).get());
+      }
+      return _results;
+    };
+    BloomPass.prototype.value_has_changed = function(vals) {
+      var newvals;
+      newvals = this.get_cached_array(['strength', 'kernelSize', 'sigma', 'resolution']);
+      if (flatArraysAreEquals(newvals, this.cached) === false) {
+        this.cached = newvals;
+        return true;
+      }
+      return false;
     };
     BloomPass.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      if (this.value_has_changed(['strength', 'kernelSize', 'sigma', 'resolution']) === true) {
+        this.ob = new THREE.BloomPass(this.rack.get("strength").get(), this.rack.get('kernelSize').get(), this.rack.get('sigma').get(), this.rack.get('resolution').get());
+      }
       return this.rack.get("out", true).set(this.ob);
     };
     return BloomPass;
