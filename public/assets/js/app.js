@@ -1,5 +1,5 @@
 (function() {
-  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, add_window_resize_handler, animate, clear_workspace, composer, current_camera, current_renderer, current_scene, effectScreen, field_click_1, field_context_menu, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_context_menus, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_ui, init_webgl, init_websocket, load_local_file_input_changed, node_connections, node_context_menu, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, rebuild_all_shaders, remove_all_connections, remove_all_nodes, render, renderModel, reset_global_variables, save_local_file, show_application, svg, uid, webgl_materials_node;
+  var $, NodeBase, NodeConnection, NodeField, NodeFieldRack, NodeMaterialBase, NodeNumberSimple, add_window_resize_handler, animate, clear_workspace, composer, current_camera, current_renderer, current_scene, effectScreen, field_click_1, field_context_menu, fields, flash_sound_value, flatArraysAreEquals, get_uid, init_app, init_context_menus, init_sidebar, init_sidebar_search, init_sidebar_tab_new_node, init_sidebar_tab_system, init_sidebar_tabs, init_sidebar_toggle, init_ui, init_webgl, init_websocket, load_local_file_input_changed, node_connections, node_context_menu, node_field_in_template, node_field_out_template, node_template, nodegraph, nodes, on_ui_window_resize, on_websocket_message, rebuild_all_shaders, remove_all_connections, remove_all_nodes, render, renderModel, reset_global_variables, save_local_file, show_application, svg, uid, webgl_materials_node;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -100,7 +100,11 @@
   renderModel = false;
   composer = false;
   webgl_materials_node = [];
-  flash_sound_value = [];
+  flash_sound_value = {
+    kick: 42,
+    snare: 0,
+    hat: 17
+  };
   node_template = false;
   node_field_in_template = false;
   node_field_out_template = false;
@@ -121,20 +125,23 @@
     return init_websocket();
   };
   require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/colorpicker/js/colorpicker", "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/three-extras/js/postprocessing/FilmPass", "order!libs/three-extras/js/postprocessing/DotScreenPass", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/three-extras/js/RequestAnimationFrame"], init_app);
+  on_websocket_message = function(data) {
+    var messg;
+    messg = data.data;
+    return flash_sound_value = jQuery.parseJSON(messg);
+  };
   init_websocket = function() {
     var socket, webso;
     webso = false;
-    if (!window.WebSocket) {
+    if (window.MozWebSocket) {
       webso = window.MozWebSocket;
     } else {
       webso = WebSocket;
     }
-    console.log("trying to open a websocket2");
+    console.log("init websocket.");
     socket = new webso("ws://localhost:8080/p5websocket");
     socket.onmessage = function(data) {
-      var messg, snd_data;
-      messg = data.data;
-      return snd_data = jQuery.parseJSON(messg);
+      return on_websocket_message(data);
     };
     socket.onerror = function() {
       return console.log('socket close');
@@ -163,10 +170,6 @@
       _results.push(n.ob.program = false);
     }
     return _results;
-  };
-  this.onSoundInput = function(data) {
-    flash_sound_value = data.split('&');
-    return flash_sound_value.pop();
   };
   node_connections = [];
   NodeConnection = (function() {
@@ -2466,6 +2469,9 @@
       SoundInput.__super__.set_fields.apply(this, arguments);
       this.counter = 0;
       return this.rack.addFields({
+        inputs: {
+          "gain": 1.0
+        },
         outputs: {
           "low": 0,
           "medium": 0,
@@ -2474,9 +2480,9 @@
       });
     };
     SoundInput.prototype.compute = function() {
-      this.rack.get("low", true).set(flash_sound_value[2 % flash_sound_value.length]);
-      this.rack.get("medium", true).set(flash_sound_value[9 % flash_sound_value.length]);
-      return this.rack.get("high", true).set(flash_sound_value[14 % flash_sound_value.length]);
+      this.rack.get("low", true).set(flash_sound_value.kick);
+      this.rack.get("medium", true).set(flash_sound_value.snare);
+      return this.rack.get("high", true).set(flash_sound_value.hat);
     };
     return SoundInput;
   })();

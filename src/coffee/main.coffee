@@ -23,7 +23,10 @@ renderModel = false
 composer = false
 
 webgl_materials_node = []
-flash_sound_value = []
+flash_sound_value =
+  kick: 42
+  snare: 0
+  hat: 17
 
 node_template = false
 node_field_in_template = false
@@ -79,20 +82,23 @@ require [
   "libs/three-extras/js/RequestAnimationFrame"
   ], init_app
 
+on_websocket_message = (data) ->
+  messg = data.data
+  flash_sound_value = jQuery.parseJSON(messg)
+
 init_websocket = () ->
   webso = false
-  if !window.WebSocket
+  if window.MozWebSocket
     webso = window.MozWebSocket
   else
     webso = WebSocket
 
-  console.log("trying to open a websocket2")
+  console.log("init websocket.")
   socket = new webso("ws://localhost:8080/p5websocket")
-  #ws = new io.Socket(null, {port: 8080, rememberTransport: false})
+  
+  
   socket.onmessage = (data) ->
-    messg = data.data
-    snd_data = jQuery.parseJSON(messg)
-    #console.log snd_data
+    on_websocket_message(data)
     
   socket.onerror = () ->
     console.log 'socket close'
@@ -114,9 +120,3 @@ rebuild_all_shaders = () ->
   console.log webgl_materials_node
   for n in webgl_materials_node
     n.ob.program = false
-
-@onSoundInput = (data) ->
-  #console.log data
-  flash_sound_value = data.split('&')
-  flash_sound_value.pop()
-  #console.log flash_sound_value

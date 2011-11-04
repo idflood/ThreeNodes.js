@@ -1,5 +1,3 @@
-- use_processing = false
-- use_flash = false
 !!! 5
 %html{:lang => "en", "xml:lang" => "en", :xmlns => "http://www.w3.org/1999/xhtml"}
   %head
@@ -7,7 +5,6 @@
     %title ThreeNodes.js::alpha 1
     %script{:'data-main' => "assets/js/app.js", :src => "assets/js/libs/require-jquery.js"}
     %script{:charset => "utf-8", :src => "http://localhost:8001/vogue-client.js"}
-    -#%link{:href => "assets/js/libs/jquery-ui/css/ui-threenodes/jquery-ui-1.8.16.custom.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
     %link{:href => "assets/css/screen.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
     %link{:href => "assets/js/libs/colorpicker/css/colorpicker.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
     %link{:href => "favicon2.ico", :rel => "shortcut icon", :type => "image/x-icon"}/
@@ -15,19 +12,11 @@
     %header
       #logo<
         %h1< ThreeNodes.js::alpha
-    - if use_flash == true
-      %object#sound-input-flash{:type => "application/x-shockwave-flash", :width => "630", :height => "300", :data => "assets/flash/SpectrumAnalyzer.swf"}
-    - if use_processing == true
-      %object#sound-input{:type => "application/x-java-applet", :width => "630", :height => "300", :name => "sound_input"}
-        %param{:name => "codebase", :value => "assets/java/NodeSoundInput/applet/"}
-        %param{:name => "code", :value => "NodeSoundInput.class"}
-        %param{:name => "mayscript", :value => "true"}
-        %param{:name => "scriptable", :value => "true"}
-        %param{:name => "archive", :value => "NodeSoundInput.jar,jl1.0.jar,jsminim.jar,minim-spi.jar,minim.jar,mp3spi1.9.4.jar,tritonus_aos.jar,tritonus_share.jar,core.jar,WebSocket.jar"}
     
     #container-wrapper
       #container
         #graph
+    
     #sidebar
       %ul
         %li
@@ -51,6 +40,7 @@
             %a.save_file{:href => "#"} Save File
           %li
             %a.rebuild_shaders{:href => "#"} Rebuild shaders
+    
     #sidebar-toggle
       
     %footer#footer

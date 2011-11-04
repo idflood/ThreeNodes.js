@@ -64,14 +64,17 @@ class nodes.types.Utils.SoundInput extends NodeBase
     super
     @counter = 0
     @rack.addFields
+      inputs:
+        "gain": 1.0
       outputs:
         "low" : 0
         "medium" : 0
         "high" : 0
   compute: () =>
-    @rack.get("low", true).set flash_sound_value[2 % flash_sound_value.length]
-    @rack.get("medium", true).set flash_sound_value[9 % flash_sound_value.length]
-    @rack.get("high", true).set flash_sound_value[14 % flash_sound_value.length]
+    #console.log flash_sound_value
+    @rack.get("low", true).set flash_sound_value.kick
+    @rack.get("medium", true).set flash_sound_value.snare
+    @rack.get("high", true).set flash_sound_value.hat
   
 
 class nodes.types.Utils.Timer extends NodeBase
