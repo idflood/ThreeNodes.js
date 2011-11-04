@@ -1,6 +1,6 @@
 // websocket
-//import muthesius.net.*;
-//import org.webbitserver.*;
+import muthesius.net.*;
+import org.webbitserver.*;
 
 // sound
 import ddf.minim.*;
@@ -47,7 +47,7 @@ int columnCenter = 220;
 int columnRight = 430;
 
 
-//WebSocketP5 socket;
+WebSocketP5 socket;
 
 boolean use_line_in = true;
 
@@ -56,7 +56,7 @@ void setup() {
   frame.setLocation(800, 517);
   frameRate(30);
   
-  //socket = new WebSocketP5(this,8080);
+  socket = new WebSocketP5(this,8080);
   
   minim = new Minim(this);
   if (use_line_in == true) {
@@ -144,8 +144,8 @@ void draw()
   snd_kick_alpha *= decay;
   snd_snare_alpha *= decay;
   snd_hat_alpha *= decay;
-  println(snd_kick_alpha);
-  //socket.broadcast("hello from processing!" + snd_kick_alpha);
+  //println(snd_kick_alpha);
+  socket.broadcast("{\"kick\": " + snd_kick_alpha + ",\"snare\": " + snd_snare_alpha + ",\"hat\": " + snd_hat_alpha + "}");
 }
 
 void stop()

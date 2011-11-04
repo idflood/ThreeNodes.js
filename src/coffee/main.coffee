@@ -44,7 +44,7 @@ init_app = (_node_template, _node_field_in_template, _node_field_out_template, _
   init_webgl()
   init_ui()
   animate()
-  #init_websocket()
+  init_websocket()
 
 require [
   # views
@@ -81,17 +81,19 @@ require [
 
 init_websocket = () ->
   webso = false
-  if !WebSocket
-    webso = MozWebsocket
+  if !window.WebSocket
+    webso = window.MozWebSocket
   else
     webso = WebSocket
 
   console.log("trying to open a websocket2")
-  socket = new WebSocket("ws://localhost:8080/p5websocket")
+  socket = new webso("ws://localhost:8080/p5websocket")
   #ws = new io.Socket(null, {port: 8080, rememberTransport: false})
   socket.onmessage = (data) ->
-    console.log data
-    console.log "ok"
+    messg = data.data
+    snd_data = jQuery.parseJSON(messg)
+    #console.log snd_data
+    
   socket.onerror = () ->
     console.log 'socket close'
   true

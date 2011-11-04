@@ -117,22 +117,24 @@
     console.log("init...");
     init_webgl();
     init_ui();
-    return animate();
+    animate();
+    return init_websocket();
   };
   require(["text!templates/node.tmpl.html", "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery-1.6.4.min", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", "order!libs/colorpicker/js/colorpicker", "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/three-extras/js/postprocessing/FilmPass", "order!libs/three-extras/js/postprocessing/DotScreenPass", "order!libs/raphael-min", "order!libs/underscore-min", "order!libs/backbone", "libs/BlobBuilder.min", "libs/FileSaver.min", "libs/sockjs-latest.min", "libs/signals.min", "libs/three-extras/js/RequestAnimationFrame"], init_app);
   init_websocket = function() {
     var socket, webso;
     webso = false;
-    if (!WebSocket) {
-      webso = MozWebsocket;
+    if (!window.WebSocket) {
+      webso = window.MozWebSocket;
     } else {
       webso = WebSocket;
     }
     console.log("trying to open a websocket2");
-    socket = new WebSocket("ws://localhost:8080/p5websocket");
+    socket = new webso("ws://localhost:8080/p5websocket");
     socket.onmessage = function(data) {
-      console.log(data);
-      return console.log("ok");
+      var messg, snd_data;
+      messg = data.data;
+      return snd_data = jQuery.parseJSON(messg);
     };
     socket.onerror = function() {
       return console.log('socket close');
