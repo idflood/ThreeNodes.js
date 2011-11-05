@@ -23,7 +23,7 @@ class nodes.types.PostProcessing.BloomPass extends NodeBase
     if @value_has_changed(['strength', 'kernelSize', 'sigma', 'resolution']) == true
       @ob = new THREE.BloomPass(@rack.get("strength").get(), @rack.get('kernelSize').get(), @rack.get('sigma').get(), @rack.get('resolution').get())
     #@apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.PostProcessing.DotScreenPass extends NodeBase
   set_fields: =>
@@ -48,7 +48,7 @@ class nodes.types.PostProcessing.DotScreenPass extends NodeBase
   compute: =>
     if @value_has_changed(['center', 'angle', 'scale']) == true
       @ob = new THREE.DotScreenPass(@rack.get("center").get(), @rack.get('angle').get(), @rack.get('scale').get())
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.PostProcessing.FilmPass extends NodeBase
   set_fields: =>
@@ -74,7 +74,7 @@ class nodes.types.PostProcessing.FilmPass extends NodeBase
   compute: =>
     if @value_has_changed(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']) == true
       @ob = new THREE.FilmPass(@rack.get("noiseIntensity").get(), @rack.get('scanlinesIntensity').get(), @rack.get('scanlinesCount').get(), @rack.get('grayscale').get())
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.PostProcessing.VignettePass extends NodeBase
   set_fields: =>
@@ -91,7 +91,7 @@ class nodes.types.PostProcessing.VignettePass extends NodeBase
   compute: =>
     @ob.uniforms[ "offset" ].value = @rack.get("offset").get()
     @ob.uniforms[ "darkness" ].value = @rack.get("darkness").get()
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.PostProcessing.BleachPass extends NodeBase
   set_fields: =>
@@ -106,4 +106,4 @@ class nodes.types.PostProcessing.BleachPass extends NodeBase
     
   compute: =>
     @ob.uniforms[ "opacity" ].value = @rack.get("opacity").get()
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)

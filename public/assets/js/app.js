@@ -733,9 +733,9 @@
       this.node = node;
       this.add_center_textfield = __bind(this.add_center_textfield, this);
       this.render_sidebar = __bind(this.render_sidebar, this);
+      this.registerField = __bind(this.registerField, this);
       this.addFields = __bind(this.addFields, this);
-      this.addOutput = __bind(this.addOutput, this);
-      this.addInput = __bind(this.addInput, this);
+      this.addField = __bind(this.addField, this);
       this.update_inputs = __bind(this.update_inputs, this);
       this.fromXML = __bind(this.fromXML, this);
       this.toXML = __bind(this.toXML, this);
@@ -757,6 +757,9 @@
       } else {
         return this.node_fields_by_name.inputs[key];
       }
+    };
+    NodeFieldRack.prototype.set = function(key, value) {
+      return this.node_fields_by_name.outputs[key].set(value);
     };
     NodeFieldRack.prototype.render_connections = function() {
       var f;
@@ -806,49 +809,52 @@
       });
     };
     NodeFieldRack.prototype.update_inputs = function() {
-      var f, _results;
-      _results = [];
+      var f;
       for (f in this.node_fields.inputs) {
-        _results.push(this.node_fields.inputs[f].update_input_node());
+        this.node_fields.inputs[f].update_input_node();
       }
-      return _results;
+      return this;
     };
-    NodeFieldRack.prototype.addInput = function(field) {
-      field.node = this.node;
-      this.node_fields.inputs["fid-" + field.fid] = field;
-      this.node_fields_by_name.inputs[field.name] = field;
-      $(".inputs", this.node.main_view).append(field.render_button());
-      this.node.add_field_listener($("#fid-" + field.fid));
-      return field;
-    };
-    NodeFieldRack.prototype.addOutput = function(field) {
-      field.node = this.node;
-      field.is_output = true;
-      this.node_fields.outputs["fid-" + field.fid] = field;
-      this.node_fields_by_name.outputs[field.name] = field;
-      $(".outputs", this.node.main_view).append(field.render_button());
-      this.node.add_field_listener($("#fid-" + field.fid));
-      return field;
+    NodeFieldRack.prototype.addField = function(name, value, direction) {
+      var f;
+      if (direction == null) {
+        direction = "inputs";
+      }
+      f = false;
+      if ($.type(value) === "object") {
+        f = new fields.types[value.type](name, value.val);
+      } else {
+        f = this.create_field_from_default_type(name, value);
+      }
+      if (direction !== "inputs") {
+        f.is_output = true;
+      }
+      this.registerField(f);
+      return f;
     };
     NodeFieldRack.prototype.addFields = function(fields_array) {
-      var dir, f, fname, k;
+      var dir, fname, value;
       for (dir in fields_array) {
         for (fname in fields_array[dir]) {
-          k = fields_array[dir][fname];
-          f = false;
-          if ($.type(k) === "object") {
-            f = new fields.types[k.type](fname, k.val);
-          } else {
-            f = this.create_field_from_default_type(fname, k);
-          }
-          if (dir === "inputs") {
-            this.addInput(f);
-          } else {
-            this.addOutput(f);
-          }
+          value = fields_array[dir][fname];
+          this.addField(fname, value, dir);
         }
       }
-      return false;
+      return true;
+    };
+    NodeFieldRack.prototype.registerField = function(field) {
+      field.node = this.node;
+      if (field.is_output === false) {
+        this.node_fields.inputs["fid-" + field.fid] = field;
+        this.node_fields_by_name.inputs[field.name] = field;
+        $(".inputs", this.node.main_view).append(field.render_button());
+      } else {
+        this.node_fields.outputs["fid-" + field.fid] = field;
+        this.node_fields_by_name.outputs[field.name] = field;
+        $(".outputs", this.node.main_view).append(field.render_button());
+      }
+      this.node.add_field_listener($("#fid-" + field.fid));
+      return field;
     };
     NodeFieldRack.prototype.render_sidebar = function() {
       var $target, f;
@@ -857,7 +863,7 @@
       for (f in this.node_fields.inputs) {
         this.node_fields.inputs[f].render_sidebar();
       }
-      return false;
+      return true;
     };
     NodeFieldRack.prototype.add_center_textfield = function(field) {
       var f_in;
@@ -1117,8 +1123,8 @@
       return this.value = 0;
     };
     NodeNumberSimple.prototype.set_fields = function() {
-      this.v_in = this.rack.addInput(new fields.types.Float("in", 0));
-      return this.v_out = this.rack.addOutput(new fields.types.Float("out", 0));
+      this.v_in = this.rack.addField("in", 0);
+      return this.v_out = this.rack.addField("out", 0, "outputs");
     };
     NodeNumberSimple.prototype.process_val = function(num, i) {
       return num;
@@ -1180,7 +1186,7 @@
       });
     };
     String.prototype.compute = function() {
-      return this.rack.get("out", true).set(this.rack.get("string").get());
+      return this.rack.set("out", this.rack.get("string").get());
     };
     return String;
   })();
@@ -1221,9 +1227,9 @@
         this.value = new THREE.Vector2(this.rack.get("x").get(), this.rack.get("y").get());
       }
       if (this.value !== old) {
-        this.rack.get("xy", true).set(this.value);
-        this.rack.get("x", true).set(this.value.x);
-        return this.rack.get("y", true).set(this.value.y);
+        this.rack.set("xy", this.value);
+        this.rack.set("x", this.value.x);
+        return this.rack.set("y", this.value.y);
       }
     };
     return Vector2;
@@ -1267,10 +1273,10 @@
         this.value = new THREE.Vector3(this.rack.get("x").get(), this.rack.get("y").get(), this.rack.get("z").get());
       }
       if (this.value !== old) {
-        this.rack.get("xyz", true).set(this.value);
-        this.rack.get("x", true).set(this.value.x);
-        this.rack.get("y", true).set(this.value.y);
-        return this.rack.get("z", true).set(this.value.z);
+        this.rack.set("xyz", this.value);
+        this.rack.set("x", this.value.x);
+        this.rack.set("y", this.value.y);
+        return this.rack.set("z", this.value.z);
       }
     };
     return Vector3;
@@ -1339,10 +1345,10 @@
         this.value = new THREE.Color().setRGB(this.rack.get("r").get(), this.rack.get("g").get(), this.rack.get("b").get());
       }
       if (this.value !== old) {
-        this.rack.get("rgb", true).set(this.value);
-        this.rack.get("r", true).set(this.value.r);
-        this.rack.get("g", true).set(this.value.g);
-        return this.rack.get("b", true).set(this.value.b);
+        this.rack.set("rgb", this.value);
+        this.rack.set("r", this.value.r);
+        this.rack.set("g", this.value.g);
+        return this.rack.set("b", this.value.b);
       }
     };
     return Color;
@@ -1384,7 +1390,7 @@
         this.ob = new THREE.PlaneGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return PlaneGeometry;
   })();
@@ -1428,7 +1434,7 @@
         this.ob = new THREE.CubeGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return CubeGeometry;
   })();
@@ -1469,7 +1475,7 @@
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return SphereGeometry;
   })();
@@ -1498,7 +1504,7 @@
         @ob = new THREE.SphereGeometry(@rack.get("text").get())
         @cached = new_cache
       #@apply_fields_to_val(@rack.node_fields.inputs, @ob, ["text"])
-      @rack.get("out", true).set @ob
+      @rack.set("out", @ob)
       
   */
   nodes.types.Lights.PointLight = (function() {
@@ -1534,7 +1540,7 @@
     };
     PointLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return PointLight;
   })();
@@ -1579,7 +1585,7 @@
         rebuild_all_shaders();
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return SpotLight;
   })();
@@ -1616,7 +1622,7 @@
     };
     DirectionalLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return DirectionalLight;
   })();
@@ -1649,7 +1655,7 @@
     };
     AmbientLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return AmbientLight;
   })();
@@ -1678,7 +1684,7 @@
     };
     NodeMaterialBase.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return NodeMaterialBase;
   })();
@@ -1729,7 +1735,7 @@
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return MeshBasicMaterial;
   })();
@@ -1778,7 +1784,7 @@
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return MeshLambertMaterial;
   })();
@@ -1857,7 +1863,7 @@
     }
     Mod.prototype.set_fields = function() {
       Mod.__super__.set_fields.apply(this, arguments);
-      return this.v_valy = this.rack.addInput(new fields.types.Float("y", 2));
+      return this.v_valy = this.rack.addField("y", 2);
     };
     Mod.prototype.process_val = function(num, i) {
       return num % this.v_valy.get();
@@ -1873,7 +1879,7 @@
     }
     Add.prototype.set_fields = function() {
       Add.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
+      return this.v_factor = this.rack.addField("y", 1);
     };
     Add.prototype.process_val = function(num, i) {
       return num + this.v_factor.get();
@@ -1889,7 +1895,7 @@
     }
     Subtract.prototype.set_fields = function() {
       Subtract.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 1));
+      return this.v_factor = this.rack.addField("y", 1);
     };
     Subtract.prototype.process_val = function(num, i) {
       return num - this.v_factor.get();
@@ -1905,7 +1911,7 @@
     }
     Mult.prototype.set_fields = function() {
       Mult.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("factor", 2));
+      return this.v_factor = this.rack.addField("factor", 2);
     };
     Mult.prototype.process_val = function(num, i) {
       return num * this.v_factor.get();
@@ -1921,7 +1927,7 @@
     }
     Divide.prototype.set_fields = function() {
       Divide.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addInput(new fields.types.Float("y", 2));
+      return this.v_factor = this.rack.addField("y", 2);
     };
     Divide.prototype.process_val = function(num, i) {
       return num / this.v_factor.get();
@@ -1937,7 +1943,7 @@
     }
     Min.prototype.set_fields = function() {
       Min.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+      return this.v_inb = this.rack.addField("in", 0);
     };
     Min.prototype.process_val = function(num, i) {
       return Math.min(num, this.v_inb.get());
@@ -1953,12 +1959,35 @@
     }
     Max.prototype.set_fields = function() {
       Max.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addInput(new fields.types.Float("in2", 0));
+      return this.v_inb = this.rack.addField("in2", 0);
     };
     Max.prototype.process_val = function(num, i) {
       return Math.max(num, this.v_inb.get());
     };
     return Max;
+  })();
+  nodes.types.Math.Attenuation = (function() {
+    __extends(Attenuation, NodeNumberSimple);
+    function Attenuation() {
+      this.process_val = __bind(this.process_val, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Attenuation.__super__.constructor.apply(this, arguments);
+    }
+    Attenuation.prototype.set_fields = function() {
+      Attenuation.__super__.set_fields.apply(this, arguments);
+      this.def_val = this.rack.addField("default", 0);
+      this.reset_val = this.rack.addField("reset", false);
+      this.factor = this.rack.addField("factor", 0.8);
+      return this.val = this.def_val.get();
+    };
+    Attenuation.prototype.process_val = function(num, i) {
+      if (this.reset_val.get() === true) {
+        this.val = this.def_val.get();
+      }
+      this.val = this.val + (this.v_in.get() - this.val) * this.factor.get();
+      return this.val;
+    };
+    return Attenuation;
   })();
   nodes.types.Three.Object3D = (function() {
     __extends(Object3D, NodeBase);
@@ -2026,7 +2055,7 @@
           this.ob.addChild(child);
         }
       }
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return Object3D;
   })();
@@ -2074,7 +2103,7 @@
     Scene.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
       this.apply_children();
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return Scene;
   })();
@@ -2109,7 +2138,7 @@
           "overdraw": false
         }
       });
-      this.rack.get("out", true).set(this.ob);
+      this.rack.set("out", this.ob);
       this.geometry_cache = this.rack.get('geometry').get().id;
       return this.materials_cache = this.rack.get('materials').get();
     };
@@ -2133,7 +2162,7 @@
       if (needs_rebuild === true) {
         rebuild_all_shaders();
       }
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return Mesh;
   })();
@@ -2173,7 +2202,7 @@
     };
     Camera.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return Camera;
   })();
@@ -2214,7 +2243,7 @@
           this.cached = this.ob;
         }
       }
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return Texture;
   })();
@@ -2353,7 +2382,7 @@
       old = this.rack.get("out", true).get();
       this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
       if (this.value !== old) {
-        return this.rack.get("out", true).set(this.value);
+        return this.rack.set("out", this.value);
       }
     };
     return Random;
@@ -2413,7 +2442,7 @@
         }
       }
       if (this.value !== old) {
-        return this.rack.get("out", true).set(this.value);
+        return this.rack.set("out", this.value);
       }
     };
     return Merge;
@@ -2453,7 +2482,7 @@
         this.value = arr[ind % arr.length];
       }
       if (this.value !== old) {
-        return this.rack.get("out", true).set(this.value);
+        return this.rack.set("out", this.value);
       }
     };
     return Get;
@@ -2480,9 +2509,9 @@
       });
     };
     SoundInput.prototype.compute = function() {
-      this.rack.get("low", true).set(flash_sound_value.kick);
-      this.rack.get("medium", true).set(flash_sound_value.snare);
-      return this.rack.get("high", true).set(flash_sound_value.hat);
+      this.rack.set("low", flash_sound_value.kick);
+      this.rack.set("medium", flash_sound_value.snare);
+      return this.rack.set("high", flash_sound_value.hat);
     };
     return SoundInput;
   })();
@@ -2528,7 +2557,7 @@
         this.counter = 0;
       }
       this.old = now;
-      return this.rack.get("out", true).set(this.counter);
+      return this.rack.set("out", this.counter);
     };
     return Timer;
   })();
@@ -2569,9 +2598,61 @@
       } else {
         res = this.rack.get("val2").get();
       }
-      return this.rack.get("out", true).set(res);
+      return this.rack.set("out", res);
     };
     return IfElse;
+  })();
+  nodes.types.Conditional.And = (function() {
+    __extends(And, NodeBase);
+    function And() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      And.__super__.constructor.apply(this, arguments);
+    }
+    And.prototype.set_fields = function() {
+      And.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "val1": false,
+          "val2": false
+        },
+        outputs: {
+          "out": false
+        }
+      });
+    };
+    And.prototype.compute = function() {
+      var res;
+      res = this.rack.get("val1").get() && this.rack.get("val2").get();
+      return this.rack.set("out", res);
+    };
+    return And;
+  })();
+  nodes.types.Conditional.Or = (function() {
+    __extends(Or, NodeBase);
+    function Or() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Or.__super__.constructor.apply(this, arguments);
+    }
+    Or.prototype.set_fields = function() {
+      Or.__super__.set_fields.apply(this, arguments);
+      return this.rack.addFields({
+        inputs: {
+          "val1": false,
+          "val2": false
+        },
+        outputs: {
+          "out": false
+        }
+      });
+    };
+    Or.prototype.compute = function() {
+      var res;
+      res = this.rack.get("val1").get() || this.rack.get("val2").get();
+      return this.rack.set("out", res);
+    };
+    return Or;
   })();
   nodes.types.Conditional.Equal = (function() {
     __extends(Equal, NodeBase);
@@ -2601,7 +2682,7 @@
     Equal.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get() === this.rack.get("val2").get();
-      return this.rack.get("out", true).set(res);
+      return this.rack.set("out", res);
     };
     return Equal;
   })();
@@ -2633,7 +2714,7 @@
     Smaller.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get() < this.rack.get("val2").get();
-      return this.rack.get("out", true).set(res);
+      return this.rack.set("out", res);
     };
     return Smaller;
   })();
@@ -2665,7 +2746,7 @@
     Greater.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get() > this.rack.get("val2").get();
-      return this.rack.get("out", true).set(res);
+      return this.rack.set("out", res);
     };
     return Greater;
   })();
@@ -2709,7 +2790,7 @@
       if (this.value_has_changed(['strength', 'kernelSize', 'sigma', 'resolution']) === true) {
         this.ob = new THREE.BloomPass(this.rack.get("strength").get(), this.rack.get('kernelSize').get(), this.rack.get('sigma').get(), this.rack.get('resolution').get());
       }
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return BloomPass;
   })();
@@ -2755,7 +2836,7 @@
       if (this.value_has_changed(['center', 'angle', 'scale']) === true) {
         this.ob = new THREE.DotScreenPass(this.rack.get("center").get(), this.rack.get('angle').get(), this.rack.get('scale').get());
       }
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return DotScreenPass;
   })();
@@ -2799,7 +2880,7 @@
       if (this.value_has_changed(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']) === true) {
         this.ob = new THREE.FilmPass(this.rack.get("noiseIntensity").get(), this.rack.get('scanlinesIntensity').get(), this.rack.get('scanlinesCount').get(), this.rack.get('grayscale').get());
       }
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return FilmPass;
   })();
@@ -2831,7 +2912,7 @@
     VignettePass.prototype.compute = function() {
       this.ob.uniforms["offset"].value = this.rack.get("offset").get();
       this.ob.uniforms["darkness"].value = this.rack.get("darkness").get();
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return VignettePass;
   })();
@@ -2861,7 +2942,7 @@
     };
     BleachPass.prototype.compute = function() {
       this.ob.uniforms["opacity"].value = this.rack.get("opacity").get();
-      return this.rack.get("out", true).set(this.ob);
+      return this.rack.set("out", this.ob);
     };
     return BleachPass;
   })();

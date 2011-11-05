@@ -15,7 +15,35 @@ class nodes.types.Conditional.IfElse extends NodeBase
       res = @rack.get("val1").get()
     else
       res = @rack.get("val2").get()
-    @rack.get("out", true).set res
+    @rack.set("out", res)
+
+class nodes.types.Conditional.And extends NodeBase
+  set_fields: =>
+    super
+    @rack.addFields
+      inputs:
+        "val1" : false
+        "val2" : false
+      outputs:
+        "out" : false
+
+  compute: =>
+    res = @rack.get("val1").get() && @rack.get("val2").get()
+    @rack.set("out", res)
+
+class nodes.types.Conditional.Or extends NodeBase
+  set_fields: =>
+    super
+    @rack.addFields
+      inputs:
+        "val1" : false
+        "val2" : false
+      outputs:
+        "out" : false
+
+  compute: =>
+    res = @rack.get("val1").get() || @rack.get("val2").get()
+    @rack.set("out", res)
 
 class nodes.types.Conditional.Equal extends NodeBase
   set_fields: =>
@@ -29,7 +57,7 @@ class nodes.types.Conditional.Equal extends NodeBase
 
   compute: =>
     res = @rack.get("val1").get() == @rack.get("val2").get()
-    @rack.get("out", true).set res
+    @rack.set("out", res)
 
 class nodes.types.Conditional.Smaller extends NodeBase
   set_fields: =>
@@ -43,7 +71,7 @@ class nodes.types.Conditional.Smaller extends NodeBase
 
   compute: =>
     res = @rack.get("val1").get() < @rack.get("val2").get()
-    @rack.get("out", true).set res
+    @rack.set("out", res)
 
 class nodes.types.Conditional.Greater extends NodeBase
   set_fields: =>
@@ -57,4 +85,4 @@ class nodes.types.Conditional.Greater extends NodeBase
 
   compute: =>
     res = @rack.get("val1").get() > @rack.get("val2").get()
-    @rack.get("out", true).set res
+    @rack.set("out", res)

@@ -20,7 +20,7 @@ class nodes.types.Geometry.PlaneGeometry extends NodeBase
     if flatArraysAreEquals(new_cache, @cached) == false
       @ob = new THREE.PlaneGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Geometry.CubeGeometry extends NodeBase
   set_fields: =>
@@ -47,7 +47,7 @@ class nodes.types.Geometry.CubeGeometry extends NodeBase
     if flatArraysAreEquals(new_cache, @cached) == false
       @ob = new THREE.CubeGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get())
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Geometry.SphereGeometry extends NodeBase
   set_fields: =>
@@ -73,7 +73,7 @@ class nodes.types.Geometry.SphereGeometry extends NodeBase
       @ob = new THREE.SphereGeometry(@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
       @cached = new_cache
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 ###
 # todo: maybe use require to load the font as required
@@ -100,6 +100,6 @@ class nodes.types.Geometry.TextGeometry extends NodeBase
       @ob = new THREE.SphereGeometry(@rack.get("text").get())
       @cached = new_cache
     #@apply_fields_to_val(@rack.node_fields.inputs, @ob, ["text"])
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
     
 ###

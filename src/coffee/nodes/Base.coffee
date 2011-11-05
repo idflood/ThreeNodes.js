@@ -15,7 +15,7 @@ class nodes.types.Base.String extends NodeBase
       outputs:
         "out": {type: "Any", val: @ob}
   compute: =>
-    @rack.get("out", true).set @rack.get("string").get()
+    @rack.set("out", @rack.get("string").get())
 
 class nodes.types.Base.Vector2 extends NodeBase
   set_fields: =>
@@ -38,9 +38,9 @@ class nodes.types.Base.Vector2 extends NodeBase
       @value = new THREE.Vector2(@rack.get("x").get(), @rack.get("y").get())
     if @value != old
       #@v_out.signal.dispatch @value
-      @rack.get("xy", true).set @value
-      @rack.get("x", true).set @value.x
-      @rack.get("y", true).set @value.y
+      @rack.set("xy", @value)
+      @rack.set("x", @value.x)
+      @rack.set("y", @value.y)
 
 class nodes.types.Base.Vector3 extends NodeBase
   set_fields: =>
@@ -63,14 +63,12 @@ class nodes.types.Base.Vector3 extends NodeBase
     @value = @rack.get("xyz").get()
     if @rack.get("xyz").connections.length == 0
       #@vec.set @v_in_x.val, @v_in_y.val, @v_in_z.val
-      #@value = @vec
       @value = new THREE.Vector3(@rack.get("x").get(), @rack.get("y").get(), @rack.get("z").get())
     if @value != old
-      #@v_out.signal.dispatch @value
-      @rack.get("xyz", true).set @value
-      @rack.get("x", true).set @value.x
-      @rack.get("y", true).set @value.y
-      @rack.get("z", true).set @value.z
+      @rack.set("xyz", @value)
+      @rack.set("x", @value.x)
+      @rack.set("y", @value.y)
+      @rack.set("z", @value.z)
 
 class nodes.types.Base.Color extends NodeBase
   init_preview: () =>
@@ -110,7 +108,7 @@ class nodes.types.Base.Color extends NodeBase
     if @rack.get("rgb").connections.length == 0
       @value = new THREE.Color().setRGB(@rack.get("r").get(), @rack.get("g").get(), @rack.get("b").get())
     if @value != old
-      @rack.get("rgb", true).set @value
-      @rack.get("r", true).set @value.r
-      @rack.get("g", true).set @value.g
-      @rack.get("b", true).set @value.b
+      @rack.set("rgb", @value)
+      @rack.set("r", @value.r)
+      @rack.set("g", @value.g)
+      @rack.set("b", @value.b)

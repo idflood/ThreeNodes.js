@@ -14,7 +14,7 @@ class nodes.types.Lights.PointLight extends NodeBase
 
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Lights.SpotLight extends NodeBase
   set_fields: =>
@@ -36,7 +36,7 @@ class nodes.types.Lights.SpotLight extends NodeBase
     if @rack.get("castShadow").get() != @ob.castShadow
       rebuild_all_shaders()
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Lights.DirectionalLight extends NodeBase
   set_fields: =>
@@ -54,7 +54,7 @@ class nodes.types.Lights.DirectionalLight extends NodeBase
 
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Lights.AmbientLight extends NodeBase
   set_fields: =>
@@ -71,4 +71,4 @@ class nodes.types.Lights.AmbientLight extends NodeBase
 
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)

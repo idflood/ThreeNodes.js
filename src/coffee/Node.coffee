@@ -152,8 +152,8 @@ class NodeNumberSimple extends NodeBase
     @value = 0
     
   set_fields: =>
-    @v_in = @rack.addInput(new fields.types.Float("in", 0))
-    @v_out = @rack.addOutput(new fields.types.Float("out", 0))
+    @v_in = @rack.addField("in", 0)
+    @v_out = @rack.addField("out", 0, "outputs")
     
   process_val: (num, i) => num
   

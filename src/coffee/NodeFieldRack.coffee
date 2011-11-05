@@ -13,6 +13,9 @@ class NodeFieldRack
     else
       @node_fields_by_name.inputs[key]
   
+  set: (key, value) ->
+    @node_fields_by_name.outputs[key].set value
+  
   render_connections: =>
     for f of @node_fields.inputs
       @node_fields.inputs[f].render_connections()
@@ -50,46 +53,47 @@ class NodeFieldRack
   update_inputs: =>
     for f of @node_fields.inputs
       @node_fields.inputs[f].update_input_node()
-      
-  addInput: (field) =>
-    field.node = @node
-    @node_fields.inputs["fid-" + field.fid] = field
-    @node_fields_by_name.inputs[field.name] = field
-    $(".inputs", @node.main_view).append(field.render_button())
-    @node.add_field_listener($("#fid-#{field.fid}"))
-    field
+    this
   
-  addOutput: (field) =>
-    field.node = @node
-    field.is_output = true
-    @node_fields.outputs["fid-" + field.fid] = field
-    @node_fields_by_name.outputs[field.name] = field
-    $(".outputs", @node.main_view).append(field.render_button())
-    @node.add_field_listener($("#fid-#{field.fid}"))
-    field
+  addField: (name, value, direction = "inputs") =>
+    f = false
+    if $.type(value) == "object"
+      f = new fields.types[value.type](name, value.val)
+    else
+      f = @create_field_from_default_type(name, value)
+    if direction != "inputs"
+      f.is_output = true
+    
+    @registerField(f)
+    f
     
   addFields: (fields_array) =>
     for dir of fields_array
       # dir = inputs / outputs
       for fname of fields_array[dir]
-        k = fields_array[dir][fname]
-        f = false
-        if $.type(k) == "object"
-          f = new fields.types[k.type](fname, k.val)
-        else
-          f = @create_field_from_default_type(fname, k)
-        if dir == "inputs"
-          @addInput(f)
-        else
-          @addOutput(f)
-    false
-    
+        value = fields_array[dir][fname]
+        @addField(fname, value, dir)
+    true
+  
+  registerField: (field) =>
+    field.node = @node
+    if field.is_output == false
+      @node_fields.inputs["fid-" + field.fid] = field
+      @node_fields_by_name.inputs[field.name] = field
+      $(".inputs", @node.main_view).append(field.render_button())
+    else
+      @node_fields.outputs["fid-" + field.fid] = field
+      @node_fields_by_name.outputs[field.name] = field
+      $(".outputs", @node.main_view).append(field.render_button())
+    @node.add_field_listener($("#fid-#{field.fid}"))
+    field
+  
   render_sidebar: () =>
     $target = $("#tab-attribute")
     $target.html("");
     for f of @node_fields.inputs
       @node_fields.inputs[f].render_sidebar()
-    false
+    true
   
   add_center_textfield: (field) =>
     $(".options .center", @node.main_view).append("<div><input type='text' id='f-txt-input-#{field.fid}' /></div>")

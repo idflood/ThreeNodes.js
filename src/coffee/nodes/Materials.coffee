@@ -16,7 +16,7 @@ class NodeMaterialBase extends NodeBase
   
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
   set_fields: =>
@@ -42,7 +42,7 @@ class nodes.types.Materials.MeshBasicMaterial extends NodeMaterialBase
       @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
   set_fields: =>
@@ -66,4 +66,4 @@ class nodes.types.Materials.MeshLambertMaterial extends NodeMaterialBase
       @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
     @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)

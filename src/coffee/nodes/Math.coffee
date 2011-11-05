@@ -25,48 +25,61 @@ class nodes.types.Math.Floor extends NodeNumberSimple
 class nodes.types.Math.Mod extends NodeNumberSimple
   set_fields: =>
     super
-    @v_valy = @rack.addInput(new fields.types.Float("y", 2))
+    @v_valy = @rack.addField("y", 2)
   process_val: (num, i) =>
     num % @v_valy.get()
 
 class nodes.types.Math.Add extends NodeNumberSimple
   set_fields: =>
     super
-    @v_factor = @rack.addInput(new fields.types.Float("y", 1))
+    @v_factor = @rack.addField("y", 1)
   process_val: (num, i) =>
     num + @v_factor.get()
 
 class nodes.types.Math.Subtract extends NodeNumberSimple
   set_fields: =>
     super
-    @v_factor = @rack.addInput(new fields.types.Float("y", 1))
+    @v_factor = @rack.addField("y", 1)
   process_val: (num, i) =>
     num - @v_factor.get()
 
 class nodes.types.Math.Mult extends NodeNumberSimple
   set_fields: =>
     super
-    @v_factor = @rack.addInput(new fields.types.Float("factor", 2))
+    @v_factor = @rack.addField("factor", 2)
   process_val: (num, i) =>
     num * @v_factor.get()
 
 class nodes.types.Math.Divide extends NodeNumberSimple
   set_fields: =>
     super
-    @v_factor = @rack.addInput(new fields.types.Float("y", 2))
+    @v_factor = @rack.addField("y", 2)
   process_val: (num, i) =>
     num / @v_factor.get()
 
 class nodes.types.Math.Min extends NodeNumberSimple
   set_fields: =>
     super
-    @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
+    @v_inb = @rack.addField("in", 0)
   process_val: (num, i) =>
     Math.min(num, @v_inb.get())
 
 class nodes.types.Math.Max extends NodeNumberSimple
   set_fields: =>
     super
-    @v_inb = @rack.addInput(new fields.types.Float("in2", 0))
+    @v_inb = @rack.addField("in2", 0)
   process_val: (num, i) =>
     Math.max(num, @v_inb.get())
+    
+class nodes.types.Math.Attenuation extends NodeNumberSimple
+  set_fields: =>
+    super
+    @def_val = @rack.addField("default", 0)
+    @reset_val = @rack.addField("reset", false)
+    @factor = @rack.addField("factor", 0.8)
+    @val = @def_val.get()
+  process_val: (num, i) =>
+    if @reset_val.get() == true
+      @val = @def_val.get()
+    @val = @val + (@v_in.get() - @val) * @factor.get()
+    @val

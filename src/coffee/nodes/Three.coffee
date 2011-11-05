@@ -37,7 +37,7 @@ class nodes.types.Three.Object3D extends NodeBase
         console.log @ob
         @ob.addChild(child)
     
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   set_fields: =>
@@ -86,7 +86,7 @@ class nodes.types.Three.Scene extends nodes.types.Three.Object3D
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
     @apply_children()
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
   set_fields: =>
@@ -97,7 +97,7 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
         "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
         "materials": {type: "Array", val: [new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false })]}
         "overdraw": false
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
     @geometry_cache = @rack.get('geometry').get().id
     @materials_cache = @rack.get('materials').get()
 
@@ -120,7 +120,7 @@ class nodes.types.Three.Mesh extends nodes.types.Three.Object3D
     if needs_rebuild == true
       rebuild_all_shaders()
     
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Three.Camera extends NodeBase
   set_fields: =>
@@ -140,7 +140,7 @@ class nodes.types.Three.Camera extends NodeBase
 
   compute: =>
     @apply_fields_to_val(@rack.node_fields.inputs, @ob)
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
 
 class nodes.types.Three.Texture extends NodeBase
   set_fields: =>
@@ -163,7 +163,7 @@ class nodes.types.Three.Texture extends NodeBase
         console.log @ob
         @cached = @ob
         
-    @rack.get("out", true).set @ob
+    @rack.set("out", @ob)
     
 class nodes.types.Three.WebGLRenderer extends NodeBase
   set_fields: =>
@@ -239,4 +239,4 @@ class nodes.types.Three.WebGLRenderer extends NodeBase
     renderModel.scene = current_scene
     renderModel.camera = current_camera
     composer.render(0.05)
-    #@rack.get("out", true).set @ob
+    #@rack.set("out", @ob)

@@ -13,7 +13,7 @@ class nodes.types.Utils.Random extends NodeBase
     old = @rack.get("out", true).get()
     @value = @rack.get("min").get() + Math.random() * (@rack.get("max").get() - @rack.get("min").get())
     if @value != old
-      @rack.get("out", true).set @value
+      @rack.set("out", @value)
 
 class nodes.types.Utils.Merge extends NodeBase
   set_fields: =>
@@ -37,7 +37,7 @@ class nodes.types.Utils.Merge extends NodeBase
       if k.get() != null && k.connections.length > 0
         @value[@value.length] = k.get()
     if @value != old
-      @rack.get("out", true).set @value
+      @rack.set("out", @value)
 
 class nodes.types.Utils.Get extends NodeBase
   set_fields: =>
@@ -57,7 +57,7 @@ class nodes.types.Utils.Get extends NodeBase
     if $.type(arr) == "array"
       @value = arr[ind % arr.length]
     if @value != old
-      @rack.get("out", true).set @value
+      @rack.set("out", @value)
 
 class nodes.types.Utils.SoundInput extends NodeBase
   set_fields: =>
@@ -72,9 +72,9 @@ class nodes.types.Utils.SoundInput extends NodeBase
         "high" : 0
   compute: () =>
     #console.log flash_sound_value
-    @rack.get("low", true).set flash_sound_value.kick
-    @rack.get("medium", true).set flash_sound_value.snare
-    @rack.get("high", true).set flash_sound_value.hat
+    @rack.set("low", flash_sound_value.kick)
+    @rack.set("medium", flash_sound_value.snare)
+    @rack.set("high", flash_sound_value.hat)
   
 
 class nodes.types.Utils.Timer extends NodeBase
@@ -106,4 +106,4 @@ class nodes.types.Utils.Timer extends NodeBase
       #@counter = diff * -1
       @counter = 0
     @old = now
-    @rack.get("out", true).set @counter
+    @rack.set("out", @counter)
