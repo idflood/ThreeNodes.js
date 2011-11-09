@@ -33,21 +33,27 @@ node_field_in_template = false
 node_field_out_template = false
 field_context_menu = false
 node_context_menu = false
-$ = false
+
+nodegraph = false
 
 init_app = (_node_template, _node_field_in_template, _node_field_out_template, _field_context_menu, _node_context_menu) ->
-  $ = jQuery
   node_template = _node_template
   node_field_in_template = _node_field_in_template
   node_field_out_template = _node_field_out_template
   field_context_menu = _field_context_menu
   node_context_menu = _node_context_menu
   
+  nodegraph = new NodeGraph()
+  
   console.log "init..."
-  init_webgl()
-  init_ui()
-  animate()
-  init_websocket()
+  if $("#qunit-tests").length == 0
+    init_webgl()
+    init_ui()
+    animate()
+    init_websocket()
+  else
+    console.log window
+    window.init_test()
 
 require [
   # views

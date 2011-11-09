@@ -13,6 +13,7 @@ function compile_sass() {
 
 function compile_haml() {
   exec("haml src/haml/index.haml public/index.html", puts);
+  exec("haml src/haml/test.haml public/test.html", puts);
 }
 
 function compile_coffee() {

@@ -24,10 +24,14 @@ appFiles  = [
   'File'
 ]
 
+testFiles = [
+  'base_test'
+]
+
 process = (filename, appContents)->
   fs.writeFile 'public/assets/js/' + filename + '.coffee', appContents.join('\n\n'), 'utf8', (err) ->
     throw err if err
-    exec 'coffee --compile public/assets/js/' + filename + '.coffee', (err, stdout, stderr) ->
+    exec 'coffee -c -b public/assets/js/' + filename + '.coffee', (err, stdout, stderr) ->
       throw err if err
       console.log stdout + stderr
       fs.unlink 'public/assets/js/' + filename + '.coffee', (err) ->
@@ -42,5 +46,14 @@ build_app = () ->
       appContents[index] = fileContents
       process("app", appContents) if --remaining is 0
 
+build_tests = () ->
+  appContents = new Array remaining = testFiles.length
+  for file, index in testFiles then do (file, index) ->
+    fs.readFile "src/coffee/tests/#{file}.coffee", 'utf8', (err, fileContents) ->
+      throw err if err
+      appContents[index] = fileContents
+      process("tests", appContents) if --remaining is 0
+
 task 'build', 'Build single application file from source files', ->
   build_app()
+  build_tests()
