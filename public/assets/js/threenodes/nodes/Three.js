@@ -115,7 +115,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       _results = [];
       for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
         child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.add(child), rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("scene add child"), console.log(this.ob), this.ob.add(child)) : void 0));
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.add(child), ThreeNodes.rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("scene add child"), console.log(this.ob), this.ob.add(child)) : void 0));
       }
       return _results;
     };
@@ -179,7 +179,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       if (needs_rebuild === true) {
-        rebuild_all_shaders();
+        ThreeNodes.rebuild_all_shaders();
       }
       return this.rack.set("out", this.ob);
     };

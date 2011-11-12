@@ -28,7 +28,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if flatArraysAreEquals(new_cache, @cached) == false
+      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.PlaneGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
@@ -55,7 +55,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if flatArraysAreEquals(new_cache, @cached) == false
+      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.CubeGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get())
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
@@ -80,7 +80,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if flatArraysAreEquals(new_cache, @cached) == false
+      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.SphereGeometry(@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)

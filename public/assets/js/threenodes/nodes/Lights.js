@@ -82,7 +82,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     SpotLight.prototype.compute = function() {
       if (this.rack.get("castShadow").get() !== this.ob.castShadow) {
-        rebuild_all_shaders();
+        ThreeNodes.rebuild_all_shaders();
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.set("out", this.ob);

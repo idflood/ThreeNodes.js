@@ -40,7 +40,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     PlaneGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
-      if (flatArraysAreEquals(new_cache, this.cached) === false) {
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
         this.ob = new THREE.PlaneGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -84,7 +84,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     CubeGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
-      if (flatArraysAreEquals(new_cache, this.cached) === false) {
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
         this.ob = new THREE.CubeGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -124,7 +124,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     SphereGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
-      if (flatArraysAreEquals(new_cache, this.cached) === false) {
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
         this.ob = new THREE.SphereGeometry(this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
         this.cached = new_cache;
       }

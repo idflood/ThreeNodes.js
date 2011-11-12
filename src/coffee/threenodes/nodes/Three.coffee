@@ -86,7 +86,7 @@ define [
           ind = @ob.children.indexOf(child)
           if ind == -1
             @ob.add(child)
-            rebuild_all_shaders()
+            ThreeNodes.rebuild_all_shaders()
         else
           ind = @ob.children.indexOf(child)
           if ind == -1
@@ -129,7 +129,7 @@ define [
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       
       if needs_rebuild == true
-        rebuild_all_shaders()
+        ThreeNodes.rebuild_all_shaders()
       
       @rack.set("out", @ob)
   

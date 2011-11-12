@@ -257,13 +257,20 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     Float.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "number":
           res = parseFloat(val);
           break;
         case "string":
           res = parseFloat(val);
+          break;
+        case "boolean":
+          if (val) {
+            res = 1;
+          } else {
+            res = 0;
+          }
       }
       return res;
     };

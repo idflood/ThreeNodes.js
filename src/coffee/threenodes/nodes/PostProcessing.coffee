@@ -25,7 +25,7 @@ define [
         
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
-      if flatArraysAreEquals(newvals, @cached) == false
+      if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
       false
@@ -51,7 +51,7 @@ define [
         
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
-      if flatArraysAreEquals(newvals, @cached) == false
+      if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
       false
@@ -77,7 +77,7 @@ define [
         
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
-      if flatArraysAreEquals(newvals, @cached) == false
+      if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
       false

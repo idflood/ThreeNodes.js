@@ -148,10 +148,15 @@ define [
           $(this).blur()
       false
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "number" then res = parseFloat(val)
         when "string" then res = parseFloat(val)
+        when "boolean"
+          if val
+            res = 1
+          else
+            res = 0
       res
       
   class ThreeNodes.fields.types.Vector2 extends ThreeNodes.NodeField

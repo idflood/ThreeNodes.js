@@ -11,8 +11,8 @@ define [
       test "Nodegraph nodes", () ->
         ng = app.nodegraph
         ng.create_node("Base", "Number", 0, 0)
-        equals 1, ng.nodes.length, "Nodegraph has 1 node"
+        equals ng.nodes.length, 1, "Nodegraph has 1 node"
         ng.create_node("Base", "Number", 0, 0)
-        equals 2, ng.nodes.length, "Nodegraph has 2 nodes"
+        equals ng.nodes.length, 2, "Nodegraph has 2 nodes"
         app.clear_workspace()
-        equals 0, ng.nodes.length, "Nodegraph has 0 nodes"
+        equals ng.nodes.length, 0, "Nodegraph has 0 nodes"

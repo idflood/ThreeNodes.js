@@ -37,7 +37,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     BloomPass.prototype.value_has_changed = function(vals) {
       var newvals;
       newvals = this.get_cached_array(vals);
-      if (flatArraysAreEquals(newvals, this.cached) === false) {
+      if (ThreeNodes.Utils.flatArraysAreEquals(newvals, this.cached) === false) {
         this.cached = newvals;
         return true;
       }
@@ -83,7 +83,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     DotScreenPass.prototype.value_has_changed = function(vals) {
       var newvals;
       newvals = this.get_cached_array(vals);
-      if (flatArraysAreEquals(newvals, this.cached) === false) {
+      if (ThreeNodes.Utils.flatArraysAreEquals(newvals, this.cached) === false) {
         this.cached = newvals;
         return true;
       }
@@ -127,7 +127,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     FilmPass.prototype.value_has_changed = function(vals) {
       var newvals;
       newvals = this.get_cached_array(vals);
-      if (flatArraysAreEquals(newvals, this.cached) === false) {
+      if (ThreeNodes.Utils.flatArraysAreEquals(newvals, this.cached) === false) {
         this.cached = newvals;
         return true;
       }

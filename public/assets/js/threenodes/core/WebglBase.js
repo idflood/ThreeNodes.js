@@ -19,6 +19,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
       ThreeNodes.Webgl.composer = this.composer;
       ThreeNodes.Webgl.renderModel = this.renderModel;
       ThreeNodes.Webgl.effectScreen = this.effectScreen;
+      ThreeNodes.rebuild_all_shaders = this.rebuild_all_shaders;
     }
     WebglBase.prototype.rebuild_all_shaders = function() {
       var n, _i, _len, _ref, _results;
