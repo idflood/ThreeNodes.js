@@ -6,13 +6,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
       this.init_sidebar_search = __bind(this.init_sidebar_search, this);
       this.init_sidebar_toggle = __bind(this.init_sidebar_toggle, this);
       this.init_sidebar_tabs = __bind(this.init_sidebar_tabs, this);
-      this.init_sidebar_tab_system = __bind(this.init_sidebar_tab_system, this);      _.extend(this, Backbone.Events);
+      this.init_sidebar_tab_system = __bind(this.init_sidebar_tab_system, this);
+      this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
+    }
+    AppSidebar.prototype.onRegister = function() {
       this.init_sidebar_tab_new_node();
       this.init_sidebar_search();
       this.init_sidebar_toggle();
       this.init_sidebar_tabs();
-      this.init_sidebar_tab_system();
-    }
+      return this.init_sidebar_tab_system();
+    };
     AppSidebar.prototype.init_sidebar_tab_system = function() {
       var self;
       self = this;
@@ -36,7 +39,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
       });
     };
     AppSidebar.prototype.init_sidebar_tabs = function() {
-      console.log("tab init");
       return $("#sidebar").tabs({
         fx: {
           opacity: 'toggle',
@@ -142,7 +144,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
           nodetype = jQuery.trim(ui.draggable.html());
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10;
           dy = ui.position.top - 10 + $("#container-wrapper").scrollTop();
-          self.trigger("create_node", nodename, nodetype, dx, dy);
+          self.context.commandMap.execute("CreateNodeCommand", nodename, nodetype, dx, dy);
           return $("#sidebar").show();
         }
       });

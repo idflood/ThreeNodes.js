@@ -7,16 +7,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.render = __bind(this.render, this);
       this.show_application = __bind(this.show_application, this);
       this.add_window_resize_handler = __bind(this.add_window_resize_handler, this);
-      this.init_context_menus = __bind(this.init_context_menus, this);      _.extend(this, Backbone.Events);
+      this.init_context_menus = __bind(this.init_context_menus, this);
+      this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
-      this.webgl = new ThreeNodes.WebglBase();
-      this.sidebar = new ThreeNodes.AppSidebar();
+    }
+    AppUI.prototype.onRegister = function() {
+      var injector;
+      injector = this.context.injector;
+      injector.mapSingleton("ThreeNodes.WebglBase", ThreeNodes.WebglBase);
+      injector.mapSingleton("ThreeNodes.AppSidebar", ThreeNodes.AppSidebar);
+      this.webgl = injector.get("ThreeNodes.WebglBase");
+      this.sidebar = injector.get("ThreeNodes.AppSidebar");
       this.add_window_resize_handler();
       this.init_context_menus();
       this.show_application();
-      this.animate();
-    }
+      return this.animate();
+    };
     AppUI.prototype.init_context_menus = function() {
       var menu_field_menu, node_menu;
       menu_field_menu = $.tmpl(_view_field_context_menu, {});

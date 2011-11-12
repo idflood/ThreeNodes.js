@@ -7,13 +7,15 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       this.cid = cid != null ? cid : ThreeNodes.Utils.get_uid();
       this.update_node_from = __bind(this.update_node_from, this);
       this.container = $("#graph");
+    }
+    NodeConnection.prototype.onRegister = function() {
       this.line = false;
-      ThreeNodes.node_connections.push(this);
+      this.context.commandMap.execute("AddConnectionCommand", this);
       this.from_field.add_connection(this);
       this.to_field.add_connection(this);
       this.update();
-      this.render();
-    }
+      return this.render();
+    };
     NodeConnection.prototype.get_path = function() {
       var diffx, diffy, f1, f2, min_diff, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
       f1 = this.get_field_position(this.from_field);

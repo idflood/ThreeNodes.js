@@ -10,8 +10,10 @@ define [
   class ThreeNodes.NodeConnection
     constructor: (@from_field, @to_field, @cid = ThreeNodes.Utils.get_uid()) ->
       @container = $("#graph")
+    
+    onRegister: () ->
       @line = false
-      ThreeNodes.node_connections.push(this)
+      @context.commandMap.execute "AddConnectionCommand", this
       @from_field.add_connection(this)
       @to_field.add_connection(this)
       @update()

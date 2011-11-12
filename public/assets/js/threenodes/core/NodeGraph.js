@@ -5,6 +5,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       this.render = __bind(this.render, this);
       this.get_component_by_type = __bind(this.get_component_by_type, this);
       this.create_node = __bind(this.create_node, this);      this.nodes = [];
+      this.node_connections = [];
       this.types = false;
     }
     NodeGraph.prototype.create_node = function(component, type, x, y, inXML) {
@@ -13,6 +14,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
         inXML = false;
       }
       n = new ThreeNodes.nodes.types[component][type](x, y, inXML);
+      this.context.injector.applyContext(n);
       this.nodes.push(n);
       return n;
     };
@@ -41,6 +43,25 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         node = _ref2[_j];
         node.updated = false;
+      }
+      return true;
+    };
+    NodeGraph.prototype.addConnection = function(c) {
+      return this.node_connections[this.node_connections.length] = c;
+    };
+    NodeGraph.prototype.remove_all_nodes = function() {
+      var node, _i, _len, _ref;
+      $("#tab-attribute").html("");
+      _ref = this.nodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        node.remove();
+      }
+      return true;
+    };
+    NodeGraph.prototype.remove_all_connections = function() {
+      while (this.node_connections.length > 0) {
+        this.node_connections[0].remove();
       }
       return true;
     };

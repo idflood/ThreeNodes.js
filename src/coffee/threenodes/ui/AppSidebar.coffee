@@ -8,6 +8,8 @@ define [
   class ThreeNodes.AppSidebar
     constructor: () ->
       _.extend(@, Backbone.Events)
+    
+    onRegister: () =>
       @init_sidebar_tab_new_node()
       @init_sidebar_search()
       @init_sidebar_toggle()
@@ -36,7 +38,6 @@ define [
         false
     
     init_sidebar_tabs: () =>
-      console.log("tab init")
       $("#sidebar").tabs
         fx:
           opacity: 'toggle'
@@ -104,5 +105,5 @@ define [
           nodetype = jQuery.trim(ui.draggable.html())
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10
           dy = ui.position.top - 10 + $("#container-wrapper").scrollTop()
-          self.trigger("create_node", nodename, nodetype, dx, dy)
+          self.context.commandMap.execute("CreateNodeCommand", nodename, nodetype, dx, dy)
           $("#sidebar").show()

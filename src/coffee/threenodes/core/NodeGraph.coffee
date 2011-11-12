@@ -16,10 +16,12 @@ define [
   class ThreeNodes.NodeGraph
     constructor: () ->
       @nodes = []
+      @node_connections = []
       @types = false
     
     create_node: (component, type, x, y, inXML = false) =>
       n = new ThreeNodes.nodes.types[component][type](x, y, inXML)
+      @context.injector.applyContext(n)
       @nodes.push(n)
       n
     
@@ -37,4 +39,18 @@ define [
           node.update()
       for node in @nodes
         node.updated = false
+      true
+    
+    addConnection: (c) ->
+      @node_connections[@node_connections.length] = c
+    
+    remove_all_nodes: () ->
+      $("#tab-attribute").html("")
+      for node in @nodes
+        node.remove()
+      true
+    
+    remove_all_connections: () ->
+      while @node_connections.length > 0
+        @node_connections[0].remove()
       true

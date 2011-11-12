@@ -38,6 +38,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       } else {
         this.nid = ThreeNodes.Utils.get_uid();
       }
+    }
+    NodeBase.prototype.onRegister = function() {
       this.container = $("#container");
       this.out_connections = [];
       this.rack = new ThreeNodes.NodeFieldRack(this, this.inXML);
@@ -50,8 +52,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.inXML !== false) {
         this.rack.fromXML(this.inXML);
       }
-      this.init_context_menu();
-    }
+      return this.init_context_menu();
+    };
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
     };
@@ -130,7 +132,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return _results;
     };
     NodeBase.prototype.create_field_connection = function(field) {
-      var f, field_click_2;
+      var c, f, field_click_2;
       f = this;
       if (ThreeNodes.field_click_1 === false) {
         ThreeNodes.field_click_1 = field;
@@ -139,7 +141,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }).addClass("field-possible-target");
       } else {
         field_click_2 = field;
-        new ThreeNodes.NodeConnection(ThreeNodes.field_click_1, field_click_2);
+        c = new ThreeNodes.NodeConnection(ThreeNodes.field_click_1, field_click_2);
+        this.context.injector.applyContext(c);
         $(".field").removeClass("field-possible-target");
         return ThreeNodes.field_click_1 = false;
       }

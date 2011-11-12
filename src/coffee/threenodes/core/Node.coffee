@@ -19,6 +19,8 @@ define [
         uid = @nid
       else
         @nid = ThreeNodes.Utils.get_uid()
+    
+    onRegister: () ->
       @container = $("#container")
       @out_connections = []
       @rack = new ThreeNodes.NodeFieldRack(this, @inXML)
@@ -102,7 +104,8 @@ define [
         .addClass "field-possible-target"
       else
         field_click_2 = field
-        new ThreeNodes.NodeConnection(ThreeNodes.field_click_1, field_click_2)
+        c = new ThreeNodes.NodeConnection(ThreeNodes.field_click_1, field_click_2)
+        @context.injector.applyContext(c)
         $(".field").removeClass "field-possible-target"
         ThreeNodes.field_click_1 = false
         

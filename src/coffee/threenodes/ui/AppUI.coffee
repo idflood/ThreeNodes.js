@@ -17,9 +17,14 @@ define [
       _.extend(@, Backbone.Events)
       @svg = Raphael("graph", 4000, 4000)
       ThreeNodes.svg = @svg
+    
+    onRegister: () =>
+      injector = @context.injector
+      injector.mapSingleton "ThreeNodes.WebglBase", ThreeNodes.WebglBase
+      injector.mapSingleton "ThreeNodes.AppSidebar", ThreeNodes.AppSidebar
+      @webgl = injector.get "ThreeNodes.WebglBase"
+      @sidebar = injector.get "ThreeNodes.AppSidebar"
       
-      @webgl = new ThreeNodes.WebglBase()
-      @sidebar = new ThreeNodes.AppSidebar()
       @add_window_resize_handler()
       @init_context_menus()
       @show_application()
