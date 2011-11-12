@@ -1,6 +1,7 @@
 Icon
 Thumbs.db
 .DS_Store
+.monitor
 .sass-cache/
 .project
 node_modules/
