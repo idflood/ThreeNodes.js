@@ -13,7 +13,7 @@ define [
     set_fields: =>
       super
       @ob = false
-      webgl_materials_node[webgl_materials_node.length] = this
+      ThreeNodes.webgl_materials_node[ThreeNodes.webgl_materials_node.length] = this
       @rack.addFields
         inputs:
           "opacity": 1

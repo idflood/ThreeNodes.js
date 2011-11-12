@@ -6,8 +6,12 @@ require.config
 
 require [
   'order!threenodes/App',
+  'tests/NodeGraphTest',
   'order!libs/jquery-1.6.4.min',
   'order!libs/underscore-min',
-  'order!libs/backbone'
-], (App) ->
+  'order!libs/backbone',
+  "order!libs/qunit-git",
+], (App, NodeGraphTest) ->
   app = new App()
+  new NodeGraphTest(app)
+  

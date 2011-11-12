@@ -31,8 +31,9 @@ define [
       ThreeNodes.Webgl.composer = @composer
       ThreeNodes.Webgl.renderModel = @renderModel
       ThreeNodes.Webgl.effectScreen = @effectScreen
+    
     rebuild_all_shaders: () =>
       console.log "rebuilding shaders"
-      console.log webgl_materials_node
-      for n in @webgl_materials_node
+      console.log ThreeNodes.webgl_materials_node
+      for n in ThreeNodes.webgl_materials_node
         n.ob.program = false

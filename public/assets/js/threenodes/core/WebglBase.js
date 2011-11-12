@@ -23,8 +23,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
     WebglBase.prototype.rebuild_all_shaders = function() {
       var n, _i, _len, _ref, _results;
       console.log("rebuilding shaders");
-      console.log(webgl_materials_node);
-      _ref = this.webgl_materials_node;
+      console.log(ThreeNodes.webgl_materials_node);
+      _ref = ThreeNodes.webgl_materials_node;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         n = _ref[_i];
