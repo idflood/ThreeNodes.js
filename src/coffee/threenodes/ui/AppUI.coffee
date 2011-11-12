@@ -2,9 +2,9 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "order!threenodes/core/WebglBase",
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
+  "order!threenodes/core/WebglBase",
   "order!libs/jquery.tmpl.min",
   'order!threenodes/ui/AppSidebar',
   "libs/three-extras/js/RequestAnimationFrame",
@@ -44,7 +44,6 @@ define [
       $("#sidebar-toggle").delay(delay_intro).fadeIn(0)
       
     render: () =>
-      #@app.nodegraph.render()
       @trigger("render")
     
     on_ui_window_resize: () =>

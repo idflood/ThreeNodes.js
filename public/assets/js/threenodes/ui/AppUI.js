@@ -1,5 +1,5 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', "order!threenodes/core/WebglBase", "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', "libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!threenodes/core/WebglBase", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', "libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
   return ThreeNodes.AppUI = (function() {
     function AppUI() {
       this.animate = __bind(this.animate, this);
