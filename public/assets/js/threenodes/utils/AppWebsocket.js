@@ -11,14 +11,19 @@ define(['jQuery', 'Underscore', 'Backbone', "libs/sockjs-latest.min"], function(
         webso = WebSocket;
       }
       console.log("init websocket.");
-      socket = new webso("ws://localhost:8080/p5websocket");
       self = this;
-      socket.onmessage = function(data) {
-        return self.on_websocket_message(data);
-      };
-      socket.onerror = function() {
-        return console.log('socket close');
-      };
+      try {
+        socket = new webso("ws://localhost:8080/p5websocket");
+        socket.onmessage = function(data) {
+          return self.on_websocket_message(data);
+        };
+        socket.onerror = function() {
+          return console.log('socket close');
+        };
+      } catch (e) {
+        console.log("no websockets!");
+        console.log(e);
+      }
       true;
     }
     AppWebsocket.prototype.on_websocket_message = function(data) {

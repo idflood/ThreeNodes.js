@@ -13,15 +13,19 @@ define [
         webso = WebSocket
     
       console.log("init websocket.")
-      socket = new webso("ws://localhost:8080/p5websocket")
-      
       self = this
-      socket.onmessage = (data) ->
-        self.on_websocket_message(data)
-        
-      socket.onerror = () ->
-        console.log 'socket close'
+      try
+        socket = new webso("ws://localhost:8080/p5websocket")
+        socket.onmessage = (data) ->
+          self.on_websocket_message(data)
+          
+        socket.onerror = () ->
+          console.log 'socket close'
+      catch e
+        console.log "no websockets!"
+        console.log e
       true
+    
     on_websocket_message: (data) =>
       messg = data.data
       ThreeNodes.flash_sound_value = jQuery.parseJSON(messg)
