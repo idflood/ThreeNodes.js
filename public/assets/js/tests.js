@@ -12,6 +12,8 @@ window.init_test = function() {
     ng.create_node("Base", "Number", 0, 0);
     equals(1, ng.nodes.length, "Nodegraph has 1 node");
     ng.create_node("Base", "Number", 0, 0);
-    return equals(2, ng.nodes.length, "Nodegraph has 2 nodes");
+    equals(2, ng.nodes.length, "Nodegraph has 2 nodes");
+    clear_workspace();
+    return equals(0, ng.nodes.length, "Nodegraph has 0 nodes");
   });
 };

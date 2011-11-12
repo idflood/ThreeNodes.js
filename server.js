@@ -40,6 +40,7 @@ function watchDirectoryAndRecompile(dir, callback) {
 connect.createServer(
     connect.static(__dirname + '/public', { maxAge: 0 })
   , function(req, res) {
+    res.statusCode = 404;
     res.setHeader('Content-Type', 'text/html');
     res.end('404')
   }
