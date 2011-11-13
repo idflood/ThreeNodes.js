@@ -36,8 +36,8 @@ Packages published in the npm registry are not part of npm
 itself, are the sole property of their respective maintainers,
 and are not covered by this license.
 
-"npm Logo" created by Mathias Pettersson and Brian Hammond,
-used with permission.
+
+This program uses "Three.js", Copyright (c) 2010-2011 three.js Authors
 
 This program uses "coffee-script", Copyright (c) 2011 Jeremy Ashkenas.
 
