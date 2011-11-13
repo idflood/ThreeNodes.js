@@ -3,7 +3,6 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 ThreeNodes = {};
 ThreeNodes.nodes = {
   fields: {},
-  list: [],
   types: {
     Base: {},
     Math: {},
@@ -64,7 +63,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.nodegraph.node_connections = [];
       this.nodegraph.nodes = [];
       ThreeNodes.nodes.fields = {};
-      ThreeNodes.nodes.list = [];
       return ThreeNodes.webgl_materials_node = [];
     };
     return App;

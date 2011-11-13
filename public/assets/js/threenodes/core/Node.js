@@ -64,14 +64,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         menu: "field-context-menu"
       }, function(action, el, pos) {
         var f_name, f_type, field;
-        console.log("context click");
-        console.log(action);
         if (action === "remove_connection") {
           f_name = $(el).attr("id");
           f_type = $(el).parent().attr("class");
           field = self.rack.node_fields[f_type][f_name];
-          console.log("should remove connction");
-          console.log(field);
           return field.remove_connections();
         }
       });

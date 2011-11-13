@@ -2,7 +2,6 @@ ThreeNodes = {}
 
 ThreeNodes.nodes =
   fields: {}
-  list: []
   types:
     Base: {}
     Math: {}
@@ -80,6 +79,5 @@ define [
       @nodegraph.node_connections = []
       @nodegraph.nodes = []
       ThreeNodes.nodes.fields = {}
-      ThreeNodes.nodes.list = []
     
       ThreeNodes.webgl_materials_node = []

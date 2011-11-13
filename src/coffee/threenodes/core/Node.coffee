@@ -42,14 +42,10 @@ define [
       #  if action == "remove_node"
       #    self.remove()
       $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
-        console.log "context click"
-        console.log action
         if action == "remove_connection"
           f_name = $(el).attr("id")
           f_type = $(el).parent().attr("class")
           field = self.rack.node_fields[f_type][f_name]
-          console.log "should remove connction"
-          console.log field
           field.remove_connections()
     
     create_cache_object: (values) =>
