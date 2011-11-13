@@ -26,7 +26,7 @@ ThreeNodes.flash_sound_value = {
   snare: 0,
   hat: 0
 };
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/AddConnectionCommand', 'order!threenodes/commands/CreateNodeCommand'], function($, _, Backbone, NodeGraph, AppUI) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/AddConnectionCommand', 'order!threenodes/commands/RemoveConnectionCommand', 'order!threenodes/commands/CreateNodeCommand'], function($, _, Backbone, NodeGraph, AppUI) {
   return ThreeNodes.App = (function() {
     function App() {
       this.init_ui = __bind(this.init_ui, this);      console.log("ThreeNodes app init...");
@@ -41,6 +41,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.commandMap = new ThreeNodes.CommandMap(this);
       this.commandMap.register("ClearWorkspaceCommand", ThreeNodes.ClearWorkspaceCommand);
       this.commandMap.register("AddConnectionCommand", ThreeNodes.AddConnectionCommand);
+      this.commandMap.register("RemoveConnectionCommand", ThreeNodes.RemoveConnectionCommand);
       this.commandMap.register("CreateNodeCommand", ThreeNodes.CreateNodeCommand);
       this.injector.mapSingleton("NodeGraph", ThreeNodes.NodeGraph);
       this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);

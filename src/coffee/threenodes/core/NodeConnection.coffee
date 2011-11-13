@@ -63,12 +63,9 @@ define [
     remove: ->
       @from_field.remove_connection(this)
       @to_field.remove_connection(this)
-      #@from_field.signal.remove @listener
       @line.remove()
       @line = false
-      ind = node_connections.indexOf(this)
-      if ind != -1
-        node_connections.splice(ind, 1)
+      @context.commandMap.execute "RemoveConnectionCommand", this
       false
     render: ->
       if @line && @line.attrs

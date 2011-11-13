@@ -44,6 +44,11 @@ define [
     addConnection: (c) ->
       @node_connections[@node_connections.length] = c
     
+    removeConnection: (c) ->
+      ind = @node_connections.indexOf(c)
+      if ind != -1
+        @node_connections.splice(ind, 1)
+    
     remove_all_nodes: () ->
       $("#tab-attribute").html("")
       for node in @nodes

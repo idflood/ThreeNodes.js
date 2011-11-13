@@ -60,15 +60,11 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       return o1;
     };
     NodeConnection.prototype.remove = function() {
-      var ind;
       this.from_field.remove_connection(this);
       this.to_field.remove_connection(this);
       this.line.remove();
       this.line = false;
-      ind = node_connections.indexOf(this);
-      if (ind !== -1) {
-        node_connections.splice(ind, 1);
-      }
+      this.context.commandMap.execute("RemoveConnectionCommand", this);
       return false;
     };
     NodeConnection.prototype.render = function() {

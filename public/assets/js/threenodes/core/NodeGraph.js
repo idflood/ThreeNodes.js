@@ -49,6 +49,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     NodeGraph.prototype.addConnection = function(c) {
       return this.node_connections[this.node_connections.length] = c;
     };
+    NodeGraph.prototype.removeConnection = function(c) {
+      var ind;
+      ind = this.node_connections.indexOf(c);
+      if (ind !== -1) {
+        return this.node_connections.splice(ind, 1);
+      }
+    };
     NodeGraph.prototype.remove_all_nodes = function() {
       var node, _i, _len, _ref;
       $("#tab-attribute").html("");

@@ -35,6 +35,7 @@ define [
   'order!threenodes/utils/CommandMap',
   'order!threenodes/commands/ClearWorkspaceCommand',
   'order!threenodes/commands/AddConnectionCommand',
+  'order!threenodes/commands/RemoveConnectionCommand',
   'order!threenodes/commands/CreateNodeCommand',
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   class ThreeNodes.App
@@ -54,6 +55,7 @@ define [
       
       @commandMap.register "ClearWorkspaceCommand", ThreeNodes.ClearWorkspaceCommand
       @commandMap.register "AddConnectionCommand", ThreeNodes.AddConnectionCommand
+      @commandMap.register "RemoveConnectionCommand", ThreeNodes.RemoveConnectionCommand
       @commandMap.register "CreateNodeCommand", ThreeNodes.CreateNodeCommand
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
