@@ -28,3 +28,6 @@ This is an attempt to make something like "vvvv" in javascript, html and webgl.
 3. if vogue is installed open another terminal and simply call "vogue" in ThreeNodes.js/public/ directory
 4. with firefox or chrome go to http://localhost:8042/
 5. allow this site to create popups (for webglrender node)
+
+## Howto create a simple scene
+First, create a webglrenderer node. Then add a scene and connect it to the "scene" of the webgl node. On the scene children you would connect a "merge" and to it a mesh. With that there should be a red cube showing in the renderer window.
