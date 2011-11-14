@@ -1,10 +1,12 @@
 {
-    "name": "ThreeNodes.js"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-    "socket.io-client": ">= 0.0.1"
-    , "connect": ">= 0.0.1"
-    , "watch": ">= 0.0.1"
-  }
+  "name": "ThreeNodes.js",
+  "version": "0.0.2",
+  "author": "David Mignot (http://idflood.com)",
+  "repository": "git://github.com/idflood/ThreeNodes.js",
+  "dependencies": {
+    "socket.io-client": ">= 0.0.1",
+    "connect": ">= 0.0.1",
+    "watch": ">= 0.4.0"
+  },
+  "engine": "node >= 0.4.x"
 }
