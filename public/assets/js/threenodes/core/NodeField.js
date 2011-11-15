@@ -24,6 +24,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.render_sidebar = __bind(this.render_sidebar, this);
       this.render_connections = __bind(this.render_connections, this);
       this.toXML = __bind(this.toXML, this);
+      this.toJSON = __bind(this.toJSON, this);
       this.get = __bind(this.get, this);
       this.set = __bind(this.set, this);
       self = this;
@@ -52,6 +53,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     NodeField.prototype.get = function() {
       return this.val;
+    };
+    NodeField.prototype.toJSON = function() {
+      var res;
+      res = {
+        fid: this.fid,
+        val: this.get()
+      };
+      return res;
     };
     NodeField.prototype.toXML = function() {
       return "\t\t\t<field fid='" + this.fid + "' val='" + (this.get()) + "'/>\n";

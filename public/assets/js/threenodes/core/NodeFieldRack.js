@@ -10,7 +10,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       this.addField = __bind(this.addField, this);
       this.update_inputs = __bind(this.update_inputs, this);
       this.fromXML = __bind(this.fromXML, this);
+      this.fromJSON = __bind(this.fromJSON, this);
       this.toXML = __bind(this.toXML, this);
+      this.toJSON = __bind(this.toJSON, this);
       this.remove_all_connections = __bind(this.remove_all_connections, this);
       this.render_connections = __bind(this.render_connections, this);
       this.node_fields = {};
@@ -54,6 +56,18 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       }
       return _results;
     };
+    NodeFieldRack.prototype.toJSON = function() {
+      var res;
+      res = {
+        "in": jQuery.map(this.node_fields.inputs, function(f, i) {
+          return f.toJSON();
+        }),
+        out: jQuery.map(this.node_fields.outputs, function(f, i) {
+          return f.toJSON();
+        })
+      };
+      return res;
+    };
     NodeFieldRack.prototype.toXML = function() {
       var f, res;
       res = "\t\t<in>\n";
@@ -67,6 +81,17 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       }
       res += "\t\t</out>\n";
       return res;
+    };
+    NodeFieldRack.prototype.fromJSON = function(data) {
+      var f, node_field, _i, _len, _ref, _results;
+      _ref = data["in"];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        f = _ref[_i];
+        node_field = self.node_fields.inputs["fid-" + f.fid];
+        _results.push(node_field ? node_field.set(f.val) : void 0);
+      }
+      return _results;
     };
     NodeFieldRack.prototype.fromXML = function(data) {
       var self;

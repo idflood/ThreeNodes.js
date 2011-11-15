@@ -36,6 +36,15 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       y3 = y4;
       return ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
     };
+    NodeConnection.prototype.toJSON = function() {
+      var res;
+      res = {
+        id: this.cid,
+        from: this.from_field.fid,
+        to: this.to_field.fid
+      };
+      return res;
+    };
     NodeConnection.prototype.toXML = function() {
       return "\t\t<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>\n";
     };

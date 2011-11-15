@@ -21,7 +21,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
       self = this;
       $(".new_file").click(function(e) {
         e.preventDefault();
-        return self.trigger("new_file_clicked");
+        return self.context.commandMap.execute("ClearWorkspaceCommand");
       });
       $(".open_file").click(function(e) {
         e.preventDefault();
@@ -29,9 +29,11 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
       });
       $(".save_file").click(function(e) {
         e.preventDefault();
-        return self.trigger("save_file_clicked");
+        return self.context.commandMap.execute("SaveFileCommand");
       });
-      $("#main_file_input_open").change(self.trigger("load_local_file_input_changed"));
+      $("#main_file_input_open").change(function(e) {
+        return self.context.commandMap.execute("LoadLocalFileCommand", e);
+      });
       return $(".rebuild_shaders").click(function(e) {
         e.preventDefault();
         self.trigger("rebuild_all_shaders");
