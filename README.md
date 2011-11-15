@@ -3,6 +3,8 @@
 
 This is an attempt to make something like "vvvv" in javascript, html and webgl.
 
+Live demo: http://idflood.github.com/ThreeNodes.js/
+
 ## Key principles
 - modular
 - creating a custom "node" must be as easy as possible
