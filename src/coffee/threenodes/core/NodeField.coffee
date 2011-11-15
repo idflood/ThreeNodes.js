@@ -62,7 +62,8 @@ define [
       if @is_output == true
         @node.add_out_connection(c, this)
       c
-    remove_connection: (c) =>
+    
+    unregister_connection: (c) =>
       @node.remove_connection(c)
       ind = @connections.indexOf(c)
       if ind != -1

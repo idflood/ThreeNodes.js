@@ -16,7 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.fid = fid != null ? fid : ThreeNodes.Utils.get_uid();
       this.on_value_changed = __bind(this.on_value_changed, this);
       this.remove_connections = __bind(this.remove_connections, this);
-      this.remove_connection = __bind(this.remove_connection, this);
+      this.unregister_connection = __bind(this.unregister_connection, this);
       this.add_connection = __bind(this.add_connection, this);
       this.update_input_node = __bind(this.update_input_node, this);
       this.compute_value = __bind(this.compute_value, this);
@@ -97,7 +97,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
       return c;
     };
-    NodeField.prototype.remove_connection = function(c) {
+    NodeField.prototype.unregister_connection = function(c) {
       var ind;
       this.node.remove_connection(c);
       ind = this.connections.indexOf(c);

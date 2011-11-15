@@ -6,6 +6,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       test("Nodegraph nodes", function() {
         var ng;
         ng = app.nodegraph;
+        app.commandMap.execute("ClearWorkspaceCommand");
         ng.create_node("Base", "Number", 0, 0);
         equals(ng.nodes.length, 1, "Nodegraph has 1 node");
         ng.create_node("Base", "Number", 0, 0);

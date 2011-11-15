@@ -7,6 +7,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       this.cid = cid != null ? cid : ThreeNodes.Utils.get_uid();
       this.update_node_from = __bind(this.update_node_from, this);
       this.container = $("#graph");
+      this.to_field.remove_connections();
     }
     NodeConnection.prototype.onRegister = function() {
       this.line = false;
@@ -60,25 +61,29 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       return o1;
     };
     NodeConnection.prototype.remove = function() {
-      this.from_field.remove_connection(this);
-      this.to_field.remove_connection(this);
-      this.line.remove();
-      this.line = false;
+      this.from_field.unregister_connection(this);
+      this.to_field.unregister_connection(this);
+      if (ThreeNodes.svg && this.line) {
+        this.line.remove();
+        this.line = false;
+      }
       this.context.commandMap.execute("RemoveConnectionCommand", this);
       return false;
     };
     NodeConnection.prototype.render = function() {
       var color;
-      if (this.line && this.line.attrs) {
-        return this.line.attr({
-          path: this.get_path()
-        });
-      } else {
-        color = "#555";
-        return this.line = ThreeNodes.svg.path(this.get_path()).attr({
-          stroke: color,
-          fill: "none"
-        });
+      if (ThreeNodes.svg) {
+        if (this.line && this.line.attrs) {
+          return this.line.attr({
+            path: this.get_path()
+          });
+        } else {
+          color = "#555";
+          return this.line = ThreeNodes.svg.path(this.get_path()).attr({
+            stroke: color,
+            fill: "none"
+          });
+        }
       }
     };
     return NodeConnection;

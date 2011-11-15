@@ -10,6 +10,7 @@ define [
       
       test "Nodegraph nodes", () ->
         ng = app.nodegraph
+        app.commandMap.execute "ClearWorkspaceCommand"
         ng.create_node("Base", "Number", 0, 0)
         equals ng.nodes.length, 1, "Nodegraph has 1 node"
         ng.create_node("Base", "Number", 0, 0)

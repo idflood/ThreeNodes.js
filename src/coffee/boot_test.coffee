@@ -8,11 +8,13 @@ require [
   'order!threenodes/App',
   'tests/NodeGraphTest',
   'tests/NodeFieldTest',
+  'tests/NodeConnectionTest',
   'order!libs/jquery-1.6.4.min',
   'order!libs/underscore-min',
   'order!libs/backbone',
   "order!libs/qunit-git",
-], (App, NodeGraphTest, NodeFieldTest) ->
+], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest) ->
   app = new App()
   new NodeGraphTest(app)
   new NodeFieldTest(app)
+  new NodeConnectionTest(app)

@@ -10,6 +10,8 @@ define [
   class ThreeNodes.NodeConnection
     constructor: (@from_field, @to_field, @cid = ThreeNodes.Utils.get_uid()) ->
       @container = $("#graph")
+      # remove existing input connection since inputs only have one connection
+      @to_field.remove_connections()
     
     onRegister: () ->
       @line = false
@@ -61,18 +63,21 @@ define [
       o1
     
     remove: ->
-      @from_field.remove_connection(this)
-      @to_field.remove_connection(this)
-      @line.remove()
-      @line = false
+      @from_field.unregister_connection(this)
+      @to_field.unregister_connection(this)
+      if ThreeNodes.svg && @line
+        @line.remove()
+        @line = false
       @context.commandMap.execute "RemoveConnectionCommand", this
       false
+    
     render: ->
-      if @line && @line.attrs
-        @line.attr
-          path: @get_path()
-      else
-        color = "#555"
-        @line = ThreeNodes.svg.path(@get_path()).attr
-          stroke: color
-          fill: "none"
+      if ThreeNodes.svg
+        if @line && @line.attrs
+          @line.attr
+            path: @get_path()
+        else
+          color = "#555"
+          @line = ThreeNodes.svg.path(@get_path()).attr
+            stroke: color
+            fill: "none"
