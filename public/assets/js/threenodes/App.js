@@ -1,6 +1,7 @@
 var ThreeNodes;
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 ThreeNodes = {};
+ThreeNodes.websocket_enabled = false;
 ThreeNodes.nodes = {
   fields: {},
   types: {
