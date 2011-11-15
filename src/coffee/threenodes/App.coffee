@@ -1,5 +1,9 @@
 ThreeNodes = {}
 
+# disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
+# this makes the soundinput node not working
+ThreeNodes.websocket_enabled = false
+
 ThreeNodes.nodes =
   fields: {}
   types:
