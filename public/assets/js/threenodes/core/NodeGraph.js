@@ -22,8 +22,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       var comp, typ;
       if (this.types === false) {
         this.types = {};
-        for (comp in nodes.types) {
-          for (typ in nodes.types[comp]) {
+        for (comp in ThreeNodes.nodes.types) {
+          for (typ in ThreeNodes.nodes.types[comp]) {
             this.types[typ.toString()] = comp;
           }
         }

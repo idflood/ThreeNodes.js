@@ -35,6 +35,12 @@ define [
       for f of @node_fields.outputs
         @node_fields.outputs[f].remove_connections()
     
+    toJSON: =>
+      res = 
+        in: jQuery.map(@node_fields.inputs, (f, i) -> f.toJSON())
+        out: jQuery.map(@node_fields.outputs, (f, i) -> f.toJSON()) 
+      res
+    
     toXML: =>
       res = "\t\t<in>\n"
       for f of @node_fields.inputs
@@ -46,6 +52,12 @@ define [
         res += @node_fields.outputs[f].toXML()
       res += "\t\t</out>\n"
       res
+    
+    fromJSON: (data) =>
+      for f in data.in
+        node_field = self.node_fields.inputs["fid-#{f.fid}"]
+        if node_field
+          node_field.set(f.val)
     
     fromXML: (data) =>
       self = this

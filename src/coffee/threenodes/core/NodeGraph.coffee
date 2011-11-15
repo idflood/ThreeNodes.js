@@ -28,8 +28,8 @@ define [
     get_component_by_type: (type) =>
       if @types == false
         @types = {}
-        for comp of nodes.types
-          for typ of nodes.types[comp]
+        for comp of ThreeNodes.nodes.types
+          for typ of ThreeNodes.nodes.types[comp]
             @types[typ.toString()] = comp
       @types[type]
     

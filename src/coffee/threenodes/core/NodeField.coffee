@@ -31,6 +31,12 @@ define [
     get: () =>
       @val
     
+    toJSON : () =>
+      res =
+        fid: @fid
+        val: @get()
+      res
+    
     toXML : () =>
       "\t\t\t<field fid='#{@fid}' val='#{@get()}'/>\n"
   

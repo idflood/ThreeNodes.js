@@ -41,6 +41,13 @@ define [
       
       ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
     
+    toJSON: () ->
+      res =
+        id: @cid
+        from: @from_field.fid
+        to: @to_field.fid
+      res
+    
     toXML: () ->
       "\t\t<connection id='#{@cid}' from='#{@from_field.fid}' to='#{@to_field.fid}'/>\n"
     

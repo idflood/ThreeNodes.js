@@ -20,7 +20,7 @@ define [
       self = this
       $(".new_file").click (e) ->
         e.preventDefault()
-        self.trigger("new_file_clicked")
+        self.context.commandMap.execute("ClearWorkspaceCommand")
         
       $(".open_file").click (e) ->
         e.preventDefault()
@@ -28,9 +28,10 @@ define [
     
       $(".save_file").click (e) ->
         e.preventDefault()
-        self.trigger("save_file_clicked")
+        self.context.commandMap.execute("SaveFileCommand")
     
-      $("#main_file_input_open").change self.trigger("load_local_file_input_changed")
+      $("#main_file_input_open").change (e) ->
+        self.context.commandMap.execute("LoadLocalFileCommand", e)
     
       $(".rebuild_shaders").click (e) ->
         e.preventDefault()

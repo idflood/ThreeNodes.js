@@ -36,10 +36,13 @@ define [
   'order!threenodes/utils/AppWebsocket',
   'order!threenodes/utils/Injector',
   'order!threenodes/utils/CommandMap',
+  'order!threenodes/utils/FileHandler',
   'order!threenodes/commands/ClearWorkspaceCommand',
   'order!threenodes/commands/AddConnectionCommand',
   'order!threenodes/commands/RemoveConnectionCommand',
   'order!threenodes/commands/CreateNodeCommand',
+  'order!threenodes/commands/SaveFileCommand',
+  'order!threenodes/commands/LoadLocalFileCommand',
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   class ThreeNodes.App
     constructor: () ->
@@ -60,10 +63,13 @@ define [
       @commandMap.register "AddConnectionCommand", ThreeNodes.AddConnectionCommand
       @commandMap.register "RemoveConnectionCommand", ThreeNodes.RemoveConnectionCommand
       @commandMap.register "CreateNodeCommand", ThreeNodes.CreateNodeCommand
+      @commandMap.register "SaveFileCommand", ThreeNodes.SaveFileCommand
+      @commandMap.register "LoadLocalFileCommand", ThreeNodes.LoadLocalFileCommand
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
       @injector.mapSingleton "AppUI", AppUI
+      @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
       @nodegraph = @injector.get "NodeGraph"
       @socket = @injector.get "AppWebsocket"

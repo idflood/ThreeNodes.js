@@ -13,10 +13,13 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   class ThreeNodes.NodeBase
-    constructor: (@x, @y, @inXML = false) ->
+    constructor: (@x, @y, @inXML = false, @inJSON = false) ->
       if @inXML
         @nid = parseInt @inXML.attr("nid")
-        uid = @nid
+        ThreeNodes.uid = @nid
+      else if @inJSON
+        @nid = @inJSON.nid
+        ThreeNodes.uid = @nid
       else
         @nid = ThreeNodes.Utils.get_uid()
     
@@ -30,8 +33,10 @@ define [
       @updated = false
       @init()
       @set_fields()
-      if @inXML != false
+      if @inXML
         @rack.fromXML(@inXML)
+      else if @inJSON
+        @rack.fromJSON(@inJSON)
       @init_context_menu()
       
     typename: => String(@constructor.name)
@@ -84,6 +89,16 @@ define [
       @rack.update_inputs()
       # update node output values based on inputs
       @compute()
+    
+    toJSON: () =>
+      pos = @main_view.position()
+      res =
+        nid: @nid
+        type: @typename()
+        x: pos.left
+        y: pos.top
+        fields: @rack.toJSON()
+      res
     
     toXML: () =>
       pos = @main_view.position()
