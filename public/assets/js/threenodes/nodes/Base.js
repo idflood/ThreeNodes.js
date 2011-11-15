@@ -173,7 +173,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     Color.prototype.set_fields = function() {
       Color.__super__.set_fields.apply(this, arguments);
-      this.vec = new THREE.Color(1, 0, 0);
       this.rack.addFields({
         inputs: {
           "rgb": {

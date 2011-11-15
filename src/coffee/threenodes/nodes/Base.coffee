@@ -100,7 +100,6 @@ define [
     
     set_fields: =>
       super
-      @vec = new THREE.Color(1, 0, 0)
       @rack.addFields
         inputs:
           "rgb": {type: "Color", val: false}

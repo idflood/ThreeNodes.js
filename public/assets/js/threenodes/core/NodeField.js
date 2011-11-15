@@ -171,7 +171,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Bool.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "boolean":
           res = val;
@@ -216,7 +216,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     String.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "number":
           res = val.toString;
@@ -285,7 +285,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Vector2.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Vector2) {
@@ -304,7 +304,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Vector3.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Vector3) {
@@ -323,7 +323,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Vector4.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Vector4) {
@@ -342,7 +342,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Quaternion.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Quaternion) {
@@ -361,11 +361,25 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Color.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
+        case "number":
+          res = new THREE.Color().setRGB(val, val, val);
+          break;
         case "object":
-          if (val.constructor === THREE.Color) {
-            res = val;
+          switch (val.constructor) {
+            case THREE.Color:
+              res = val;
+              break;
+            case THREE.Vector3:
+              res = new THREE.Color().setRGB(val.x, val.y, val.z);
+          }
+          break;
+        case "boolean":
+          if (val) {
+            res = new THREE.Color(0xffffff);
+          } else {
+            res = new THREE.Color(0x000000);
           }
       }
       return res;
@@ -380,7 +394,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Object3D.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
@@ -399,7 +413,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Scene.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Scene) {
@@ -418,7 +432,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Camera.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Camera ||  val.constructor === THREE.PerspectiveCamera ||  val.constructor === THREE.OrthographicCamera) {
@@ -437,7 +451,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Mesh.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
@@ -456,7 +470,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Geometry.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
@@ -475,7 +489,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Texture.prototype.compute_value = function(val) {
       var res;
-      res = false;
+      res = this.get();
       switch ($.type(val)) {
         case "object":
           if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {

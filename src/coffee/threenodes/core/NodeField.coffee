@@ -101,7 +101,7 @@ define [
       
   class ThreeNodes.fields.types.Bool extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "boolean" then res = val
         when "number" then res = val != 0
@@ -126,7 +126,7 @@ define [
           $(this).blur()
       false
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "number" then res = val.toString
         when "string" then res = val
@@ -163,7 +163,7 @@ define [
       
   class ThreeNodes.fields.types.Vector2 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Vector2
           res = val
@@ -171,7 +171,7 @@ define [
           
   class ThreeNodes.fields.types.Vector3 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Vector3
           res = val
@@ -179,7 +179,7 @@ define [
   
   class ThreeNodes.fields.types.Vector4 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Vector4
           res = val
@@ -187,7 +187,7 @@ define [
   
   class ThreeNodes.fields.types.Quaternion extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Quaternion
           res = val
@@ -195,50 +195,58 @@ define [
       
   class ThreeNodes.fields.types.Color extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
-        when "object" then if val.constructor == THREE.Color
-          res = val
+        when "number" then res = new THREE.Color().setRGB(val, val, val)
+        when "object"
+          switch val.constructor
+            when THREE.Color then res = val
+            when THREE.Vector3 then res = new THREE.Color().setRGB(val.x, val.y, val.z)
+        when "boolean"
+          if val
+            res = new THREE.Color(0xffffff)
+          else
+            res = new THREE.Color(0x000000)
       res
    
   class ThreeNodes.fields.types.Object3D extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
           res = val
       res
   class ThreeNodes.fields.types.Scene extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Scene
           res = val
       res
   class ThreeNodes.fields.types.Camera extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
           res = val
       res
   class ThreeNodes.fields.types.Mesh extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
           res = val
       res
   class ThreeNodes.fields.types.Geometry extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
           res = val
       res
   class ThreeNodes.fields.types.Texture extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = false
+      res = @get()
       switch $.type(val)
         when "object" then if val.constructor == THREE.Texture || val instanceof THREE.Texture
           res = val
