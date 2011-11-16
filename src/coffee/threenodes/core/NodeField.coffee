@@ -34,8 +34,9 @@ define [
     toJSON : () =>
       res =
         fid: @fid
-      # help avoid "Converting circular structure to JSON" with chrome
-      if jQuery.type(@get()) != "object"
+      # help avoid cyclic value
+      val_type = jQuery.type(@get())
+      if val_type != "object" && val_type != "array"
         res.val = @get()
       res
     

@@ -4,7 +4,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
     function FileSaveTest(app) {
       module("File");
       test("JSON save", function() {
-        var c1, filehandler, json_string, n1, n2, ng, parsed_data1, _c1, _n1, _n2;
+        var c1, c2, filehandler, json_string, n1, n2, n3, ng, parsed_data1, _c1, _n1, _n2;
         ng = app.nodegraph;
         filehandler = app.injector.get("FileHandler");
         app.commandMap.execute("ClearWorkspaceCommand");
@@ -38,8 +38,21 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         app.injector.applyContext(c1);
         ng.render();
         json_string = filehandler.get_local_json();
+        parsed_data1 = JSON.parse(json_string);
         equals(parsed_data1.nodes.length, 2, "Saved 2 nodes");
-        return equals(parsed_data1.connections.length, 1, "Saved one connection");
+        equals(parsed_data1.connections.length, 1, "Saved one connection");
+        app.commandMap.execute("ClearWorkspaceCommand");
+        n1 = ng.create_node("Three", "Scene");
+        n2 = ng.create_node("Utils", "Merge");
+        n3 = ng.create_node("Three", "Mesh");
+        c1 = new ThreeNodes.NodeConnection(n2.rack.get("out", true), n1.rack.get("children"));
+        c2 = new ThreeNodes.NodeConnection(n3.rack.get("out", true), n2.rack.get("in0"));
+        app.injector.applyContext(c1);
+        app.injector.applyContext(c2);
+        ng.render();
+        json_string = filehandler.get_local_json();
+        parsed_data1 = JSON.parse(json_string);
+        return equals(parsed_data1.nodes.length, 3, "Saved 3 nodes (cyclic value)");
       });
     }
     return FileSaveTest;

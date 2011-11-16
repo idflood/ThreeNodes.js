@@ -55,11 +55,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return this.val;
     };
     NodeField.prototype.toJSON = function() {
-      var res;
+      var res, val_type;
       res = {
         fid: this.fid
       };
-      if (jQuery.type(this.get()) !== "object") {
+      val_type = jQuery.type(this.get());
+      if (val_type !== "object" && val_type !== "array") {
         res.val = this.get();
       }
       return res;

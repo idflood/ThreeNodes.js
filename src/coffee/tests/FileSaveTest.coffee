@@ -50,5 +50,22 @@ define [
         ng.render()
         
         json_string = filehandler.get_local_json()
+        parsed_data1 = JSON.parse(json_string)
         equals parsed_data1.nodes.length, 2, "Saved 2 nodes"
         equals parsed_data1.connections.length, 1, "Saved one connection"
+        
+        # test for possible circular reference in json
+        # appear when saving an object inside an array, the mesh in the merge array for this example
+        app.commandMap.execute "ClearWorkspaceCommand"
+        n1 = ng.create_node("Three", "Scene")
+        n2 = ng.create_node("Utils", "Merge")
+        n3 = ng.create_node("Three", "Mesh")
+        c1 = new ThreeNodes.NodeConnection(n2.rack.get("out", true), n1.rack.get("children"))
+        c2 = new ThreeNodes.NodeConnection(n3.rack.get("out", true), n2.rack.get("in0"))
+        app.injector.applyContext(c1)
+        app.injector.applyContext(c2)
+        ng.render()
+        
+        json_string = filehandler.get_local_json()
+        parsed_data1 = JSON.parse(json_string)
+        equals parsed_data1.nodes.length, 3, "Saved 3 nodes (cyclic value)"
