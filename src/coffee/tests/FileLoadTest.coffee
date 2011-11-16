@@ -55,3 +55,22 @@ define [
         equals ng.node_connections.length, 2, "2 connections has been created"
         equals ng.nodes[1].v_out.get(), 0.7, "node2.input has been set"
         equals ng.nodes[2].v_out.get(), 12, "node3.input has been set"
+        
+        # possible issue with mesh (mesh.geometry undefined)
+        app.commandMap.execute "ClearWorkspaceCommand"
+        n1 = ng.create_node("Three", "Scene")
+        n2 = ng.create_node("Utils", "Merge")
+        n3 = ng.create_node("Three", "Mesh")
+        c1 = new ThreeNodes.NodeConnection(n2.rack.get("out", true), n1.rack.get("children"))
+        c2 = new ThreeNodes.NodeConnection(n3.rack.get("out", true), n2.rack.get("in0"))
+        app.injector.applyContext(c1)
+        app.injector.applyContext(c2)
+        ng.render()
+        
+        json_string2 = filehandler.get_local_json()
+        app.commandMap.execute "ClearWorkspaceCommand"
+        
+        filehandler.load_from_json_data(json_string2)
+        ng.render()
+        equals ng.nodes.length, 3, "The 3 nodes are created in the nodegraph"
+        equals ng.node_connections.length, 2, "2 connections has been created"

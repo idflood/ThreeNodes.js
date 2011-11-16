@@ -69,3 +69,5 @@ define [
         json_string = filehandler.get_local_json()
         parsed_data1 = JSON.parse(json_string)
         equals parsed_data1.nodes.length, 3, "Saved 3 nodes (cyclic value)"
+        
+        
