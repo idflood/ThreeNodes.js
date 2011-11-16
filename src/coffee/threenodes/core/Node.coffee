@@ -13,7 +13,7 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   class ThreeNodes.NodeBase
-    constructor: (@x, @y, @inXML = false, @inJSON = false) ->
+    constructor: (@x = 0, @y = 0, @inXML = false, @inJSON = false) ->
       if @inXML
         @nid = parseInt @inXML.attr("nid")
         ThreeNodes.uid = @nid

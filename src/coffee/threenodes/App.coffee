@@ -45,7 +45,7 @@ define [
   'order!threenodes/commands/LoadLocalFileCommand',
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   class ThreeNodes.App
-    constructor: () ->
+    constructor: (@testing_mode = false) ->
       console.log "ThreeNodes app init..."
       @current_scene = false
       @current_camera = false
@@ -70,11 +70,13 @@ define [
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
       @injector.mapSingleton "AppUI", AppUI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
+      @injector.mapSingleton "ThreeNodes.WebglBase", ThreeNodes.WebglBase
       
       @nodegraph = @injector.get "NodeGraph"
       @socket = @injector.get "AppWebsocket"
+      @webgl = @injector.get "ThreeNodes.WebglBase"
       
-      if $("#qunit-tests").length == 0
+      if @testing_mode == false
         @init_ui()
     
     init_ui: () =>

@@ -15,7 +15,7 @@ define [
         
         # test with two number nodes connected
         n1 = ng.create_node("Base", "Number", 363, 113)
-        n2 = ng.create_node("Base", "Number", 0, 0)
+        n2 = ng.create_node("Base", "Number")
         c1 = new ThreeNodes.NodeConnection(n1.v_out, n2.v_in)
         app.injector.applyContext(c1)
         n1.v_in.set 4
@@ -34,9 +34,24 @@ define [
         equals ng.nodes[1].v_out.get(), 4, "The second node has been connected and the output is 4"
         
         app.commandMap.execute "ClearWorkspaceCommand"
-        # n1 is a vector3(1, 2, 3), connected to 'add' and 'mult' nodes, with connection to resulting float nodes
-        json_string2 = '{"uid":38,"nodes":[{"nid":1,"type":"Vector3","x":448,"y":217,"fields":{"in":[{"fid":2,"val":false},{"fid":3,"val":1},{"fid":4,"val":2},{"fid":5,"val":3}],"out":[{"fid":6,"val":{"x":1,"y":2,"z":3}},{"fid":7,"val":1},{"fid":8,"val":2},{"fid":9,"val":3}]}},{"nid":10,"type":"Add","x":653,"y":184,"fields":{"in":[{"fid":11,"val":1},{"fid":13,"val":2}],"out":[{"fid":12,"val":3}]}},{"nid":16,"type":"Number","x":784,"y":248,"fields":{"in":[{"fid":17,"val":3}],"out":[{"fid":18,"val":3}]}},{"nid":20,"type":"Add","x":959,"y":297,"fields":{"in":[{"fid":21,"val":3},{"fid":23,"val":3}],"out":[{"fid":22,"val":6}]}},{"nid":26,"type":"Number","x":1060,"y":309,"fields":{"in":[{"fid":27,"val":6}],"out":[{"fid":28,"val":6}]}},{"nid":30,"type":"Mult","x":622,"y":383,"fields":{"in":[{"fid":31,"val":3},{"fid":33,"val":0.5}],"out":[{"fid":32,"val":1.5}]}},{"nid":35,"type":"Number","x":833,"y":454,"fields":{"in":[{"fid":36,"val":1.5}],"out":[{"fid":37,"val":1.5}]}}],"connections":[{"id":14,"from":7,"to":11},{"id":15,"from":8,"to":13},{"id":19,"from":12,"to":17},{"id":24,"from":9,"to":23},{"id":25,"from":18,"to":21},{"id":29,"from":22,"to":27},{"id":34,"from":9,"to":31},{"id":38,"from":32,"to":36}]}'
+        # test with a vector3 object instead of only float
+        n1 = ng.create_node("Base", "Vector3")
+        n2 = ng.create_node("Base", "Number")
+        n3 = ng.create_node("Base", "Number")
+        c1 = new ThreeNodes.NodeConnection(n1.rack.get("x", true), n2.v_in)
+        c2 = new ThreeNodes.NodeConnection(n1.rack.get("y", true), n3.v_in)
+        app.injector.applyContext(c1)
+        app.injector.applyContext(c2)
+        n1.rack.get("x").set(0.7)
+        n1.rack.get("y").set(12)
+        ng.render()
+        
+        json_string2 = filehandler.get_local_json()
+        app.commandMap.execute "ClearWorkspaceCommand"
+        
         filehandler.load_from_json_data(json_string2)
         ng.render()
-        equals ng.nodes.length, 7, "The 7 nodes are created in the nodegraph"
-        equals ng.node_connections.length, 8, "8 connections has been created"
+        equals ng.nodes.length, 3, "The 3 nodes are created in the nodegraph"
+        equals ng.node_connections.length, 2, "2 connections has been created"
+        equals ng.nodes[1].v_out.get(), 0.7, "node2.input has been set"
+        equals ng.nodes[2].v_out.get(), 12, "node3.input has been set"

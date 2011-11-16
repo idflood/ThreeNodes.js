@@ -20,7 +20,7 @@ define [
     
     onRegister: () =>
       injector = @context.injector
-      injector.mapSingleton "ThreeNodes.WebglBase", ThreeNodes.WebglBase
+      
       injector.mapSingleton "ThreeNodes.AppSidebar", ThreeNodes.AppSidebar
       @webgl = injector.get "ThreeNodes.WebglBase"
       @sidebar = injector.get "ThreeNodes.AppSidebar"

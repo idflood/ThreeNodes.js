@@ -15,6 +15,7 @@ define [
   ThreeNodes.Webgl = {}
   class ThreeNodes.WebglBase
     constructor: () ->
+      console.log "webgl init..."
       @current_scene = new THREE.Scene()
       @current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
       @current_renderer = new THREE.WebGLRenderer

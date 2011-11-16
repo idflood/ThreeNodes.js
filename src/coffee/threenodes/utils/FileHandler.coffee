@@ -19,7 +19,7 @@ define [
         uid: ThreeNodes.uid
         nodes: jQuery.map(nodegraph.nodes, (n, i) -> n.toJSON())
         connections: jQuery.map(nodegraph.node_connections, (c, i) -> c.toJSON())
-      
+      console.log res
       JSON.stringify(res)
     
     get_local_xml: () =>

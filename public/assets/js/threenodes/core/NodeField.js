@@ -57,9 +57,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.toJSON = function() {
       var res;
       res = {
-        fid: this.fid,
-        val: this.get()
+        fid: this.fid
       };
+      if (jQuery.type(this.get()) !== "object") {
+        res.val = this.get();
+      }
       return res;
     };
     NodeField.prototype.toXML = function() {

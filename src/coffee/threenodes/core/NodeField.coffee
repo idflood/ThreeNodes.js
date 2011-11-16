@@ -34,7 +34,9 @@ define [
     toJSON : () =>
       res =
         fid: @fid
-        val: @get()
+      # help avoid "Converting circular structure to JSON" with chrome
+      if jQuery.type(@get()) != "object"
+        res.val = @get()
       res
     
     toXML : () =>

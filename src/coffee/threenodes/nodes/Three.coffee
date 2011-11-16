@@ -200,11 +200,13 @@ define [
           "out": {type: "Any", val: @ob}
       @apply_size()
       @rack.get("camera").val.position.z = 1000
-      @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
-      @win.document.body.appendChild( @ob.domElement );
-      $("*", @win.document).css
-        padding: 0
-        margin: 0
+      @win = false
+      if @context.testing_mode == false
+        @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
+        @win.document.body.appendChild( @ob.domElement );
+        $("*", @win.document).css
+          padding: 0
+          margin: 0
       @old_bg = false
       @apply_bg_color()
     

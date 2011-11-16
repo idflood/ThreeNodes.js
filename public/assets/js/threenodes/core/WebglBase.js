@@ -3,7 +3,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
   ThreeNodes.Webgl = {};
   return ThreeNodes.WebglBase = (function() {
     function WebglBase() {
-      this.rebuild_all_shaders = __bind(this.rebuild_all_shaders, this);      this.current_scene = new THREE.Scene();
+      this.rebuild_all_shaders = __bind(this.rebuild_all_shaders, this);      console.log("webgl init...");
+      this.current_scene = new THREE.Scene();
       this.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
       this.current_renderer = new THREE.WebGLRenderer({
         clearColor: 0x000000

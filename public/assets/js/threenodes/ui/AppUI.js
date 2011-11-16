@@ -15,7 +15,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     AppUI.prototype.onRegister = function() {
       var injector;
       injector = this.context.injector;
-      injector.mapSingleton("ThreeNodes.WebglBase", ThreeNodes.WebglBase);
       injector.mapSingleton("ThreeNodes.AppSidebar", ThreeNodes.AppSidebar);
       this.webgl = injector.get("ThreeNodes.WebglBase");
       this.sidebar = injector.get("ThreeNodes.AppSidebar");

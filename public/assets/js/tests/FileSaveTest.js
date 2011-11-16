@@ -4,7 +4,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
     function FileSaveTest(app) {
       module("File");
       test("JSON save", function() {
-        var c1, filehandler, json_string1, n1, n2, ng, parsed_data1, _c1, _n1, _n2;
+        var c1, filehandler, json_string, n1, n2, ng, parsed_data1, _c1, _n1, _n2;
         ng = app.nodegraph;
         filehandler = app.injector.get("FileHandler");
         app.commandMap.execute("ClearWorkspaceCommand");
@@ -14,8 +14,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         app.injector.applyContext(c1);
         n1.v_in.set(4);
         ng.render();
-        json_string1 = filehandler.get_local_json();
-        parsed_data1 = JSON.parse(json_string1);
+        json_string = filehandler.get_local_json();
+        parsed_data1 = JSON.parse(json_string);
         equals(parsed_data1.uid, 7, "Saved the last uid");
         equals(parsed_data1.nodes.length, 2, "Saved 2 nodes");
         equals(parsed_data1.connections.length, 1, "Saved one connection");
@@ -30,7 +30,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         _c1 = parsed_data1.connections[0];
         equals(_c1.id, c1.cid, "Connection1.cid saved");
         equals(_c1.from, c1.from_field.fid, "Connection1.from_field saved");
-        return equals(_c1.to, c1.to_field.fid, "Connection1.to_field saved");
+        equals(_c1.to, c1.to_field.fid, "Connection1.to_field saved");
+        app.commandMap.execute("ClearWorkspaceCommand");
+        n1 = ng.create_node("Three", "Scene");
+        n2 = ng.create_node("Three", "WebGLRenderer");
+        c1 = new ThreeNodes.NodeConnection(n1.rack.get("out", true), n2.rack.get("scene"));
+        app.injector.applyContext(c1);
+        ng.render();
+        json_string = filehandler.get_local_json();
+        equals(parsed_data1.nodes.length, 2, "Saved 2 nodes");
+        return equals(parsed_data1.connections.length, 1, "Saved one connection");
       });
     }
     return FileSaveTest;

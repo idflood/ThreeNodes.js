@@ -10,8 +10,8 @@ ThreeNodes.field_click_1 = false;
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeConnection', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   ThreeNodes.NodeBase = (function() {
     function NodeBase(x, y, inXML, inJSON) {
-      this.x = x;
-      this.y = y;
+      this.x = x != null ? x : 0;
+      this.y = y != null ? y : 0;
       this.inXML = inXML != null ? inXML : false;
       this.inJSON = inJSON != null ? inJSON : false;
       this.init = __bind(this.init, this);

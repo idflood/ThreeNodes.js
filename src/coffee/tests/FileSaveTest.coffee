@@ -21,9 +21,9 @@ define [
         n1.v_in.set 4
         ng.render()
         
-        json_string1 = filehandler.get_local_json()
+        json_string = filehandler.get_local_json()
         
-        parsed_data1 = JSON.parse(json_string1)
+        parsed_data1 = JSON.parse(json_string)
         equals parsed_data1.uid, 7, "Saved the last uid"
         equals parsed_data1.nodes.length, 2, "Saved 2 nodes"
         equals parsed_data1.connections.length, 1, "Saved one connection"
@@ -40,3 +40,15 @@ define [
         equals _c1.id, c1.cid, "Connection1.cid saved"
         equals _c1.from, c1.from_field.fid, "Connection1.from_field saved"
         equals _c1.to, c1.to_field.fid, "Connection1.to_field saved"
+        
+        # save a scene connected to webglrenderer
+        app.commandMap.execute "ClearWorkspaceCommand"
+        n1 = ng.create_node("Three", "Scene")
+        n2 = ng.create_node("Three", "WebGLRenderer")
+        c1 = new ThreeNodes.NodeConnection(n1.rack.get("out", true), n2.rack.get("scene"))
+        app.injector.applyContext(c1)
+        ng.render()
+        
+        json_string = filehandler.get_local_json()
+        equals parsed_data1.nodes.length, 2, "Saved 2 nodes"
+        equals parsed_data1.connections.length, 1, "Saved one connection"

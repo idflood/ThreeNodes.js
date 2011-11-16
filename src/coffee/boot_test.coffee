@@ -16,7 +16,7 @@ require [
   'order!libs/backbone',
   "order!libs/qunit-git",
 ], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, FileSaveTest, FileLoadTest) ->
-  app = new App()
+  app = new App(true)
   new NodeGraphTest(app)
   new NodeFieldTest(app)
   new NodeConnectionTest(app)
