@@ -10,14 +10,15 @@ define(['jQuery', 'Underscore', 'Backbone', "libs/BlobBuilder.min", "libs/FileSa
       this.save_local_file = __bind(this.save_local_file, this);
     }
     FileHandler.prototype.save_local_file = function() {
-      var bb, fileSaver;
-      bb = this.get_local_json();
+      var bb, fileSaver, result_string;
+      bb = new BlobBuilder();
+      result_string = this.get_local_json();
+      bb.append(result_string);
       return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json");
     };
     FileHandler.prototype.get_local_json = function() {
-      var bb, nodegraph, res;
+      var nodegraph, res;
       nodegraph = this.context.injector.get("NodeGraph");
-      bb = new BlobBuilder();
       res = {
         uid: ThreeNodes.uid,
         nodes: jQuery.map(nodegraph.nodes, function(n, i) {
@@ -27,32 +28,31 @@ define(['jQuery', 'Underscore', 'Backbone', "libs/BlobBuilder.min", "libs/FileSa
           return c.toJSON();
         })
       };
-      bb.append(JSON.stringify(res));
-      return bb;
+      return JSON.stringify(res);
     };
     FileHandler.prototype.get_local_xml = function() {
-      var bb, c, node, nodegraph, _i, _j, _len, _len2, _ref, _ref2;
+      var c, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
-      bb = new BlobBuilder();
-      bb.append('<?xml version="1.0" encoding="UTF-8"?>\n');
-      bb.append("<app>\n");
-      bb.append("\t<uid last='" + ThreeNodes.uid + "' />\n");
-      bb.append("\t<nodes>\n");
+      res = "";
+      res += '<?xml version="1.0" encoding="UTF-8"?>\n';
+      res += "<app>\n";
+      res += "\t<uid last='" + ThreeNodes.uid + "' />\n";
+      res += "\t<nodes>\n";
       _ref = nodegraph.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        bb.append(node.toXML());
+        res += node.toXML();
       }
-      bb.append("\t</nodes>\n");
-      bb.append("\t<connections>\n");
+      res += "\t</nodes>\n";
+      res += "\t<connections>\n";
       _ref2 = nodegraph.node_connections;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         c = _ref2[_j];
-        bb.append(c.toXML());
+        res += c.toXML();
       }
-      bb.append("\t</connections>\n");
-      bb.append("</app>");
-      return bb;
+      res += "\t</connections>\n";
+      res += "</app>";
+      return res;
     };
     FileHandler.prototype.load_from_json_data = function(txt) {
       var c, component, connection, from, loaded_data, n, node, nodegraph, to, _i, _j, _len, _len2, _ref, _ref2;

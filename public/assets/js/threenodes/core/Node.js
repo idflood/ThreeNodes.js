@@ -121,13 +121,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.compute();
     };
     NodeBase.prototype.toJSON = function() {
-      var pos, res;
-      pos = this.main_view.position();
+      var res;
       res = {
         nid: this.nid,
         type: this.typename(),
-        x: pos.left,
-        y: pos.top,
+        x: this.x,
+        y: this.y,
         fields: this.rack.toJSON()
       };
       return res;
@@ -222,7 +221,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.render_connections();
         },
         stop: function() {
-          return self.render_connections();
+          var pos;
+          self.render_connections();
+          pos = self.main_view.position();
+          self.x = pos.left;
+          return self.y = pos.top;
         }
       });
       $(".head", this.main_view).dblclick(function(e) {

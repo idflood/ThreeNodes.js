@@ -8,40 +8,40 @@ define [
 ], ($, _, Backbone) ->
   class ThreeNodes.FileHandler
     save_local_file: () =>
-      bb = @get_local_json()
+      bb = new BlobBuilder()
+      result_string = @get_local_json()
+      bb.append(result_string)
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json")
     
     get_local_json: () =>
       nodegraph = @context.injector.get("NodeGraph")
-      bb = new BlobBuilder()
       res = 
         uid: ThreeNodes.uid
         nodes: jQuery.map(nodegraph.nodes, (n, i) -> n.toJSON())
         connections: jQuery.map(nodegraph.node_connections, (c, i) -> c.toJSON())
       
-      bb.append(JSON.stringify(res))
-      bb
+      JSON.stringify(res)
     
     get_local_xml: () =>
       nodegraph = @context.injector.get("NodeGraph")
-      bb = new BlobBuilder()
-      bb.append('<?xml version="1.0" encoding="UTF-8"?>\n')
-      bb.append("<app>\n")
+      res = ""
+      res += '<?xml version="1.0" encoding="UTF-8"?>\n'
+      res += ("<app>\n")
     
-      bb.append("\t<uid last='#{ThreeNodes.uid}' />\n")
+      res += "\t<uid last='#{ThreeNodes.uid}' />\n"
     
-      bb.append("\t<nodes>\n")
+      res += "\t<nodes>\n"
       for node in nodegraph.nodes
-        bb.append(node.toXML())
-      bb.append("\t</nodes>\n")
+        res += node.toXML()
+      res += "\t</nodes>\n"
       
-      bb.append("\t<connections>\n")
+      res += "\t<connections>\n"
       for c in nodegraph.node_connections
-        bb.append(c.toXML())
-      bb.append("\t</connections>\n")
+        res += c.toXML()
+      res += "\t</connections>\n"
       
-      bb.append("</app>")
-      bb
+      res += "</app>"
+      res
     
     load_from_json_data: (txt) =>
       nodegraph = @context.injector.get("NodeGraph")

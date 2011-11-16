@@ -93,12 +93,11 @@ define [
       @compute()
     
     toJSON: () =>
-      pos = @main_view.position()
       res =
         nid: @nid
         type: @typename()
-        x: pos.left
-        y: pos.top
+        x: @x
+        y: @y
         fields: @rack.toJSON()
       res
     
@@ -170,6 +169,9 @@ define [
           self.render_connections()
         stop: () ->
           self.render_connections()
+          pos = self.main_view.position()
+          self.x = pos.left
+          self.y = pos.top
       $(".head", @main_view).dblclick (e) ->
         $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
           self.render_connections()
