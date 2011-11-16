@@ -24,7 +24,6 @@ define [
         json_string1 = filehandler.get_local_json()
         
         parsed_data1 = JSON.parse(json_string1)
-        console.log(parsed_data1)
         equals parsed_data1.uid, 7, "Saved the last uid"
         equals parsed_data1.nodes.length, 2, "Saved 2 nodes"
         equals parsed_data1.connections.length, 1, "Saved one connection"
@@ -39,5 +38,5 @@ define [
         
         _c1 = parsed_data1.connections[0]
         equals _c1.id, c1.cid, "Connection1.cid saved"
-        equals _c1.from, c1.from_field, "Connection1.from_field saved"
-        equals _c1.to, c1.to_field, "Connection1.to_field saved"
+        equals _c1.from, c1.from_field.fid, "Connection1.from_field saved"
+        equals _c1.to, c1.to_field.fid, "Connection1.to_field saved"

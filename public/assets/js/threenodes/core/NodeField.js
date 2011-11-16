@@ -115,7 +115,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
     };
     NodeField.prototype.remove_connections = function() {
-      console.log("removing connections");
       while (this.connections.length > 0) {
         this.connections[0].remove();
       }

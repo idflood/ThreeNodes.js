@@ -46,7 +46,6 @@ define [
     load_from_json_data: (txt) =>
       nodegraph = @context.injector.get("NodeGraph")
       loaded_data = JSON.parse(txt)
-      console.log loaded_data
       for node in loaded_data.nodes
         component = nodegraph.get_component_by_type(node.type)
         n = nodegraph.create_node(component, node.type, node.x, node.y, false, node)

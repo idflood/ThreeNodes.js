@@ -77,7 +77,6 @@ define [
       
     # called on shift click on a field / remove all connections
     remove_connections: () =>
-      console.log "removing connections"
       @connections[0].remove() while @connections.length > 0
       true
       

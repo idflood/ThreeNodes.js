@@ -58,7 +58,6 @@ define(['jQuery', 'Underscore', 'Backbone', "libs/BlobBuilder.min", "libs/FileSa
       var c, component, connection, from, loaded_data, n, node, nodegraph, to, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
       loaded_data = JSON.parse(txt);
-      console.log(loaded_data);
       _ref = loaded_data.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
