@@ -5,10 +5,12 @@ require.config({
     Backbone: 'loaders/backbone-loader'
   }
 });
-require(['order!threenodes/App', 'tests/NodeGraphTest', 'tests/NodeFieldTest', 'tests/NodeConnectionTest', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone', "order!libs/qunit-git"], function(App, NodeGraphTest, NodeFieldTest, NodeConnectionTest) {
+require(['order!threenodes/App', 'tests/NodeGraphTest', 'tests/NodeFieldTest', 'tests/NodeConnectionTest', 'tests/FileSaveTest', 'tests/FileLoadTest', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone', "order!libs/qunit-git"], function(App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, FileSaveTest, FileLoadTest) {
   var app;
-  app = new App();
+  app = new App(true);
   new NodeGraphTest(app);
   new NodeFieldTest(app);
-  return new NodeConnectionTest(app);
+  new NodeConnectionTest(app);
+  new FileSaveTest(app);
+  return new FileLoadTest(app);
 });

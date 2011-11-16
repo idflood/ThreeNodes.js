@@ -28,8 +28,10 @@ ThreeNodes.flash_sound_value = {
 };
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/AddConnectionCommand', 'order!threenodes/commands/RemoveConnectionCommand', 'order!threenodes/commands/CreateNodeCommand', 'order!threenodes/commands/SaveFileCommand', 'order!threenodes/commands/LoadLocalFileCommand'], function($, _, Backbone, NodeGraph, AppUI) {
   return ThreeNodes.App = (function() {
-    function App() {
-      this.init_ui = __bind(this.init_ui, this);      console.log("ThreeNodes app init...");
+    function App(testing_mode) {
+      this.testing_mode = testing_mode != null ? testing_mode : false;
+      this.init_ui = __bind(this.init_ui, this);
+      console.log("ThreeNodes app init...");
       this.current_scene = false;
       this.current_camera = false;
       this.current_renderer = false;
@@ -49,9 +51,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);
       this.injector.mapSingleton("AppUI", AppUI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
+      this.injector.mapSingleton("ThreeNodes.WebglBase", ThreeNodes.WebglBase);
       this.nodegraph = this.injector.get("NodeGraph");
       this.socket = this.injector.get("AppWebsocket");
-      if ($("#qunit-tests").length === 0) {
+      this.webgl = this.injector.get("ThreeNodes.WebglBase");
+      if (this.testing_mode === false) {
         this.init_ui();
       }
     }

@@ -10,8 +10,8 @@ ThreeNodes.field_click_1 = false;
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeConnection', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   ThreeNodes.NodeBase = (function() {
     function NodeBase(x, y, inXML, inJSON) {
-      this.x = x;
-      this.y = y;
+      this.x = x != null ? x : 0;
+      this.y = y != null ? y : 0;
       this.inXML = inXML != null ? inXML : false;
       this.inJSON = inJSON != null ? inJSON : false;
       this.init = __bind(this.init, this);
@@ -121,13 +121,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.compute();
     };
     NodeBase.prototype.toJSON = function() {
-      var pos, res;
-      pos = this.main_view.position();
+      var res;
       res = {
         nid: this.nid,
         type: this.typename(),
-        x: pos.left,
-        y: pos.top,
+        x: this.x,
+        y: this.y,
         fields: this.rack.toJSON()
       };
       return res;
@@ -222,7 +221,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.render_connections();
         },
         stop: function() {
-          return self.render_connections();
+          var pos;
+          self.render_connections();
+          pos = self.main_view.position();
+          self.x = pos.left;
+          return self.y = pos.top;
         }
       });
       $(".head", this.main_view).dblclick(function(e) {

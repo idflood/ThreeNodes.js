@@ -57,9 +57,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.toJSON = function() {
       var res;
       res = {
-        fid: this.fid,
-        val: this.get()
+        fid: this.fid
       };
+      if (jQuery.type(this.get()) !== "object") {
+        res.val = this.get();
+      }
       return res;
     };
     NodeField.prototype.toXML = function() {
@@ -115,7 +117,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
     };
     NodeField.prototype.remove_connections = function() {
-      console.log("removing connections");
       while (this.connections.length > 0) {
         this.connections[0].remove();
       }

@@ -316,12 +316,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       this.apply_size();
       this.rack.get("camera").val.position.z = 1000;
-      this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false");
-      this.win.document.body.appendChild(this.ob.domElement);
-      $("*", this.win.document).css({
-        padding: 0,
-        margin: 0
-      });
+      this.win = false;
+      if (this.context.testing_mode === false) {
+        this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false");
+        this.win.document.body.appendChild(this.ob.domElement);
+        $("*", this.win.document).css({
+          padding: 0,
+          margin: 0
+        });
+      }
       this.old_bg = false;
       return this.apply_bg_color();
     };
