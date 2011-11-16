@@ -84,11 +84,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
     };
     NodeFieldRack.prototype.fromJSON = function(data) {
       var f, node_field, _i, _len, _ref, _results;
-      _ref = data["in"];
+      console.log(data);
+      _ref = data.fields["in"];
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
-        node_field = self.node_fields.inputs["fid-" + f.fid];
+        node_field = this.node_fields.inputs["fid-" + f.fid];
+        console.log(node_field);
         _results.push(node_field ? node_field.set(f.val) : void 0);
       }
       return _results;

@@ -8,12 +8,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       this.node_connections = [];
       this.types = false;
     }
-    NodeGraph.prototype.create_node = function(component, type, x, y, inXML) {
+    NodeGraph.prototype.create_node = function(component, type, x, y, inXML, inJSON) {
       var n;
       if (inXML == null) {
         inXML = false;
       }
-      n = new ThreeNodes.nodes.types[component][type](x, y, inXML);
+      if (inJSON == null) {
+        inJSON = false;
+      }
+      n = new ThreeNodes.nodes.types[component][type](x, y, inXML, inJSON);
       this.context.injector.applyContext(n);
       this.nodes.push(n);
       return n;

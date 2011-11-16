@@ -33,10 +33,12 @@ define [
       @updated = false
       @init()
       @set_fields()
+      
       if @inXML
         @rack.fromXML(@inXML)
       else if @inJSON
         @rack.fromJSON(@inJSON)
+      
       @init_context_menu()
       
     typename: => String(@constructor.name)

@@ -19,8 +19,8 @@ define [
       @node_connections = []
       @types = false
     
-    create_node: (component, type, x, y, inXML = false) =>
-      n = new ThreeNodes.nodes.types[component][type](x, y, inXML)
+    create_node: (component, type, x, y, inXML = false, inJSON = false) =>
+      n = new ThreeNodes.nodes.types[component][type](x, y, inXML, inJSON)
       @context.injector.applyContext(n)
       @nodes.push(n)
       n

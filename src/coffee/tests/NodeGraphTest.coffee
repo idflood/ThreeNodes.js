@@ -17,3 +17,4 @@ define [
         equals ng.nodes.length, 2, "Nodegraph has 2 nodes"
         app.commandMap.execute "ClearWorkspaceCommand"
         equals ng.nodes.length, 0, "Nodegraph has 0 nodes"
+        equals ThreeNodes.uid, 0, "ThreeNodes.uid has been reset to 0"

@@ -54,8 +54,10 @@ define [
       res
     
     fromJSON: (data) =>
-      for f in data.in
-        node_field = self.node_fields.inputs["fid-#{f.fid}"]
+      console.log data
+      for f in data.fields.in
+        node_field = @node_fields.inputs["fid-#{f.fid}"]
+        console.log node_field
         if node_field
           node_field.set(f.val)
     
