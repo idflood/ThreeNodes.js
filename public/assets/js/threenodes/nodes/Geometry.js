@@ -92,7 +92,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return CubeGeometry;
   })();
-  return ThreeNodes.nodes.types.Geometry.SphereGeometry = (function() {
+  ThreeNodes.nodes.types.Geometry.SphereGeometry = (function() {
     __extends(SphereGeometry, ThreeNodes.NodeBase);
     function SphereGeometry() {
       this.compute = __bind(this.compute, this);
@@ -132,6 +132,93 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.ob);
     };
     return SphereGeometry;
+  })();
+  ThreeNodes.nodes.types.Geometry.TorusGeometry = (function() {
+    __extends(TorusGeometry, ThreeNodes.NodeBase);
+    function TorusGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      TorusGeometry.__super__.constructor.apply(this, arguments);
+    }
+    TorusGeometry.prototype.set_fields = function() {
+      TorusGeometry.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2);
+      this.rack.addFields({
+        inputs: {
+          "radius": 100,
+          "tube": 40,
+          "segmentsR": 8,
+          "segmentsT": 6,
+          "arc": Math.PI * 2
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cache_array();
+    };
+    TorusGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get()];
+    };
+    TorusGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
+        this.ob = new THREE.TorusGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get());
+        this.cached = new_cache;
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.set("out", this.ob);
+    };
+    return TorusGeometry;
+  })();
+  return ThreeNodes.nodes.types.Geometry.CylinderGeometry = (function() {
+    __extends(CylinderGeometry, ThreeNodes.NodeBase);
+    function CylinderGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      CylinderGeometry.__super__.constructor.apply(this, arguments);
+    }
+    CylinderGeometry.prototype.set_fields = function() {
+      CylinderGeometry.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false);
+      this.rack.addFields({
+        inputs: {
+          "radiusTop": 100,
+          "radiusBottom": 100,
+          "height": 20,
+          "segmentsRadius": 30,
+          "segmentsHeight": 1,
+          "openEnded": false
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cache_array();
+    };
+    CylinderGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("radiusTop").get(), this.rack.get("radiusBottom").get(), this.rack.get("height").get(), this.rack.get("segmentsRadius").get(), this.rack.get("segmentsHeight").get(), this.rack.get("openEnded").get()];
+    };
+    CylinderGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
+        this.ob = new THREE.CylinderGeometry(this.rack.get("radiusTop").get(), this.rack.get("radiusBottom").get(), this.rack.get("height").get(), this.rack.get("segmentsRadius").get(), this.rack.get("segmentsHeight").get(), this.rack.get("openEnded").get());
+        this.cached = new_cache;
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.set("out", this.ob);
+    };
+    return CylinderGeometry;
   })();
 });
 /*

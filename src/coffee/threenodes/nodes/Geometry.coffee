@@ -64,8 +64,6 @@ define [
     set_fields: =>
       super
       @ob = new THREE.SphereGeometry(100, 20, 20)
-      
-      #@value = 0
       @rack.addFields
         inputs:
           "radius": 100
@@ -82,6 +80,73 @@ define [
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.SphereGeometry(@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
+        @cached = new_cache
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.Geometry.TorusGeometry extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2)
+      @rack.addFields
+        inputs:
+          "radius": 100
+          "tube": 40
+          "segmentsR": 8
+          "segmentsT": 6
+          "arc": Math.PI * 2
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @cached = @get_cache_array()
+    
+    get_cache_array: =>
+      [
+        @rack.get("radius").get(), @rack.get("tube").get(), @rack.get("segmentsR").get(), 
+        @rack.get("segmentsT").get(), @rack.get("arc").get()
+      ]
+  
+    compute: =>
+      new_cache = @get_cache_array()
+      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        @ob = new THREE.TorusGeometry(
+          @rack.get("radius").get(), @rack.get("tube").get(), @rack.get("segmentsR").get(), 
+          @rack.get("segmentsT").get(), @rack.get("arc").get()
+        )
+        @cached = new_cache
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.Geometry.CylinderGeometry extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false)
+      
+      #@value = 0
+      @rack.addFields
+        inputs:
+          "radiusTop": 100
+          "radiusBottom": 100
+          "height": 20
+          "segmentsRadius": 30
+          "segmentsHeight": 1
+          "openEnded": false
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @cached = @get_cache_array()
+    
+    get_cache_array: =>
+      [
+        @rack.get("radiusTop").get(), @rack.get("radiusBottom").get(), @rack.get("height").get(), 
+        @rack.get("segmentsRadius").get(), @rack.get("segmentsHeight").get(), @rack.get("openEnded").get()
+      ]
+  
+    compute: =>
+      new_cache = @get_cache_array()
+      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        @ob = new THREE.CylinderGeometry(
+          @rack.get("radiusTop").get(), @rack.get("radiusBottom").get(), @rack.get("height").get(), 
+          @rack.get("segmentsRadius").get(), @rack.get("segmentsHeight").get(), @rack.get("openEnded").get()
+        )
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
