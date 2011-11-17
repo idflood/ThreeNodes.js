@@ -59,8 +59,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         child = _ref[_i];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child) {
-          console.log("object remove child");
-          console.log(this.ob);
           this.ob.removeChild(child);
         }
       }
@@ -68,8 +66,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         child = childs_in[_j];
         ind = this.ob.children.indexOf(child);
         if (ind === -1) {
-          console.log("object add child");
-          console.log(this.ob);
           this.ob.addChild(child);
         }
       }

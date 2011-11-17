@@ -36,16 +36,16 @@ define [
       for child in @ob.children
         ind = childs_in.indexOf(child)
         if child && ind == -1 && child
-          console.log "object remove child"
-          console.log @ob
+          #console.log "object remove child"
+          #console.log @ob
           @ob.removeChild(child)
       
       #add new childs
       for child in childs_in
         ind = @ob.children.indexOf(child)
         if ind == -1
-          console.log "object add child"
-          console.log @ob
+          #console.log "object add child"
+          #console.log @ob
           @ob.addChild(child)
       
       @rack.set("out", @ob)
