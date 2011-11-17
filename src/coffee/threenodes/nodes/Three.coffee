@@ -32,6 +32,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
       childs_in = @rack.get("children").get()
       
+      # no connections mean no children
+      if @rack.get("children").connections.length == 0 && @ob.children.length != 0
+        @ob.remove(@ob.children[0]) while @ob.children.length > 0
+      
       # remove old childs
       for child in @ob.children
         ind = childs_in.indexOf(child)
@@ -65,8 +69,12 @@ define [
       #@obo.position.y = -300
   
     apply_children: =>
-      childs_in = @rack.get("children").get()
+      # no connections mean no children
+      if @rack.get("children").connections.length == 0 && @ob.children.length != 0
+        @ob.remove(@ob.children[0]) while @ob.children.length > 0
+        return true
       
+      childs_in = @rack.get("children").get()
       # remove old childs
       for child in @ob.children
         ind = childs_in.indexOf(child)

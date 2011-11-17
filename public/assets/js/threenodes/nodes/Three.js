@@ -54,6 +54,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
       childs_in = this.rack.get("children").get();
+      if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
+        while (this.ob.children.length > 0) {
+          this.ob.remove(this.ob.children[0]);
+        }
+      }
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -89,6 +94,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     Scene.prototype.apply_children = function() {
       var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
+      if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
+        while (this.ob.children.length > 0) {
+          this.ob.remove(this.ob.children[0]);
+        }
+        return true;
+      }
       childs_in = this.rack.get("children").get();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
