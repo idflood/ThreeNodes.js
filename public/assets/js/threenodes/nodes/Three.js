@@ -59,8 +59,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         child = _ref[_i];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child) {
-          console.log("object remove child");
-          console.log(this.ob);
           this.ob.removeChild(child);
         }
       }
@@ -68,8 +66,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         child = childs_in[_j];
         ind = this.ob.children.indexOf(child);
         if (ind === -1) {
-          console.log("object add child");
-          console.log(this.ob);
           this.ob.addChild(child);
         }
       }
@@ -206,8 +202,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             val: new THREE.Vector3()
           },
           "target": {
-            type: "Object3D",
-            val: new THREE.Object3D()
+            type: "Vector3",
+            val: new THREE.Vector3()
           },
           "useTarget": false
         },
@@ -220,7 +216,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
     };
     Camera.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['target']);
+      this.ob.lookAt(this.rack.get("target").get());
       return this.rack.set("out", this.ob);
     };
     return Camera;
