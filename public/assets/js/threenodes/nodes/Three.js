@@ -202,8 +202,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             val: new THREE.Vector3()
           },
           "target": {
-            type: "Object3D",
-            val: new THREE.Object3D()
+            type: "Vector3",
+            val: new THREE.Vector3()
           },
           "useTarget": false
         },
@@ -216,7 +216,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
     };
     Camera.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['target']);
+      this.ob.lookAt(this.rack.get("target").get());
       return this.rack.set("out", this.ob);
     };
     return Camera;

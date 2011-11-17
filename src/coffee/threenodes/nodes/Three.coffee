@@ -144,13 +144,14 @@ define [
           "near": 0.1
           "far": 2000
           "position": {type: "Vector3", val: new THREE.Vector3()}
-          "target": {type: "Object3D", val: new THREE.Object3D()}
+          "target": {type: "Vector3", val: new THREE.Vector3()}
           "useTarget": false
         outputs:
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['target'])
+      @ob.lookAt(@rack.get("target").get())
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.types.Three.Texture extends ThreeNodes.NodeBase
