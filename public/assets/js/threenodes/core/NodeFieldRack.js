@@ -83,20 +83,21 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       return res;
     };
     NodeFieldRack.prototype.fromJSON = function(data) {
-      var f, node_field, _i, _len, _ref, _results;
+      var f, node_field, _i, _len, _ref;
       _ref = data.fields["in"];
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
         node_field = this.node_fields.inputs["fid-" + f.fid];
-        _results.push(node_field && f.val ? node_field.set(f.val) : void 0);
+        if (node_field && f.val) {
+          node_field.set(f.val);
+        }
       }
-      return _results;
+      return true;
     };
     NodeFieldRack.prototype.fromXML = function(data) {
       var self;
       self = this;
-      return $("in field", data).each(function() {
+      $("in field", data).each(function() {
         var f, field_val;
         f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
         field_val = $(this).attr("val");
@@ -104,6 +105,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
           return f.set(field_val);
         }
       });
+      return true;
     };
     NodeFieldRack.prototype.update_inputs = function() {
       var f;

@@ -58,6 +58,7 @@ define [
         node_field = @node_fields.inputs["fid-#{f.fid}"]
         if node_field && f.val
           node_field.set(f.val)
+      true
     
     fromXML: (data) =>
       self = this
@@ -67,6 +68,7 @@ define [
         field_val = $(this).attr("val")
         if f && field_val != "[object Object]"
           f.set(field_val)
+      true
     
     update_inputs: =>
       for f of @node_fields.inputs
