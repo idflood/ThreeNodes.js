@@ -28,7 +28,6 @@ define(['jQuery', 'Underscore', 'Backbone', "libs/BlobBuilder.min", "libs/FileSa
           return c.toJSON();
         })
       };
-      console.log(res);
       return JSON.stringify(res);
     };
     FileHandler.prototype.get_local_xml = function() {
