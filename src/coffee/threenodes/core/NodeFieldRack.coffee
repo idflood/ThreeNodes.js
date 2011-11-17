@@ -56,7 +56,7 @@ define [
     fromJSON: (data) =>
       for f in data.fields.in
         node_field = @node_fields.inputs["fid-#{f.fid}"]
-        if node_field
+        if node_field && f.val
           node_field.set(f.val)
     
     fromXML: (data) =>
