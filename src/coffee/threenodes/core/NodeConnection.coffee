@@ -4,7 +4,7 @@ define [
   'Backbone',
   "order!libs/jquery.tmpl.min",
   "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
+  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   class ThreeNodes.NodeConnection
@@ -22,10 +22,11 @@ define [
       @render()
     
     get_path: () ->
+      container_y = parseFloat($("#container-wrapper").css("top"))
       f1 = @get_field_position(@from_field)
       f2 = @get_field_position(@to_field)
       ofx = $("#container-wrapper").scrollLeft()
-      ofy = $("#container-wrapper").scrollTop()
+      ofy = $("#container-wrapper").scrollTop() - container_y
       x1 = f1.left + ofx
       y1 = f1.top + ofy
       x4 = f2.left + ofx
