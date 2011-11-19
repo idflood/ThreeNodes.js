@@ -18,13 +18,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.remove_connections = __bind(this.remove_connections, this);
       this.unregister_connection = __bind(this.unregister_connection, this);
       this.add_connection = __bind(this.add_connection, this);
-      this.update_input_node = __bind(this.update_input_node, this);
       this.compute_value = __bind(this.compute_value, this);
       this.render_button = __bind(this.render_button, this);
       this.render_sidebar = __bind(this.render_sidebar, this);
       this.render_connections = __bind(this.render_connections, this);
       this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
+      this.getSliceCount = __bind(this.getSliceCount, this);
+      this.isConnected = __bind(this.isConnected, this);
+      this.isChanged = __bind(this.isChanged, this);
       this.get = __bind(this.get, this);
       this.set = __bind(this.set, this);
       self = this;
@@ -32,12 +34,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.signal = new signals.Signal();
       this.node = false;
       this.is_output = false;
+      this.changed = true;
       this.connections = [];
       ThreeNodes.nodes.fields[this.fid] = this;
       this.on_value_changed(this.val);
     }
-    NodeField.prototype.set = function(v) {
+    NodeField.prototype.set = function(v, index) {
       var connection, hook, _i, _len, _ref;
+      if (index == null) {
+        index = 0;
+      }
+      this.changed = true;
+      this.node.dirty = true;
       v = this.on_value_changed(v);
       for (hook in this.on_value_update_hooks) {
         this.on_value_update_hooks[hook](v);
@@ -46,13 +54,31 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         _ref = this.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           connection = _ref[_i];
-          connection.update();
+          connection.to_field.set(v);
         }
       }
       return true;
     };
-    NodeField.prototype.get = function() {
+    NodeField.prototype.get = function(index) {
+      if (index == null) {
+        index = 0;
+      }
       return this.val;
+    };
+    NodeField.prototype.isChanged = function() {
+      var res;
+      res = this.changed;
+      this.changed = false;
+      return res;
+    };
+    NodeField.prototype.isConnected = function() {
+      return this.connections.length > 0;
+    };
+    NodeField.prototype.getSliceCount = function() {
+      if (jQuery.type(this.val) !== "array") {
+        return 1;
+      }
+      return this.val.length;
     };
     NodeField.prototype.toJSON = function() {
       var res, val_type;
@@ -90,15 +116,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     NodeField.prototype.compute_value = function(val) {
       return val;
-    };
-    NodeField.prototype.update_input_node = function() {
-      var c, _i, _len, _ref;
-      _ref = this.connections;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        c = _ref[_i];
-        c.update_node_from();
-      }
-      return true;
     };
     NodeField.prototype.add_connection = function(c) {
       if (this.connections.indexOf(c) === -1) {
@@ -156,6 +173,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     __extends(Array, ThreeNodes.NodeField);
     function Array() {
       this.on_value_changed = __bind(this.on_value_changed, this);
+      this.remove_connections = __bind(this.remove_connections, this);
       this.compute_value = __bind(this.compute_value, this);
       Array.__super__.constructor.apply(this, arguments);
     }
@@ -167,6 +185,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         return val;
       } else {
         return [val];
+      }
+    };
+    Array.prototype.remove_connections = function() {
+      Array.__super__.remove_connections.apply(this, arguments);
+      if (this.is_output === false) {
+        return this.on_value_changed([]);
       }
     };
     Array.prototype.on_value_changed = function(val) {

@@ -1,20 +1,18 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   return ThreeNodes.NodeConnection = (function() {
     function NodeConnection(from_field, to_field, cid) {
       this.from_field = from_field;
       this.to_field = to_field;
       this.cid = cid != null ? cid : ThreeNodes.Utils.get_uid();
-      this.update_node_from = __bind(this.update_node_from, this);
       this.container = $("#graph");
       this.to_field.remove_connections();
+      this.from_field.add_connection(this);
+      this.to_field.add_connection(this);
+      this.to_field.set(this.from_field.get());
     }
     NodeConnection.prototype.onRegister = function() {
       this.line = false;
       this.context.commandMap.execute("AddConnectionCommand", this);
-      this.from_field.add_connection(this);
-      this.to_field.add_connection(this);
-      this.update();
       return this.render();
     };
     NodeConnection.prototype.get_path = function() {
@@ -48,12 +46,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
     NodeConnection.prototype.toXML = function() {
       return "\t\t<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>\n";
     };
-    NodeConnection.prototype.update = function() {
-      return this.to_field.set(this.from_field.get());
-    };
-    NodeConnection.prototype.update_node_from = function() {
-      return this.from_field.node.update();
-    };
     NodeConnection.prototype.get_field_position = function(field) {
       var diff, o1;
       o1 = $("#fid-" + field.fid + " a").offset();
@@ -72,6 +64,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
     NodeConnection.prototype.remove = function() {
       this.from_field.unregister_connection(this);
       this.to_field.unregister_connection(this);
+      this.to_field.node.dirty = true;
+      this.to_field.changed = true;
       if (ThreeNodes.svg && this.line) {
         this.line.remove();
         this.line = false;

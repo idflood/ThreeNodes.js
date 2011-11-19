@@ -13,6 +13,7 @@ define [
     set_fields: =>
       super
       @ob = false
+      @auto_evaluate = true
       ThreeNodes.webgl_materials_node[ThreeNodes.webgl_materials_node.length] = this
       @rack.addFields
         inputs:
@@ -35,7 +36,7 @@ define [
       @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
       @rack.addFields
         inputs:
-          "color": {type: "Color", val: new THREE.Color(1, 0, 0)}
+          "color": {type: "Color", val: new THREE.Color(0xff0000)}
           "map": {type: "Any", val: false}
           "reflectivity": 1
           "refractionRatio": 0.98
@@ -61,7 +62,7 @@ define [
       @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
       @rack.addFields
         inputs:
-          "color": {type: "Color", val: new THREE.Color(1, 0, 0)}
+          "color": {type: "Color", val: new THREE.Color(0xff0000)}
           "reflectivity": 1
           "refractionRatio": 0.98
           "wireframe": false

@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Object3D.prototype.set_fields = function() {
       Object3D.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.Object3D();
       this.rack.addFields({
         inputs: {
@@ -106,8 +107,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         child = _ref[_i];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child instanceof THREE.Light === false) {
-          console.log("scene remove child");
-          console.log(this.ob);
           this.ob.remove(child);
         }
       }
@@ -122,7 +121,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       _results = [];
       for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
         child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.add(child), ThreeNodes.rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? (console.log("scene add child"), console.log(this.ob), this.ob.add(child)) : void 0));
+        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.add(child), ThreeNodes.rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.add(child) : void 0));
       }
       return _results;
     };
@@ -142,48 +141,39 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Mesh.prototype.set_fields = function() {
       Mesh.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
-        color: 0xff0000,
-        wireframe: false
-      }));
       this.rack.addFields({
         inputs: {
           "geometry": {
             type: "Any",
             val: new THREE.CubeGeometry(200, 200, 200)
           },
-          "materials": {
-            type: "Array",
-            val: [
-              new THREE.MeshLambertMaterial({
-                color: 0xff0000,
-                wireframe: false
-              })
-            ]
+          "material": {
+            type: "Any",
+            val: new THREE.MeshLambertMaterial({
+              color: 0xff0000,
+              wireframe: false
+            })
           },
           "overdraw": false
         }
       });
+      this.ob = new THREE.Mesh(this.rack.get("geometry").get(), this.rack.get("material").get());
       this.rack.set("out", this.ob);
       this.geometry_cache = this.rack.get('geometry').get().id;
-      return this.materials_cache = this.rack.get('materials').get();
+      return this.material_cache = this.rack.get('material').get();
     };
     Mesh.prototype.compute = function() {
       var needs_rebuild;
       needs_rebuild = false;
       if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
-        this.ob = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({
-          color: 0xff0000,
-          wireframe: false
-        }));
         needs_rebuild = true;
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
-      if (this.geometry_cache !== this.rack.get('geometry').get().id || ThreeNodes.Utils.flatArraysAreEquals(this.materials_cache, this.rack.get('materials').get()) === false) {
-        this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('materials').get());
+      if (this.geometry_cache !== this.rack.get('geometry').get().id || this.material_cache !== this.rack.get('material').get() || needs_rebuild) {
+        this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get());
         this.geometry_cache = this.rack.get('geometry').get().id;
-        this.materials_cache = this.rack.get('materials').get();
+        this.material_cache = this.rack.get('material').get();
       }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       if (needs_rebuild === true) {
         ThreeNodes.rebuild_all_shaders();
@@ -285,6 +275,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     WebGLRenderer.prototype.set_fields = function() {
       WebGLRenderer.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = ThreeNodes.Webgl.current_renderer;
       this.width = 0;
       this.height = 0;
@@ -305,8 +296,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             val: new THREE.Color(0, 0, 0)
           },
           "postfx": {
-            type: "Any",
-            val: false
+            type: "Array",
+            val: []
           },
           "shadowCameraNear": 3,
           "shadowCameraFar": 3000,
@@ -362,23 +353,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     WebGLRenderer.prototype.apply_post_fx = function() {
       var fxs;
-      fxs = this.rack.get("postfx").get();
-      if (fxs === false) {
-        fxs = [];
-      }
+      fxs = this.rack.get("postfx").get().slice(0);
       fxs.unshift(ThreeNodes.Webgl.renderModel);
       fxs.push(ThreeNodes.Webgl.effectScreen);
       return ThreeNodes.Webgl.composer.passes = fxs;
     };
     WebGLRenderer.prototype.compute = function() {
-      var cam, sce;
       this.apply_size();
       this.apply_bg_color();
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
-      sce = this.rack.get("scene").get();
-      cam = this.rack.get("camera").get();
-      ThreeNodes.Webgl.current_camera = cam;
-      ThreeNodes.Webgl.current_scene = sce;
+      ThreeNodes.Webgl.current_camera = this.rack.get("camera").get();
+      ThreeNodes.Webgl.current_scene = this.rack.get("scene").get();
       this.apply_post_fx();
       this.ob.clear();
       ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene;

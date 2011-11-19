@@ -14,6 +14,10 @@ define [
 ], ($, _, Backbone, _view_node_template) ->
   class ThreeNodes.NodeBase
     constructor: (@x = 0, @y = 0, @inXML = false, @inJSON = false) ->
+      @auto_evaluate = false
+      @delays_output = false
+      @dirty = true
+      
       if @inXML
         @nid = parseInt @inXML.attr("nid")
         ThreeNodes.uid = @nid
@@ -30,7 +34,6 @@ define [
       @value = false
       @name = false
       @main_view = false
-      @updated = false
       @init()
       @set_fields()
       
@@ -74,21 +77,16 @@ define [
     has_out_connection: () =>
       @out_connections.length != 0
     
-    compute: () =>
-      @value = @value
-    
     remove: () =>
       @rack.remove_all_connections()
       @main_view.remove()
       # todo: maybe remove fields
       # todo: remove sidebar attributes if this is the selected node
     
+    getUpstreamNodes: () => @rack.getUpstreamNodes()
+    getDownstreamNodes: () => @rack.getDownstreamNodes()
+    
     update: () =>
-      if @updated == true
-        return true
-      @updated = true
-      # update all input fields and their connected node source
-      @rack.update_inputs()
       # update node output values based on inputs
       @compute()
     
@@ -120,8 +118,7 @@ define [
         .addClass "field-possible-target"
       else
         field_click_2 = field
-        c = new ThreeNodes.NodeConnection(ThreeNodes.field_click_1, field_click_2)
-        @context.injector.applyContext(c)
+        c = @context.injector.instanciate(ThreeNodes.NodeConnection, ThreeNodes.field_click_1, field_click_2)
         $(".field").removeClass "field-possible-target"
         ThreeNodes.field_click_1 = false
         
@@ -195,7 +192,7 @@ define [
       switch $.type(@v_in.get())
         when "array" then res = _.map(@v_in.val, (n, i) -> @process_val(n, i))
         else res = @process_val(@v_in.get(), 0)
-      if @v_out.get() != res
-        @v_out.set res
+      #if @v_out.get() != res
+      @v_out.set res
       true
 

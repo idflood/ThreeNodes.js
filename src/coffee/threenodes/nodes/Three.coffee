@@ -12,6 +12,7 @@ define [
   class ThreeNodes.nodes.types.Three.Object3D extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.Object3D()
       @rack.addFields
         inputs:
@@ -59,17 +60,9 @@ define [
       super
       @ob = new THREE.Scene()
       current_scene = @ob
-      
-      #@rack.addFields
-      #  inputs:
-      #    "lights": {type: "Array", val: []}
-      #@obl = new THREE.PointLight(0xffffff)
-      #@obl.position.y = 300
-      #@obo = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
-      #@obo.position.y = -300
   
     apply_children: =>
-      # no connections mean no children
+      # no connections means no children
       if @rack.get("children").connections.length == 0 && @ob.children.length != 0
         @ob.remove(@ob.children[0]) while @ob.children.length > 0
         return true
@@ -79,8 +72,8 @@ define [
       for child in @ob.children
         ind = childs_in.indexOf(child)
         if child && ind == -1 && child instanceof THREE.Light == false
-          console.log "scene remove child"
-          console.log @ob
+          #console.log "scene remove child"
+          #console.log @ob
           @ob.remove(child)
           
       for child in @ob.children
@@ -98,8 +91,8 @@ define [
         else
           ind = @ob.children.indexOf(child)
           if ind == -1
-            console.log "scene add child"
-            console.log @ob
+            #console.log "scene add child"
+            #console.log @ob
             @ob.add(child)
   
     compute: =>
@@ -110,30 +103,28 @@ define [
   class ThreeNodes.nodes.types.Three.Mesh extends ThreeNodes.nodes.types.Three.Object3D
     set_fields: =>
       super
-      @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
       @rack.addFields
         inputs:
           "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
-          "materials": {type: "Array", val: [new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false })]}
+          "material": {type: "Any", val: new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false })}
           "overdraw": false
+      @ob = new THREE.Mesh(@rack.get("geometry").get(), @rack.get("material").get())
       @rack.set("out", @ob)
       @geometry_cache = @rack.get('geometry').get().id
-      @materials_cache = @rack.get('materials').get()
+      @material_cache = @rack.get('material').get()
   
     compute: =>
       needs_rebuild = false
       
       if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
-        @ob = new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false }))
         needs_rebuild = true
-        
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry'])
       
-      if @geometry_cache != @rack.get('geometry').get().id || ThreeNodes.Utils.flatArraysAreEquals(@materials_cache, @rack.get('materials').get()) == false
-        @ob = new THREE.Mesh(@rack.get('geometry').get(), @rack.get('materials').get())
+      if @geometry_cache != @rack.get('geometry').get().id || @material_cache != @rack.get('material').get() || needs_rebuild
+        @ob = new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())
         @geometry_cache = @rack.get('geometry').get().id
-        @materials_cache = @rack.get('materials').get()
+        @material_cache = @rack.get('material').get()
       
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry'])
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       
       if needs_rebuild == true
@@ -188,6 +179,7 @@ define [
   class ThreeNodes.nodes.types.Three.WebGLRenderer extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = ThreeNodes.Webgl.current_renderer
       @width = 0
       @height = 0
@@ -198,7 +190,7 @@ define [
           "scene": {type: "Scene", val: new THREE.Scene()}
           "camera": {type: "Camera", val: new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)}
           "bg_color": {type: "Color", val: new THREE.Color(0, 0, 0)}
-          "postfx": {type: "Any", val: false}
+          "postfx": {type: "Array", val: []}
           "shadowCameraNear": 3
           "shadowCameraFar": 3000
           "shadowMapWidth": 512
@@ -238,9 +230,9 @@ define [
       @height = h
     
     apply_post_fx: =>
-      fxs = @rack.get("postfx").get()
-      if fxs == false
-        fxs = []
+      # work on a copy of the incoming array
+      fxs = @rack.get("postfx").get().slice(0)
+      # 1st pass = rendermodel, last pass = screen
       fxs.unshift ThreeNodes.Webgl.renderModel
       fxs.push ThreeNodes.Webgl.effectScreen
       ThreeNodes.Webgl.composer.passes = fxs
@@ -249,16 +241,11 @@ define [
       @apply_size()
       @apply_bg_color()
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
-      sce = @rack.get("scene").get()
-      cam = @rack.get("camera").get()
+      ThreeNodes.Webgl.current_camera = @rack.get("camera").get()
+      ThreeNodes.Webgl.current_scene = @rack.get("scene").get()
       
-      ThreeNodes.Webgl.current_camera = cam
-      ThreeNodes.Webgl.current_scene = sce
-      #if sce != false && cam != false
-      #@ob.render(sce, cam)
       @apply_post_fx()
       @ob.clear()
       ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
       ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
       ThreeNodes.Webgl.composer.render(0.05)
-      #@rack.set("out", @ob)

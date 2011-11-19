@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     PointLight.prototype.set_fields = function() {
       PointLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.PointLight(0xffffff);
       return this.rack.addFields({
         inputs: {
@@ -53,6 +54,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     SpotLight.prototype.set_fields = function() {
       SpotLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.SpotLight(0xffffff);
       return this.rack.addFields({
         inputs: {
@@ -98,6 +100,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     DirectionalLight.prototype.set_fields = function() {
       DirectionalLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.DirectionalLight(0xffffff);
       return this.rack.addFields({
         inputs: {
@@ -135,6 +138,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     AmbientLight.prototype.set_fields = function() {
       AmbientLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.AmbientLight(0xffffff);
       return this.rack.addFields({
         inputs: {

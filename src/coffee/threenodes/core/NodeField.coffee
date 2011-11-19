@@ -15,21 +15,39 @@ define [
       @signal = new signals.Signal()
       @node = false
       @is_output = false
+      @changed = true
       @connections = []
       ThreeNodes.nodes.fields[@fid] = this
       @on_value_changed(@val)
     
-    set: (v) =>
+    set: (v, index = 0) =>
+      @changed = true
+      @node.dirty = true
+      
       v = @on_value_changed(v)
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](v)
       if @is_output == true
         for connection in @connections
-          connection.update()
+          connection.to_field.set(v)
       true
   
-    get: () =>
-      @val
+    get: (index = 0) =>
+      return @val
+      #return @val[index % @val.length]
+    
+    isChanged: () =>
+      res = @changed
+      @changed = false
+      res
+    
+    isConnected: () =>
+      @connections.length > 0
+    
+    getSliceCount: () =>
+      if jQuery.type(@val) != "array"
+        return 1
+      return @val.length
     
     toJSON : () =>
       res =
@@ -59,11 +77,6 @@ define [
       
     compute_value : (val) =>
       val
-    
-    update_input_node : () =>
-      for c in @connections
-        c.update_node_from()
-      true
     
     add_connection: (c) =>
       if @connections.indexOf(c) == -1
@@ -104,6 +117,12 @@ define [
         val
       else
         [val]
+    
+    remove_connections: () =>
+      super
+      if @is_output == false
+        @on_value_changed([])
+    
     on_value_changed : (val) =>
       @val = @compute_value(val)
       

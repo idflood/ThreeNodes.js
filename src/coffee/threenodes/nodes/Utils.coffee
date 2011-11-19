@@ -12,6 +12,7 @@ define [
   class ThreeNodes.nodes.types.Utils.Random extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @rack.addFields
         inputs:
           "min" : 0
@@ -73,6 +74,7 @@ define [
   class ThreeNodes.nodes.types.Utils.SoundInput extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @counter = 0
       @rack.addFields
         inputs:
@@ -90,6 +92,7 @@ define [
   class ThreeNodes.nodes.types.Utils.Timer extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @old = @get_time()
       @counter = 0
       @rack.addFields

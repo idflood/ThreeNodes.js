@@ -34,11 +34,30 @@ define [
       @types[type]
     
     render: () =>
+      invalidNodes = {}
+      terminalNodes = {}
+      
       for node in @nodes
-        if node.has_out_connection() == false
+        if node.has_out_connection() == false || node.auto_evaluate || node.delays_output
+          terminalNodes[node.nid] = node
+        invalidNodes[node.nid] = node
+      
+      evaluateSubGraph = (node) ->
+        upstreamNodes = node.getUpstreamNodes()
+        for upnode in upstreamNodes
+          if invalidNodes[upnode.nid] && !upnode.delays_output
+            evaluateSubGraph(upnode)
+        if node.dirty || node.auto_evaluate
           node.update()
-      for node in @nodes
-        node.updated = false
+          node.dirty = false
+          node.rack.setFieldInputUnchanged()
+        
+        delete invalidNodes[node.nid]
+        true
+      
+      for nid of terminalNodes
+        if invalidNodes[nid]
+          evaluateSubGraph(terminalNodes[nid])
       true
     
     addConnection: (c) ->

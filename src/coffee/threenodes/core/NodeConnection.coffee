@@ -12,13 +12,15 @@ define [
       @container = $("#graph")
       # remove existing input connection since inputs only have one connection
       @to_field.remove_connections()
+      # add the connection to each fields
+      @from_field.add_connection(this)
+      @to_field.add_connection(this)
+      # dispatch the new value
+      @to_field.set(@from_field.get())
     
     onRegister: () ->
       @line = false
       @context.commandMap.execute "AddConnectionCommand", this
-      @from_field.add_connection(this)
-      @to_field.add_connection(this)
-      @update()
       @render()
     
     get_path: () ->
@@ -50,12 +52,6 @@ define [
     
     toXML: () ->
       "\t\t<connection id='#{@cid}' from='#{@from_field.fid}' to='#{@to_field.fid}'/>\n"
-    
-    update: () ->
-      @to_field.set(@from_field.get())
-      
-    update_node_from: () =>
-      @from_field.node.update()
   
     get_field_position: (field) ->
       o1 = $("#fid-#{field.fid} a").offset()
@@ -72,6 +68,8 @@ define [
     remove: ->
       @from_field.unregister_connection(this)
       @to_field.unregister_connection(this)
+      @to_field.node.dirty = true
+      @to_field.changed = true
       if ThreeNodes.svg && @line
         @line.remove()
         @line = false

@@ -8,13 +8,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       this.registerField = __bind(this.registerField, this);
       this.addFields = __bind(this.addFields, this);
       this.addField = __bind(this.addField, this);
-      this.update_inputs = __bind(this.update_inputs, this);
       this.fromXML = __bind(this.fromXML, this);
       this.fromJSON = __bind(this.fromJSON, this);
       this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
       this.remove_all_connections = __bind(this.remove_all_connections, this);
       this.render_connections = __bind(this.render_connections, this);
+      this.setFieldInputUnchanged = __bind(this.setFieldInputUnchanged, this);
+      this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
+      this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
+      this.getMaxInputSliceCount = __bind(this.getMaxInputSliceCount, this);
       this.node_fields = {};
       this.node_fields.inputs = {};
       this.node_fields.outputs = {};
@@ -34,6 +37,58 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
     };
     NodeFieldRack.prototype.set = function(key, value) {
       return this.node_fields_by_name.outputs[key].set(value);
+    };
+    NodeFieldRack.prototype.getMaxInputSliceCount = function() {
+      var f, fid, res, _i, _len, _ref;
+      res = 0;
+      _ref = this.node_fields.inputs;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        fid = _ref[_i];
+        f = this.node_fields.inputs[fid];
+        if (f.val.length > res) {
+          res = f.val.length;
+        }
+      }
+      return res;
+    };
+    NodeFieldRack.prototype.getUpstreamNodes = function() {
+      var c, f, fid, res, _i, _len, _ref;
+      res = [];
+      for (fid in this.node_fields.inputs) {
+        f = this.node_fields.inputs[fid];
+        _ref = f.connections;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          c = _ref[_i];
+          res[res.length] = c.from_field.node;
+        }
+      }
+      return res;
+    };
+    NodeFieldRack.prototype.getDownstreamNodes = function() {
+      var c, f, fid, res, _i, _j, _len, _len2, _ref, _ref2;
+      res = [];
+      _ref = this.node_fields.outputs;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        fid = _ref[_i];
+        f = this.node_fields.inputs[fid];
+        _ref2 = f.connections;
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          c = _ref2[_j];
+          res[res.length] = c.to_field.node;
+        }
+      }
+      return res;
+    };
+    NodeFieldRack.prototype.setFieldInputUnchanged = function() {
+      var f, fid, _i, _len, _ref, _results;
+      _ref = this.node_fields.inputs;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        fid = _ref[_i];
+        f = this.node_fields.inputs[fid];
+        _results.push(f.changed = false);
+      }
+      return _results;
     };
     NodeFieldRack.prototype.render_connections = function() {
       var f;
@@ -106,13 +161,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
         }
       });
       return true;
-    };
-    NodeFieldRack.prototype.update_inputs = function() {
-      var f;
-      for (f in this.node_fields.inputs) {
-        this.node_fields.inputs[f].update_input_node();
-      }
-      return this;
     };
     NodeFieldRack.prototype.addField = function(name, value, direction) {
       var f;

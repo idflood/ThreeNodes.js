@@ -17,6 +17,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeMaterialBase.prototype.set_fields = function() {
       NodeMaterialBase.__super__.set_fields.apply(this, arguments);
       this.ob = false;
+      this.auto_evaluate = true;
       ThreeNodes.webgl_materials_node[ThreeNodes.webgl_materials_node.length] = this;
       return this.rack.addFields({
         inputs: {
@@ -52,7 +53,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         inputs: {
           "color": {
             type: "Color",
-            val: new THREE.Color(1, 0, 0)
+            val: new THREE.Color(0xff0000)
           },
           "map": {
             type: "Any",
@@ -103,7 +104,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         inputs: {
           "color": {
             type: "Color",
-            val: new THREE.Color(1, 0, 0)
+            val: new THREE.Color(0xff0000)
           },
           "reflectivity": 1,
           "refractionRatio": 0.98,

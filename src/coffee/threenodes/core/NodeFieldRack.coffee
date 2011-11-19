@@ -22,6 +22,35 @@ define [
     set: (key, value) ->
       @node_fields_by_name.outputs[key].set value
     
+    getMaxInputSliceCount: () =>
+      res = 0
+      for fid in @node_fields.inputs
+        f = @node_fields.inputs[fid]
+        if f.val.length > res
+          res = f.val.length
+      res
+    
+    getUpstreamNodes: () =>
+      res = []
+      for fid of @node_fields.inputs
+        f = @node_fields.inputs[fid]
+        for c in f.connections
+          res[res.length] = c.from_field.node
+      res
+    
+    getDownstreamNodes: () =>
+      res = []
+      for fid in @node_fields.outputs
+        f = @node_fields.inputs[fid]
+        for c in f.connections
+          res[res.length] = c.to_field.node
+      res
+    
+    setFieldInputUnchanged: () =>
+      for fid in @node_fields.inputs
+        f = @node_fields.inputs[fid]
+        f.changed = false
+    
     render_connections: =>
       for f of @node_fields.inputs
         @node_fields.inputs[f].render_connections()
@@ -69,11 +98,6 @@ define [
         if f && field_val != "[object Object]"
           f.set(field_val)
       true
-    
-    update_inputs: =>
-      for f of @node_fields.inputs
-        @node_fields.inputs[f].update_input_node()
-      this
     
     addField: (name, value, direction = "inputs") =>
       f = false

@@ -12,6 +12,7 @@ define [
   class ThreeNodes.nodes.types.Lights.PointLight extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.PointLight(0xffffff)
       
       @rack.addFields
@@ -30,6 +31,7 @@ define [
   class ThreeNodes.nodes.types.Lights.SpotLight extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.SpotLight(0xffffff)
       
       @rack.addFields
@@ -52,6 +54,7 @@ define [
   class ThreeNodes.nodes.types.Lights.DirectionalLight extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.DirectionalLight(0xffffff)
       
       @rack.addFields
@@ -70,6 +73,7 @@ define [
   class ThreeNodes.nodes.types.Lights.AmbientLight extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.AmbientLight(0xffffff)
       
       @rack.addFields

@@ -17,6 +17,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     PlaneGeometry.prototype.set_fields = function() {
       PlaneGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1);
       this.rack.addFields({
         inputs: {
@@ -58,6 +59,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     CubeGeometry.prototype.set_fields = function() {
       CubeGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1);
       this.rack.addFields({
         inputs: {
@@ -102,6 +104,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     SphereGeometry.prototype.set_fields = function() {
       SphereGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.SphereGeometry(100, 20, 20);
       this.rack.addFields({
         inputs: {
@@ -143,6 +146,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     CylinderGeometry.prototype.set_fields = function() {
       CylinderGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false);
       this.rack.addFields({
         inputs: {
@@ -187,6 +191,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     TorusGeometry.prototype.set_fields = function() {
       TorusGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2);
       this.rack.addFields({
         inputs: {
@@ -230,6 +235,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     TorusKnotGeometry.prototype.set_fields = function() {
       TorusKnotGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.TorusKnotGeometry(200, 40, 64, 8, 2, 3, 1);
       this.rack.addFields({
         inputs: {
@@ -275,6 +281,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     OctahedronGeometry.prototype.set_fields = function() {
       OctahedronGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.OctahedronGeometry(100, 0);
       this.rack.addFields({
         inputs: {

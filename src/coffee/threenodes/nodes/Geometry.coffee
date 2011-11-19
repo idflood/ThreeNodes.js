@@ -12,6 +12,7 @@ define [
   class ThreeNodes.nodes.types.Geometry.PlaneGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1)
       @rack.addFields
         inputs:
@@ -36,6 +37,7 @@ define [
   class ThreeNodes.nodes.types.Geometry.CubeGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
       @rack.addFields
         inputs:
@@ -63,6 +65,7 @@ define [
   class ThreeNodes.nodes.types.Geometry.SphereGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.SphereGeometry(100, 20, 20)
       @rack.addFields
         inputs:
@@ -87,6 +90,7 @@ define [
   class ThreeNodes.nodes.types.Geometry.CylinderGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false)
       
       #@value = 0
@@ -122,6 +126,7 @@ define [
   class ThreeNodes.nodes.types.Geometry.TorusGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2)
       @rack.addFields
         inputs:
@@ -154,6 +159,7 @@ define [
   class ThreeNodes.nodes.types.Geometry.TorusKnotGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.TorusKnotGeometry(200, 40, 64, 8, 2, 3, 1)
       @rack.addFields
         inputs:
@@ -188,6 +194,7 @@ define [
   class ThreeNodes.nodes.types.Geometry.OctahedronGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.OctahedronGeometry(100, 0)
       @rack.addFields
         inputs:

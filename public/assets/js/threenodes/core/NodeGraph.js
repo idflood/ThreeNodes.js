@@ -34,18 +34,38 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       return this.types[type];
     };
     NodeGraph.prototype.render = function() {
-      var node, _i, _j, _len, _len2, _ref, _ref2;
+      var evaluateSubGraph, invalidNodes, nid, node, terminalNodes, _i, _len, _ref;
+      invalidNodes = {};
+      terminalNodes = {};
       _ref = this.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        if (node.has_out_connection() === false) {
-          node.update();
+        if (node.has_out_connection() === false || node.auto_evaluate || node.delays_output) {
+          terminalNodes[node.nid] = node;
         }
+        invalidNodes[node.nid] = node;
       }
-      _ref2 = this.nodes;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        node = _ref2[_j];
-        node.updated = false;
+      evaluateSubGraph = function(node) {
+        var upnode, upstreamNodes, _j, _len2;
+        upstreamNodes = node.getUpstreamNodes();
+        for (_j = 0, _len2 = upstreamNodes.length; _j < _len2; _j++) {
+          upnode = upstreamNodes[_j];
+          if (invalidNodes[upnode.nid] && !upnode.delays_output) {
+            evaluateSubGraph(upnode);
+          }
+        }
+        if (node.dirty || node.auto_evaluate) {
+          node.update();
+          node.dirty = false;
+          node.rack.setFieldInputUnchanged();
+        }
+        delete invalidNodes[node.nid];
+        return true;
+      };
+      for (nid in terminalNodes) {
+        if (invalidNodes[nid]) {
+          evaluateSubGraph(terminalNodes[nid]);
+        }
       }
       return true;
     };

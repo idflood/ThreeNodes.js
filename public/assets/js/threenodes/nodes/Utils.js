@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Random.prototype.set_fields = function() {
       Random.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.rack.addFields({
         inputs: {
           "min": 0,
@@ -146,6 +147,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     SoundInput.prototype.set_fields = function() {
       SoundInput.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.counter = 0;
       return this.rack.addFields({
         inputs: {
@@ -175,6 +177,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Timer.prototype.set_fields = function() {
       Timer.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.old = this.get_time();
       this.counter = 0;
       this.rack.addFields({

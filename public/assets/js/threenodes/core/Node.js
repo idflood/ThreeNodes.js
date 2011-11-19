@@ -25,14 +25,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
       this.update = __bind(this.update, this);
+      this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
+      this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
       this.remove = __bind(this.remove, this);
-      this.compute = __bind(this.compute, this);
       this.has_out_connection = __bind(this.has_out_connection, this);
       this.set_fields = __bind(this.set_fields, this);
       this.input_value_has_changed = __bind(this.input_value_has_changed, this);
       this.create_cache_object = __bind(this.create_cache_object, this);
       this.init_context_menu = __bind(this.init_context_menu, this);
       this.typename = __bind(this.typename, this);
+      this.auto_evaluate = false;
+      this.delays_output = false;
+      this.dirty = true;
       if (this.inXML) {
         this.nid = parseInt(this.inXML.attr("nid"));
         ThreeNodes.uid = this.nid;
@@ -50,7 +54,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.value = false;
       this.name = false;
       this.main_view = false;
-      this.updated = false;
       this.init();
       this.set_fields();
       if (this.inXML) {
@@ -105,19 +108,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.has_out_connection = function() {
       return this.out_connections.length !== 0;
     };
-    NodeBase.prototype.compute = function() {
-      return this.value = this.value;
-    };
     NodeBase.prototype.remove = function() {
       this.rack.remove_all_connections();
       return this.main_view.remove();
     };
+    NodeBase.prototype.getUpstreamNodes = function() {
+      return this.rack.getUpstreamNodes();
+    };
+    NodeBase.prototype.getDownstreamNodes = function() {
+      return this.rack.getDownstreamNodes();
+    };
     NodeBase.prototype.update = function() {
-      if (this.updated === true) {
-        return true;
-      }
-      this.updated = true;
-      this.rack.update_inputs();
       return this.compute();
     };
     NodeBase.prototype.toJSON = function() {
@@ -158,8 +159,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }).addClass("field-possible-target");
       } else {
         field_click_2 = field;
-        c = new ThreeNodes.NodeConnection(ThreeNodes.field_click_1, field_click_2);
-        this.context.injector.applyContext(c);
+        c = this.context.injector.instanciate(ThreeNodes.NodeConnection, ThreeNodes.field_click_1, field_click_2);
         $(".field").removeClass("field-possible-target");
         return ThreeNodes.field_click_1 = false;
       }
@@ -273,9 +273,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         default:
           res = this.process_val(this.v_in.get(), 0);
       }
-      if (this.v_out.get() !== res) {
-        this.v_out.set(res);
-      }
+      this.v_out.set(res);
       return true;
     };
     return NodeNumberSimple;
