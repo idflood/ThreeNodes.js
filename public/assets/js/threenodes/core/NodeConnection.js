@@ -9,6 +9,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       this.from_field.add_connection(this);
       this.to_field.add_connection(this);
       this.to_field.set(this.from_field.get());
+      this.from_field.node.dirty = true;
+      console.log("connect");
+      console.log(this.from_field.get());
     }
     NodeConnection.prototype.onRegister = function() {
       this.line = false;

@@ -157,10 +157,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "overdraw": false
         }
       });
-      this.ob = new THREE.Mesh(this.rack.get("geometry").get(), this.rack.get("material").get());
-      this.rack.set("out", this.ob);
-      this.geometry_cache = this.rack.get('geometry').get().id;
-      return this.material_cache = this.rack.get('material').get();
+      this.ob = false;
+      this.geometry_cache = false;
+      this.material_cache = false;
+      return this.compute();
     };
     Mesh.prototype.compute = function() {
       var needs_rebuild;
@@ -168,10 +168,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
         needs_rebuild = true;
       }
-      if (this.geometry_cache !== this.rack.get('geometry').get().id || this.material_cache !== this.rack.get('material').get() || needs_rebuild) {
+      if (this.geometry_cache !== this.rack.get('geometry').get().id || this.material_cache !== this.rack.get('material').get().id || needs_rebuild) {
         this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get());
         this.geometry_cache = this.rack.get('geometry').get().id;
-        this.material_cache = this.rack.get('material').get();
+        this.material_cache = this.rack.get('material').get().id;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry']);
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);

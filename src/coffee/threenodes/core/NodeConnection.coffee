@@ -17,6 +17,9 @@ define [
       @to_field.add_connection(this)
       # dispatch the new value
       @to_field.set(@from_field.get())
+      @from_field.node.dirty = true
+      console.log "connect"
+      console.log @from_field.get()
     
     onRegister: () ->
       @line = false

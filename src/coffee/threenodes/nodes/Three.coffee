@@ -108,10 +108,10 @@ define [
           "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
           "material": {type: "Any", val: new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false })}
           "overdraw": false
-      @ob = new THREE.Mesh(@rack.get("geometry").get(), @rack.get("material").get())
-      @rack.set("out", @ob)
-      @geometry_cache = @rack.get('geometry').get().id
-      @material_cache = @rack.get('material').get()
+      @ob = false
+      @geometry_cache = false
+      @material_cache = false
+      @compute()
   
     compute: =>
       needs_rebuild = false
@@ -119,10 +119,10 @@ define [
       if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
         needs_rebuild = true
       
-      if @geometry_cache != @rack.get('geometry').get().id || @material_cache != @rack.get('material').get() || needs_rebuild
+      if @geometry_cache != @rack.get('geometry').get().id || @material_cache != @rack.get('material').get().id || needs_rebuild
         @ob = new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())
         @geometry_cache = @rack.get('geometry').get().id
-        @material_cache = @rack.get('material').get()
+        @material_cache = @rack.get('material').get().id
       
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry'])
       @shadow_cache = @create_cache_object(@vars_shadow_options)

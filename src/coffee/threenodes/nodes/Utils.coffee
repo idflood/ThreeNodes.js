@@ -30,6 +30,7 @@ define [
   class ThreeNodes.nodes.types.Utils.Merge extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @rack.addFields
         inputs:
           "in0" : {type: "Any", val: null}
@@ -47,9 +48,13 @@ define [
       for f of @rack.node_fields.inputs
         k = @rack.node_fields.inputs[f]
         if k.get() != null && k.connections.length > 0
-          @value[@value.length] = k.get()
-      if @value != old
-        @rack.set("out", @value)
+          subval = k.get()
+          # if subvalue is an array append it to the result
+          if jQuery.type(subval) == "array"
+            @value = @value.concat(subval)
+          else
+            @value[@value.length] = k.get()
+      @rack.set("out", @value)
   
   class ThreeNodes.nodes.types.Utils.Get extends ThreeNodes.NodeBase
     set_fields: =>

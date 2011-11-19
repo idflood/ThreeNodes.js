@@ -78,3 +78,4 @@ define [
       while @node_connections.length > 0
         @node_connections[0].remove()
       true
+      

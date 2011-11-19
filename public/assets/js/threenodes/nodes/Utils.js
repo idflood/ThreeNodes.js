@@ -47,6 +47,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Merge.prototype.set_fields = function() {
       Merge.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       return this.rack.addFields({
         inputs: {
           "in0": {
@@ -83,18 +84,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
     };
     Merge.prototype.compute = function() {
-      var f, k, old;
+      var f, k, old, subval;
       old = this.rack.get("out", true).get();
       this.value = [];
       for (f in this.rack.node_fields.inputs) {
         k = this.rack.node_fields.inputs[f];
         if (k.get() !== null && k.connections.length > 0) {
-          this.value[this.value.length] = k.get();
+          subval = k.get();
+          if (jQuery.type(subval) === "array") {
+            this.value = this.value.concat(subval);
+          } else {
+            this.value[this.value.length] = k.get();
+          }
         }
       }
-      if (this.value !== old) {
-        return this.rack.set("out", this.value);
-      }
+      return this.rack.set("out", this.value);
     };
     return Merge;
   })();
