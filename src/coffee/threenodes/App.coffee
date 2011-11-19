@@ -43,6 +43,7 @@ define [
   'order!threenodes/commands/CreateNodeCommand',
   'order!threenodes/commands/SaveFileCommand',
   'order!threenodes/commands/LoadLocalFileCommand',
+  'order!threenodes/commands/RebuildShadersCommand',
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   class ThreeNodes.App
     constructor: (@testing_mode = false) ->
@@ -65,6 +66,7 @@ define [
       @commandMap.register "CreateNodeCommand", ThreeNodes.CreateNodeCommand
       @commandMap.register "SaveFileCommand", ThreeNodes.SaveFileCommand
       @commandMap.register "LoadLocalFileCommand", ThreeNodes.LoadLocalFileCommand
+      @commandMap.register "RebuildShadersCommand", ThreeNodes.RebuildShadersCommand
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket

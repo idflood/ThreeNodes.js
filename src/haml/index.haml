@@ -23,26 +23,13 @@
           %a{:href => "#tab-new"} New
         %li
           %a{:href => "#tab-attribute"} Attribute
-        %li
-          %a{:href => "#tab-system"} System
       #tab-attribute
         empty...
       #tab-new
         %input#node_filter{:type => "input", :placeholder => "Search"}
-      #tab-system
-        %ul
-          %li
-            %a.new_file{:href => "#"} New File
-          %li
-            %a.open_file{:href => "#"} Open File
-            %input#main_file_input_open{:type => "file", :multiple => "false"}
-          %li
-            %a.save_file{:href => "#"} Save File
-          %li
-            %a.rebuild_shaders{:href => "#"} Rebuild shaders
     
     #sidebar-toggle
-      
+    %input#main_file_input_open{:type => "file", :multiple => "false"}
     %footer#footer
       ThreeNodes.js | idflood.com | 2011
     

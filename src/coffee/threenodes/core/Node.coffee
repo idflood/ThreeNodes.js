@@ -7,7 +7,7 @@ define [
   "text!templates/node.tmpl.html",
   "order!libs/jquery.tmpl.min",
   "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
+  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/core/NodeConnection',
   'order!threenodes/utils/Utils',

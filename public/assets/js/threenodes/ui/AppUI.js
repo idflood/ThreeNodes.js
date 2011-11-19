@@ -1,5 +1,5 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!threenodes/core/WebglBase", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', "libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!threenodes/core/WebglBase", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', 'order!threenodes/ui/AppMenuBar', "libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
   return ThreeNodes.AppUI = (function() {
     function AppUI() {
       this.animate = __bind(this.animate, this);
@@ -16,8 +16,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       var injector;
       injector = this.context.injector;
       injector.mapSingleton("ThreeNodes.AppSidebar", ThreeNodes.AppSidebar);
+      injector.mapSingleton("ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar);
       this.webgl = injector.get("ThreeNodes.WebglBase");
       this.sidebar = injector.get("ThreeNodes.AppSidebar");
+      this.sidebar = injector.get("ThreeNodes.AppMenuBar");
       this.add_window_resize_handler();
       this.init_context_menus();
       this.show_application();
@@ -51,7 +53,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       h = $(window).height();
       $("#container-wrapper").css({
         width: w,
-        height: h
+        height: h - 25
       });
       return $("#sidebar").css("height", h);
     };

@@ -7,10 +7,11 @@ define [
   "order!threenodes/core/WebglBase",
   "order!libs/jquery.tmpl.min",
   'order!threenodes/ui/AppSidebar',
+  'order!threenodes/ui/AppMenuBar',
   "libs/three-extras/js/RequestAnimationFrame",
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
+  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu) ->
   class ThreeNodes.AppUI
     constructor: () ->
@@ -22,8 +23,10 @@ define [
       injector = @context.injector
       
       injector.mapSingleton "ThreeNodes.AppSidebar", ThreeNodes.AppSidebar
+      injector.mapSingleton "ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar
       @webgl = injector.get "ThreeNodes.WebglBase"
       @sidebar = injector.get "ThreeNodes.AppSidebar"
+      @sidebar = injector.get "ThreeNodes.AppMenuBar"
       
       @add_window_resize_handler()
       @init_context_menus()
@@ -56,7 +59,7 @@ define [
       h = $(window).height()
       $("#container-wrapper").css
         width: w
-        height: h
+        height: h - 25
       $("#sidebar").css("height", h)
       
     animate: () =>

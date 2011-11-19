@@ -3,7 +3,7 @@ define [
   'Underscore', 
   'Backbone',
   "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min",
+  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
 ], ($, _, Backbone) ->
   class ThreeNodes.AppSidebar
     constructor: () ->
@@ -14,29 +14,6 @@ define [
       @init_sidebar_search()
       @init_sidebar_toggle()
       @init_sidebar_tabs()
-      @init_sidebar_tab_system()
-    
-    init_sidebar_tab_system: () =>
-      self = this
-      $(".new_file").click (e) ->
-        e.preventDefault()
-        self.context.commandMap.execute("ClearWorkspaceCommand")
-        
-      $(".open_file").click (e) ->
-        e.preventDefault()
-        $("#main_file_input_open").click()
-    
-      $(".save_file").click (e) ->
-        e.preventDefault()
-        self.context.commandMap.execute("SaveFileCommand")
-    
-      $("#main_file_input_open").change (e) ->
-        self.context.commandMap.execute("LoadLocalFileCommand", e)
-    
-      $(".rebuild_shaders").click (e) ->
-        e.preventDefault()
-        self.trigger("rebuild_all_shaders")
-        false
     
     init_sidebar_tabs: () =>
       $("#sidebar").tabs
