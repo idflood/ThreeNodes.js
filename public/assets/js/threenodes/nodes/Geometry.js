@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   ThreeNodes.nodes.types.Geometry.PlaneGeometry = (function() {
     __extends(PlaneGeometry, ThreeNodes.NodeBase);
     function PlaneGeometry() {
@@ -17,6 +17,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     PlaneGeometry.prototype.set_fields = function() {
       PlaneGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1);
       this.rack.addFields({
         inputs: {
@@ -58,6 +59,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     CubeGeometry.prototype.set_fields = function() {
       CubeGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1);
       this.rack.addFields({
         inputs: {
@@ -102,6 +104,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     SphereGeometry.prototype.set_fields = function() {
       SphereGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.SphereGeometry(100, 20, 20);
       this.rack.addFields({
         inputs: {
@@ -133,50 +136,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SphereGeometry;
   })();
-  ThreeNodes.nodes.types.Geometry.TorusGeometry = (function() {
-    __extends(TorusGeometry, ThreeNodes.NodeBase);
-    function TorusGeometry() {
-      this.compute = __bind(this.compute, this);
-      this.get_cache_array = __bind(this.get_cache_array, this);
-      this.set_fields = __bind(this.set_fields, this);
-      TorusGeometry.__super__.constructor.apply(this, arguments);
-    }
-    TorusGeometry.prototype.set_fields = function() {
-      TorusGeometry.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2);
-      this.rack.addFields({
-        inputs: {
-          "radius": 100,
-          "tube": 40,
-          "segmentsR": 8,
-          "segmentsT": 6,
-          "arc": Math.PI * 2
-        },
-        outputs: {
-          "out": {
-            type: "Any",
-            val: this.ob
-          }
-        }
-      });
-      return this.cached = this.get_cache_array();
-    };
-    TorusGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get()];
-    };
-    TorusGeometry.prototype.compute = function() {
-      var new_cache;
-      new_cache = this.get_cache_array();
-      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.TorusGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get());
-        this.cached = new_cache;
-      }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
-    };
-    return TorusGeometry;
-  })();
-  return ThreeNodes.nodes.types.Geometry.CylinderGeometry = (function() {
+  ThreeNodes.nodes.types.Geometry.CylinderGeometry = (function() {
     __extends(CylinderGeometry, ThreeNodes.NodeBase);
     function CylinderGeometry() {
       this.compute = __bind(this.compute, this);
@@ -186,6 +146,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     CylinderGeometry.prototype.set_fields = function() {
       CylinderGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false);
       this.rack.addFields({
         inputs: {
@@ -219,6 +180,137 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.ob);
     };
     return CylinderGeometry;
+  })();
+  ThreeNodes.nodes.types.Geometry.TorusGeometry = (function() {
+    __extends(TorusGeometry, ThreeNodes.NodeBase);
+    function TorusGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      TorusGeometry.__super__.constructor.apply(this, arguments);
+    }
+    TorusGeometry.prototype.set_fields = function() {
+      TorusGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2);
+      this.rack.addFields({
+        inputs: {
+          "radius": 100,
+          "tube": 40,
+          "segmentsR": 8,
+          "segmentsT": 6,
+          "arc": Math.PI * 2
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cache_array();
+    };
+    TorusGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get()];
+    };
+    TorusGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
+        this.ob = new THREE.TorusGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get());
+        this.cached = new_cache;
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.set("out", this.ob);
+    };
+    return TorusGeometry;
+  })();
+  ThreeNodes.nodes.types.Geometry.TorusKnotGeometry = (function() {
+    __extends(TorusKnotGeometry, ThreeNodes.NodeBase);
+    function TorusKnotGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      TorusKnotGeometry.__super__.constructor.apply(this, arguments);
+    }
+    TorusKnotGeometry.prototype.set_fields = function() {
+      TorusKnotGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.ob = new THREE.TorusKnotGeometry(200, 40, 64, 8, 2, 3, 1);
+      this.rack.addFields({
+        inputs: {
+          "radius": 200,
+          "tube": 40,
+          "segmentsR": 64,
+          "segmentsT": 8,
+          "p": 2,
+          "q": 3,
+          "heightScale": 1
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cache_array();
+    };
+    TorusKnotGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("p").get(), this.rack.get("q").get(), this.rack.get("heightScale").get()];
+    };
+    TorusKnotGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
+        this.ob = new THREE.TorusKnotGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("p").get(), this.rack.get("q").get(), this.rack.get("heightScale").get());
+        this.cached = new_cache;
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.set("out", this.ob);
+    };
+    return TorusKnotGeometry;
+  })();
+  return ThreeNodes.nodes.types.Geometry.OctahedronGeometry = (function() {
+    __extends(OctahedronGeometry, ThreeNodes.NodeBase);
+    function OctahedronGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      OctahedronGeometry.__super__.constructor.apply(this, arguments);
+    }
+    OctahedronGeometry.prototype.set_fields = function() {
+      OctahedronGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.ob = new THREE.OctahedronGeometry(100, 0);
+      this.rack.addFields({
+        inputs: {
+          "radius": 100,
+          "detail": 0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cache_array();
+    };
+    OctahedronGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("radius").get(), this.rack.get("detail").get()];
+    };
+    OctahedronGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
+        this.ob = new THREE.OctahedronGeometry(this.rack.get("radius").get(), this.rack.get("detail").get());
+        this.cached = new_cache;
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.set("out", this.ob);
+    };
+    return OctahedronGeometry;
   })();
 });
 /*

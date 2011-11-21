@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   ThreeNodes.nodes.types.Utils.Random = (function() {
     __extends(Random, ThreeNodes.NodeBase);
     function Random() {
@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Random.prototype.set_fields = function() {
       Random.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.rack.addFields({
         inputs: {
           "min": 0,
@@ -46,6 +47,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Merge.prototype.set_fields = function() {
       Merge.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       return this.rack.addFields({
         inputs: {
           "in0": {
@@ -82,18 +84,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
     };
     Merge.prototype.compute = function() {
-      var f, k, old;
+      var f, k, old, subval;
       old = this.rack.get("out", true).get();
       this.value = [];
       for (f in this.rack.node_fields.inputs) {
         k = this.rack.node_fields.inputs[f];
         if (k.get() !== null && k.connections.length > 0) {
-          this.value[this.value.length] = k.get();
+          subval = k.get();
+          if (jQuery.type(subval) === "array") {
+            this.value = this.value.concat(subval);
+          } else {
+            this.value[this.value.length] = k.get();
+          }
         }
       }
-      if (this.value !== old) {
-        return this.rack.set("out", this.value);
-      }
+      return this.rack.set("out", this.value);
     };
     return Merge;
   })();
@@ -146,6 +151,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     SoundInput.prototype.set_fields = function() {
       SoundInput.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.counter = 0;
       return this.rack.addFields({
         inputs: {
@@ -175,6 +181,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Timer.prototype.set_fields = function() {
       Timer.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.old = this.get_time();
       this.counter = 0;
       this.rack.addFields({

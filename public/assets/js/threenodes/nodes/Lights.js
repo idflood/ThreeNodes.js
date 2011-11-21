@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   ThreeNodes.nodes.types.Lights.PointLight = (function() {
     __extends(PointLight, ThreeNodes.NodeBase);
     function PointLight() {
@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     PointLight.prototype.set_fields = function() {
       PointLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.PointLight(0xffffff);
       return this.rack.addFields({
         inputs: {
@@ -53,6 +54,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     SpotLight.prototype.set_fields = function() {
       SpotLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.SpotLight(0xffffff);
       return this.rack.addFields({
         inputs: {
@@ -98,6 +100,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     DirectionalLight.prototype.set_fields = function() {
       DirectionalLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.DirectionalLight(0xffffff);
       return this.rack.addFields({
         inputs: {
@@ -135,6 +138,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     AmbientLight.prototype.set_fields = function() {
       AmbientLight.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.AmbientLight(0xffffff);
       return this.rack.addFields({
         inputs: {

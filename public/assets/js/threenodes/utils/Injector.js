@@ -9,6 +9,28 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       };
       this.instancedSingletons = {};
     }
+    Injector.prototype.instanciate = function(className) {
+      var args, res;
+      res = false;
+      args = arguments;
+      if (args.length === 1) {
+        res = new className();
+      } else if (args.length === 2) {
+        res = new className(args[1]);
+      } else if (args.length === 3) {
+        res = new className(args[1], args[2]);
+      } else if (args.length === 4) {
+        res = new className(args[1], args[2], args[3]);
+      } else if (args.length === 5) {
+        res = new className(args[1], args[2], args[3], args[4]);
+      } else if (args.length === 6) {
+        res = new className(args[1], args[2], args[3], args[4], args[5]);
+      } else if (args.length === 7) {
+        res = new className(args[1], args[2], args[3], args[4], args[5], args[6]);
+      }
+      this.applyContext(res);
+      return res;
+    };
     Injector.prototype.applyContext = function(v) {
       if (v && !v.context) {
         v.context = this.context;

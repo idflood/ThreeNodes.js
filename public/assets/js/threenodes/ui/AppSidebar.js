@@ -1,44 +1,18 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.8.16.custom.min"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min"], function($, _, Backbone) {
   return ThreeNodes.AppSidebar = (function() {
     function AppSidebar() {
       this.init_sidebar_tab_new_node = __bind(this.init_sidebar_tab_new_node, this);
       this.init_sidebar_search = __bind(this.init_sidebar_search, this);
       this.init_sidebar_toggle = __bind(this.init_sidebar_toggle, this);
       this.init_sidebar_tabs = __bind(this.init_sidebar_tabs, this);
-      this.init_sidebar_tab_system = __bind(this.init_sidebar_tab_system, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
     }
     AppSidebar.prototype.onRegister = function() {
       this.init_sidebar_tab_new_node();
       this.init_sidebar_search();
       this.init_sidebar_toggle();
-      this.init_sidebar_tabs();
-      return this.init_sidebar_tab_system();
-    };
-    AppSidebar.prototype.init_sidebar_tab_system = function() {
-      var self;
-      self = this;
-      $(".new_file").click(function(e) {
-        e.preventDefault();
-        return self.context.commandMap.execute("ClearWorkspaceCommand");
-      });
-      $(".open_file").click(function(e) {
-        e.preventDefault();
-        return $("#main_file_input_open").click();
-      });
-      $(".save_file").click(function(e) {
-        e.preventDefault();
-        return self.context.commandMap.execute("SaveFileCommand");
-      });
-      $("#main_file_input_open").change(function(e) {
-        return self.context.commandMap.execute("LoadLocalFileCommand", e);
-      });
-      return $(".rebuild_shaders").click(function(e) {
-        e.preventDefault();
-        self.trigger("rebuild_all_shaders");
-        return false;
-      });
+      return this.init_sidebar_tabs();
     };
     AppSidebar.prototype.init_sidebar_tabs = function() {
       return $("#sidebar").tabs({
