@@ -180,6 +180,7 @@ define [
     set_fields: =>
       super
       @auto_evaluate = true
+      @preview_mode = true
       @ob = ThreeNodes.Webgl.current_renderer
       @width = 0
       @height = 0
@@ -197,35 +198,60 @@ define [
           "shadowMapHeight": 512
           "shadowMapEnabled": false
           "shadowMapSoft": true
-        outputs:
-          "out": {type: "Any", val: @ob}
-      @apply_size()
+      
       @rack.get("camera").val.position.z = 1000
       @win = false
-      if @context.testing_mode == false
-        @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
-        @win.document.body.appendChild( @ob.domElement );
-        $("*", @win.document).css
-          padding: 0
-          margin: 0
+      @apply_size()
       @old_bg = false
       @apply_bg_color()
+      self = this
+      $(".center", @main_view).click (e) ->
+        self.create_popup_view()
     
-    apply_bg_color: ->
+    create_popup_view: ->
+      @preview_mode = false
+      @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
+      @win.document.body.appendChild( @ob.domElement )
+      $("*", @win.document).css
+        padding: 0
+        margin: 0
+      @apply_bg_color(true)
+      @apply_size(true)
+    
+    create_preview_view: ->
+      @preview_mode = true
+      $(".center", @main_view).append( @ob.domElement )
+      @apply_bg_color(true)
+      @apply_size(true)
+    
+    apply_bg_color: (force_refresh = false) ->
       new_val = @rack.get('bg_color').get().getContextStyle()
-      if @win && @old_bg != new_val
+      
+      if @old_bg == new_val && force_refresh == false
+        return false
+      
+      @ob.setClearColor( @rack.get('bg_color').get(), 1 )
+      $(".center", @main_view).css
+        background: new_val
+      
+      if @win
         $(@win.document.body).css
           background: new_val
-        @ob.setClearColor( @rack.get('bg_color').get(), 1 )
-        @old_bg = new_val
+      
+      @old_bg = new_val
     
-    apply_size: =>
-      if !@win
-        return false
+    apply_size: (force_refresh = false) =>
       w = @rack.get('width').get()
       h = @rack.get('height').get()
-      if w != @width || h != @height
-        @ob.setSize(w, h)
+      dw = w
+      dh = h
+      if @win == false
+        maxw = 280
+        r = w / h
+        dw = maxw
+        dh = dw / r
+      if dw != @width || dh != @height || force_refresh
+        @ob.setSize(dw, dh)
       @width = w
       @height = h
     
@@ -237,7 +263,19 @@ define [
       fxs.push ThreeNodes.Webgl.effectScreen
       ThreeNodes.Webgl.composer.passes = fxs
       
+    add_renderer_to_dom: =>
+      if @preview_mode && $("canvas", @main_view).length == 0
+        @create_preview_view()
+      if @preview_mode == false && !@win
+        @create_popup_view()
+    
     compute: =>
+      if @win
+        if @win.closed && @preview_mode == false
+          @preview_mode = true
+          @win = false
+      if !@context.testing_mode
+        @add_renderer_to_dom()
       @apply_size()
       @apply_bg_color()
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])

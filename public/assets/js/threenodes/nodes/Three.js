@@ -267,14 +267,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     __extends(WebGLRenderer, ThreeNodes.NodeBase);
     function WebGLRenderer() {
       this.compute = __bind(this.compute, this);
+      this.add_renderer_to_dom = __bind(this.add_renderer_to_dom, this);
       this.apply_post_fx = __bind(this.apply_post_fx, this);
       this.apply_size = __bind(this.apply_size, this);
       this.set_fields = __bind(this.set_fields, this);
       WebGLRenderer.__super__.constructor.apply(this, arguments);
     }
     WebGLRenderer.prototype.set_fields = function() {
+      var self;
       WebGLRenderer.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
+      this.preview_mode = true;
       this.ob = ThreeNodes.Webgl.current_renderer;
       this.width = 0;
       this.height = 0;
@@ -304,48 +307,72 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "shadowMapHeight": 512,
           "shadowMapEnabled": false,
           "shadowMapSoft": true
-        },
-        outputs: {
-          "out": {
-            type: "Any",
-            val: this.ob
-          }
         }
       });
-      this.apply_size();
       this.rack.get("camera").val.position.z = 1000;
       this.win = false;
-      if (this.context.testing_mode === false) {
-        this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false");
-        this.win.document.body.appendChild(this.ob.domElement);
-        $("*", this.win.document).css({
-          padding: 0,
-          margin: 0
-        });
-      }
+      this.apply_size();
       this.old_bg = false;
-      return this.apply_bg_color();
+      this.apply_bg_color();
+      self = this;
+      return $(".center", this.main_view).click(function(e) {
+        return self.create_popup_view();
+      });
     };
-    WebGLRenderer.prototype.apply_bg_color = function() {
+    WebGLRenderer.prototype.create_popup_view = function() {
+      this.preview_mode = false;
+      this.win = window.open('', 'win' + this.nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false");
+      this.win.document.body.appendChild(this.ob.domElement);
+      $("*", this.win.document).css({
+        padding: 0,
+        margin: 0
+      });
+      this.apply_bg_color(true);
+      return this.apply_size(true);
+    };
+    WebGLRenderer.prototype.create_preview_view = function() {
+      this.preview_mode = true;
+      $(".center", this.main_view).append(this.ob.domElement);
+      this.apply_bg_color(true);
+      return this.apply_size(true);
+    };
+    WebGLRenderer.prototype.apply_bg_color = function(force_refresh) {
       var new_val;
+      if (force_refresh == null) {
+        force_refresh = false;
+      }
       new_val = this.rack.get('bg_color').get().getContextStyle();
-      if (this.win && this.old_bg !== new_val) {
+      if (this.old_bg === new_val && force_refresh === false) {
+        return false;
+      }
+      this.ob.setClearColor(this.rack.get('bg_color').get(), 1);
+      $(".center", this.main_view).css({
+        background: new_val
+      });
+      if (this.win) {
         $(this.win.document.body).css({
           background: new_val
         });
-        this.ob.setClearColor(this.rack.get('bg_color').get(), 1);
-        return this.old_bg = new_val;
       }
+      return this.old_bg = new_val;
     };
-    WebGLRenderer.prototype.apply_size = function() {
-      var h, w;
-      if (!this.win) {
-        return false;
+    WebGLRenderer.prototype.apply_size = function(force_refresh) {
+      var dh, dw, h, maxw, r, w;
+      if (force_refresh == null) {
+        force_refresh = false;
       }
       w = this.rack.get('width').get();
       h = this.rack.get('height').get();
-      if (w !== this.width || h !== this.height) {
-        this.ob.setSize(w, h);
+      dw = w;
+      dh = h;
+      if (this.win === false) {
+        maxw = 280;
+        r = w / h;
+        dw = maxw;
+        dh = dw / r;
+      }
+      if (dw !== this.width || dh !== this.height ||  force_refresh) {
+        this.ob.setSize(dw, dh);
       }
       this.width = w;
       return this.height = h;
@@ -357,7 +384,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       fxs.push(ThreeNodes.Webgl.effectScreen);
       return ThreeNodes.Webgl.composer.passes = fxs;
     };
+    WebGLRenderer.prototype.add_renderer_to_dom = function() {
+      if (this.preview_mode && $("canvas", this.main_view).length === 0) {
+        this.create_preview_view();
+      }
+      if (this.preview_mode === false && !this.win) {
+        return this.create_popup_view();
+      }
+    };
     WebGLRenderer.prototype.compute = function() {
+      if (this.win) {
+        if (this.win.closed && this.preview_mode === false) {
+          this.preview_mode = true;
+          this.win = false;
+        }
+      }
+      if (!this.context.testing_mode) {
+        this.add_renderer_to_dom();
+      }
       this.apply_size();
       this.apply_bg_color();
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
