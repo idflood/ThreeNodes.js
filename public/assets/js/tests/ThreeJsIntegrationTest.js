@@ -29,7 +29,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         meshNode = ng.create_node("Three", "Mesh");
         mesh = meshNode.ob;
         ng.render();
-        equals(mesh.material.constructor, THREE.MeshLambertMaterial, "Mesh default material is a MeshLambertMaterial");
+        equals(mesh.material.constructor, THREE.MeshBasicMaterial, "Mesh default material is a MeshBasicMaterial");
         equals(mesh.material.color.r, 1, "Mesh default material is red (1/3)");
         equals(mesh.material.color.g, 0, "Mesh default material is red (2/3)");
         equals(mesh.material.color.b, 0, "Mesh default material is red (3/3)");
