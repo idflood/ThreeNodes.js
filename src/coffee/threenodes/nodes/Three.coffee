@@ -106,7 +106,7 @@ define [
       @rack.addFields
         inputs:
           "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
-          "material": {type: "Any", val: new THREE.MeshLambertMaterial( { color: 0xff0000, wireframe: false })}
+          "material": {type: "Any", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
           "overdraw": false
       @ob = false
       @geometry_cache = false

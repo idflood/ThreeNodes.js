@@ -149,9 +149,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           },
           "material": {
             type: "Any",
-            val: new THREE.MeshLambertMaterial({
-              color: 0xff0000,
-              wireframe: false
+            val: new THREE.MeshBasicMaterial({
+              color: 0xff0000
             })
           },
           "overdraw": false
