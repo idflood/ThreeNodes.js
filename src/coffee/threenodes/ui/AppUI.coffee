@@ -8,7 +8,7 @@ define [
   "order!libs/jquery.tmpl.min",
   'order!threenodes/ui/AppSidebar',
   'order!threenodes/ui/AppMenuBar',
-  "libs/three-extras/js/RequestAnimationFrame",
+  "order!libs/three-extras/js/RequestAnimationFrame",
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",

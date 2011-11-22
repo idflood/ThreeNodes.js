@@ -2,9 +2,9 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "libs/BlobBuilder.min",
-  "libs/FileSaver.min",
-  "libs/json2",
+  "order!libs/BlobBuilder.min",
+  "order!libs/FileSaver.min",
+  "order!libs/json2",
 ], ($, _, Backbone) ->
   class ThreeNodes.FileHandler
     save_local_file: () =>

@@ -2,7 +2,7 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "libs/sockjs-latest.min",
+  "order!libs/sockjs-latest.min",
 ], ($, _, Backbone) ->
   class ThreeNodes.AppWebsocket
     constructor: () ->

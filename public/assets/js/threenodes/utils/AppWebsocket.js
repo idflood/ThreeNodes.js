@@ -1,5 +1,5 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', "libs/sockjs-latest.min"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', "order!libs/sockjs-latest.min"], function($, _, Backbone) {
   return ThreeNodes.AppWebsocket = (function() {
     function AppWebsocket() {
       this.on_websocket_message = __bind(this.on_websocket_message, this);
