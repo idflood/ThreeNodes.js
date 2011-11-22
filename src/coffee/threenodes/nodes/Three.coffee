@@ -181,9 +181,12 @@ define [
       super
       @auto_evaluate = true
       @preview_mode = true
+      @creating_popup = false
       @ob = ThreeNodes.Webgl.current_renderer
       @width = 0
       @height = 0
+      $("body").append("<div id='webgl-window'></div>")
+      @webgl_container = $("#webgl-window")
       @rack.addFields
         inputs:
           "width": 800
@@ -205,14 +208,16 @@ define [
       @old_bg = false
       @apply_bg_color()
       self = this
-      $(".center", @main_view).click (e) ->
+      @webgl_container.click (e) ->
         self.create_popup_view()
     
     create_popup_view: ->
       @preview_mode = false
+      @creating_popup = true
+      
       @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
-      @win.document.body.appendChild( @ob.domElement )
-      $("*", @win.document).css
+      $("body", $(@win.document)).append( @ob.domElement )
+      $("*", $(@win.document)).css
         padding: 0
         margin: 0
       @apply_bg_color(true)
@@ -220,7 +225,7 @@ define [
     
     create_preview_view: ->
       @preview_mode = true
-      $(".center", @main_view).append( @ob.domElement )
+      @webgl_container.append( @ob.domElement )
       @apply_bg_color(true)
       @apply_size(true)
     
@@ -231,7 +236,7 @@ define [
         return false
       
       @ob.setClearColor( @rack.get('bg_color').get(), 1 )
-      $(".center", @main_view).css
+      @webgl_container.css
         background: new_val
       
       if @win
@@ -246,14 +251,14 @@ define [
       dw = w
       dh = h
       if @win == false
-        maxw = 280
+        maxw = 220
         r = w / h
         dw = maxw
         dh = dw / r
       if dw != @width || dh != @height || force_refresh
         @ob.setSize(dw, dh)
-      @width = w
-      @height = h
+      @width = dw
+      @height = dh
     
     apply_post_fx: =>
       # work on a copy of the incoming array
@@ -264,18 +269,24 @@ define [
       ThreeNodes.Webgl.composer.passes = fxs
       
     add_renderer_to_dom: =>
-      if @preview_mode && $("canvas", @main_view).length == 0
+      if @preview_mode && $("canvas", @webgl_container).length == 0
         @create_preview_view()
-      if @preview_mode == false && !@win
+      if @preview_mode == false && @win == false
         @create_popup_view()
     
     compute: =>
-      if @win
+      # help fix asynchronous bug with firefox when opening popup
+      if @creating_popup == true && !@win
+        return
+      
+      @creating_popup = false
+      if @win != false
         if @win.closed && @preview_mode == false
           @preview_mode = true
           @win = false
       if !@context.testing_mode
         @add_renderer_to_dom()
+      
       @apply_size()
       @apply_bg_color()
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
@@ -286,4 +297,5 @@ define [
       @ob.clear()
       ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
       ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
+      ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer
       ThreeNodes.Webgl.composer.render(0.05)
