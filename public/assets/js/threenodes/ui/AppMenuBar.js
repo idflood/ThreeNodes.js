@@ -15,6 +15,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
       });
     }
     AppMenuBar.prototype.on_menu_select = function(event, ui) {
+      var fh, rel;
+      fh = this.context.injector.get("FileHandler");
+      if ($('a', ui.item).attr('href') === "#example") {
+        rel = $('a', ui.item).attr("rel");
+        $.ajax({
+          url: "examples/" + rel,
+          dataType: 'text',
+          success: function(data) {
+            return fh.load_from_json_data(data);
+          }
+        });
+        return false;
+      }
       switch (ui.item.text().toLowerCase()) {
         case "new":
           return this.context.commandMap.execute("ClearWorkspaceCommand");

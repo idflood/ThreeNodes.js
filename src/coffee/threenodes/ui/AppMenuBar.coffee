@@ -18,6 +18,16 @@ define [
         self.context.commandMap.execute("LoadLocalFileCommand", e)
     
     on_menu_select: (event, ui) =>
+      fh = @context.injector.get("FileHandler")
+      if $('a', ui.item).attr('href') == "#example"
+        rel = $('a', ui.item).attr("rel")
+        $.ajax
+          url: "examples/#{rel}"
+          dataType: 'text'
+          success: (data) ->
+            fh.load_from_json_data(data)
+        return false
+      
       switch ui.item.text().toLowerCase()
         when "new" then @context.commandMap.execute("ClearWorkspaceCommand")
         when "open" then $("#main_file_input_open").click()

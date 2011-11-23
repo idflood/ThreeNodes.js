@@ -5,9 +5,6 @@
     background: #333
     border: 1px solid #666
     border-top: 1px solid #444
-    
-    a
-      padding-left: 10px
 
 .ui-menubar
   list-style: none
@@ -35,27 +32,40 @@
     
 .ui-menu
   list-style: none
-  padding: 2px
+  padding: 0
   margin: 0
   display: block
   outline: none
   .ui-menu
     margin-top: -3px
     position: absolute
+  
+  .separator
+    border-bottom: 1px solid #444
+    margin-top: 5px
+    margin-bottom: 5px
+  
   .ui-menu-item
     margin: 0
     padding: 0
     zoom: 1
     width: 100%
+    display: block
+    
     a
       text-decoration: none
       display: block
-      padding: 2px .4em
+      padding: 2px 10px
       line-height: 1.5
       zoom: 1
       font-weight: normal
       &.ui-state-focus, &.ui-state-active
         font-weight: normal
+  
+    &.expanded > a
+      padding-left: 20px
+      background: image-url("menu-expanded.png") no-repeat 9px 7px
+    
   li.ui-state-disabled
     font-weight: normal
     padding: .0em .4em
@@ -169,3 +179,4 @@ input.ui-button
 button.ui-button::-moz-focus-inner
   border: 0
   padding: 0
+  

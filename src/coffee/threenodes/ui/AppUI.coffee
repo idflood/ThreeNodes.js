@@ -60,7 +60,7 @@ define [
       $("#container-wrapper").css
         width: w
         height: h - 25
-      $("#sidebar").css("height", h)
+      $("#sidebar").css("height", h - 25)
       
     animate: () =>
       @render()
