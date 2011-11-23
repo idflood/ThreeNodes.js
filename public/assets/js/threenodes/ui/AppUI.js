@@ -55,7 +55,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         width: w,
         height: h - 25
       });
-      return $("#sidebar").css("height", h);
+      return $("#sidebar").css("height", h - 25);
     };
     AppUI.prototype.animate = function() {
       this.render();
