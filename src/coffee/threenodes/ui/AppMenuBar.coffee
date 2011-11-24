@@ -19,9 +19,10 @@ define [
     
     on_menu_select: (event, ui) =>
       fh = @context.injector.get("FileHandler")
-      @context.commandMap.execute("ClearWorkspaceCommand")
+      
       if $('a', ui.item).attr('href') == "#example"
         rel = $('a', ui.item).attr("rel")
+        @context.commandMap.execute("ClearWorkspaceCommand")
         $.ajax
           url: "examples/#{rel}"
           dataType: 'text'
