@@ -88,7 +88,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return MeshBasicMaterial;
   })();
-  return ThreeNodes.nodes.types.Materials.MeshLambertMaterial = (function() {
+  ThreeNodes.nodes.types.Materials.MeshLambertMaterial = (function() {
     __extends(MeshLambertMaterial, ThreeNodes.NodeMaterialBase);
     function MeshLambertMaterial() {
       this.compute = __bind(this.compute, this);
@@ -136,5 +136,63 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.ob);
     };
     return MeshLambertMaterial;
+  })();
+  return ThreeNodes.nodes.types.Materials.MeshPhongMaterial = (function() {
+    __extends(MeshPhongMaterial, ThreeNodes.NodeMaterialBase);
+    function MeshPhongMaterial() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      MeshPhongMaterial.__super__.constructor.apply(this, arguments);
+    }
+    MeshPhongMaterial.prototype.set_fields = function() {
+      MeshPhongMaterial.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.MeshPhongMaterial({
+        color: 0xff0000
+      });
+      this.rack.addFields({
+        inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(0xff0000)
+          },
+          "ambient": {
+            type: "Color",
+            val: new THREE.Color(0x050505)
+          },
+          "specular": {
+            type: "Color",
+            val: new THREE.Color(0x111111)
+          },
+          "shininess": 30,
+          "reflectivity": 1,
+          "refractionRatio": 0.98,
+          "wireframe": false,
+          "vertexColors": {
+            type: "Any",
+            val: false
+          },
+          "skinning": false
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      this.vars_rebuild_shader_on_change = ["transparent", "depthTest"];
+      return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
+    };
+    MeshPhongMaterial.prototype.compute = function() {
+      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
+        this.ob = new THREE.MeshPhongMaterial({
+          color: 0xff0000
+        });
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
+      return this.rack.set("out", this.ob);
+    };
+    return MeshPhongMaterial;
   })();
 });

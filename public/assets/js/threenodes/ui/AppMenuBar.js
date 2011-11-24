@@ -19,6 +19,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
       fh = this.context.injector.get("FileHandler");
       if ($('a', ui.item).attr('href') === "#example") {
         rel = $('a', ui.item).attr("rel");
+        this.context.commandMap.execute("ClearWorkspaceCommand");
         $.ajax({
           url: "examples/" + rel,
           dataType: 'text',
