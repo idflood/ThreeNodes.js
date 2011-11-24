@@ -79,3 +79,30 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
       @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.Materials.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
+    set_fields: =>
+      super
+      @ob = new THREE.MeshPhongMaterial( { color: 0xff0000 } )
+      @rack.addFields
+        inputs:
+          "color": {type: "Color", val: new THREE.Color(0xff0000)}
+          "ambient": {type: "Color", val: new THREE.Color(0x050505)}
+          "specular": {type: "Color", val: new THREE.Color(0x111111)}
+          "shininess": 30
+          "reflectivity": 1
+          "refractionRatio": 0.98
+          "wireframe": false
+          "vertexColors": {type: "Any", val: false}
+          "skinning": false
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
+      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+    
+    compute: =>
+      if @input_value_has_changed(@vars_rebuild_shader_on_change)
+        @ob = new THREE.MeshPhongMaterial({color: 0xff0000})
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      @rack.set("out", @ob)
