@@ -75,8 +75,8 @@ define [
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
     
     compute: =>
-      #if @input_value_has_changed(@vars_rebuild_shader_on_change)
-      #  @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
-      #@apply_fields_to_val(@rack.node_fields.inputs, @ob)
-      #@material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      if @input_value_has_changed(@vars_rebuild_shader_on_change)
+        @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
       @rack.set("out", @mat)

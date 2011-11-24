@@ -137,7 +137,7 @@ define [
         @geometry_cache = @rack.get('geometry').get().id
         @material_cache = @rack.get('material').get().id
       
-      @ob.overdraw = @rack.get('overdraw').get()
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       
       if needs_rebuild == true

@@ -100,6 +100,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob = new THREE.MeshLambertMaterial({
         color: 0xff0000
       });
+      this.mat = new THREE.MeshLambertMaterial({
+        color: 0xff0000
+      });
       this.rack.addFields({
         inputs: {
           "color": {
@@ -133,7 +136,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
-      return this.rack.set("out", this.ob);
+      return this.rack.set("out", this.mat);
     };
     return MeshLambertMaterial;
   })();
