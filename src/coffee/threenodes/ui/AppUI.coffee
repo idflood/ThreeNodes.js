@@ -12,6 +12,7 @@ define [
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
+  "order!libs/jquery.transform2d",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu) ->
   class ThreeNodes.AppUI
     constructor: () ->
@@ -31,7 +32,22 @@ define [
       @add_window_resize_handler()
       @init_context_menus()
       @show_application()
+      @init_resize_slider()
       @animate()
+    
+    init_resize_slider: () =>
+      self = this
+      $("body").append("<div id='zoom-slider'></div>")
+      scale_graph = (val) ->
+        factor = val / 100
+        $("#container").css('transform', "scale(#{factor}, #{factor})")
+      
+      $("#zoom-slider").slider
+        min: 25
+        step: 25
+        value: 100
+        change: (event, ui) -> scale_graph(ui.value)
+        slide: (event, ui) -> scale_graph(ui.value) 
     
     init_context_menus: () =>
       menu_field_menu = $.tmpl(_view_field_context_menu, {})

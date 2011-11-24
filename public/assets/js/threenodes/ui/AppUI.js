@@ -1,5 +1,5 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!threenodes/core/WebglBase", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', 'order!threenodes/ui/AppMenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!threenodes/core/WebglBase", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', 'order!threenodes/ui/AppMenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
   return ThreeNodes.AppUI = (function() {
     function AppUI() {
       this.animate = __bind(this.animate, this);
@@ -8,6 +8,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.show_application = __bind(this.show_application, this);
       this.add_window_resize_handler = __bind(this.add_window_resize_handler, this);
       this.init_context_menus = __bind(this.init_context_menus, this);
+      this.init_resize_slider = __bind(this.init_resize_slider, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
@@ -23,7 +24,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.add_window_resize_handler();
       this.init_context_menus();
       this.show_application();
+      this.init_resize_slider();
       return this.animate();
+    };
+    AppUI.prototype.init_resize_slider = function() {
+      var scale_graph, self;
+      self = this;
+      $("body").append("<div id='zoom-slider'></div>");
+      scale_graph = function(val) {
+        var factor;
+        factor = val / 100;
+        return $("#container").css('transform', "scale(" + factor + ", " + factor + ")");
+      };
+      return $("#zoom-slider").slider({
+        min: 25,
+        step: 25,
+        value: 100,
+        change: function(event, ui) {
+          return scale_graph(ui.value);
+        },
+        slide: function(event, ui) {
+          return scale_graph(ui.value);
+        }
+      });
     };
     AppUI.prototype.init_context_menus = function() {
       var menu_field_menu, node_menu;
