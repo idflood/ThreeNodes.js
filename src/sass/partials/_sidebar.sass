@@ -1,41 +1,36 @@
 #sidebar
-  //overflow-y: scroll
-  //overflow-x: visible
-  //overflow: hidden
   overflow: auto
   ul
     +no-bullets
     
   ul, li
     +reset-box-model
+  
   > div
     padding-right: 20px
     margin-bottom: 40px
+  
   a
     padding: 3px 10px
     display: block
-    font-size: 11px
   
   #tab-new
     li
-      //background: image-url("list-separator.png") no-repeat 0 0
       border-top: 1px solid #444
       &:first-child
         border-top-color: #333
-        //background: transparent
       
   .ui-tabs-nav
     @extend .mono-font
     +reset-box-model
     margin-left: 10px
     margin-top: 5px
-    //border-bottom: 1px solid #222
     margin-bottom: 10px
-    font-size: 11px
     li
       margin: 0
     li a
       padding: .2em 5px
+  
   #tab-new
     h3
       @extend .mono-font
@@ -57,7 +52,6 @@
 #node_filter
   padding: 5px 10px
   background: #2a2a2a
-  font-size: 11px
   width: 90%
   border-radius: 5px
   margin-bottom: 5px
@@ -67,6 +61,25 @@
   position: absolute
   left: -9999px
   top: -9999px
+
+.ui-tabs-nav
+  +inline-block-list
+  
+#sidebar .ui-tabs-nav
+  li
+    padding: 1px 3px
+    margin: 10px
+    background: #222
+    +border-radius(4px)
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a
+  cursor: text
+.ui-tabs .ui-tabs-hide
+  display: none !important
+#sidebar li.ui-tabs-selected
+  background: #eee
+  a
+    color: #333
+
 
 #sidebar-toggle
   $i: "toggle_black.png"

@@ -74,11 +74,10 @@
 
 
 .ui-menu-icons
-  position: relative
+  @extend .relative
   .ui-menu-item a
-    position: relative
+    @extend .relative
     padding-left: 2em
-
 
 .ui-menu
   .ui-icon
@@ -88,12 +87,10 @@
   .ui-menu-icon
     position: static
     float: right
-    
-
 
 .ui-button
+  @extend .relative
   display: inline-block
-  position: relative
   padding: 0
   margin-right: .1em
   text-decoration: none !important

@@ -1,25 +1,16 @@
 $field-label-padding: 4px
-$field-button-size: 5px
+$field-button-size: 4px
 
 $c: 100
 .connection
   stroke: rgb($c, $c, $c)
   stroke-width: 1
 
-input
-  width: 100%
-  border: 1px solid $node_color + #111
-  background: $node_color
-  font-size: 9px
-  color: #aaa
-  font-family: $blueprint-font-family
 .node
   position: absolute
   background: $node_color
-  color: #aaa
-  font-size: 10px
   padding: 4px
-  +pie-clearfix
+  +clearfix
   min-width: 80px
   +border-radius(8px)
   
@@ -27,11 +18,6 @@ input
     overflow: hidden
     width: 100%
   
-  .head
-    font-weight: normal
-    letter-spacing: 1px
-    text-align: center
-    @extend .mono-font
   .head, .field
     cursor: pointer
   .field a
@@ -48,66 +34,110 @@ input
   .field.field-possible-target
     a
       background: $main_color
+  
+  @extend .ratio-50-50
   .inputs, .outputs
     float: left
     display: inline
-    width: 50%
     color: #777
   .inputs, .outputs, .center
     & > div
-      height: 16px
+      height: 14px
       display: inline-block
       width: 100%
       vertical-align: middle
-  .outputs > div
-    text-align: right
+  
   .inputs a
     margin-right: $field-label-padding
   .outputs a
     margin-left: $field-label-padding
 
-.node-Merge, .node-Get
+// utility classes
+.width-80
   width: 80px
 
-.node-Camera, .node-PointLight
-  width: 140px
+.width-120
+  width: 120px
 
-.node-MeshLambertMaterial, .node-MeshBasicMaterial, .node-MeshPhongMaterial, .node-CubeGeometry
-  width: 230px
+.width-150
+  width: 150px
 
-.node-Object3D, .node-Mesh, .node-Scene, .node-CylinderGeometry
+.width-200
   width: 200px
 
-.node-Number, .node-Random, .node-Timer
-  width: 150px
-  .inputs, .outputs
-    width: 25%
-  .center
-    float: left
-    display: inline
+.width-230
+  width: 230px
+
+.ratio-50-50
+  .inputs
+    width: 50%
+  .outputs
     width: 50%
 
-.node-Vector3, .node-BleachPass, .node-VignettePass
-  min-width: 110px
-
-.node-WebGLRenderer
-  width: 120px
-  .inputs
-    width: 100%
-  .outputs
-    display: none
-    visibility: hidden
-    
-
-.node-FilmPass
-  width: 150px
+.ratio-80-20
   .inputs
     width: 80%
   .outputs
     width: 20%
 
+.ratio-25-50-25
+  .inputs, .outputs
+    width: 25%
+  .center
+    @extend .inline-float
+    width: 50%
+
+// base
+.node-Number
+  @extend .width-150
+  @extend .ratio-25-50-25
+
+.node-String
+  @extend .width-150
+  @extend .ratio-25-50-25
+  
+.node-Vector2, .node-Vector3
+  @extend .width-80
+
+// utils
+.node-Merge, .node-Get
+  @extend .width-80
+
+.node-Random, .node-Timer
+  @extend .width-150
+  @extend .ratio-25-50-25
+
+// three.js related nodes
+.node-Camera, .node-PointLight, .node-SpotLight
+  @extend .width-120
+  @extend .ratio-80-20
+
+.node-MeshLambertMaterial, .node-MeshBasicMaterial, .node-MeshPhongMaterial, .node-CubeGeometry
+  @extend .width-230
+
+.node-Object3D, .node-Mesh, .node-Scene, .node-CylinderGeometry
+  @extend .width-200
+
+// postprocessing
+.node-BleachPass, .node-VignettePass
+  @extend .width-120
+  @extend .ratio-80-20
+
+.node-FilmPass
+  @extend .width-150
+  @extend .ratio-80-20
+
+// special nodes
+.node-WebGLRenderer
+  @extend .width-120
+  .inputs
+    width: 100%
+  .outputs
+    display: none
+    visibility: hidden
+
 .node-Color
-  width: 80px
+  @extend .width-80
   .inputs, .outputs
     width: 35%
   .center
