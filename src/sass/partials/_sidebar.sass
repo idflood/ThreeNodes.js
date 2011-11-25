@@ -14,40 +14,37 @@
     padding: 3px 10px
     display: block
   
-  #tab-new
-    li
-      border-top: 1px solid #444
-      &:first-child
-        border-top-color: #333
-      
   .ui-tabs-nav
     @extend .mono-font
     +reset-box-model
-    margin-left: 10px
-    margin-top: 5px
-    margin-bottom: 10px
-    li
-      margin: 0
+    
     li a
       padding: .2em 5px
   
-  #tab-new
-    h3
-      @extend .mono-font
-      color: #eee
-      font-size: 12px
-      margin-top: 20px
-      margin-bottom: 5px
-      margin-left: 10px
-      font-weight: bold
-    a
-      font-size: 10px
-      letter-spacing: 1px
   .ui-tabs-panel
     padding: 0.5em
   &.ui-widget-content
     padding: 0
     padding-top: 18px
+
+#tab-new
+  h3
+    @extend .mono-font
+    color: #eee
+    font-size: 12px
+    margin-top: 20px
+    margin-bottom: 5px
+    margin-left: 10px
+    font-weight: bold
+  
+  li
+    border-top: 1px solid #444
+    &:first-child
+      border-top-color: #333
+  
+  a
+    font-size: 10px
+    letter-spacing: 1px
 
 #node_filter
   padding: 5px 10px
@@ -56,11 +53,6 @@
   border-radius: 5px
   margin-bottom: 5px
   outline: 0
-  
-#main_file_input_open
-  position: absolute
-  left: -9999px
-  top: -9999px
 
 .ui-tabs-nav
   +inline-block-list
@@ -68,30 +60,17 @@
 #sidebar .ui-tabs-nav
   li
     padding: 1px 3px
-    margin: 10px
+    margin: 0 10px
     background: #222
     +border-radius(4px)
+
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a
   cursor: text
+
 .ui-tabs .ui-tabs-hide
   display: none !important
+
 #sidebar li.ui-tabs-selected
   background: #eee
   a
     color: #333
-
-
-#sidebar-toggle
-  $i: "toggle_black.png"
-  $p: 3px
-  height: image-height($i) + $p * 2
-  width: image-width($i) + $p * 2
-  background: image-url($i) $p $p no-repeat
-  position: absolute
-  top: 32px
-  left: 230px
-  cursor: pointer
-  z-index: 900
-  +rotate(45deg)
-  &.toggle-closed
-    +rotate(0deg)
