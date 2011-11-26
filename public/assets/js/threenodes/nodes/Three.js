@@ -215,7 +215,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "material": {
             type: "Any",
             val: new THREE.ParticleBasicMaterial()
-          }
+          },
+          "sortParticles": false
         }
       });
       this.ob = new THREE.ParticleSystem(this.rack.get('geometry').get(), this.rack.get('material').get());

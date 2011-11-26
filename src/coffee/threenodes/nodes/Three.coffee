@@ -152,6 +152,7 @@ define [
         inputs:
           "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
           "material": {type: "Any", val: new THREE.ParticleBasicMaterial()}
+          "sortParticles": false
       @ob = new THREE.ParticleSystem(@rack.get('geometry').get(), @rack.get('material').get())
       @geometry_cache = false
       @material_cache = false
