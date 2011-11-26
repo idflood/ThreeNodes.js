@@ -196,64 +196,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Mesh;
   })();
-  ThreeNodes.nodes.types.Three.ParticleSystem = (function() {
-    __extends(ParticleSystem, ThreeNodes.nodes.types.Three.Object3D);
-    function ParticleSystem() {
-      this.compute = __bind(this.compute, this);
-      this.rebuild_geometry = __bind(this.rebuild_geometry, this);
-      this.set_fields = __bind(this.set_fields, this);
-      ParticleSystem.__super__.constructor.apply(this, arguments);
-    }
-    ParticleSystem.prototype.set_fields = function() {
-      ParticleSystem.__super__.set_fields.apply(this, arguments);
-      this.rack.addFields({
-        inputs: {
-          "geometry": {
-            type: "Any",
-            val: new THREE.CubeGeometry(200, 200, 200)
-          },
-          "material": {
-            type: "Any",
-            val: new THREE.ParticleBasicMaterial()
-          },
-          "sortParticles": false
-        }
-      });
-      this.ob = new THREE.ParticleSystem(this.rack.get('geometry').get(), this.rack.get('material').get());
-      this.geometry_cache = false;
-      this.material_cache = false;
-      return this.compute();
-    };
-    ParticleSystem.prototype.rebuild_geometry = function() {
-      var field, geom;
-      field = this.rack.get('geometry');
-      if (field.connections.length > 0) {
-        geom = field.connections[0].from_field.node;
-        geom.cached = [];
-        return geom.compute();
-      } else {
-        return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
-      }
-    };
-    ParticleSystem.prototype.compute = function() {
-      var needs_rebuild;
-      needs_rebuild = false;
-      if (this.material_cache !== this.rack.get('material').get().id) {
-        this.rebuild_geometry();
-      }
-      if (this.geometry_cache !== this.rack.get('geometry').get().id || this.material_cache !== this.rack.get('material').get().id || needs_rebuild) {
-        this.ob = new THREE.ParticleSystem(this.rack.get('geometry').get(), this.rack.get('material').get());
-        this.geometry_cache = this.rack.get('geometry').get().id;
-        this.material_cache = this.rack.get('material').get().id;
-      }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
-      if (needs_rebuild === true) {
-        ThreeNodes.rebuild_all_shaders();
-      }
-      return this.rack.set("out", this.ob);
-    };
-    return ParticleSystem;
-  })();
   ThreeNodes.nodes.types.Three.Camera = (function() {
     __extends(Camera, ThreeNodes.NodeBase);
     function Camera() {

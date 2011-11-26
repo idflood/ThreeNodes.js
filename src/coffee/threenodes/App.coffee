@@ -16,6 +16,7 @@ ThreeNodes.nodes =
     Materials: {}
     Lights: {}
     PostProcessing: {}
+    Particle: {}
 
 ThreeNodes.fields =
   types: {}

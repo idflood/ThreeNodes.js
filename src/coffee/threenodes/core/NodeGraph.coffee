@@ -12,6 +12,7 @@ define [
   'order!threenodes/nodes/PostProcessing',
   'order!threenodes/nodes/Three',
   'order!threenodes/nodes/Utils',
+  'order!threenodes/nodes/Particle',
 ], ($, _, Backbone) ->
   class ThreeNodes.NodeGraph
     constructor: () ->
