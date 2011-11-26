@@ -106,3 +106,26 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
       @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.Materials.ParticleBasicMaterial extends ThreeNodes.NodeMaterialBase
+    set_fields: =>
+      super
+      @ob = new THREE.ParticleBasicMaterial({color: 0xff0000})
+      @rack.addFields
+        inputs:
+          "color": {type: "Color", val: new THREE.Color(0xff0000)}
+          "map": {type: "Any", val: false}
+          "size": 1
+          "sizeAttenuation": true
+          "vertexColors": false
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
+      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+    
+    compute: =>
+      if @input_value_has_changed(@vars_rebuild_shader_on_change)
+        @ob = new THREE.ParticleBasicMaterial({color: 0xffffff})
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      @rack.set("out", @ob)

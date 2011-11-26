@@ -145,6 +145,46 @@ define [
       
       @rack.set("out", @ob)
   
+  class ThreeNodes.nodes.types.Three.ParticleSystem extends ThreeNodes.nodes.types.Three.Object3D
+    set_fields: =>
+      super
+      @rack.addFields
+        inputs:
+          "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
+          "material": {type: "Any", val: new THREE.ParticleBasicMaterial()}
+      @ob = new THREE.ParticleSystem(@rack.get('geometry').get(), @rack.get('material').get())
+      @geometry_cache = false
+      @material_cache = false
+      @compute()
+    
+    rebuild_geometry: =>
+      field = @rack.get('geometry')
+      if field.connections.length > 0
+        geom = field.connections[0].from_field.node
+        geom.cached = []
+        geom.compute()
+      else
+        @rack.get('geometry').set(new THREE.CubeGeometry( 200, 200, 200 ))
+      
+    compute: =>
+      needs_rebuild = false
+      
+      if @material_cache != @rack.get('material').get().id
+        # let's trigger a geometry rebuild so we have the appropriate buffers set
+        @rebuild_geometry()
+      
+      if @geometry_cache != @rack.get('geometry').get().id || @material_cache != @rack.get('material').get().id || needs_rebuild
+        @ob = new THREE.ParticleSystem(@rack.get('geometry').get(), @rack.get('material').get())
+        @geometry_cache = @rack.get('geometry').get().id
+        @material_cache = @rack.get('material').get().id
+      
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
+      
+      if needs_rebuild == true
+        ThreeNodes.rebuild_all_shaders()
+      
+      @rack.set("out", @ob)
+  
   class ThreeNodes.nodes.types.Three.Camera extends ThreeNodes.NodeBase
     set_fields: =>
       super
