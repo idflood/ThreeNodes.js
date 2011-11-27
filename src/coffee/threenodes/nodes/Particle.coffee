@@ -72,3 +72,38 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
       @rack.set("out", @ob)
+
+  class ThreeNodes.nodes.types.Particle.RandomCloudGeometry extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @ob = new THREE.Geometry()
+      @rack.addFields
+        inputs:
+          "nbrParticles": 20000
+          "radius": 2000
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @vars_rebuild_on_change = ["nbrParticles", "radius"]
+      @cache = @get_cache_array()
+      @generate()
+    
+    get_cache_array: =>
+      [@rack.get("radius").get(), @rack.get("nbrParticles").get()]
+    
+    generate: =>
+      @ob = new THREE.Geometry()
+      rad = @rack.get("radius").get()
+      total = @rack.get("nbrParticles").get()
+      for i in [0..total]
+        vector = new THREE.Vector3( Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5 )
+        @ob.vertices.push( new THREE.Vertex( vector ) )
+      true
+      
+    compute: =>
+      new_cache = @get_cache_array()
+      if new_cache != @cache
+        @generate()
+      
+      @cache = new_cache
+      @rack.set("out", @ob)
+      

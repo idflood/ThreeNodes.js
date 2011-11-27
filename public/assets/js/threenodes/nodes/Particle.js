@@ -65,7 +65,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return ParticleSystem;
   })();
-  return ThreeNodes.nodes.types.Particle.ParticleBasicMaterial = (function() {
+  ThreeNodes.nodes.types.Particle.ParticleBasicMaterial = (function() {
     __extends(ParticleBasicMaterial, ThreeNodes.NodeMaterialBase);
     function ParticleBasicMaterial() {
       this.compute = __bind(this.compute, this);
@@ -112,5 +112,58 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.ob);
     };
     return ParticleBasicMaterial;
+  })();
+  return ThreeNodes.nodes.types.Particle.RandomCloudGeometry = (function() {
+    __extends(RandomCloudGeometry, ThreeNodes.NodeBase);
+    function RandomCloudGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.generate = __bind(this.generate, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      RandomCloudGeometry.__super__.constructor.apply(this, arguments);
+    }
+    RandomCloudGeometry.prototype.set_fields = function() {
+      RandomCloudGeometry.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.Geometry();
+      this.rack.addFields({
+        inputs: {
+          "nbrParticles": 20000,
+          "radius": 2000
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      this.vars_rebuild_on_change = ["nbrParticles", "radius"];
+      this.cache = this.get_cache_array();
+      return this.generate();
+    };
+    RandomCloudGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("radius").get(), this.rack.get("nbrParticles").get()];
+    };
+    RandomCloudGeometry.prototype.generate = function() {
+      var i, rad, total, vector;
+      this.ob = new THREE.Geometry();
+      rad = this.rack.get("radius").get();
+      total = this.rack.get("nbrParticles").get();
+      for (i = 0; 0 <= total ? i <= total : i >= total; 0 <= total ? i++ : i--) {
+        vector = new THREE.Vector3(Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5);
+        this.ob.vertices.push(new THREE.Vertex(vector));
+      }
+      return true;
+    };
+    RandomCloudGeometry.prototype.compute = function() {
+      var new_cache;
+      new_cache = this.get_cache_array();
+      if (new_cache !== this.cache) {
+        this.generate();
+      }
+      this.cache = new_cache;
+      return this.rack.set("out", this.ob);
+    };
+    return RandomCloudGeometry;
   })();
 });
