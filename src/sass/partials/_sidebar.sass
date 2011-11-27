@@ -1,5 +1,14 @@
 #sidebar
   overflow: auto
+  h3
+    @extend .mono-font
+    color: #eee
+    font-size: 12px
+    margin-top: 20px
+    margin-bottom: 5px
+    margin-left: 10px
+    font-weight: bold
+  
   ul
     +no-bullets
     
@@ -28,15 +37,6 @@
     padding-top: 18px
 
 #tab-new
-  h3
-    @extend .mono-font
-    color: #eee
-    font-size: 12px
-    margin-top: 20px
-    margin-bottom: 5px
-    margin-left: 10px
-    font-weight: bold
-  
   li
     border-top: 1px solid #444
     &:first-child
@@ -45,6 +45,11 @@
   a
     font-size: 10px
     letter-spacing: 1px
+
+#tab-attribute
+  h3
+    margin-left: 0
+    margin-top: 5px
 
 #node_filter
   padding: 5px 10px
