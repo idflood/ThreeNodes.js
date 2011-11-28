@@ -20,11 +20,19 @@ define [
           "opacity": 1
           "transparent": false
           "depthTest": true
-          #"blending": THREE.NormalBlending
           "alphaTest": 0
           "polygonOffset": false
           "polygonOffsetFactor": 0
           "polygonOffsetUnits": 0
+          "blending":
+            type: "Float"
+            val: THREE.NormalBlending
+            values:
+              "Normal": THREE.NormalBlending
+              "Additive": THREE.AdditiveBlending
+              "Subtractive": THREE.SubtractiveBlending
+              "Multiply": THREE.MultiplyBlending
+              "AdditiveAlpha": THREE.AdditiveAlphaBlending
     
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
@@ -46,7 +54,7 @@ define [
           "skinning": false
         outputs:
           "out": {type: "Any", val: @ob}
-      @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
+      @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map", "blending"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
     
     compute: =>

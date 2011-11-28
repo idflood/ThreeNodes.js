@@ -9,11 +9,13 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", 'order!threenodes/utils/Utils', "order!libs/signals.min"], function($, _, Backbone, _view_node_field_in, _view_node_field_out) {
   ThreeNodes.NodeField = (function() {
     NodeField.connections = false;
-    function NodeField(name, val, fid) {
+    function NodeField(name, val, possible_values, fid) {
       var self;
       this.name = name;
       this.val = val;
+      this.possible_values = possible_values != null ? possible_values : false;
       this.fid = fid != null ? fid : ThreeNodes.Utils.get_uid();
+      this.create_sidebar_container = __bind(this.create_sidebar_container, this);
       this.on_value_changed = __bind(this.on_value_changed, this);
       this.remove_connections = __bind(this.remove_connections, this);
       this.unregister_connection = __bind(this.unregister_connection, this);
@@ -152,6 +154,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
       return this.val;
     };
+    NodeField.prototype.create_sidebar_container = function() {
+      var $cont, $target;
+      $cont = $("#tab-attribute");
+      $cont.append("<div id='side-field-" + this.fid + "'></div>");
+      $target = $("#side-field-" + this.fid);
+      $target.append("<h3>" + this.name + "</h3>");
+      return $target;
+    };
     return NodeField;
   })();
   ThreeNodes.fields.types.Any = (function() {
@@ -229,12 +239,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       String.__super__.constructor.apply(this, arguments);
     }
     String.prototype.render_sidebar = function() {
-      var $cont, $target, f_in, self;
+      var $target, f_in, self;
       self = this;
-      $cont = $("#tab-attribute");
-      $cont.append("<div id='side-field-" + this.fid + "'></div>");
-      $target = $("#side-field-" + this.fid);
-      $target.append("<h3>" + this.name + "</h3>");
+      $target = this.create_sidebar_container();
       $target.append("<div><input type='text' id='side-field-txt-input-" + this.fid + "' /></div>");
       f_in = $("#side-field-txt-input-" + this.fid);
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
@@ -268,28 +275,55 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     function Float() {
       this.compute_value = __bind(this.compute_value, this);
       this.render_sidebar = __bind(this.render_sidebar, this);
+      this.create_sidebar_input = __bind(this.create_sidebar_input, this);
+      this.create_sidebar_select = __bind(this.create_sidebar_select, this);
       Float.__super__.constructor.apply(this, arguments);
     }
-    Float.prototype.render_sidebar = function() {
-      var $cont, $target, f_in, self;
+    Float.prototype.create_sidebar_select = function($target) {
+      var dval, f, input, self;
       self = this;
-      $cont = $("#tab-attribute");
-      $cont.append("<div id='side-field-" + this.fid + "'></div>");
-      $target = $("#side-field-" + this.fid);
-      $target.append("<h3>" + this.name + "</h3>");
+      input = "<div><select>";
+      for (f in this.possible_values) {
+        dval = this.possible_values[f];
+        console.log("dval " + dval);
+        console.log("val " + this.val);
+        if (dval === this.val) {
+          input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
+        } else {
+          input += "<option value='" + dval + "'>" + f + "</option>";
+        }
+      }
+      input += "</select></div>";
+      $target.append(input);
+      $("select", $target).change(function(e) {
+        return self.set($(this).val());
+      });
+      return true;
+    };
+    Float.prototype.create_sidebar_input = function($target) {
+      var f_in;
       $target.append("<div><input type='text' id='side-field-txt-input-" + this.fid + "' /></div>");
       f_in = $("#side-field-txt-input-" + this.fid);
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
         return f_in.val(v.toString().substring(0, 10));
       };
       f_in.val(this.get());
-      f_in.keypress(function(e) {
+      return f_in.keypress(function(e) {
         if (e.which === 13) {
           self.set($(this).val());
           return $(this).blur();
         }
       });
-      return false;
+    };
+    Float.prototype.render_sidebar = function() {
+      var $target;
+      $target = this.create_sidebar_container();
+      if (this.possible_values) {
+        this.create_sidebar_select($target);
+      } else {
+        this.create_sidebar_input($target);
+      }
+      return true;
     };
     Float.prototype.compute_value = function(val) {
       var res;

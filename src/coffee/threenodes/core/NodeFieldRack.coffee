@@ -102,7 +102,10 @@ define [
     addField: (name, value, direction = "inputs") =>
       f = false
       if $.type(value) == "object"
-        f = new ThreeNodes.fields.types[value.type](name, value.val)
+        if value.values
+          f = new ThreeNodes.fields.types[value.type](name, value.val, value.values)
+        else
+          f = new ThreeNodes.fields.types[value.type](name, value.val)
       else
         f = @create_field_from_default_type(name, value)
       if direction != "inputs"

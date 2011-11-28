@@ -169,7 +169,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       }
       f = false;
       if ($.type(value) === "object") {
-        f = new ThreeNodes.fields.types[value.type](name, value.val);
+        if (value.values) {
+          f = new ThreeNodes.fields.types[value.type](name, value.val, value.values);
+        } else {
+          f = new ThreeNodes.fields.types[value.type](name, value.val);
+        }
       } else {
         f = this.create_field_from_default_type(name, value);
       }

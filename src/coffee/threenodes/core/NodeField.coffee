@@ -9,7 +9,7 @@ define [
 ], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
   class ThreeNodes.NodeField
     @connections = false
-    constructor: (@name, @val, @fid = ThreeNodes.Utils.get_uid()) ->
+    constructor: (@name, @val, @possible_values = false, @fid = ThreeNodes.Utils.get_uid()) ->
       self = this
       @on_value_update_hooks = {}
       @signal = new signals.Signal()
@@ -100,8 +100,14 @@ define [
       switch $.type(val)
         when "array" then @val = _.map(val, (n) -> @compute_value(n))
         else @val = @compute_value(val)
-      #@update_ui()
       @val
+    
+    create_sidebar_container: () =>
+      $cont = $("#tab-attribute")
+      $cont.append("<div id='side-field-" + @fid + "'></div>")
+      $target = $("#side-field-#{@fid}")
+      $target.append("<h3>#{@name}</h3>")
+      return $target
   
   class ThreeNodes.fields.types.Any extends ThreeNodes.NodeField
     compute_value : (val) =>
@@ -138,10 +144,7 @@ define [
   class ThreeNodes.fields.types.String extends ThreeNodes.NodeField
     render_sidebar: =>
       self = this
-      $cont = $("#tab-attribute")
-      $cont.append("<div id='side-field-" + @fid + "'></div>")
-      $target = $("#side-field-#{@fid}")
-      $target.append("<h3>#{@name}</h3>")
+      $target = @create_sidebar_container()
       $target.append("<div><input type='text' id='side-field-txt-input-#{@fid}' /></div>")
       f_in = $("#side-field-txt-input-#{@fid}")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
@@ -160,12 +163,24 @@ define [
       res
   
   class ThreeNodes.fields.types.Float extends ThreeNodes.NodeField
-    render_sidebar: =>
+    create_sidebar_select: ($target) =>
       self = this
-      $cont = $("#tab-attribute")
-      $cont.append("<div id='side-field-" + @fid + "'></div>")
-      $target = $("#side-field-#{@fid}")
-      $target.append("<h3>#{@name}</h3>")
+      input = "<div><select>"
+      for f of @possible_values
+        dval = @possible_values[f]
+        console.log "dval #{dval}"
+        console.log "val #{@val}"
+        if dval == @val
+          input += "<option value='#{dval}' selected='selected'>#{f}</option>"
+        else
+          input += "<option value='#{dval}'>#{f}</option>"
+      input += "</select></div>"
+      $target.append(input)
+      $("select", $target).change (e) ->
+        self.set($(this).val())
+      return true
+    
+    create_sidebar_input: ($target) =>
       $target.append("<div><input type='text' id='side-field-txt-input-#{@fid}' /></div>")
       f_in = $("#side-field-txt-input-#{@fid}")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
@@ -175,7 +190,16 @@ define [
         if e.which == 13
           self.set($(this).val())
           $(this).blur()
-      false
+          
+    render_sidebar: =>
+      $target = @create_sidebar_container()
+      if @possible_values
+        @create_sidebar_select($target)
+      else
+        @create_sidebar_input($target)
+      
+      true
+    
     compute_value : (val) =>
       res = @get()
       switch $.type(val)

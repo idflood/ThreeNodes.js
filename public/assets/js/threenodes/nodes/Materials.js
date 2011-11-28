@@ -27,7 +27,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "alphaTest": 0,
           "polygonOffset": false,
           "polygonOffsetFactor": 0,
-          "polygonOffsetUnits": 0
+          "polygonOffsetUnits": 0,
+          "blending": {
+            type: "Float",
+            val: THREE.NormalBlending,
+            values: {
+              "Normal": THREE.NormalBlending,
+              "Additive": THREE.AdditiveBlending,
+              "Subtractive": THREE.SubtractiveBlending,
+              "Multiply": THREE.MultiplyBlending,
+              "AdditiveAlpha": THREE.AdditiveAlphaBlending
+            }
+          }
         }
       });
     };
@@ -73,7 +84,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
+      this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map", "blending"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     MeshBasicMaterial.prototype.compute = function() {
