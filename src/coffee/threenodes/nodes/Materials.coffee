@@ -54,7 +54,7 @@ define [
           "skinning": false
         outputs:
           "out": {type: "Any", val: @ob}
-      @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map", "blending"]
+      @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
     
     compute: =>

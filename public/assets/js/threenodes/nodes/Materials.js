@@ -84,7 +84,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map", "blending"];
+      this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     MeshBasicMaterial.prototype.compute = function() {
