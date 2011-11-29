@@ -142,7 +142,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       _ref = data.fields["in"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
-        node_field = this.node_fields.inputs["fid-" + f.fid];
+        node_field = this.node_fields_by_name.inputs[f.name];
         if (node_field && f.val) {
           node_field.set(f.val);
         }

@@ -2,9 +2,11 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order!threenodes/nodes/Base', 'order!threenodes/nodes/Conditional', 'order!threenodes/nodes/Geometry', 'order!threenodes/nodes/Lights', 'order!threenodes/nodes/Materials', 'order!threenodes/nodes/Math', 'order!threenodes/nodes/PostProcessing', 'order!threenodes/nodes/Three', 'order!threenodes/nodes/Utils', 'order!threenodes/nodes/Particle'], function($, _, Backbone) {
   return ThreeNodes.NodeGraph = (function() {
     function NodeGraph() {
+      this.get_node = __bind(this.get_node, this);
       this.render = __bind(this.render, this);
       this.get_component_by_type = __bind(this.get_component_by_type, this);
       this.create_node = __bind(this.create_node, this);      this.nodes = [];
+      this.nodes_by_nid = {};
       this.node_connections = [];
       this.types = false;
     }
@@ -19,6 +21,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       n = new ThreeNodes.nodes.types[component][type](x, y, inXML, inJSON);
       this.context.injector.applyContext(n);
       this.nodes.push(n);
+      this.nodes_by_nid[n.nid] = n;
       return n;
     };
     NodeGraph.prototype.get_component_by_type = function(type) {
@@ -78,6 +81,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       if (ind !== -1) {
         return this.node_connections.splice(ind, 1);
       }
+    };
+    NodeGraph.prototype.get_node = function(nid) {
+      return this.nodes_by_nid[nid];
     };
     NodeGraph.prototype.remove_all_nodes = function() {
       var node, _i, _len, _ref;

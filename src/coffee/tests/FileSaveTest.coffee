@@ -38,8 +38,8 @@ define [
         
         _c1 = parsed_data1.connections[0]
         equals _c1.id, c1.cid, "Connection1.cid saved"
-        equals _c1.from, c1.from_field.fid, "Connection1.from_field saved"
-        equals _c1.to, c1.to_field.fid, "Connection1.to_field saved"
+        equals _c1.from, c1.from_field.name, "Connection1.from_field saved"
+        equals _c1.to, c1.to_field.name, "Connection1.to_field saved"
         
         # save a scene connected to webglrenderer
         app.commandMap.execute "ClearWorkspaceCommand"

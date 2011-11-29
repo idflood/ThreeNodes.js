@@ -48,8 +48,10 @@ define [
     toJSON: () ->
       res =
         id: @cid
-        from: @from_field.fid
-        to: @to_field.fid
+        from_node: @from_field.node.nid
+        from: @from_field.name
+        to_node: @to_field.node.nid
+        to: @to_field.name
       res
     
     toXML: () ->

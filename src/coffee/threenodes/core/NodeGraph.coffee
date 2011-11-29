@@ -17,6 +17,7 @@ define [
   class ThreeNodes.NodeGraph
     constructor: () ->
       @nodes = []
+      @nodes_by_nid = {}
       @node_connections = []
       @types = false
     
@@ -24,6 +25,7 @@ define [
       n = new ThreeNodes.nodes.types[component][type](x, y, inXML, inJSON)
       @context.injector.applyContext(n)
       @nodes.push(n)
+      @nodes_by_nid[n.nid] = n
       n
     
     get_component_by_type: (type) =>
@@ -68,6 +70,9 @@ define [
       ind = @node_connections.indexOf(c)
       if ind != -1
         @node_connections.splice(ind, 1)
+    
+    get_node: (nid) =>
+      @nodes_by_nid[nid]
     
     remove_all_nodes: () ->
       $("#tab-attribute").html("")

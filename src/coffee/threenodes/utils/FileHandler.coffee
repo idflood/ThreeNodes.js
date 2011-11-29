@@ -50,8 +50,10 @@ define [
         n = nodegraph.create_node(component, node.type, node.x, node.y, false, node)
       
       for connection in loaded_data.connections
-        from = ThreeNodes.nodes.fields[connection.from.toString()]
-        to = ThreeNodes.nodes.fields[connection.to.toString()]
+        from_node = nodegraph.get_node(connection.from_node.toString())
+        from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
+        to_node = nodegraph.get_node(connection.to_node.toString())
+        to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
         c = new ThreeNodes.NodeConnection(from, to, connection.id)
         @context.injector.applyContext(c)
       ThreeNodes.uid = loaded_data.uid

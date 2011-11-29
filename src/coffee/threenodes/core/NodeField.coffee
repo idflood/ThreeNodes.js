@@ -51,7 +51,7 @@ define [
     
     toJSON : () =>
       res =
-        fid: @fid
+        name: @name
       # help avoid cyclic value
       val_type = jQuery.type(@get())
       if val_type != "object" && val_type != "array"

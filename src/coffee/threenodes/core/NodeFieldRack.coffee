@@ -84,7 +84,7 @@ define [
     
     fromJSON: (data) =>
       for f in data.fields.in
-        node_field = @node_fields.inputs["fid-#{f.fid}"]
+        node_field = @node_fields_by_name.inputs[f.name]
         if node_field && f.val
           node_field.set(f.val)
       true
