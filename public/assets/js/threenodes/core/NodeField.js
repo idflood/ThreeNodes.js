@@ -301,7 +301,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return true;
     };
     Float.prototype.create_sidebar_input = function($target) {
-      var f_in;
+      var f_in, self;
+      self = this;
       $target.append("<div><input type='text' id='side-field-txt-input-" + this.fid + "' /></div>");
       f_in = $("#side-field-txt-input-" + this.fid);
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {

@@ -181,6 +181,7 @@ define [
       return true
     
     create_sidebar_input: ($target) =>
+      self = this
       $target.append("<div><input type='text' id='side-field-txt-input-#{@fid}' /></div>")
       f_in = $("#side-field-txt-input-#{@fid}")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
