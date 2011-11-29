@@ -146,8 +146,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             type: "Color",
             val: new THREE.Color(0xffffff)
           },
-          "intensity": 1,
-          "distance": 0
+          "position": {
+            type: "Vector3",
+            val: new THREE.Vector3(0, 300, 0)
+          }
         },
         outputs: {
           "out": {
