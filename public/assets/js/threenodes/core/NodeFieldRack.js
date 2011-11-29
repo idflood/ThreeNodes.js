@@ -142,7 +142,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       _ref = data.fields["in"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
-        node_field = this.node_fields.inputs["fid-" + f.fid];
+        node_field = this.node_fields_by_name.inputs[f.name];
         if (node_field && f.val) {
           node_field.set(f.val);
         }
@@ -169,7 +169,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       }
       f = false;
       if ($.type(value) === "object") {
-        f = new ThreeNodes.fields.types[value.type](name, value.val);
+        if (value.values) {
+          f = new ThreeNodes.fields.types[value.type](name, value.val, value.values);
+        } else {
+          f = new ThreeNodes.fields.types[value.type](name, value.val);
+        }
       } else {
         f = this.create_field_from_default_type(name, value);
       }

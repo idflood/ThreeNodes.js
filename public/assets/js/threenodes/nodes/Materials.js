@@ -27,7 +27,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "alphaTest": 0,
           "polygonOffset": false,
           "polygonOffsetFactor": 0,
-          "polygonOffsetUnits": 0
+          "polygonOffsetUnits": 0,
+          "blending": {
+            type: "Float",
+            val: THREE.NormalBlending,
+            values: {
+              "Normal": THREE.NormalBlending,
+              "Additive": THREE.AdditiveBlending,
+              "Subtractive": THREE.SubtractiveBlending,
+              "Multiply": THREE.MultiplyBlending,
+              "AdditiveAlpha": THREE.AdditiveAlphaBlending
+            }
+          }
         }
       });
     };

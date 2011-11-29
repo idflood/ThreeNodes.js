@@ -13,7 +13,8 @@ ThreeNodes.nodes = {
     Three: {},
     Materials: {},
     Lights: {},
-    PostProcessing: {}
+    PostProcessing: {},
+    Particle: {}
   }
 };
 ThreeNodes.fields = {

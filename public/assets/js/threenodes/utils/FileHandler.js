@@ -55,7 +55,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       return res;
     };
     FileHandler.prototype.load_from_json_data = function(txt) {
-      var c, component, connection, from, loaded_data, n, node, nodegraph, to, _i, _j, _len, _len2, _ref, _ref2;
+      var c, component, connection, from, from_node, loaded_data, n, node, nodegraph, to, to_node, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
       loaded_data = JSON.parse(txt);
       _ref = loaded_data.nodes;
@@ -67,8 +67,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       _ref2 = loaded_data.connections;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         connection = _ref2[_j];
-        from = ThreeNodes.nodes.fields[connection.from.toString()];
-        to = ThreeNodes.nodes.fields[connection.to.toString()];
+        from_node = nodegraph.get_node(connection.from_node.toString());
+        from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()];
+        to_node = nodegraph.get_node(connection.to_node.toString());
+        to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()];
         c = new ThreeNodes.NodeConnection(from, to, connection.id);
         this.context.injector.applyContext(c);
       }
