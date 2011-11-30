@@ -118,17 +118,28 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     function RandomCloudGeometry() {
       this.compute = __bind(this.compute, this);
       this.generate = __bind(this.generate, this);
+      this.move_particles = __bind(this.move_particles, this);
+      this.limit_position = __bind(this.limit_position, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
       this.set_fields = __bind(this.set_fields, this);
       RandomCloudGeometry.__super__.constructor.apply(this, arguments);
     }
     RandomCloudGeometry.prototype.set_fields = function() {
       RandomCloudGeometry.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
       this.ob = new THREE.Geometry();
       this.rack.addFields({
         inputs: {
           "nbrParticles": 20000,
-          "radius": 2000
+          "radius": 2000,
+          "rndVelocity": {
+            type: "Vector3",
+            val: new THREE.Vector3(1, 1, 1)
+          },
+          "linearVelocity": {
+            type: "Vector3",
+            val: new THREE.Vector3(1, 1, 1)
+          }
         },
         outputs: {
           "out": {
@@ -137,30 +148,60 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      this.vars_rebuild_on_change = ["nbrParticles", "radius"];
       this.cache = this.get_cache_array();
       return this.generate();
     };
     RandomCloudGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("nbrParticles").get()];
+      return [this.rack.get("radius").get(), this.rack.get("nbrParticles").get(), this.rack.get("linearVelocity").get()];
+    };
+    RandomCloudGeometry.prototype.limit_position = function(pos) {
+      var margin, radius;
+      radius = this.rack.get("radius").get();
+      margin = 5;
+      if (pos < radius * -1) {
+        pos = radius - margin;
+      } else if (pos > radius) {
+        pos = radius * -1 + margin;
+      }
+      return pos;
+    };
+    RandomCloudGeometry.prototype.move_particles = function() {
+      var key, p, rndVelocity, _ref;
+      rndVelocity = this.rack.get("rndVelocity").get();
+      _ref = this.ob.vertices;
+      for (key in _ref) {
+        p = _ref[key];
+        p.position.x += Math.random() * rndVelocity.x - rndVelocity.x * 0.5 + p.velocity.x;
+        p.position.y += Math.random() * rndVelocity.y - rndVelocity.y * 0.5 + p.velocity.y;
+        p.position.z += Math.random() * rndVelocity.z - rndVelocity.z * 0.5 + p.velocity.z;
+        p.position.x = this.limit_position(p.position.x);
+        p.position.y = this.limit_position(p.position.y);
+        p.position.z = this.limit_position(p.position.z);
+      }
+      this.ob.__dirtyVertices = true;
+      return true;
     };
     RandomCloudGeometry.prototype.generate = function() {
-      var i, rad, total, vector;
+      var i, linearVelocity, rad, total, v, vector;
       this.ob = new THREE.Geometry();
       rad = this.rack.get("radius").get();
       total = this.rack.get("nbrParticles").get();
+      linearVelocity = this.rack.get("linearVelocity").get();
       for (i = 0; 0 <= total ? i <= total : i >= total; 0 <= total ? i++ : i--) {
         vector = new THREE.Vector3(Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5);
-        this.ob.vertices.push(new THREE.Vertex(vector));
+        v = new THREE.Vertex(vector);
+        v.velocity = new THREE.Vector3(Math.random() * linearVelocity.x - linearVelocity.x * 0.5, Math.random() * linearVelocity.y - linearVelocity.y * 0.5, Math.random() * linearVelocity.z - linearVelocity.z * 0.5);
+        this.ob.vertices.push(v);
       }
       return true;
     };
     RandomCloudGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
-      if (new_cache !== this.cache) {
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cache) === false) {
         this.generate();
       }
+      this.move_particles();
       this.cache = new_cache;
       return this.rack.set("out", this.ob);
     };

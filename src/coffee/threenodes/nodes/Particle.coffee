@@ -76,34 +76,61 @@ define [
   class ThreeNodes.nodes.types.Particle.RandomCloudGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super
+      @auto_evaluate = true
       @ob = new THREE.Geometry()
       @rack.addFields
         inputs:
           "nbrParticles": 20000
           "radius": 2000
+          "rndVelocity": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
+          "linearVelocity": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
         outputs:
           "out": {type: "Any", val: @ob}
-      @vars_rebuild_on_change = ["nbrParticles", "radius"]
       @cache = @get_cache_array()
       @generate()
     
     get_cache_array: =>
-      [@rack.get("radius").get(), @rack.get("nbrParticles").get()]
+      [@rack.get("radius").get(), @rack.get("nbrParticles").get(), @rack.get("linearVelocity").get()]
+    
+    limit_position: (pos) =>
+      radius = @rack.get("radius").get()
+      margin = 5
+      if pos < radius * -1
+        pos = radius - margin
+      else if pos > radius
+        pos = radius * -1 + margin
+      pos
+    
+    move_particles: =>
+      rndVelocity = @rack.get("rndVelocity").get()
+      for key,p of @ob.vertices
+        p.position.x += Math.random() * rndVelocity.x - rndVelocity.x * 0.5 + p.velocity.x
+        p.position.y += Math.random() * rndVelocity.y - rndVelocity.y * 0.5 + p.velocity.y
+        p.position.z += Math.random() * rndVelocity.z - rndVelocity.z * 0.5 + p.velocity.z
+        p.position.x = @limit_position(p.position.x)
+        p.position.y = @limit_position(p.position.y)
+        p.position.z = @limit_position(p.position.z)
+      @ob.__dirtyVertices = true
+      true
     
     generate: =>
       @ob = new THREE.Geometry()
       rad = @rack.get("radius").get()
       total = @rack.get("nbrParticles").get()
+      linearVelocity = @rack.get("linearVelocity").get()
       for i in [0..total]
         vector = new THREE.Vector3( Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5 )
-        @ob.vertices.push( new THREE.Vertex( vector ) )
+        v = new THREE.Vertex( vector )
+        v.velocity = new THREE.Vector3( Math.random() * linearVelocity.x - linearVelocity.x * 0.5, Math.random() * linearVelocity.y - linearVelocity.y * 0.5, Math.random() * linearVelocity.z - linearVelocity.z * 0.5 )
+        @ob.vertices.push( v )
       true
       
     compute: =>
       new_cache = @get_cache_array()
-      if new_cache != @cache
+      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cache) == false
         @generate()
-      
+        
+      @move_particles()
       @cache = new_cache
       @rack.set("out", @ob)
       
