@@ -33,29 +33,34 @@ define [
           $("#sidebar-toggle").addClass("toggle-closed")
           $t.animate({left: -220}, { queue: false, duration: 120 }, "swing")
           $("#sidebar-toggle").animate({left: o}, { queue: false, duration: 180 }, "swing")
+    
+    filter_list_item: ($item, value) =>
+      s = $.trim($("a", $item).html()).toLowerCase()
+      if s.indexOf(value) == -1
+        $item.hide()
+      else
+        $item.show()
+    
+    filter_list: (ul, value) =>
+      self = this
+      ul_title = ul.prev()
+      has_visible_items = false
       
+      $("li", ul).each () -> self.filter_list_item($(this), value)
+      
+      if $("li:visible", ul).length == 0
+        ul_title.hide()
+      else
+        ul_title.show()
+    
     init_sidebar_search: () =>
-      toggle_class = "hidden-element"
+      self = this
       $("#node_filter").keyup (e) ->
         v = $.trim($("#node_filter").val()).toLowerCase()
         if v == ""
-          $("#tab-new li").removeClass toggle_class
+          $("#tab-new li, #tab-new h3").show()
         else
-          $("#tab-new li").each (el) ->
-            s = $.trim($("a", this).html()).toLowerCase()
-            if s.indexOf(v) != -1
-              $(this).removeClass toggle_class
-            else
-              $(this).addClass toggle_class
-              ul = $(this).parent()
-              has_visible_items = false
-              ul.children().each () ->
-                if $(this).hasClass(toggle_class) == false
-                  has_visible_items = true
-              if has_visible_items == false
-                ul.prev().addClass toggle_class
-              else
-                ul.prev().removeClass toggle_class
+          $("#tab-new ul").each () -> self.filter_list($(this), v)
                   
     init_sidebar_tab_new_node: () =>
       self = this
