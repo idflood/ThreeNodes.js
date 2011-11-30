@@ -4,6 +4,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
     function AppSidebar() {
       this.init_sidebar_tab_new_node = __bind(this.init_sidebar_tab_new_node, this);
       this.init_sidebar_search = __bind(this.init_sidebar_search, this);
+      this.filter_list = __bind(this.filter_list, this);
+      this.filter_list_item = __bind(this.filter_list_item, this);
       this.init_sidebar_toggle = __bind(this.init_sidebar_toggle, this);
       this.init_sidebar_tabs = __bind(this.init_sidebar_tabs, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
@@ -58,35 +60,40 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
         }
       });
     };
+    AppSidebar.prototype.filter_list_item = function($item, value) {
+      var s;
+      s = $.trim($("a", $item).html()).toLowerCase();
+      if (s.indexOf(value) === -1) {
+        return $item.hide();
+      } else {
+        return $item.show();
+      }
+    };
+    AppSidebar.prototype.filter_list = function(ul, value) {
+      var has_visible_items, self, ul_title;
+      self = this;
+      ul_title = ul.prev();
+      has_visible_items = false;
+      $("li", ul).each(function() {
+        return self.filter_list_item($(this), value);
+      });
+      if ($("li:visible", ul).length === 0) {
+        return ul_title.hide();
+      } else {
+        return ul_title.show();
+      }
+    };
     AppSidebar.prototype.init_sidebar_search = function() {
-      var toggle_class;
-      toggle_class = "hidden-element";
+      var self;
+      self = this;
       return $("#node_filter").keyup(function(e) {
         var v;
         v = $.trim($("#node_filter").val()).toLowerCase();
         if (v === "") {
-          return $("#tab-new li").removeClass(toggle_class);
+          return $("#tab-new li, #tab-new h3").show();
         } else {
-          return $("#tab-new li").each(function(el) {
-            var has_visible_items, s, ul;
-            s = $.trim($("a", this).html()).toLowerCase();
-            if (s.indexOf(v) !== -1) {
-              return $(this).removeClass(toggle_class);
-            } else {
-              $(this).addClass(toggle_class);
-              ul = $(this).parent();
-              has_visible_items = false;
-              ul.children().each(function() {
-                if ($(this).hasClass(toggle_class) === false) {
-                  return has_visible_items = true;
-                }
-              });
-              if (has_visible_items === false) {
-                return ul.prev().addClass(toggle_class);
-              } else {
-                return ul.prev().removeClass(toggle_class);
-              }
-            }
+          return $("#tab-new ul").each(function() {
+            return self.filter_list($(this), v);
           });
         }
       });
