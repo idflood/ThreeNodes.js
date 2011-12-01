@@ -38,49 +38,49 @@ define [
       super
       @v_valy = @rack.addField("y", 2)
     process_val: (num, i) =>
-      num % @v_valy.get()
+      num % @v_valy.get(i)
   
   class ThreeNodes.nodes.types.Math.Add extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
       @v_factor = @rack.addField("y", 1)
     process_val: (num, i) =>
-      num + @v_factor.get()
+      num + @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Subtract extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
       @v_factor = @rack.addField("y", 1)
     process_val: (num, i) =>
-      num - @v_factor.get()
+      num - @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Mult extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
       @v_factor = @rack.addField("factor", 2)
     process_val: (num, i) =>
-      num * @v_factor.get()
+      num * @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Divide extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
       @v_factor = @rack.addField("y", 2)
     process_val: (num, i) =>
-      num / @v_factor.get()
+      num / @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Min extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
       @v_inb = @rack.addField("in", 0)
     process_val: (num, i) =>
-      Math.min(num, @v_inb.get())
+      Math.min(num, @v_inb.get(i))
   
   class ThreeNodes.nodes.types.Math.Max extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
       @v_inb = @rack.addField("in2", 0)
     process_val: (num, i) =>
-      Math.max(num, @v_inb.get())
+      Math.max(num, @v_inb.get(i))
       
   class ThreeNodes.nodes.types.Math.Attenuation extends ThreeNodes.NodeNumberSimple
     set_fields: =>

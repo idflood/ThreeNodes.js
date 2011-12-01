@@ -157,9 +157,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "overdraw": false
         }
       });
-      this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get());
+      this.ob = [new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get())];
       this.geometry_cache = false;
       this.material_cache = false;
+      this.last_slice_count = 1;
       return this.compute();
     };
     Mesh.prototype.rebuild_geometry = function() {
@@ -174,8 +175,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
     };
     Mesh.prototype.compute = function() {
-      var needs_rebuild;
+      var i, item, needs_rebuild, numItems;
       needs_rebuild = false;
+      numItems = this.rack.getMaxInputSliceCount();
+      if (this.last_slice_count !== numItems) {
+        needs_rebuild = true;
+        this.last_slice_count = numItems;
+      }
       if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
         needs_rebuild = true;
       }
@@ -183,11 +189,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.rebuild_geometry();
       }
       if (this.geometry_cache !== this.rack.get('geometry').get().id || this.material_cache !== this.rack.get('material').get().id || needs_rebuild) {
-        this.ob = new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get());
+        for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+          item = new THREE.Mesh(this.rack.get('geometry').get(i), this.rack.get('material').get(i));
+          this.ob[i] = item;
+        }
         this.geometry_cache = this.rack.get('geometry').get().id;
         this.material_cache = this.rack.get('material').get().id;
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
+      }
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       if (needs_rebuild === true) {
         ThreeNodes.rebuild_all_shaders();

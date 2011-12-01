@@ -85,7 +85,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.v_valy = this.rack.addField("y", 2);
     };
     Mod.prototype.process_val = function(num, i) {
-      return num % this.v_valy.get();
+      return num % this.v_valy.get(i);
     };
     return Mod;
   })();
@@ -101,7 +101,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.v_factor = this.rack.addField("y", 1);
     };
     Add.prototype.process_val = function(num, i) {
-      return num + this.v_factor.get();
+      return num + this.v_factor.get(i);
     };
     return Add;
   })();
@@ -117,7 +117,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.v_factor = this.rack.addField("y", 1);
     };
     Subtract.prototype.process_val = function(num, i) {
-      return num - this.v_factor.get();
+      return num - this.v_factor.get(i);
     };
     return Subtract;
   })();
@@ -133,7 +133,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.v_factor = this.rack.addField("factor", 2);
     };
     Mult.prototype.process_val = function(num, i) {
-      return num * this.v_factor.get();
+      return num * this.v_factor.get(i);
     };
     return Mult;
   })();
@@ -149,7 +149,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.v_factor = this.rack.addField("y", 2);
     };
     Divide.prototype.process_val = function(num, i) {
-      return num / this.v_factor.get();
+      return num / this.v_factor.get(i);
     };
     return Divide;
   })();
@@ -165,7 +165,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.v_inb = this.rack.addField("in", 0);
     };
     Min.prototype.process_val = function(num, i) {
-      return Math.min(num, this.v_inb.get());
+      return Math.min(num, this.v_inb.get(i));
     };
     return Min;
   })();
@@ -181,7 +181,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.v_inb = this.rack.addField("in2", 0);
     };
     Max.prototype.process_val = function(num, i) {
-      return Math.max(num, this.v_inb.get());
+      return Math.max(num, this.v_inb.get(i));
     };
     return Max;
   })();

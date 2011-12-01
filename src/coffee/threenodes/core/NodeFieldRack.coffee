@@ -23,12 +23,13 @@ define [
       @node_fields_by_name.outputs[key].set value
     
     getMaxInputSliceCount: () =>
-      res = 0
-      for fid in @node_fields.inputs
+      res = 1
+      for fid of @node_fields.inputs
         f = @node_fields.inputs[fid]
         if f.val.length > res
           res = f.val.length
-      res
+      # start with 0
+      res - 1
     
     getUpstreamNodes: () =>
       res = []

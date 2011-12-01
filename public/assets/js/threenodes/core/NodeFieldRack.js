@@ -39,17 +39,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       return this.node_fields_by_name.outputs[key].set(value);
     };
     NodeFieldRack.prototype.getMaxInputSliceCount = function() {
-      var f, fid, res, _i, _len, _ref;
-      res = 0;
-      _ref = this.node_fields.inputs;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        fid = _ref[_i];
+      var f, fid, res;
+      res = 1;
+      for (fid in this.node_fields.inputs) {
         f = this.node_fields.inputs[fid];
         if (f.val.length > res) {
           res = f.val.length;
         }
       }
-      return res;
+      return res - 1;
     };
     NodeFieldRack.prototype.getUpstreamNodes = function() {
       var c, f, fid, res, _i, _len, _ref;

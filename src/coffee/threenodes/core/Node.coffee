@@ -46,6 +46,11 @@ define [
       
     typename: => String(@constructor.name)
     
+    add_count_input : () =>
+      @rack.addFields
+        inputs:
+          "count" : 1
+    
     init_context_menu: () =>
       self = this
       #$(@main_view).contextMenu {menu: "node-context-menu"}, (action, el, pos) ->
@@ -103,11 +108,11 @@ define [
       pos = @main_view.position()
       "\t\t\t<node nid='#{@nid}' type='#{@typename()}' x='#{pos.left}' y='#{pos.top}'>#{@rack.toXML()}</node>\n"
     
-    apply_fields_to_val: (afields, target, exceptions = []) =>
+    apply_fields_to_val: (afields, target, exceptions = [], index) =>
       for f of afields
         nf = afields[f]
         if exceptions.indexOf(nf.name) == -1
-          target[nf.name] = @rack.get(nf.name).val
+          target[nf.name] = @rack.get(nf.name).get(index)
     
     create_field_connection: (field) =>
       f = this
@@ -188,10 +193,10 @@ define [
     process_val: (num, i) => num
     
     compute: =>
-      res = false
-      switch $.type(@v_in.get())
-        when "array" then res = _.map(@v_in.val, (n, i) -> @process_val(n, i))
-        else res = @process_val(@v_in.get(), 0)
+      res = []
+      numItems = @rack.getMaxInputSliceCount()
+      for i in [0..numItems]
+        res[i] = @process_val(@v_in.get(i), i)
       #if @v_out.get() != res
       @v_out.set res
       true

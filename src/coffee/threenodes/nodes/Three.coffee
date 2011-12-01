@@ -108,9 +108,10 @@ define [
           "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
           "material": {type: "Any", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
           "overdraw": false
-      @ob = new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())
+      @ob = [new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())]
       @geometry_cache = false
       @material_cache = false
+      @last_slice_count = 1
       @compute()
     
     rebuild_geometry: =>
@@ -124,6 +125,11 @@ define [
       
     compute: =>
       needs_rebuild = false
+      numItems = @rack.getMaxInputSliceCount()
+      
+      if @last_slice_count != numItems
+        needs_rebuild = true
+        @last_slice_count = numItems
       
       if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
         needs_rebuild = true
@@ -133,11 +139,14 @@ define [
         @rebuild_geometry()
       
       if @geometry_cache != @rack.get('geometry').get().id || @material_cache != @rack.get('material').get().id || needs_rebuild
-        @ob = new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())
+        for i in [0..numItems]
+          item = new THREE.Mesh(@rack.get('geometry').get(i), @rack.get('material').get(i))
+          @ob[i] = item
         @geometry_cache = @rack.get('geometry').get().id
         @material_cache = @rack.get('material').get().id
       
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
+      for i in [0..numItems]
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       
       if needs_rebuild == true

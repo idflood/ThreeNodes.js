@@ -24,8 +24,8 @@ define [
     compute: =>
       old = @rack.get("out", true).get()
       @value = @rack.get("min").get() + Math.random() * (@rack.get("max").get() - @rack.get("min").get())
-      if @value != old
-        @rack.set("out", @value)
+      
+      @rack.set("out", @value)
   
   class ThreeNodes.nodes.types.Utils.Merge extends ThreeNodes.NodeBase
     set_fields: =>

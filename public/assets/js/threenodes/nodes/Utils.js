@@ -32,9 +32,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var old;
       old = this.rack.get("out", true).get();
       this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
-      if (this.value !== old) {
-        return this.rack.set("out", this.value);
-      }
+      return this.rack.set("out", this.value);
     };
     return Random;
   })();
