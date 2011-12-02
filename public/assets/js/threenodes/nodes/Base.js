@@ -148,7 +148,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Color.prototype.init_preview = function() {
       var col, self;
       $(".center", this.main_view).append("<div class='color_preview'></div>");
-      col = this.rack.get("rgb").get();
+      col = this.rack.get("rgb", true).get(0);
       self = this;
       $(".color_preview", this.main_view).ColorPicker({
         color: {
@@ -164,7 +164,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return self.rack.get("rgb", true).on_value_update_hooks.set_bg_color_preview = function(v) {
         return $(".color_preview", self.main_view).css({
-          background: v.getContextStyle()
+          background: v[0].getContextStyle()
         });
       };
     };
@@ -201,7 +201,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         resb[i] = this.rack.get("b").get(i);
         res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i]);
       }
-      this.rack.set("xyz", res);
+      this.rack.set("rgb", res);
       this.rack.set("r", resr);
       this.rack.set("g", resg);
       return this.rack.set("b", resb);

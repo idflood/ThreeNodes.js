@@ -92,7 +92,7 @@ define [
   class ThreeNodes.nodes.types.Base.Color extends ThreeNodes.NodeBase
     init_preview: () =>
       $(".center", @main_view).append("<div class='color_preview'></div>")
-      col = @rack.get("rgb").get()
+      col = @rack.get("rgb", true).get(0)
       self = this
       $(".color_preview", @main_view).ColorPicker
         color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
@@ -103,7 +103,7 @@ define [
       # on output value change set preview color
       self.rack.get("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) ->
         $(".color_preview", self.main_view).css
-          background: v.getContextStyle()
+          background: v[0].getContextStyle()
     
     set_fields: =>
       super
@@ -132,7 +132,7 @@ define [
         resb[i] = @rack.get("b").get(i)
         res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i])
       
-      @rack.set("xyz", res)
+      @rack.set("rgb", res)
       @rack.set("r", resr)
       @rack.set("g", resg)
       @rack.set("b", resb)
