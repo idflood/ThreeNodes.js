@@ -76,6 +76,24 @@ define [
         equals node_mult.v_out.get(0), 3, "1st mult output equals 3"
         equals node_mult.v_out.get(1), 6, "2nd mult output equals 6"
         
+        # verify Vector3 support spreads
+        app.commandMap.execute "ClearWorkspaceCommand"
+        n1 = ng.create_node("Base", "Number")
+        n2 = ng.create_node("Base", "Number")
+        node_vec = ng.create_node("Base", "Vector3")
+        node_merge = ng.create_node("Utils", "Merge")
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"))
+        c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"))
+        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_vec.rack.get("y"))
+        n1.v_in.set 5
+        n2.v_in.set 7
+        ng.render()
+        
+        equals node_vec.rack.get("y").val.length, 2, "Vector3.y input has 2 values"
+        equals node_vec.rack.getMaxInputSliceCount(), 1, "Vector3 node has correct MaxInputSliceCount (1 since array start with 0)"
+        equals node_vec.rack.get("xyz", true).get(0).y, 5, "1st y value"
+        equals node_vec.rack.get("xyz", true).get(1).y, 7, "2nd y value"
+        console.log node_vec.rack.get("xyz", true)
         # mesh should duplicate itself
         app.commandMap.execute "ClearWorkspaceCommand"
         meshNode = ng.create_node("Three", "Mesh")

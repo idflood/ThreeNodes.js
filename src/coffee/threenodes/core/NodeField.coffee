@@ -142,7 +142,7 @@ define [
     
   class ThreeNodes.fields.types.Bool extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "boolean" then res = val
         when "number" then res = val != 0
@@ -164,7 +164,7 @@ define [
           $(this).blur()
       false
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -224,7 +224,7 @@ define [
       
   class ThreeNodes.fields.types.Vector2 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -234,17 +234,16 @@ define [
           
   class ThreeNodes.fields.types.Vector3 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Vector3
           res = val
       res
   
   class ThreeNodes.fields.types.Vector4 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -254,7 +253,7 @@ define [
   
   class ThreeNodes.fields.types.Quaternion extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -264,7 +263,7 @@ define [
       
   class ThreeNodes.fields.types.Color extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -282,7 +281,7 @@ define [
    
   class ThreeNodes.fields.types.Object3D extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -291,7 +290,7 @@ define [
       res
   class ThreeNodes.fields.types.Scene extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -300,7 +299,7 @@ define [
       res
   class ThreeNodes.fields.types.Camera extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -309,7 +308,7 @@ define [
       res
   class ThreeNodes.fields.types.Mesh extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -318,7 +317,7 @@ define [
       res
   class ThreeNodes.fields.types.Geometry extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val
@@ -327,7 +326,7 @@ define [
       res
   class ThreeNodes.fields.types.Texture extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @get()
+      res = @val
       switch $.type(val)
         when "array"
           res = val

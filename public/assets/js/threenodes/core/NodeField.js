@@ -233,7 +233,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Bool.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "boolean":
           res = val;
@@ -275,7 +275,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     String.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -376,7 +376,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Vector2.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -398,7 +398,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Vector3.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -420,7 +420,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Vector4.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -442,7 +442,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Quaternion.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -464,7 +464,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Color.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -500,7 +500,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Object3D.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -522,7 +522,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Scene.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -544,7 +544,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Camera.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -566,7 +566,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Mesh.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -588,7 +588,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Geometry.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;
@@ -610,7 +610,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     }
     Texture.prototype.compute_value = function(val) {
       var res;
-      res = this.get();
+      res = this.val;
       switch ($.type(val)) {
         case "array":
           res = val;

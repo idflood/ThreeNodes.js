@@ -61,10 +61,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vec = new THREE.Vector2(0, 0);
       return this.rack.addFields({
         inputs: {
-          "xy": {
-            type: "Vector2",
-            val: false
-          },
           "x": 0,
           "y": 0
         },
@@ -79,17 +75,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
     };
     Vector2.prototype.compute = function() {
-      var old;
-      old = this.rack.get("xy", true).get();
-      this.value = this.rack.get("xy").get();
-      if (this.rack.get("xy").connections.length === 0) {
-        this.value = new THREE.Vector2(this.rack.get("x").get(), this.rack.get("y").get());
+      var i, numItems, res, resx, resy;
+      res = [];
+      resx = [];
+      resy = [];
+      numItems = this.rack.getMaxInputSliceCount();
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        resx[i] = this.rack.get("x").get(i);
+        resy[i] = this.rack.get("y").get(i);
+        res[i] = new THREE.Vector3(resx[i], resy[i]);
       }
-      if (this.value !== old) {
-        this.rack.set("xy", this.value);
-        this.rack.set("x", this.value.x);
-        return this.rack.set("y", this.value.y);
-      }
+      this.rack.set("xy", res);
+      this.rack.set("x", resx);
+      return this.rack.set("y", resy);
     };
     return Vector2;
   })();
@@ -102,13 +100,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Vector3.prototype.set_fields = function() {
       Vector3.__super__.set_fields.apply(this, arguments);
-      this.vec = new THREE.Vector3(0, 0, 0);
       return this.rack.addFields({
         inputs: {
-          "xyz": {
-            type: "Vector3",
-            val: false
-          },
           "x": 0,
           "y": 0,
           "z": 0
@@ -125,18 +118,22 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
     };
     Vector3.prototype.compute = function() {
-      var old;
-      old = this.rack.get("xyz", true).get();
-      this.value = this.rack.get("xyz").get();
-      if (this.rack.get("xyz").connections.length === 0) {
-        this.value = new THREE.Vector3(this.rack.get("x").get(), this.rack.get("y").get(), this.rack.get("z").get());
+      var i, numItems, res, resx, resy, resz;
+      res = [];
+      resx = [];
+      resy = [];
+      resz = [];
+      numItems = this.rack.getMaxInputSliceCount();
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        resx[i] = this.rack.get("x").get(i);
+        resy[i] = this.rack.get("y").get(i);
+        resz[i] = this.rack.get("z").get(i);
+        res[i] = new THREE.Vector3(resx[i], resy[i], resz[i]);
       }
-      if (this.value !== old) {
-        this.rack.set("xyz", this.value);
-        this.rack.set("x", this.value.x);
-        this.rack.set("y", this.value.y);
-        return this.rack.set("z", this.value.z);
-      }
+      this.rack.set("xyz", res);
+      this.rack.set("x", resx);
+      this.rack.set("y", resy);
+      return this.rack.set("z", resz);
     };
     return Vector3;
   })();
@@ -175,10 +172,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       Color.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
         inputs: {
-          "rgb": {
-            type: "Color",
-            val: false
-          },
           "r": 0,
           "g": 0,
           "b": 0
@@ -196,18 +189,22 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.init_preview();
     };
     Color.prototype.compute = function() {
-      var old;
-      old = this.rack.get("rgb", true).get();
-      this.value = this.rack.get("rgb").get();
-      if (this.rack.get("rgb").connections.length === 0) {
-        this.value = new THREE.Color().setRGB(this.rack.get("r").get(), this.rack.get("g").get(), this.rack.get("b").get());
+      var i, numItems, res, resb, resg, resr;
+      res = [];
+      resr = [];
+      resg = [];
+      resb = [];
+      numItems = this.rack.getMaxInputSliceCount();
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        resr[i] = this.rack.get("r").get(i);
+        resg[i] = this.rack.get("g").get(i);
+        resb[i] = this.rack.get("b").get(i);
+        res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i]);
       }
-      if (this.value !== old) {
-        this.rack.set("rgb", this.value);
-        this.rack.set("r", this.value.r);
-        this.rack.set("g", this.value.g);
-        return this.rack.set("b", this.value.b);
-      }
+      this.rack.set("xyz", res);
+      this.rack.set("r", resr);
+      this.rack.set("g", resg);
+      return this.rack.set("b", resb);
     };
     return Color;
   })();

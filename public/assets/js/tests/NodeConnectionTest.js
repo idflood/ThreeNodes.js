@@ -42,7 +42,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(n3.v_out.get(), 14, "The second connection is valid and propagated the value");
       });
       test("Array connections", function() {
-        var c1, c2, c3, injector, meshNode, n1, n2, ng, node_merge, node_mult, nvec1, nvec2;
+        var c1, c2, c3, injector, meshNode, n1, n2, ng, node_merge, node_mult, node_vec, nvec1, nvec2;
         app.commandMap.execute("ClearWorkspaceCommand");
         injector = app.injector;
         ng = app.nodegraph;
@@ -63,6 +63,22 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         equals(node_mult.rack.getMaxInputSliceCount(), 1, "Mult node has correct MaxInputSliceCount (1 since array start with 0)");
         equals(node_mult.v_out.get(0), 3, "1st mult output equals 3");
         equals(node_mult.v_out.get(1), 6, "2nd mult output equals 6");
+        app.commandMap.execute("ClearWorkspaceCommand");
+        n1 = ng.create_node("Base", "Number");
+        n2 = ng.create_node("Base", "Number");
+        node_vec = ng.create_node("Base", "Vector3");
+        node_merge = ng.create_node("Utils", "Merge");
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"));
+        c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"));
+        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_vec.rack.get("y"));
+        n1.v_in.set(5);
+        n2.v_in.set(7);
+        ng.render();
+        equals(node_vec.rack.get("y").val.length, 2, "Vector3.y input has 2 values");
+        equals(node_vec.rack.getMaxInputSliceCount(), 1, "Vector3 node has correct MaxInputSliceCount (1 since array start with 0)");
+        equals(node_vec.rack.get("xyz", true).get(0).y, 5, "1st y value");
+        equals(node_vec.rack.get("xyz", true).get(1).y, 7, "2nd y value");
+        console.log(node_vec.rack.get("xyz", true));
         app.commandMap.execute("ClearWorkspaceCommand");
         meshNode = ng.create_node("Three", "Mesh");
         node_merge = ng.create_node("Utils", "Merge", 0, 0);

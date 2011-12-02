@@ -35,7 +35,6 @@ define [
       @vec = new THREE.Vector2(0, 0)
       @rack.addFields
         inputs:
-          "xy" : {type: "Vector2", val: false}
           "x" : 0
           "y" : 0
         outputs:
@@ -44,23 +43,25 @@ define [
           "y" : 0
     
     compute: =>
-      old = @rack.get("xy", true).get()
-      @value = @rack.get("xy").get()
-      if @rack.get("xy").connections.length == 0
-        @value = new THREE.Vector2(@rack.get("x").get(), @rack.get("y").get())
-      if @value != old
-        #@v_out.signal.dispatch @value
-        @rack.set("xy", @value)
-        @rack.set("x", @value.x)
-        @rack.set("y", @value.y)
+      res = []
+      resx = []
+      resy = []
+      numItems = @rack.getMaxInputSliceCount()
+      
+      for i in [0..numItems]
+        resx[i] = @rack.get("x").get(i)
+        resy[i] = @rack.get("y").get(i)
+        res[i] = new THREE.Vector3(resx[i], resy[i])
+      
+      @rack.set("xy", res)
+      @rack.set("x", resx)
+      @rack.set("y", resy)
   
   class ThreeNodes.nodes.types.Base.Vector3 extends ThreeNodes.NodeBase
     set_fields: =>
       super
-      @vec = new THREE.Vector3(0, 0, 0)
       @rack.addFields
         inputs:
-          "xyz" : {type: "Vector3", val: false}
           "x" : 0
           "y" : 0
           "z" : 0
@@ -71,16 +72,22 @@ define [
           "z" : 0
     
     compute: =>
-      old = @rack.get("xyz", true).get()
-      @value = @rack.get("xyz").get()
-      if @rack.get("xyz").connections.length == 0
-        #@vec.set @v_in_x.val, @v_in_y.val, @v_in_z.val
-        @value = new THREE.Vector3(@rack.get("x").get(), @rack.get("y").get(), @rack.get("z").get())
-      if @value != old
-        @rack.set("xyz", @value)
-        @rack.set("x", @value.x)
-        @rack.set("y", @value.y)
-        @rack.set("z", @value.z)
+      res = []
+      resx = []
+      resy = []
+      resz = []
+      numItems = @rack.getMaxInputSliceCount()
+      
+      for i in [0..numItems]
+        resx[i] = @rack.get("x").get(i)
+        resy[i] = @rack.get("y").get(i)
+        resz[i] = @rack.get("z").get(i)
+        res[i] = new THREE.Vector3(resx[i], resy[i], resz[i])
+      
+      @rack.set("xyz", res)
+      @rack.set("x", resx)
+      @rack.set("y", resy)
+      @rack.set("z", resz)
   
   class ThreeNodes.nodes.types.Base.Color extends ThreeNodes.NodeBase
     init_preview: () =>
@@ -102,7 +109,6 @@ define [
       super
       @rack.addFields
         inputs:
-          "rgb": {type: "Color", val: false}
           "r": 0
           "g": 0
           "b": 0
@@ -114,12 +120,19 @@ define [
       @init_preview()
     
     compute: =>
-      old = @rack.get("rgb", true).get()
-      @value = @rack.get("rgb").get()
-      if @rack.get("rgb").connections.length == 0
-        @value = new THREE.Color().setRGB(@rack.get("r").get(), @rack.get("g").get(), @rack.get("b").get())
-      if @value != old
-        @rack.set("rgb", @value)
-        @rack.set("r", @value.r)
-        @rack.set("g", @value.g)
-        @rack.set("b", @value.b)
+      res = []
+      resr = []
+      resg = []
+      resb = []
+      numItems = @rack.getMaxInputSliceCount()
+      
+      for i in [0..numItems]
+        resr[i] = @rack.get("r").get(i)
+        resg[i] = @rack.get("g").get(i)
+        resb[i] = @rack.get("b").get(i)
+        res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i])
+      
+      @rack.set("xyz", res)
+      @rack.set("r", resr)
+      @rack.set("g", resg)
+      @rack.set("b", resb)
