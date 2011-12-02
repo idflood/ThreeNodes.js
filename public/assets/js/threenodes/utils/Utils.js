@@ -1,8 +1,49 @@
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 ThreeNodes.uid = 0;
 ThreeNodes.Utils = {};
 ThreeNodes.Utils.get_uid = function() {
   return ThreeNodes.uid += 1;
 };
+ThreeNodes.Utils.Rc4Random = (function() {
+  function Rc4Random(seed) {
+    this.getRandomNumber = __bind(this.getRandomNumber, this);
+    this.getRandomByte = __bind(this.getRandomByte, this);
+    var i, j, t;
+    this.keySchedule = [];
+    this.keySchedule_i = 0;
+    this.keySchedule_j = 0;
+    for (i = 0; i <= 256; i++) {
+      this.keySchedule[i] = i;
+    }
+    j = 0;
+    for (i = 0; i <= 256; i++) {
+      j = (j + this.keySchedule[i] + seed.charCodeAt(i % seed.length)) % 256;
+      t = this.keySchedule[i];
+      this.keySchedule[i] = this.keySchedule[j];
+      this.keySchedule[j] = t;
+    }
+  }
+  Rc4Random.prototype.getRandomByte = function() {
+    var t;
+    this.keySchedule_i = (this.keySchedule_i + 1) % 256;
+    this.keySchedule_j = (this.keySchedule_j + this.keySchedule[this.keySchedule_i]) % 256;
+    t = this.keySchedule[this.keySchedule_i];
+    this.keySchedule[this.keySchedule_i] = this.keySchedule[keySchedule_j];
+    this.keySchedule[this.keySchedule_j] = t;
+    return this.keySchedule[(this.keySchedule[this.keySchedule_i] + this.keySchedule[this.keySchedule_j]) % 256];
+  };
+  Rc4Random.prototype.getRandomNumber = function() {
+    var i, multiplier, number;
+    number = 0;
+    multiplier = 1;
+    for (i = 0; i <= 8; i++) {
+      number += this.getRandomByte() * multiplier;
+      multiplier *= 256;
+    }
+    return number / 18446744073709551616;
+  };
+  return Rc4Random;
+})();
 ThreeNodes.Utils.flatArraysAreEquals = function(arr1, arr2) {
   var i, k, _len;
   if (arr1.length !== arr2.length) {
