@@ -72,7 +72,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         c2 = injector.instanciate(ThreeNodes.NodeConnection, nvec2.rack.get("xyz", true), node_merge.rack.get("in1"));
         c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), meshNode.rack.get("position"));
         ng.render();
-        return equals(meshNode.ob.length, 2, "Meshnode has 2 mesh since it has 2 positions");
+        equals(meshNode.ob.length, 2, "Meshnode has 2 mesh since it has 2 positions");
+        equals(node_merge.rack.get("out", true).val.length, 2, "Merge node output 2 values");
+        c2.remove();
+        ng.render();
+        equals(node_merge.rack.get("out", true).val.length, 1, "Merge node output 1 value");
+        return equals(meshNode.ob.length, 1, "Meshnode has 1 mesh because a connection has been removed");
       });
     }
     return NodeConnectionTest;

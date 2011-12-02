@@ -109,8 +109,8 @@ define [
           "material": {type: "Any", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
           "overdraw": false
       @ob = [new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())]
-      @geometry_cache = false
       @material_cache = false
+      @geometry_cache = false
       @last_slice_count = 1
       @compute()
     
@@ -123,9 +123,29 @@ define [
       else
         @rack.get('geometry').set(new THREE.CubeGeometry( 200, 200, 200 ))
       
+    get_geometry_cache: =>
+      res = ""
+      if jQuery.type(@rack.get('geometry').val) == "array"
+        for f in @rack.get('geometry').val
+          res += @rack.get('geometry').val[f].id
+      else
+        res = @rack.get('geometry').val.id
+      res
+      
+    get_material_cache: =>
+      res = ""
+      if jQuery.type(@rack.get('material').val) == "array"
+        for f in @rack.get('material').val
+          res += @rack.get('material').val[f].id
+      else
+        res = @rack.get('material').val.id
+      res
+      
     compute: =>
       needs_rebuild = false
       numItems = @rack.getMaxInputSliceCount()
+      new_material_cache = @get_material_cache()
+      new_geometry_cache = @get_geometry_cache()
       
       if @last_slice_count != numItems
         needs_rebuild = true
@@ -134,24 +154,25 @@ define [
       if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
         needs_rebuild = true
       
-      if @material_cache != @rack.get('material').get().id
+      if @material_cache != new_material_cache
         # let's trigger a geometry rebuild so we have the appropriate buffers set
         @rebuild_geometry()
       
-      if @geometry_cache != @rack.get('geometry').get().id || @material_cache != @rack.get('material').get().id || needs_rebuild
+      if @geometry_cache != new_geometry_cache || @material_cache != new_material_cache || needs_rebuild
+        @ob = []
         for i in [0..numItems]
           item = new THREE.Mesh(@rack.get('geometry').get(i), @rack.get('material').get(i))
           @ob[i] = item
-        @geometry_cache = @rack.get('geometry').get().id
-        @material_cache = @rack.get('material').get().id
-      
+          
       for i in [0..numItems]
         @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
-      @shadow_cache = @create_cache_object(@vars_shadow_options)
       
       if needs_rebuild == true
         ThreeNodes.rebuild_all_shaders()
       
+      @shadow_cache = @create_cache_object(@vars_shadow_options)
+      @geometry_cache = @get_geometry_cache()
+      @material_cache = @get_material_cache()
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.types.Three.Camera extends ThreeNodes.NodeBase

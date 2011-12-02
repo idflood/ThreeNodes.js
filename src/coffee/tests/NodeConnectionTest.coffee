@@ -88,3 +88,8 @@ define [
         ng.render()
         
         equals meshNode.ob.length, 2, "Meshnode has 2 mesh since it has 2 positions"
+        equals node_merge.rack.get("out", true).val.length, 2, "Merge node output 2 values"
+        c2.remove()
+        ng.render()
+        equals node_merge.rack.get("out", true).val.length, 1, "Merge node output 1 value"
+        equals meshNode.ob.length, 1, "Meshnode has 1 mesh because a connection has been removed"

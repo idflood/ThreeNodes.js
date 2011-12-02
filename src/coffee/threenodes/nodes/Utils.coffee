@@ -47,13 +47,13 @@ define [
       @value = []
       for f of @rack.node_fields.inputs
         k = @rack.node_fields.inputs[f]
-        if k.get() != null && k.connections.length > 0
-          subval = k.get()
+        if k.val != null && k.connections.length > 0
+          subval = k.val
           # if subvalue is an array append it to the result
           if jQuery.type(subval) == "array"
             @value = @value.concat(subval)
           else
-            @value[@value.length] = k.get()
+            @value[@value.length] = subval
       @rack.set("out", @value)
   
   class ThreeNodes.nodes.types.Utils.Get extends ThreeNodes.NodeBase

@@ -136,6 +136,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     __extends(Mesh, ThreeNodes.nodes.types.Three.Object3D);
     function Mesh() {
       this.compute = __bind(this.compute, this);
+      this.get_material_cache = __bind(this.get_material_cache, this);
+      this.get_geometry_cache = __bind(this.get_geometry_cache, this);
       this.rebuild_geometry = __bind(this.rebuild_geometry, this);
       this.set_fields = __bind(this.set_fields, this);
       Mesh.__super__.constructor.apply(this, arguments);
@@ -158,8 +160,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
       this.ob = [new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get())];
-      this.geometry_cache = false;
       this.material_cache = false;
+      this.geometry_cache = false;
       this.last_slice_count = 1;
       return this.compute();
     };
@@ -174,10 +176,40 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
       }
     };
+    Mesh.prototype.get_geometry_cache = function() {
+      var f, res, _i, _len, _ref;
+      res = "";
+      if (jQuery.type(this.rack.get('geometry').val) === "array") {
+        _ref = this.rack.get('geometry').val;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          f = _ref[_i];
+          res += this.rack.get('geometry').val[f].id;
+        }
+      } else {
+        res = this.rack.get('geometry').val.id;
+      }
+      return res;
+    };
+    Mesh.prototype.get_material_cache = function() {
+      var f, res, _i, _len, _ref;
+      res = "";
+      if (jQuery.type(this.rack.get('material').val) === "array") {
+        _ref = this.rack.get('material').val;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          f = _ref[_i];
+          res += this.rack.get('material').val[f].id;
+        }
+      } else {
+        res = this.rack.get('material').val.id;
+      }
+      return res;
+    };
     Mesh.prototype.compute = function() {
-      var i, item, needs_rebuild, numItems;
+      var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
       needs_rebuild = false;
       numItems = this.rack.getMaxInputSliceCount();
+      new_material_cache = this.get_material_cache();
+      new_geometry_cache = this.get_geometry_cache();
       if (this.last_slice_count !== numItems) {
         needs_rebuild = true;
         this.last_slice_count = numItems;
@@ -185,24 +217,25 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
         needs_rebuild = true;
       }
-      if (this.material_cache !== this.rack.get('material').get().id) {
+      if (this.material_cache !== new_material_cache) {
         this.rebuild_geometry();
       }
-      if (this.geometry_cache !== this.rack.get('geometry').get().id || this.material_cache !== this.rack.get('material').get().id || needs_rebuild) {
+      if (this.geometry_cache !== new_geometry_cache || this.material_cache !== new_material_cache || needs_rebuild) {
+        this.ob = [];
         for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
           item = new THREE.Mesh(this.rack.get('geometry').get(i), this.rack.get('material').get(i));
           this.ob[i] = item;
         }
-        this.geometry_cache = this.rack.get('geometry').get().id;
-        this.material_cache = this.rack.get('material').get().id;
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
         this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
-      this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       if (needs_rebuild === true) {
         ThreeNodes.rebuild_all_shaders();
       }
+      this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
+      this.geometry_cache = this.get_geometry_cache();
+      this.material_cache = this.get_material_cache();
       return this.rack.set("out", this.ob);
     };
     return Mesh;
