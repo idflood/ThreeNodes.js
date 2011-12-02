@@ -33,6 +33,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.input_value_has_changed = __bind(this.input_value_has_changed, this);
       this.create_cache_object = __bind(this.create_cache_object, this);
       this.init_context_menu = __bind(this.init_context_menu, this);
+      this.add_count_input = __bind(this.add_count_input, this);
       this.typename = __bind(this.typename, this);
       this.auto_evaluate = false;
       this.delays_output = false;
@@ -65,6 +66,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
+    };
+    NodeBase.prototype.add_count_input = function() {
+      return this.rack.addFields({
+        inputs: {
+          "count": 1
+        }
+      });
     };
     NodeBase.prototype.init_context_menu = function() {
       var self;
@@ -137,7 +145,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       pos = this.main_view.position();
       return "\t\t\t<node nid='" + this.nid + "' type='" + (this.typename()) + "' x='" + pos.left + "' y='" + pos.top + "'>" + (this.rack.toXML()) + "</node>\n";
     };
-    NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions) {
+    NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions, index) {
       var f, nf, _results;
       if (exceptions == null) {
         exceptions = [];
@@ -145,7 +153,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       _results = [];
       for (f in afields) {
         nf = afields[f];
-        _results.push(exceptions.indexOf(nf.name) === -1 ? target[nf.name] = this.rack.get(nf.name).val : void 0);
+        _results.push(exceptions.indexOf(nf.name) === -1 ? target[nf.name] = this.rack.get(nf.name).get(index) : void 0);
       }
       return _results;
     };
@@ -262,16 +270,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return num;
     };
     NodeNumberSimple.prototype.compute = function() {
-      var res;
-      res = false;
-      switch ($.type(this.v_in.get())) {
-        case "array":
-          res = _.map(this.v_in.val, function(n, i) {
-            return this.process_val(n, i);
-          });
-          break;
-        default:
-          res = this.process_val(this.v_in.get(), 0);
+      var i, numItems, res;
+      res = [];
+      numItems = this.rack.getMaxInputSliceCount();
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        res[i] = this.process_val(this.v_in.get(i), i);
       }
       this.v_out.set(res);
       return true;

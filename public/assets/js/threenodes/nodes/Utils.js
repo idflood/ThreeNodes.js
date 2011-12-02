@@ -32,9 +32,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var old;
       old = this.rack.get("out", true).get();
       this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
-      if (this.value !== old) {
-        return this.rack.set("out", this.value);
-      }
+      return this.rack.set("out", this.value);
     };
     return Random;
   })();
@@ -89,12 +87,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.value = [];
       for (f in this.rack.node_fields.inputs) {
         k = this.rack.node_fields.inputs[f];
-        if (k.get() !== null && k.connections.length > 0) {
-          subval = k.get();
+        if (k.val !== null && k.connections.length > 0) {
+          subval = k.val;
           if (jQuery.type(subval) === "array") {
             this.value = this.value.concat(subval);
           } else {
-            this.value[this.value.length] = k.get();
+            this.value[this.value.length] = subval;
           }
         }
       }

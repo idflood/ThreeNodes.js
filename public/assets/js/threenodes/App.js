@@ -9,6 +9,7 @@ ThreeNodes.nodes = {
     Math: {},
     Utils: {},
     Conditional: {},
+    Spread: {},
     Geometry: {},
     Three: {},
     Materials: {},
