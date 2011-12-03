@@ -43,7 +43,7 @@ define [
         if child && ind == -1 && child
           #console.log "object remove child"
           #console.log @ob
-          @ob.removeChild(child)
+          @ob.remove(child)
       
       #add new childs
       for child in childs_in
@@ -51,7 +51,7 @@ define [
         if ind == -1
           #console.log "object add child"
           #console.log @ob
-          @ob.addChild(child)
+          @ob.add(child)
       
       @rack.set("out", @ob)
   
