@@ -183,7 +183,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         _ref = this.rack.get('geometry').val;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
-          res += this.rack.get('geometry').val[f].id;
+          res += f.id;
         }
       } else {
         res = this.rack.get('geometry').val.id;
@@ -197,7 +197,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         _ref = this.rack.get('material').val;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
-          res += this.rack.get('material').val[f].id;
+          res += f.id;
         }
       } else {
         res = this.rack.get('material').val.id;

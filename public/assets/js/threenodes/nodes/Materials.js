@@ -57,9 +57,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     MeshBasicMaterial.prototype.set_fields = function() {
       MeshBasicMaterial.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.MeshBasicMaterial({
-        color: 0xff0000
-      });
+      this.ob = [];
+      this.last_slice_count = 0;
       this.rack.addFields({
         inputs: {
           "color": {
@@ -88,13 +87,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     MeshBasicMaterial.prototype.compute = function() {
-      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
-        this.ob = new THREE.MeshBasicMaterial({
-          color: 0xff0000
-        });
+      var i, needs_rebuild, numItems;
+      needs_rebuild = false;
+      numItems = this.rack.getMaxInputSliceCount();
+      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change) || this.last_slice_count !== numItems) {
+        needs_rebuild = true;
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      if (needs_rebuild === true) {
+        this.ob = [];
+        for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+          this.ob[i] = new THREE.MeshBasicMaterial();
+        }
+      }
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], [], i);
+      }
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
+      this.last_slice_count = numItems;
       return this.rack.set("out", this.ob);
     };
     return MeshBasicMaterial;
@@ -137,13 +146,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     MeshLambertMaterial.prototype.compute = function() {
-      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
-        this.ob = new THREE.MeshLambertMaterial({
-          color: 0xff0000
-        });
+      var i, needs_rebuild, numItems;
+      needs_rebuild = false;
+      numItems = this.rack.getMaxInputSliceCount();
+      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change) || this.last_slice_count !== numItems) {
+        needs_rebuild = true;
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      if (needs_rebuild === true) {
+        this.ob = [];
+        for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+          this.ob[i] = new THREE.MeshLambertMaterial();
+        }
+      }
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], [], i);
+      }
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
+      this.last_slice_count = numItems;
       return this.rack.set("out", this.ob);
     };
     return MeshLambertMaterial;
@@ -195,13 +214,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     MeshPhongMaterial.prototype.compute = function() {
-      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
-        this.ob = new THREE.MeshPhongMaterial({
-          color: 0xff0000
-        });
+      var i, needs_rebuild, numItems;
+      needs_rebuild = false;
+      numItems = this.rack.getMaxInputSliceCount();
+      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change) || this.last_slice_count !== numItems) {
+        needs_rebuild = true;
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      if (needs_rebuild === true) {
+        this.ob = [];
+        for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+          this.ob[i] = new THREE.MeshPhongMaterial();
+        }
+      }
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], [], i);
+      }
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
+      this.last_slice_count = numItems;
       return this.rack.set("out", this.ob);
     };
     return MeshPhongMaterial;

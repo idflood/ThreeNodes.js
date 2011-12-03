@@ -119,8 +119,6 @@ define [
     on_value_changed : (val) =>
       @val = @compute_value(val)
     
-    get: (index = 0) => @val
-    
   class ThreeNodes.fields.types.Array extends ThreeNodes.NodeField
     compute_value : (val) =>
       if !val || val == false

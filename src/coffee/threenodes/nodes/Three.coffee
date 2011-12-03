@@ -127,7 +127,7 @@ define [
       res = ""
       if jQuery.type(@rack.get('geometry').val) == "array"
         for f in @rack.get('geometry').val
-          res += @rack.get('geometry').val[f].id
+          res += f.id
       else
         res = @rack.get('geometry').val.id
       res
@@ -136,7 +136,7 @@ define [
       res = ""
       if jQuery.type(@rack.get('material').val) == "array"
         for f in @rack.get('material').val
-          res += @rack.get('material').val[f].id
+          res += f.id
       else
         res = @rack.get('material').val.id
       res

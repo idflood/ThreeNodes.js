@@ -41,7 +41,8 @@ define [
   class ThreeNodes.nodes.types.Materials.MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
     set_fields: =>
       super
-      @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
+      @ob = []
+      @last_slice_count = 0
       @rack.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
@@ -58,10 +59,20 @@ define [
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
     
     compute: =>
-      if @input_value_has_changed(@vars_rebuild_shader_on_change)
-        @ob = new THREE.MeshBasicMaterial({color: 0xff0000})
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      needs_rebuild = false
+      numItems = @rack.getMaxInputSliceCount()
+      if @input_value_has_changed(@vars_rebuild_shader_on_change) || @last_slice_count != numItems
+        needs_rebuild = true
+      
+      if needs_rebuild == true
+        @ob = []
+        for i in [0..numItems]
+          @ob[i] = new THREE.MeshBasicMaterial()
+      for i in [0..numItems]
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], [], i)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      
+      @last_slice_count = numItems
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.types.Materials.MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
@@ -82,10 +93,20 @@ define [
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
     
     compute: =>
-      if @input_value_has_changed(@vars_rebuild_shader_on_change)
-        @ob = new THREE.MeshLambertMaterial({color: 0xff0000})
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      needs_rebuild = false
+      numItems = @rack.getMaxInputSliceCount()
+      if @input_value_has_changed(@vars_rebuild_shader_on_change) || @last_slice_count != numItems
+        needs_rebuild = true
+      
+      if needs_rebuild == true
+        @ob = []
+        for i in [0..numItems]
+          @ob[i] = new THREE.MeshLambertMaterial()
+      for i in [0..numItems]
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], [], i)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      
+      @last_slice_count = numItems
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.types.Materials.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
@@ -109,8 +130,18 @@ define [
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
     
     compute: =>
-      if @input_value_has_changed(@vars_rebuild_shader_on_change)
-        @ob = new THREE.MeshPhongMaterial({color: 0xff0000})
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      needs_rebuild = false
+      numItems = @rack.getMaxInputSliceCount()
+      if @input_value_has_changed(@vars_rebuild_shader_on_change) || @last_slice_count != numItems
+        needs_rebuild = true
+      
+      if needs_rebuild == true
+        @ob = []
+        for i in [0..numItems]
+          @ob[i] = new THREE.MeshPhongMaterial()
+      for i in [0..numItems]
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], [], i)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      
+      @last_slice_count = numItems
       @rack.set("out", @ob)
