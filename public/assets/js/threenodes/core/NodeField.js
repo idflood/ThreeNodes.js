@@ -170,7 +170,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
   ThreeNodes.fields.types.Any = (function() {
     __extends(Any, ThreeNodes.NodeField);
     function Any() {
-      this.get = __bind(this.get, this);
       this.on_value_changed = __bind(this.on_value_changed, this);
       this.compute_value = __bind(this.compute_value, this);
       Any.__super__.constructor.apply(this, arguments);
@@ -180,12 +179,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     Any.prototype.on_value_changed = function(val) {
       return this.val = this.compute_value(val);
-    };
-    Any.prototype.get = function(index) {
-      if (index == null) {
-        index = 0;
-      }
-      return this.val;
     };
     return Any;
   })();

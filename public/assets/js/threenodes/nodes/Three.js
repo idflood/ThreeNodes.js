@@ -65,14 +65,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         child = _ref[_i];
         ind = childs_in.indexOf(child);
         if (child && ind === -1 && child) {
-          this.ob.removeChild(child);
+          this.ob.remove(child);
         }
       }
       for (_j = 0, _len2 = childs_in.length; _j < _len2; _j++) {
         child = childs_in[_j];
         ind = this.ob.children.indexOf(child);
         if (ind === -1) {
-          this.ob.addChild(child);
+          this.ob.add(child);
         }
       }
       return this.rack.set("out", this.ob);
@@ -183,7 +183,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         _ref = this.rack.get('geometry').val;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
-          res += this.rack.get('geometry').val[f].id;
+          res += f.id;
         }
       } else {
         res = this.rack.get('geometry').val.id;
@@ -197,7 +197,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         _ref = this.rack.get('material').val;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
-          res += this.rack.get('material').val[f].id;
+          res += f.id;
         }
       } else {
         res = this.rack.get('material').val.id;
