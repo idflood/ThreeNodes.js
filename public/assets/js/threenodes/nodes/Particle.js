@@ -68,15 +68,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
   ThreeNodes.nodes.types.Particle.ParticleBasicMaterial = (function() {
     __extends(ParticleBasicMaterial, ThreeNodes.NodeMaterialBase);
     function ParticleBasicMaterial() {
-      this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       ParticleBasicMaterial.__super__.constructor.apply(this, arguments);
     }
     ParticleBasicMaterial.prototype.set_fields = function() {
       ParticleBasicMaterial.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.ParticleBasicMaterial({
-        color: 0xff0000
-      });
+      this.ob = [];
+      this.material_class = THREE.ParticleBasicMaterial;
       this.rack.addFields({
         inputs: {
           "color": {
@@ -100,16 +98,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
-    };
-    ParticleBasicMaterial.prototype.compute = function() {
-      if (this.input_value_has_changed(this.vars_rebuild_shader_on_change)) {
-        this.ob = new THREE.ParticleBasicMaterial({
-          color: 0xffffff
-        });
-      }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
-      return this.rack.set("out", this.ob);
     };
     return ParticleBasicMaterial;
   })();
