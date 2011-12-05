@@ -170,6 +170,26 @@ define [
     get: (index = 0) => @val
     
   class ThreeNodes.fields.types.Bool extends ThreeNodes.NodeField
+    render_sidebar: =>
+      self = this
+      $target = @create_sidebar_container()
+      id = "side-field-checkbox-#{@fid}"
+      $target.append("<div><input type='checkbox' id='#{id}'/></div>")
+      f_in = $("#" + id)
+      @on_value_update_hooks.update_sidebar_textfield = (v) ->
+        if self.get() == true
+          f_in.attr('checked', 'checked')
+        else
+          f_in.removeAttr('checked')
+      if @get() == true
+        f_in.attr('checked', 'checked')
+      f_in.change (e) ->
+        if $(this).is(':checked')
+          self.set(true)
+        else
+          self.set(false)
+      true
+    
     compute_value : (val) =>
       res = @val
       switch $.type(val)
@@ -190,7 +210,7 @@ define [
         if e.which == 13
           self.set($(this).val())
           $(this).blur()
-      false
+      true
     compute_value : (val) =>
       res = @val
       switch $.type(val)

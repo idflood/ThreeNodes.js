@@ -269,8 +269,35 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     __extends(Bool, ThreeNodes.NodeField);
     function Bool() {
       this.compute_value = __bind(this.compute_value, this);
+      this.render_sidebar = __bind(this.render_sidebar, this);
       Bool.__super__.constructor.apply(this, arguments);
     }
+    Bool.prototype.render_sidebar = function() {
+      var $target, f_in, id, self;
+      self = this;
+      $target = this.create_sidebar_container();
+      id = "side-field-checkbox-" + this.fid;
+      $target.append("<div><input type='checkbox' id='" + id + "'/></div>");
+      f_in = $("#" + id);
+      this.on_value_update_hooks.update_sidebar_textfield = function(v) {
+        if (self.get() === true) {
+          return f_in.attr('checked', 'checked');
+        } else {
+          return f_in.removeAttr('checked');
+        }
+      };
+      if (this.get() === true) {
+        f_in.attr('checked', 'checked');
+      }
+      f_in.change(function(e) {
+        if ($(this).is(':checked')) {
+          return self.set(true);
+        } else {
+          return self.set(false);
+        }
+      });
+      return true;
+    };
     Bool.prototype.compute_value = function(val) {
       var res;
       res = this.val;
@@ -310,7 +337,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
           return $(this).blur();
         }
       });
-      return false;
+      return true;
     };
     String.prototype.compute_value = function(val) {
       var res;

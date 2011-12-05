@@ -15,6 +15,21 @@ define [
       super
       @rack.add_center_textfield(@v_in)
   
+  class ThreeNodes.nodes.types.Base.Boolean extends ThreeNodes.NodeBase
+    init: =>
+      super
+      @value = true
+      
+    set_fields: =>
+      @rack.addFields
+        inputs:
+          "bool": true
+        outputs:
+          "out": {type: "Bool", val: @value}
+    
+    compute: =>
+      @rack.set("out", @rack.get("bool").get())
+  
   class ThreeNodes.nodes.types.Base.String extends ThreeNodes.NodeBase
     init: =>
       super
@@ -25,7 +40,8 @@ define [
         inputs:
           "string": ""
         outputs:
-          "out": {type: "Any", val: @ob}
+          "out": {type: "Any", val: @value}
+    
     compute: =>
       @rack.set("out", @rack.get("string").get())
   

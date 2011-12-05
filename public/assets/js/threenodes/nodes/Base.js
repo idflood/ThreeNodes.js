@@ -19,6 +19,36 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Number;
   })();
+  ThreeNodes.nodes.types.Base.Boolean = (function() {
+    __extends(Boolean, ThreeNodes.NodeBase);
+    function Boolean() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      this.init = __bind(this.init, this);
+      Boolean.__super__.constructor.apply(this, arguments);
+    }
+    Boolean.prototype.init = function() {
+      Boolean.__super__.init.apply(this, arguments);
+      return this.value = true;
+    };
+    Boolean.prototype.set_fields = function() {
+      return this.rack.addFields({
+        inputs: {
+          "bool": true
+        },
+        outputs: {
+          "out": {
+            type: "Bool",
+            val: this.value
+          }
+        }
+      });
+    };
+    Boolean.prototype.compute = function() {
+      return this.rack.set("out", this.rack.get("bool").get());
+    };
+    return Boolean;
+  })();
   ThreeNodes.nodes.types.Base.String = (function() {
     __extends(String, ThreeNodes.NodeBase);
     function String() {
@@ -39,7 +69,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         outputs: {
           "out": {
             type: "Any",
-            val: this.ob
+            val: this.value
           }
         }
       });
