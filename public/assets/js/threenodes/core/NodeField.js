@@ -15,6 +15,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.val = val;
       this.possible_values = possible_values != null ? possible_values : false;
       this.fid = fid != null ? fid : ThreeNodes.Utils.get_uid();
+      this.create_subval_textinput = __bind(this.create_subval_textinput, this);
+      this.link_textfield_to_subval = __bind(this.link_textfield_to_subval, this);
+      this.link_textfield_to_val = __bind(this.link_textfield_to_val, this);
+      this.create_textfield = __bind(this.create_textfield, this);
       this.create_sidebar_container = __bind(this.create_sidebar_container, this);
       this.on_value_changed = __bind(this.on_value_changed, this);
       this.remove_connections = __bind(this.remove_connections, this);
@@ -157,13 +161,56 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
       return this.val;
     };
-    NodeField.prototype.create_sidebar_container = function() {
+    NodeField.prototype.create_sidebar_container = function(name) {
       var $cont, $target;
+      if (name == null) {
+        name = this.name;
+      }
       $cont = $("#tab-attribute");
       $cont.append("<div id='side-field-" + this.fid + "'></div>");
       $target = $("#side-field-" + this.fid);
-      $target.append("<h3>" + this.name + "</h3>");
+      $target.append("<h3>" + name + "</h3>");
       return $target;
+    };
+    NodeField.prototype.create_textfield = function($target, id) {
+      $target.append("<div><input type='text' id='" + id + "' /></div>");
+      return $("#" + id);
+    };
+    NodeField.prototype.link_textfield_to_val = function(f_input) {
+      var self;
+      self = this;
+      this.on_value_update_hooks.update_sidebar_textfield = function(v) {
+        return f_input.val(v);
+      };
+      f_input.val(this.get());
+      f_input.keypress(function(e) {
+        if (e.which === 13) {
+          self.set($(this).val());
+          return $(this).blur();
+        }
+      });
+      return f_input;
+    };
+    NodeField.prototype.link_textfield_to_subval = function(f_input, subval) {
+      var self;
+      self = this;
+      this.on_value_update_hooks["update_sidebar_textfield_" + subval] = function(v) {
+        return f_input.val(v[subval]);
+      };
+      f_input.val(this.get()[subval]);
+      f_input.keypress(function(e) {
+        if (e.which === 13) {
+          self.val[subval] = $(this).val();
+          return $(this).blur();
+        }
+      });
+      return f_input;
+    };
+    NodeField.prototype.create_subval_textinput = function(subval) {
+      var $target, f_in;
+      $target = this.create_sidebar_container(subval);
+      f_in = create_textfield($target, "side-field-txt-input-" + subval + "-" + this.fid);
+      return link_textfield_to_subval(f_in, subval);
     };
     return NodeField;
   })();
@@ -252,8 +299,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $target, f_in, self;
       self = this;
       $target = this.create_sidebar_container();
-      $target.append("<div><input type='text' id='side-field-txt-input-" + this.fid + "' /></div>");
-      f_in = $("#side-field-txt-input-" + this.fid);
+      f_in = create_textfield($target, "side-field-txt-input-" + this.fid);
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
         return f_in.val(v.toString());
       };
@@ -312,20 +358,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return true;
     };
     Float.prototype.create_sidebar_input = function($target) {
-      var f_in, self;
-      self = this;
-      $target.append("<div><input type='text' id='side-field-txt-input-" + this.fid + "' /></div>");
-      f_in = $("#side-field-txt-input-" + this.fid);
-      this.on_value_update_hooks.update_sidebar_textfield = function(v) {
-        return f_in.val(v.toString().substring(0, 10));
-      };
-      f_in.val(this.get());
-      return f_in.keypress(function(e) {
-        if (e.which === 13) {
-          self.set($(this).val());
-          return $(this).blur();
-        }
-      });
+      var f_in;
+      f_in = this.create_textfield($target, "side-field-txt-input-" + this.fid);
+      return this.link_textfield_to_val(f_in);
     };
     Float.prototype.render_sidebar = function() {
       var $target;
@@ -364,6 +399,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
   ThreeNodes.fields.types.Vector2 = (function() {
     __extends(Vector2, ThreeNodes.NodeField);
     function Vector2() {
+      this.render_sidebar = __bind(this.render_sidebar, this);
       this.compute_value = __bind(this.compute_value, this);
       Vector2.__super__.constructor.apply(this, arguments);
     }
@@ -381,11 +417,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
       return res;
     };
+    Vector2.prototype.render_sidebar = function() {
+      create_subval_textinput("x");
+      create_subval_textinput("y");
+      return true;
+    };
     return Vector2;
   })();
   ThreeNodes.fields.types.Vector3 = (function() {
     __extends(Vector3, ThreeNodes.NodeField);
     function Vector3() {
+      this.render_sidebar = __bind(this.render_sidebar, this);
       this.compute_value = __bind(this.compute_value, this);
       Vector3.__super__.constructor.apply(this, arguments);
     }
@@ -403,11 +445,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
       return res;
     };
+    Vector3.prototype.render_sidebar = function() {
+      create_subval_textinput("x");
+      create_subval_textinput("y");
+      create_subval_textinput("z");
+      return true;
+    };
     return Vector3;
   })();
   ThreeNodes.fields.types.Vector4 = (function() {
     __extends(Vector4, ThreeNodes.NodeField);
     function Vector4() {
+      this.render_sidebar = __bind(this.render_sidebar, this);
       this.compute_value = __bind(this.compute_value, this);
       Vector4.__super__.constructor.apply(this, arguments);
     }
@@ -424,6 +473,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
           }
       }
       return res;
+    };
+    Vector4.prototype.render_sidebar = function() {
+      create_subval_textinput("x");
+      create_subval_textinput("y");
+      create_subval_textinput("z");
+      create_subval_textinput("w");
+      return true;
     };
     return Vector4;
   })();

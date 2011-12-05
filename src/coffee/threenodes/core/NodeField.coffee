@@ -105,12 +105,43 @@ define [
         else @val = @compute_value(val)
       @val
     
-    create_sidebar_container: () =>
+    create_sidebar_container: (name = @name) =>
       $cont = $("#tab-attribute")
       $cont.append("<div id='side-field-" + @fid + "'></div>")
       $target = $("#side-field-#{@fid}")
-      $target.append("<h3>#{@name}</h3>")
+      $target.append("<h3>#{name}</h3>")
       return $target
+    
+    create_textfield: ($target, id) =>
+      $target.append("<div><input type='text' id='#{id}' /></div>")
+      return $("#" + id)
+    
+    link_textfield_to_val: (f_input) =>
+      self = this
+      @on_value_update_hooks.update_sidebar_textfield = (v) ->
+        f_input.val(v)
+      f_input.val(@get())
+      f_input.keypress (e) ->
+        if e.which == 13
+          self.set($(this).val())
+          $(this).blur()
+      f_input
+    
+    link_textfield_to_subval: (f_input, subval) =>
+      self = this
+      @on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
+        f_input.val(v[subval])
+      f_input.val(@get()[subval])
+      f_input.keypress (e) ->
+        if e.which == 13
+          self.val[subval] = $(this).val()
+          $(this).blur()
+      f_input
+  
+    create_subval_textinput: (subval) =>
+      $target = @create_sidebar_container(subval)
+      f_in = create_textfield($target, "side-field-txt-input-#{subval}-#{@fid}")
+      link_textfield_to_subval(f_in, subval)
   
   class ThreeNodes.fields.types.Any extends ThreeNodes.NodeField
     compute_value : (val) =>
@@ -151,8 +182,7 @@ define [
     render_sidebar: =>
       self = this
       $target = @create_sidebar_container()
-      $target.append("<div><input type='text' id='side-field-txt-input-#{@fid}' /></div>")
-      f_in = $("#side-field-txt-input-#{@fid}")
+      f_in = create_textfield($target, "side-field-txt-input-#{@fid}")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_in.val(v.toString())
       f_in.val(@get())
@@ -187,16 +217,8 @@ define [
       return true
     
     create_sidebar_input: ($target) =>
-      self = this
-      $target.append("<div><input type='text' id='side-field-txt-input-#{@fid}' /></div>")
-      f_in = $("#side-field-txt-input-#{@fid}")
-      @on_value_update_hooks.update_sidebar_textfield = (v) ->
-        f_in.val(v.toString().substring(0, 10))
-      f_in.val(@get())
-      f_in.keypress (e) ->
-        if e.which == 13
-          self.set($(this).val())
-          $(this).blur()
+      f_in = @create_textfield($target, "side-field-txt-input-#{@fid}")
+      @link_textfield_to_val(f_in)
           
     render_sidebar: =>
       $target = @create_sidebar_container()
@@ -229,7 +251,12 @@ define [
         when "object" then if val.constructor == THREE.Vector2
           res = val
       res
-          
+    
+    render_sidebar: =>
+      create_subval_textinput("x")
+      create_subval_textinput("y")
+      true
+  
   class ThreeNodes.fields.types.Vector3 extends ThreeNodes.NodeField
     compute_value : (val) =>
       res = @val
@@ -238,6 +265,12 @@ define [
         when "object" then if val.constructor == THREE.Vector3
           res = val
       res
+    
+    render_sidebar: =>
+      create_subval_textinput("x")
+      create_subval_textinput("y")
+      create_subval_textinput("z")
+      true
   
   class ThreeNodes.fields.types.Vector4 extends ThreeNodes.NodeField
     compute_value : (val) =>
@@ -248,6 +281,13 @@ define [
         when "object" then if val.constructor == THREE.Vector4
           res = val
       res
+    
+    render_sidebar: =>
+      create_subval_textinput("x")
+      create_subval_textinput("y")
+      create_subval_textinput("z")
+      create_subval_textinput("w")
+      true
   
   class ThreeNodes.fields.types.Quaternion extends ThreeNodes.NodeField
     compute_value : (val) =>
