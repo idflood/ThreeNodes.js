@@ -51,6 +51,47 @@ define [
         equals n3.v_in.connections.length, 1, "Input only have one connection"
         equals n3.v_out.get(), 14, "The second connection is valid and propagated the value"
       
+      test "Connection direction", () ->
+        app.commandMap.execute "ClearWorkspaceCommand"
+        injector = app.injector
+        ng = app.nodegraph
+        
+        n1 = ng.create_node("Base", "Number")
+        n2 = ng.create_node("Base", "Number")
+        # connect node in reverse order (from input to output)
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_in, n1.v_out)
+        n1.v_in.set 4
+        ng.render()
+        
+        equals n2.v_out.get(), 4, "Connection is created with good input/output order and the value has been propagated"
+      
+      test "Connection from input to anoter input", () ->
+        app.commandMap.execute "ClearWorkspaceCommand"
+        injector = app.injector
+        ng = app.nodegraph
+        
+        n1 = ng.create_node("Base", "Number")
+        n2 = ng.create_node("Base", "Number")
+        # connect an input to another input
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_in, n2.v_in)
+        # the connection should not be created
+        ng.render()
+        
+        equals ng.node_connections.length, 0, "The connection has not been created since it is wrong"
+      
+      test "Connection from and to the same node", () ->
+        app.commandMap.execute "ClearWorkspaceCommand"
+        injector = app.injector
+        ng = app.nodegraph
+        
+        n1 = ng.create_node("Base", "Number")
+        # connect an input to another input
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n1.v_in)
+        # the connection should not be created
+        ng.render()
+        
+        equals ng.node_connections.length, 0, "The connection has not been created since it is wrong"
+      
       test "Array connections", () ->
         # verify that the good amount of objects are created when having many inputs
         app.commandMap.execute "ClearWorkspaceCommand"

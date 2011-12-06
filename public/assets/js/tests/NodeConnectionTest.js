@@ -41,6 +41,39 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         equals(n3.v_in.connections.length, 1, "Input only have one connection");
         return equals(n3.v_out.get(), 14, "The second connection is valid and propagated the value");
       });
+      test("Connection direction", function() {
+        var c1, injector, n1, n2, ng;
+        app.commandMap.execute("ClearWorkspaceCommand");
+        injector = app.injector;
+        ng = app.nodegraph;
+        n1 = ng.create_node("Base", "Number");
+        n2 = ng.create_node("Base", "Number");
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_in, n1.v_out);
+        n1.v_in.set(4);
+        ng.render();
+        return equals(n2.v_out.get(), 4, "Connection is created with good input/output order and the value has been propagated");
+      });
+      test("Connection from input to anoter input", function() {
+        var c1, injector, n1, n2, ng;
+        app.commandMap.execute("ClearWorkspaceCommand");
+        injector = app.injector;
+        ng = app.nodegraph;
+        n1 = ng.create_node("Base", "Number");
+        n2 = ng.create_node("Base", "Number");
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_in, n2.v_in);
+        ng.render();
+        return equals(ng.node_connections.length, 0, "The connection has not been created since it is wrong");
+      });
+      test("Connection from and to the same node", function() {
+        var c1, injector, n1, ng;
+        app.commandMap.execute("ClearWorkspaceCommand");
+        injector = app.injector;
+        ng = app.nodegraph;
+        n1 = ng.create_node("Base", "Number");
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n1.v_in);
+        ng.render();
+        return equals(ng.node_connections.length, 0, "The connection has not been created since it is wrong");
+      });
       test("Array connections", function() {
         var c1, c2, c3, injector, meshNode, n1, n2, ng, node_merge, node_mult, node_vec, nvec1, nvec2;
         app.commandMap.execute("ClearWorkspaceCommand");
