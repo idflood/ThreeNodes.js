@@ -54,7 +54,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Object3D.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
-      childs_in = this.rack.get("children").get();
+      childs_in = this.rack.get("children").val;
       if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
           this.ob.remove(this.ob.children[0]);
@@ -101,7 +101,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
         return true;
       }
-      childs_in = this.rack.get("children").get();
+      childs_in = this.rack.get("children").val;
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -147,11 +147,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack.addFields({
         inputs: {
           "geometry": {
-            type: "Any",
+            type: "Geometry",
             val: new THREE.CubeGeometry(200, 200, 200)
           },
           "material": {
-            type: "Any",
+            type: "Material",
             val: new THREE.MeshBasicMaterial({
               color: 0xff0000
             })

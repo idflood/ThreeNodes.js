@@ -31,7 +31,7 @@ define [
   
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
-      childs_in = @rack.get("children").get()
+      childs_in = @rack.get("children").val
       
       # no connections mean no children
       if @rack.get("children").connections.length == 0 && @ob.children.length != 0
@@ -67,7 +67,7 @@ define [
         @ob.remove(@ob.children[0]) while @ob.children.length > 0
         return true
       
-      childs_in = @rack.get("children").get()
+      childs_in = @rack.get("children").val
       # remove old childs
       for child in @ob.children
         ind = childs_in.indexOf(child)
@@ -105,8 +105,8 @@ define [
       super
       @rack.addFields
         inputs:
-          "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
-          "material": {type: "Any", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
+          "geometry": {type: "Geometry", val: new THREE.CubeGeometry( 200, 200, 200 )}
+          "material": {type: "Material", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
           "overdraw": false
       @ob = [new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())]
       @material_cache = false

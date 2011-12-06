@@ -678,6 +678,28 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     return Geometry;
   })();
+  ThreeNodes.fields.types.Material = (function() {
+    __extends(Material, ThreeNodes.NodeField);
+    function Material() {
+      this.compute_value = __bind(this.compute_value, this);
+      Material.__super__.constructor.apply(this, arguments);
+    }
+    Material.prototype.compute_value = function(val) {
+      var res;
+      res = this.val;
+      switch ($.type(val)) {
+        case "array":
+          res = val;
+          break;
+        case "object":
+          if (val.constructor === THREE.Material || val instanceof THREE.Material) {
+            res = val;
+          }
+      }
+      return res;
+    };
+    return Material;
+  })();
   return ThreeNodes.fields.types.Texture = (function() {
     __extends(Texture, ThreeNodes.NodeField);
     function Texture() {

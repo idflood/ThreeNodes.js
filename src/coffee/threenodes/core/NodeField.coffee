@@ -214,8 +214,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "number" then res = val.toString
         when "string" then res = val
       res
@@ -266,8 +265,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then  res = val
         when "object" then if val.constructor == THREE.Vector2
           res = val
       res
@@ -296,8 +294,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Vector4
           res = val
       res
@@ -313,8 +310,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Quaternion
           res = val
       res
@@ -323,8 +319,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "number" then res = new THREE.Color().setRGB(val, val, val)
         when "object"
           switch val.constructor
@@ -341,8 +336,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
           res = val
       res
@@ -350,8 +344,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Scene
           res = val
       res
@@ -359,8 +352,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
           res = val
       res
@@ -368,8 +360,7 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
           res = val
       res
@@ -377,17 +368,23 @@ define [
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
+          res = val
+      res
+  class ThreeNodes.fields.types.Material extends ThreeNodes.NodeField
+    compute_value : (val) =>
+      res = @val
+      switch $.type(val)
+        when "array" then res = val
+        when "object" then if val.constructor == THREE.Material || val instanceof THREE.Material
           res = val
       res
   class ThreeNodes.fields.types.Texture extends ThreeNodes.NodeField
     compute_value : (val) =>
       res = @val
       switch $.type(val)
-        when "array"
-          res = val
+        when "array" then res = val
         when "object" then if val.constructor == THREE.Texture || val instanceof THREE.Texture
           res = val
       res

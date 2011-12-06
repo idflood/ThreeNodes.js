@@ -66,6 +66,14 @@ define [
         ng.render()
         
         equals n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed"
+        
+        # same with mesh.material
+        c1.remove()
+        old_val = n2.rack.get("material").get()
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("material"))
+        ng.render()
+        
+        equals n2.rack.get("material").get().id, old_val.id, "Material field value should not change if wrong type is passed"
       
       test "Connection direction", () ->
         app.commandMap.execute "ClearWorkspaceCommand"

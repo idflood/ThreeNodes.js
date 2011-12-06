@@ -52,7 +52,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         old_val = n2.rack.get("geometry").get();
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("geometry"));
         ng.render();
-        return equals(n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed");
+        equals(n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed");
+        c1.remove();
+        old_val = n2.rack.get("material").get();
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("material"));
+        ng.render();
+        return equals(n2.rack.get("material").get().id, old_val.id, "Material field value should not change if wrong type is passed");
       });
       test("Connection direction", function() {
         var c1, injector, n1, n2, ng;
