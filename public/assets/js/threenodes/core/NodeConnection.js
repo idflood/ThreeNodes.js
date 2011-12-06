@@ -1,20 +1,46 @@
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   return ThreeNodes.NodeConnection = (function() {
     function NodeConnection(from_field, to_field, cid) {
       this.from_field = from_field;
       this.to_field = to_field;
       this.cid = cid != null ? cid : ThreeNodes.Utils.get_uid();
-      this.container = $("#graph");
-      this.to_field.remove_connections();
-      this.from_field.add_connection(this);
-      this.to_field.add_connection(this);
-      this.to_field.set(this.from_field.get());
-      this.from_field.node.dirty = true;
+      this.validate_connection = __bind(this.validate_connection, this);
+      this.switch_fields_if_needed = __bind(this.switch_fields_if_needed, this);
+      this.is_valid = this.validate_connection();
+      if (this.is_valid) {
+        this.container = $("#graph");
+        this.to_field.remove_connections();
+        this.from_field.add_connection(this);
+        this.to_field.add_connection(this);
+        this.to_field.set(this.from_field.get());
+        this.from_field.node.dirty = true;
+      }
     }
+    NodeConnection.prototype.switch_fields_if_needed = function() {
+      var f_out;
+      if (this.from_field.is_output === false) {
+        f_out = this.to_field;
+        this.to_field = this.from_field;
+        return this.from_field = f_out;
+      }
+    };
+    NodeConnection.prototype.validate_connection = function() {
+      if (this.from_field.is_output === this.to_field.is_output) {
+        return false;
+      }
+      if (this.from_field.node.nid === this.to_field.node.nid) {
+        return false;
+      }
+      this.switch_fields_if_needed();
+      return true;
+    };
     NodeConnection.prototype.onRegister = function() {
-      this.line = false;
-      this.context.commandMap.execute("AddConnectionCommand", this);
-      return this.render();
+      if (this.is_valid) {
+        this.line = false;
+        this.context.commandMap.execute("AddConnectionCommand", this);
+        return this.render();
+      }
     };
     NodeConnection.prototype.get_path = function() {
       var container_y, diffx, diffy, f1, f2, min_diff, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
