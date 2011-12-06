@@ -51,6 +51,22 @@ define [
         equals n3.v_in.connections.length, 1, "Input only have one connection"
         equals n3.v_out.get(), 14, "The second connection is valid and propagated the value"
       
+      test "Connection between wrong field types", () ->
+        app.commandMap.execute "ClearWorkspaceCommand"
+        injector = app.injector
+        ng = app.nodegraph
+        
+        n1 = ng.create_node("Base", "Number")
+        n2 = ng.create_node("Three", "Mesh")
+        ng.render()
+        
+        old_val = n2.rack.get("geometry").get()
+        # can't really connect a number to a geometry field, should not change his value
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("geometry"))
+        ng.render()
+        
+        equals n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed"
+      
       test "Connection direction", () ->
         app.commandMap.execute "ClearWorkspaceCommand"
         injector = app.injector
