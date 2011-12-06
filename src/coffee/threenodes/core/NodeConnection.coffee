@@ -9,20 +9,42 @@ define [
 ], ($, _, Backbone, _view_node_template) ->
   class ThreeNodes.NodeConnection
     constructor: (@from_field, @to_field, @cid = ThreeNodes.Utils.get_uid()) ->
-      @container = $("#graph")
-      # remove existing input connection since inputs only have one connection
-      @to_field.remove_connections()
-      # add the connection to each fields
-      @from_field.add_connection(this)
-      @to_field.add_connection(this)
-      # dispatch the new value
-      @to_field.set(@from_field.get())
-      @from_field.node.dirty = true
+      @is_valid = @validate_connection()
+      if @is_valid
+        @container = $("#graph")
+        # remove existing input connection since inputs only have one connection
+        @to_field.remove_connections()
+        # add the connection to each fields
+        @from_field.add_connection(this)
+        @to_field.add_connection(this)
+        # dispatch the new value
+        @to_field.set(@from_field.get())
+        @from_field.node.dirty = true
+    
+    switch_fields_if_needed: () =>
+      if @from_field.is_output == false
+        f_out = @to_field
+        @to_field = @from_field
+        @from_field = f_out
+    
+    validate_connection: () =>
+      # never connect 2 outputs or 2 inputs
+      if @from_field.is_output == @to_field.is_output
+        return false
+      
+      # never connect in/out from the same node
+      if @from_field.node.nid == @to_field.node.nid
+        return false
+      
+      @switch_fields_if_needed()
+      
+      true
     
     onRegister: () ->
-      @line = false
-      @context.commandMap.execute "AddConnectionCommand", this
-      @render()
+      if @is_valid
+        @line = false
+        @context.commandMap.execute "AddConnectionCommand", this
+        @render()
     
     get_path: () ->
       container_y = parseFloat($("#container-wrapper").css("top"))
