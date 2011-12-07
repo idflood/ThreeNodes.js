@@ -82,11 +82,13 @@ define [
         
         n1 = ng.create_node("Base", "Number")
         n3 = ng.create_node("Three", "Scene")
+        equals $.type(n3.ob.children), "array", "Scene.children is by default an empty array"
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.rack.get("children"))
+        # the ng.render throw an error if the children attribute is not valid
         ng.render()
         
         equals $.type(n3.ob.children), "array", "Scene.children is still an array after connecting a number to it"
-        #equals n3.ob.children.length, 0, "Scene.children array is still empty"
+        equals n3.ob.children.length, 0, "Scene.children array is still empty"
       
       test "Connection direction", () ->
         app.commandMap.execute "ClearWorkspaceCommand"

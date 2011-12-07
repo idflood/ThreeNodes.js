@@ -21,8 +21,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack.addFields({
         inputs: {
           "children": {
-            type: "Array",
-            val: []
+            type: "Object3D",
+            val: [],
+            "default": []
           },
           "position": {
             type: "Vector3",

@@ -17,19 +17,37 @@ define [
       @is_output = false
       @changed = true
       @connections = []
+      @default_value = null
       ThreeNodes.nodes.fields[@fid] = this
       @on_value_changed(@val)
     
     set: (v) =>
       @changed = true
       @node.dirty = true
+      new_val = @on_value_changed(v)
+      if $.type(new_val) == "array"
+        tmp_val = _.filter new_val, (item) ->
+          item != null
+        if tmp_val.length != 0
+          new_val = tmp_val
+        else
+          if @default_value != null
+            new_val = @default_value
+          else
+            new_val = @val
       
-      v = @on_value_changed(v)
+      if new_val == null
+        if @default_value != null
+          @val = @default_value
+        new_val = @val
+      
+      @val = new_val
+      
       for hook of @on_value_update_hooks
-        @on_value_update_hooks[hook](v)
+        @on_value_update_hooks[hook](@val)
       if @is_output == true
         for connection in @connections
-          connection.to_field.set(v)
+          connection.to_field.set(@val)
       true
   
     get: (index = 0) =>
@@ -100,10 +118,10 @@ define [
       
     on_value_changed : (val) =>
       self = this
-      switch $.type(val)
-        when "array" then @val = _.map(val, (n) -> self.compute_value(n))
-        else @val = @compute_value(val)
-      @val
+      if $.type(val) == "array"
+        return _.map(val, (n) -> self.compute_value(n))
+      
+      return @compute_value(val)
     
     create_sidebar_container: (name = @name) =>
       $cont = $("#tab-attribute")
@@ -191,12 +209,11 @@ define [
       true
     
     compute_value : (val) =>
-      res = @val
       switch $.type(val)
-        when "boolean" then res = val
-        when "number" then res = val != 0
-        when "string" then res = val == "1"
-      res
+        when "boolean" then return val
+        when "number" then return val != 0
+        when "string" then return val == "1"
+      return null
   
   class ThreeNodes.fields.types.String extends ThreeNodes.NodeField
     render_sidebar: =>
@@ -212,12 +229,11 @@ define [
           $(this).blur()
       true
     compute_value : (val) =>
-      res = @val
       switch $.type(val)
-        when "array" then res = val
-        when "number" then res = val.toString
-        when "string" then res = val
-      res
+        when "array" then return val
+        when "number" then return val.toString
+        when "string" then return val
+      return null
   
   class ThreeNodes.fields.types.Float extends ThreeNodes.NodeField
     create_sidebar_select: ($target) =>
@@ -245,30 +261,24 @@ define [
         @create_sidebar_select($target)
       else
         @create_sidebar_input($target)
-      
       true
     
     compute_value : (val) =>
-      res = @val
       switch $.type(val)
-        when "array" then res = val
-        when "number" then res = parseFloat(val)
-        when "string" then res = parseFloat(val)
+        when "number", "string" then return parseFloat(val)
         when "boolean"
           if val
-            res = 1
+            return 1
           else
-            res = 0
-      res
+            return 0
+      return null
       
   class ThreeNodes.fields.types.Vector2 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then  res = val
-        when "object" then if val.constructor == THREE.Vector2
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Vector2
+          return val
+      return null
     
     render_sidebar: =>
       create_subval_textinput("x")
@@ -277,12 +287,10 @@ define [
   
   class ThreeNodes.fields.types.Vector3 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Vector3
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Vector3
+          return val
+      return null
     
     render_sidebar: =>
       create_subval_textinput("x")
@@ -292,12 +300,10 @@ define [
   
   class ThreeNodes.fields.types.Vector4 extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Vector4
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Vector4
+          return val
+      return null
     
     render_sidebar: =>
       create_subval_textinput("x")
@@ -308,83 +314,65 @@ define [
   
   class ThreeNodes.fields.types.Quaternion extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Quaternion
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Quaternion
+          return val
+      return null
       
   class ThreeNodes.fields.types.Color extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
       switch $.type(val)
-        when "array" then res = val
-        when "number" then res = new THREE.Color().setRGB(val, val, val)
+        when "number" then return new THREE.Color().setRGB(val, val, val)
         when "object"
           switch val.constructor
-            when THREE.Color then res = val
-            when THREE.Vector3 then res = new THREE.Color().setRGB(val.x, val.y, val.z)
+            when THREE.Color then return val
+            when THREE.Vector3 then return new THREE.Color().setRGB(val.x, val.y, val.z)
         when "boolean"
           if val
-            res = new THREE.Color(0xffffff)
+            return new THREE.Color(0xffffff)
           else
-            res = new THREE.Color(0x000000)
-      res
+            return new THREE.Color(0x000000)
+      return null
    
   class ThreeNodes.fields.types.Object3D extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
+          return val
+      return null
   class ThreeNodes.fields.types.Scene extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Scene
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Scene
+          return val
+      return null
   class ThreeNodes.fields.types.Camera extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
+          return val
+      return null
   class ThreeNodes.fields.types.Mesh extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
+          return val
+      return null
   class ThreeNodes.fields.types.Geometry extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
+          return val
+      return null
   class ThreeNodes.fields.types.Material extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Material || val instanceof THREE.Material
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Material || val instanceof THREE.Material
+          return val
+      return null
   class ThreeNodes.fields.types.Texture extends ThreeNodes.NodeField
     compute_value : (val) =>
-      res = @val
-      switch $.type(val)
-        when "array" then res = val
-        when "object" then if val.constructor == THREE.Texture || val instanceof THREE.Texture
-          res = val
-      res
+      if $.type(val) == "object"
+        if val.constructor == THREE.Texture || val instanceof THREE.Texture
+          return val
+      return null

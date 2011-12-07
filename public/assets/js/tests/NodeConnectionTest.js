@@ -66,9 +66,11 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng = app.nodegraph;
         n1 = ng.create_node("Base", "Number");
         n3 = ng.create_node("Three", "Scene");
+        equals($.type(n3.ob.children), "array", "Scene.children is by default an empty array");
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.rack.get("children"));
         ng.render();
-        return equals($.type(n3.ob.children), "array", "Scene.children is still an array after connecting a number to it");
+        equals($.type(n3.ob.children), "array", "Scene.children is still an array after connecting a number to it");
+        return equals(n3.ob.children.length, 0, "Scene.children array is still empty");
       });
       test("Connection direction", function() {
         var c1, injector, n1, n2, ng;

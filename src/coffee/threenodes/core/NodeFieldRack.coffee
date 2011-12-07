@@ -107,6 +107,8 @@ define [
           f = new ThreeNodes.fields.types[value.type](name, value.val, value.values)
         else
           f = new ThreeNodes.fields.types[value.type](name, value.val)
+        if value.default != null
+          f.default_value = value.default
       else
         f = @create_field_from_default_type(name, value)
       if direction != "inputs"

@@ -172,6 +172,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
         } else {
           f = new ThreeNodes.fields.types[value.type](name, value.val);
         }
+        if (value["default"] !== null) {
+          f.default_value = value["default"];
+        }
       } else {
         f = this.create_field_from_default_type(name, value);
       }

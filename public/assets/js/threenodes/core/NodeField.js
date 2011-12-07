@@ -42,22 +42,44 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.is_output = false;
       this.changed = true;
       this.connections = [];
+      this.default_value = null;
       ThreeNodes.nodes.fields[this.fid] = this;
       this.on_value_changed(this.val);
     }
     NodeField.prototype.set = function(v) {
-      var connection, hook, _i, _len, _ref;
+      var connection, hook, new_val, tmp_val, _i, _len, _ref;
       this.changed = true;
       this.node.dirty = true;
-      v = this.on_value_changed(v);
+      new_val = this.on_value_changed(v);
+      if ($.type(new_val) === "array") {
+        tmp_val = _.filter(new_val, function(item) {
+          return item !== null;
+        });
+        if (tmp_val.length !== 0) {
+          new_val = tmp_val;
+        } else {
+          if (this.default_value !== null) {
+            new_val = this.default_value;
+          } else {
+            new_val = this.val;
+          }
+        }
+      }
+      if (new_val === null) {
+        if (this.default_value !== null) {
+          this.val = this.default_value;
+        }
+        new_val = this.val;
+      }
+      this.val = new_val;
       for (hook in this.on_value_update_hooks) {
-        this.on_value_update_hooks[hook](v);
+        this.on_value_update_hooks[hook](this.val);
       }
       if (this.is_output === true) {
         _ref = this.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           connection = _ref[_i];
-          connection.to_field.set(v);
+          connection.to_field.set(this.val);
         }
       }
       return true;
@@ -150,16 +172,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.on_value_changed = function(val) {
       var self;
       self = this;
-      switch ($.type(val)) {
-        case "array":
-          this.val = _.map(val, function(n) {
-            return self.compute_value(n);
-          });
-          break;
-        default:
-          this.val = this.compute_value(val);
+      if ($.type(val) === "array") {
+        return _.map(val, function(n) {
+          return self.compute_value(n);
+        });
       }
-      return this.val;
+      return this.compute_value(val);
     };
     NodeField.prototype.create_sidebar_container = function(name) {
       var $cont, $target;
@@ -299,19 +317,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return true;
     };
     Bool.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
       switch ($.type(val)) {
         case "boolean":
-          res = val;
-          break;
+          return val;
         case "number":
-          res = val !== 0;
-          break;
+          return val !== 0;
         case "string":
-          res = val === "1";
+          return val === "1";
       }
-      return res;
+      return null;
     };
     return Bool;
   })();
@@ -340,19 +354,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return true;
     };
     String.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
       switch ($.type(val)) {
         case "array":
-          res = val;
-          break;
+          return val;
         case "number":
-          res = val.toString;
-          break;
+          return val.toString;
         case "string":
-          res = val;
+          return val;
       }
-      return res;
+      return null;
     };
     return String;
   })();
@@ -400,26 +410,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return true;
     };
     Float.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
       switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
         case "number":
-          res = parseFloat(val);
-          break;
         case "string":
-          res = parseFloat(val);
-          break;
+          return parseFloat(val);
         case "boolean":
           if (val) {
-            res = 1;
+            return 1;
           } else {
-            res = 0;
+            return 0;
           }
       }
-      return res;
+      return null;
     };
     return Float;
   })();
@@ -431,18 +433,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Vector2.__super__.constructor.apply(this, arguments);
     }
     Vector2.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Vector2) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Vector2) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     Vector2.prototype.render_sidebar = function() {
       create_subval_textinput("x");
@@ -459,18 +455,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Vector3.__super__.constructor.apply(this, arguments);
     }
     Vector3.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Vector3) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Vector3) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     Vector3.prototype.render_sidebar = function() {
       create_subval_textinput("x");
@@ -488,18 +478,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Vector4.__super__.constructor.apply(this, arguments);
     }
     Vector4.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Vector4) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Vector4) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     Vector4.prototype.render_sidebar = function() {
       create_subval_textinput("x");
@@ -517,18 +501,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Quaternion.__super__.constructor.apply(this, arguments);
     }
     Quaternion.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Quaternion) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Quaternion) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Quaternion;
   })();
@@ -539,32 +517,25 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Color.__super__.constructor.apply(this, arguments);
     }
     Color.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
       switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
         case "number":
-          res = new THREE.Color().setRGB(val, val, val);
-          break;
+          return new THREE.Color().setRGB(val, val, val);
         case "object":
           switch (val.constructor) {
             case THREE.Color:
-              res = val;
-              break;
+              return val;
             case THREE.Vector3:
-              res = new THREE.Color().setRGB(val.x, val.y, val.z);
+              return new THREE.Color().setRGB(val.x, val.y, val.z);
           }
           break;
         case "boolean":
           if (val) {
-            res = new THREE.Color(0xffffff);
+            return new THREE.Color(0xffffff);
           } else {
-            res = new THREE.Color(0x000000);
+            return new THREE.Color(0x000000);
           }
       }
-      return res;
+      return null;
     };
     return Color;
   })();
@@ -575,18 +546,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Object3D.__super__.constructor.apply(this, arguments);
     }
     Object3D.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Object3D;
   })();
@@ -597,18 +562,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Scene.__super__.constructor.apply(this, arguments);
     }
     Scene.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Scene) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Scene) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Scene;
   })();
@@ -619,18 +578,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Camera.__super__.constructor.apply(this, arguments);
     }
     Camera.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Camera ||  val.constructor === THREE.PerspectiveCamera ||  val.constructor === THREE.OrthographicCamera) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Camera ||  val.constructor === THREE.PerspectiveCamera ||  val.constructor === THREE.OrthographicCamera) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Camera;
   })();
@@ -641,18 +594,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Mesh.__super__.constructor.apply(this, arguments);
     }
     Mesh.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Mesh;
   })();
@@ -663,18 +610,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Geometry.__super__.constructor.apply(this, arguments);
     }
     Geometry.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Geometry;
   })();
@@ -685,18 +626,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Material.__super__.constructor.apply(this, arguments);
     }
     Material.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Material || val instanceof THREE.Material) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Material || val instanceof THREE.Material) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Material;
   })();
@@ -707,18 +642,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       Texture.__super__.constructor.apply(this, arguments);
     }
     Texture.prototype.compute_value = function(val) {
-      var res;
-      res = this.val;
-      switch ($.type(val)) {
-        case "array":
-          res = val;
-          break;
-        case "object":
-          if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
-            res = val;
-          }
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
+          return val;
+        }
       }
-      return res;
+      return null;
     };
     return Texture;
   })();

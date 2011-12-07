@@ -16,7 +16,7 @@ define [
       @ob = new THREE.Object3D()
       @rack.addFields
         inputs:
-          "children": {type: "Array", val: []}
+          "children": {type: "Object3D", val: [], default: []}
           "position": {type: "Vector3", val: new THREE.Vector3()}
           "rotation": {type: "Vector3", val: new THREE.Vector3()}
           "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
