@@ -21,7 +21,7 @@ define [
           "resolution": 256
         outputs:
           "out": {type: "Any", val: @ob}
-      @cached = @get_cached_array ['strength', 'kernelSize', 'sigma', 'resolution']
+      @cached = @get_cached_array ['kernelSize', 'sigma', 'resolution']
         
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals

@@ -32,7 +32,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      return this.cached = this.get_cached_array(['strength', 'kernelSize', 'sigma', 'resolution']);
+      return this.cached = this.get_cached_array(['kernelSize', 'sigma', 'resolution']);
     };
     BloomPass.prototype.value_has_changed = function(vals) {
       var newvals;
