@@ -7,7 +7,8 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       ng = injector.get("NodeGraph");
       ng.remove_all_connections();
       ng.remove_all_nodes();
-      return this.context.reset_global_variables();
+      this.context.reset_global_variables();
+      return $("#webgl-window canvas").remove();
     };
     return ClearWorkspaceCommand;
   })();
