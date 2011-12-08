@@ -41,6 +41,37 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         equals(n3.v_in.connections.length, 1, "Input only have one connection");
         return equals(n3.v_out.get(), 14, "The second connection is valid and propagated the value");
       });
+      test("Connection between wrong field types", function() {
+        var c1, injector, n1, n2, ng, old_val;
+        app.commandMap.execute("ClearWorkspaceCommand");
+        injector = app.injector;
+        ng = app.nodegraph;
+        n1 = ng.create_node("Base", "Number");
+        n2 = ng.create_node("Three", "Mesh");
+        ng.render();
+        old_val = n2.rack.get("geometry").get();
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("geometry"));
+        ng.render();
+        equals(n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed");
+        c1.remove();
+        old_val = n2.rack.get("material").get();
+        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("material"));
+        ng.render();
+        return equals(n2.rack.get("material").get().id, old_val.id, "Material field value should not change if wrong type is passed");
+      });
+      test("Connection between wrong field types (children array)", function() {
+        var c2, injector, n1, n3, ng;
+        app.commandMap.execute("ClearWorkspaceCommand");
+        injector = app.injector;
+        ng = app.nodegraph;
+        n1 = ng.create_node("Base", "Number");
+        n3 = ng.create_node("Three", "Scene");
+        equals($.type(n3.ob.children), "array", "Scene.children is by default an empty array");
+        c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.rack.get("children"));
+        ng.render();
+        equals($.type(n3.ob.children), "array", "Scene.children is still an array after connecting a number to it");
+        return equals(n3.ob.children.length, 0, "Scene.children array is still empty");
+      });
       test("Connection direction", function() {
         var c1, injector, n1, n2, ng;
         app.commandMap.execute("ClearWorkspaceCommand");

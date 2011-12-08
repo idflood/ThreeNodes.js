@@ -11,6 +11,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     __extends(Object3D, ThreeNodes.NodeBase);
     function Object3D() {
       this.compute = __bind(this.compute, this);
+      this.get_children_array = __bind(this.get_children_array, this);
       this.set_fields = __bind(this.set_fields, this);
       Object3D.__super__.constructor.apply(this, arguments);
     }
@@ -21,8 +22,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack.addFields({
         inputs: {
           "children": {
-            type: "Array",
-            val: []
+            type: "Object3D",
+            val: [],
+            "default": []
           },
           "position": {
             type: "Vector3",
@@ -51,10 +53,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_shadow_options = ["castShadow", "receiveShadow"];
       return this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
     };
+    Object3D.prototype.get_children_array = function() {
+      var childs;
+      childs = this.rack.get("children").val;
+      if (childs && $.type(childs) !== "array") {
+        return [childs];
+      }
+      return childs;
+    };
     Object3D.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
-      childs_in = this.rack.get("children").get();
+      childs_in = this.get_children_array();
       if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
           this.ob.remove(this.ob.children[0]);
@@ -101,7 +111,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
         return true;
       }
-      childs_in = this.rack.get("children").get();
+      childs_in = this.get_children_array();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -147,11 +157,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack.addFields({
         inputs: {
           "geometry": {
-            type: "Any",
+            type: "Geometry",
             val: new THREE.CubeGeometry(200, 200, 200)
           },
           "material": {
-            type: "Any",
+            type: "Material",
             val: new THREE.MeshBasicMaterial({
               color: 0xff0000
             })
@@ -325,6 +335,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
   return ThreeNodes.nodes.types.Three.WebGLRenderer = (function() {
     __extends(WebGLRenderer, ThreeNodes.NodeBase);
     function WebGLRenderer() {
+      this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
       this.add_renderer_to_dom = __bind(this.add_renderer_to_dom, this);
       this.apply_post_fx = __bind(this.apply_post_fx, this);
@@ -436,6 +447,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       if (dw !== this.width || dh !== this.height ||  force_refresh) {
         this.ob.setSize(dw, dh);
+        if (this.win && this.win !== false) {
+          this.win.resizeTo(dw, dh + 52);
+        }
       }
       this.width = dw;
       return this.height = dh;
@@ -480,6 +494,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera;
       ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer;
       return ThreeNodes.Webgl.composer.render(0.05);
+    };
+    WebGLRenderer.prototype.remove = function() {
+      if (this.win && this.win !== false) {
+        this.win.close();
+      }
+      return WebGLRenderer.__super__.remove.apply(this, arguments);
     };
     return WebGLRenderer;
   })();
