@@ -43,8 +43,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       res = 1;
       for (fid in this.node_fields.inputs) {
         f = this.node_fields.inputs[fid];
-        if (f.val.length > res) {
-          res = f.val.length;
+        if (f.val && $.type(f.val) === "array") {
+          if (f.val.length > res) {
+            res = f.val.length;
+          }
         }
       }
       return res - 1;

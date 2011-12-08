@@ -31,13 +31,10 @@ define [
         if tmp_val.length != 0
           new_val = tmp_val
         else
-          if @default_value != null
-            new_val = @default_value
-          else
-            new_val = @val
+          new_val = null
       
       if new_val == null
-        if @default_value != null
+        if @default_value != null && @default_value != undefined
           @val = @default_value
         new_val = @val
       

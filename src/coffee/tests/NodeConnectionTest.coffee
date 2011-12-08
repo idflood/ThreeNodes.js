@@ -64,7 +64,7 @@ define [
         # can't really connect a number to a geometry field, should not change his value
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("geometry"))
         ng.render()
-        
+                
         equals n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed"
         
         # same with mesh.material

@@ -58,15 +58,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         if (tmp_val.length !== 0) {
           new_val = tmp_val;
         } else {
-          if (this.default_value !== null) {
-            new_val = this.default_value;
-          } else {
-            new_val = this.val;
-          }
+          new_val = null;
         }
       }
       if (new_val === null) {
-        if (this.default_value !== null) {
+        if (this.default_value !== null && this.default_value !== void 0) {
           this.val = this.default_value;
         }
         new_val = this.val;

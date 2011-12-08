@@ -26,8 +26,9 @@ define [
       res = 1
       for fid of @node_fields.inputs
         f = @node_fields.inputs[fid]
-        if f.val.length > res
-          res = f.val.length
+        if f.val && $.type(f.val) == "array"
+          if f.val.length > res
+            res = f.val.length
       # start with 0
       res - 1
     
