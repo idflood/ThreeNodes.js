@@ -28,10 +28,16 @@ define [
           "out": {type: "Any", val: @ob}
       @vars_shadow_options = ["castShadow", "receiveShadow"]
       @shadow_cache = @create_cache_object(@vars_shadow_options)
-  
+    
+    get_children_array: =>
+      childs = @rack.get("children").val
+      if childs && $.type(childs) != "array"
+        return [childs]
+      return childs
+    
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
-      childs_in = @rack.get("children").val
+      childs_in = @get_children_array()
       
       # no connections mean no children
       if @rack.get("children").connections.length == 0 && @ob.children.length != 0
@@ -67,7 +73,7 @@ define [
         @ob.remove(@ob.children[0]) while @ob.children.length > 0
         return true
       
-      childs_in = @rack.get("children").val
+      childs_in = @get_children_array()
       # remove old childs
       for child in @ob.children
         ind = childs_in.indexOf(child)

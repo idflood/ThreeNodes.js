@@ -11,6 +11,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     __extends(Object3D, ThreeNodes.NodeBase);
     function Object3D() {
       this.compute = __bind(this.compute, this);
+      this.get_children_array = __bind(this.get_children_array, this);
       this.set_fields = __bind(this.set_fields, this);
       Object3D.__super__.constructor.apply(this, arguments);
     }
@@ -52,10 +53,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_shadow_options = ["castShadow", "receiveShadow"];
       return this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
     };
+    Object3D.prototype.get_children_array = function() {
+      var childs;
+      childs = this.rack.get("children").val;
+      if (childs && $.type(childs) !== "array") {
+        return [childs];
+      }
+      return childs;
+    };
     Object3D.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
-      childs_in = this.rack.get("children").val;
+      childs_in = this.get_children_array();
       if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
           this.ob.remove(this.ob.children[0]);
@@ -102,7 +111,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
         return true;
       }
-      childs_in = this.rack.get("children").val;
+      childs_in = this.get_children_array();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];

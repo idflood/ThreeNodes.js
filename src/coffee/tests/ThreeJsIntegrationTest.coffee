@@ -53,3 +53,29 @@ define [
         equals ThreeNodes.Webgl.renderModel.scene.id, n5.rack.get("scene").get().id, "ThreeNodes.Webgl.renderModel.scene == scene connected to the renderer"
         equals n5.rack.get("postfx").get().length, 0, "Webgl.postfx array is empty"
         
+      test "Camera -> object3d -> merge -> scene connection test (children array)", () ->
+        ng = app.nodegraph
+        injector = app.injector
+        app.commandMap.execute "ClearWorkspaceCommand"
+        
+        n1 = ng.create_node("Three", "Scene")
+        n2 = ng.create_node("Utils", "Merge")
+        node_object3d = ng.create_node("Three", "Object3D")
+        node_camera = ng.create_node("Three", "Camera")
+        node_webgl = ng.create_node("Three", "WebGLRenderer")
+        
+        # scene -> webglrenderer.scene
+        injector.instanciate(ThreeNodes.NodeConnection, n1.rack.get("out", true), node_webgl.rack.get("scene"))
+        
+        # merge -> scene.children
+        injector.instanciate(ThreeNodes.NodeConnection, n2.rack.get("out", true), n1.rack.get("children"))
+        # camera -> object3d.children
+        injector.instanciate(ThreeNodes.NodeConnection, node_camera.rack.get("out", true), node_object3d.rack.get("children"))
+        # cammera -> scene.camera
+        injector.instanciate(ThreeNodes.NodeConnection, node_camera.rack.get("out", true), node_webgl.rack.get("camera"))
+        # object3d -> merge
+        injector.instanciate(ThreeNodes.NodeConnection, node_object3d.rack.get("out", true), n2.rack.get("in0"))
+
+        ng.render()
+        equals node_object3d.ob.children.length, 1, "Object3D has one child"
+        equals n1.ob.children.length, 1, "Scene has one child"
