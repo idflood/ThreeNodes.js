@@ -75,9 +75,9 @@ define [
         opacity: 0.7
         helper: "clone"
         revertDuration: 0
-        start: (event, ui) ->
-          #$("#sidebar").animate({left: -170}, { queue: false, duration: 80 }, "swing")
-          $("#sidebar").hide()
+        scroll: false
+        containment: "document"
+      
       $("#container").droppable
         accept: "#tab-new a.button"
         activeClass: "ui-state-active"
@@ -87,6 +87,6 @@ define [
           nodename = ui.draggable.attr("rel")
           nodetype = jQuery.trim(ui.draggable.html())
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10
-          dy = ui.position.top - 10 + $("#container-wrapper").scrollTop()
+          dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop()
           self.context.commandMap.execute("CreateNodeCommand", nodename, nodetype, dx, dy)
           $("#sidebar").show()

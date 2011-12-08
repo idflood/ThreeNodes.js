@@ -113,9 +113,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
         opacity: 0.7,
         helper: "clone",
         revertDuration: 0,
-        start: function(event, ui) {
-          return $("#sidebar").hide();
-        }
+        scroll: false,
+        containment: "document"
       });
       return $("#container").droppable({
         accept: "#tab-new a.button",
@@ -126,7 +125,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
           nodename = ui.draggable.attr("rel");
           nodetype = jQuery.trim(ui.draggable.html());
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10;
-          dy = ui.position.top - 10 + $("#container-wrapper").scrollTop();
+          dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop();
           self.context.commandMap.execute("CreateNodeCommand", nodename, nodetype, dx, dy);
           return $("#sidebar").show();
         }
