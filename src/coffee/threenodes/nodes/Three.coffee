@@ -351,3 +351,8 @@ define [
       ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
       ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer
       ThreeNodes.Webgl.composer.render(0.05)
+    
+    remove: () =>
+      if @win && @win != false
+        @win.close()
+      super

@@ -335,6 +335,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
   return ThreeNodes.nodes.types.Three.WebGLRenderer = (function() {
     __extends(WebGLRenderer, ThreeNodes.NodeBase);
     function WebGLRenderer() {
+      this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
       this.add_renderer_to_dom = __bind(this.add_renderer_to_dom, this);
       this.apply_post_fx = __bind(this.apply_post_fx, this);
@@ -493,6 +494,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera;
       ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer;
       return ThreeNodes.Webgl.composer.render(0.05);
+    };
+    WebGLRenderer.prototype.remove = function() {
+      if (this.win && this.win !== false) {
+        this.win.close();
+      }
+      return WebGLRenderer.__super__.remove.apply(this, arguments);
     };
     return WebGLRenderer;
   })();
