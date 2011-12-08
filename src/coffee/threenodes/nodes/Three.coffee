@@ -306,6 +306,9 @@ define [
         dh = dw / r
       if dw != @width || dh != @height || force_refresh
         @ob.setSize(dw, dh)
+        if @win && @win != false
+          # todo: implement the same with ".innerWidth =" and ".innerHeight =" when chrome support this
+          @win.resizeTo(dw, dh + 52)
       @width = dw
       @height = dh
     

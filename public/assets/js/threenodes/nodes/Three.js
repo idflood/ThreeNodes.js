@@ -446,6 +446,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       if (dw !== this.width || dh !== this.height ||  force_refresh) {
         this.ob.setSize(dw, dh);
+        if (this.win && this.win !== false) {
+          this.win.resizeTo(dw, dh + 52);
+        }
       }
       this.width = dw;
       return this.height = dh;
