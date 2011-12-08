@@ -31,9 +31,9 @@ define [
       false
       
     compute: =>
-      if @value_has_changed(['strength', 'kernelSize', 'sigma', 'resolution']) == true
+      if @value_has_changed(['kernelSize', 'sigma', 'resolution']) == true
         @ob = new THREE.BloomPass(@rack.get("strength").get(), @rack.get('kernelSize').get(), @rack.get('sigma').get(), @rack.get('resolution').get())
-      #@apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @ob.screenUniforms[ "opacity" ].value = @rack.get("strength").get()
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.types.PostProcessing.DotScreenPass extends ThreeNodes.NodeBase
@@ -83,8 +83,10 @@ define [
       false
       
     compute: =>
-      if @value_has_changed(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']) == true
-        @ob = new THREE.FilmPass(@rack.get("noiseIntensity").get(), @rack.get('scanlinesIntensity').get(), @rack.get('scanlinesCount').get(), @rack.get('grayscale').get())
+      @ob.uniforms.grayscale.value = @rack.get("grayscale").get()
+      @ob.uniforms.nIntensity.value = @rack.get("noiseIntensity").get()
+      @ob.uniforms.sIntensity.value = @rack.get("scanlinesIntensity").get()
+      @ob.uniforms.sCount.value = @rack.get("scanlinesCount").get()
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.types.PostProcessing.VignettePass extends ThreeNodes.NodeBase

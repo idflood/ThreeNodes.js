@@ -44,9 +44,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return false;
     };
     BloomPass.prototype.compute = function() {
-      if (this.value_has_changed(['strength', 'kernelSize', 'sigma', 'resolution']) === true) {
+      if (this.value_has_changed(['kernelSize', 'sigma', 'resolution']) === true) {
         this.ob = new THREE.BloomPass(this.rack.get("strength").get(), this.rack.get('kernelSize').get(), this.rack.get('sigma').get(), this.rack.get('resolution').get());
       }
+      this.ob.screenUniforms["opacity"].value = this.rack.get("strength").get();
       return this.rack.set("out", this.ob);
     };
     return BloomPass;
@@ -134,9 +135,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return false;
     };
     FilmPass.prototype.compute = function() {
-      if (this.value_has_changed(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']) === true) {
-        this.ob = new THREE.FilmPass(this.rack.get("noiseIntensity").get(), this.rack.get('scanlinesIntensity').get(), this.rack.get('scanlinesCount').get(), this.rack.get('grayscale').get());
-      }
+      this.ob.uniforms.grayscale.value = this.rack.get("grayscale").get();
+      this.ob.uniforms.nIntensity.value = this.rack.get("noiseIntensity").get();
+      this.ob.uniforms.sIntensity.value = this.rack.get("scanlinesIntensity").get();
+      this.ob.uniforms.sCount.value = this.rack.get("scanlinesCount").get();
       return this.rack.set("out", this.ob);
     };
     return FilmPass;
