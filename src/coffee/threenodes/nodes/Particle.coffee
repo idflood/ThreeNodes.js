@@ -113,7 +113,7 @@ define [
       total = @rack.get("nbrParticles").get()
       linearVelocity = @rack.get("linearVelocity").get()
       for i in [0..total]
-        vector = new THREE.Vector3( Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5 )
+        vector = new THREE.Vector3( Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad )
         v = new THREE.Vertex( vector )
         v.velocity = new THREE.Vector3( Math.random() * linearVelocity.x - linearVelocity.x * 0.5, Math.random() * linearVelocity.y - linearVelocity.y * 0.5, Math.random() * linearVelocity.z - linearVelocity.z * 0.5 )
         @ob.vertices.push( v )

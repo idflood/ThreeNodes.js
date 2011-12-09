@@ -176,7 +176,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       total = this.rack.get("nbrParticles").get();
       linearVelocity = this.rack.get("linearVelocity").get();
       for (i = 0; 0 <= total ? i <= total : i >= total; 0 <= total ? i++ : i--) {
-        vector = new THREE.Vector3(Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5, Math.random() * rad - rad * 0.5);
+        vector = new THREE.Vector3(Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad);
         v = new THREE.Vertex(vector);
         v.velocity = new THREE.Vector3(Math.random() * linearVelocity.x - linearVelocity.x * 0.5, Math.random() * linearVelocity.y - linearVelocity.y * 0.5, Math.random() * linearVelocity.z - linearVelocity.z * 0.5);
         this.ob.vertices.push(v);
