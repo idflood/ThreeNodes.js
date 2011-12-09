@@ -106,6 +106,36 @@ define [
       @ob.uniforms[ "darkness" ].value = @rack.get("darkness").get()
       @rack.set("out", @ob)
   
+  class ThreeNodes.nodes.types.PostProcessing.HorizontalBlurPass extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      shader = THREE.ShaderExtras[ "horizontalBlur" ]
+      @ob = new THREE.ShaderPass( shader )
+      @rack.addFields
+        inputs:
+          "delta": 1.0 / 512.0
+        outputs:
+          "out": {type: "Any", val: @ob}
+      
+    compute: =>
+      @ob.uniforms[ "h" ].value = @rack.get("delta").get()
+      @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.PostProcessing.VerticalBlurPass extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      shader = THREE.ShaderExtras[ "verticalBlur" ]
+      @ob = new THREE.ShaderPass( shader )
+      @rack.addFields
+        inputs:
+          "delta": 1.0 / 512.0
+        outputs:
+          "out": {type: "Any", val: @ob}
+      
+    compute: =>
+      @ob.uniforms[ "v" ].value = @rack.get("delta").get()
+      @rack.set("out", @ob)
+  
   class ThreeNodes.nodes.types.PostProcessing.BleachPass extends ThreeNodes.NodeBase
     set_fields: =>
       super

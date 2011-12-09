@@ -175,6 +175,66 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return VignettePass;
   })();
+  ThreeNodes.nodes.types.PostProcessing.HorizontalBlurPass = (function() {
+    __extends(HorizontalBlurPass, ThreeNodes.NodeBase);
+    function HorizontalBlurPass() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      HorizontalBlurPass.__super__.constructor.apply(this, arguments);
+    }
+    HorizontalBlurPass.prototype.set_fields = function() {
+      var shader;
+      HorizontalBlurPass.__super__.set_fields.apply(this, arguments);
+      shader = THREE.ShaderExtras["horizontalBlur"];
+      this.ob = new THREE.ShaderPass(shader);
+      return this.rack.addFields({
+        inputs: {
+          "delta": 1.0 / 512.0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    HorizontalBlurPass.prototype.compute = function() {
+      this.ob.uniforms["h"].value = this.rack.get("delta").get();
+      return this.rack.set("out", this.ob);
+    };
+    return HorizontalBlurPass;
+  })();
+  ThreeNodes.nodes.types.PostProcessing.VerticalBlurPass = (function() {
+    __extends(VerticalBlurPass, ThreeNodes.NodeBase);
+    function VerticalBlurPass() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      VerticalBlurPass.__super__.constructor.apply(this, arguments);
+    }
+    VerticalBlurPass.prototype.set_fields = function() {
+      var shader;
+      VerticalBlurPass.__super__.set_fields.apply(this, arguments);
+      shader = THREE.ShaderExtras["verticalBlur"];
+      this.ob = new THREE.ShaderPass(shader);
+      return this.rack.addFields({
+        inputs: {
+          "delta": 1.0 / 512.0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    VerticalBlurPass.prototype.compute = function() {
+      this.ob.uniforms["v"].value = this.rack.get("delta").get();
+      return this.rack.set("out", this.ob);
+    };
+    return VerticalBlurPass;
+  })();
   return ThreeNodes.nodes.types.PostProcessing.BleachPass = (function() {
     __extends(BleachPass, ThreeNodes.NodeBase);
     function BleachPass() {
