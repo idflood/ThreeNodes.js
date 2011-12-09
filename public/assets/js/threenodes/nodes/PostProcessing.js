@@ -32,7 +32,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      return this.cached = this.get_cached_array(['strength', 'kernelSize', 'sigma', 'resolution']);
+      return this.cached = this.get_cached_array(['kernelSize', 'sigma', 'resolution']);
     };
     BloomPass.prototype.value_has_changed = function(vals) {
       var newvals;
@@ -44,9 +44,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return false;
     };
     BloomPass.prototype.compute = function() {
-      if (this.value_has_changed(['strength', 'kernelSize', 'sigma', 'resolution']) === true) {
+      if (this.value_has_changed(['kernelSize', 'sigma', 'resolution']) === true) {
         this.ob = new THREE.BloomPass(this.rack.get("strength").get(), this.rack.get('kernelSize').get(), this.rack.get('sigma').get(), this.rack.get('resolution').get());
       }
+      this.ob.screenUniforms["opacity"].value = this.rack.get("strength").get();
       return this.rack.set("out", this.ob);
     };
     return BloomPass;
@@ -134,9 +135,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return false;
     };
     FilmPass.prototype.compute = function() {
-      if (this.value_has_changed(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']) === true) {
-        this.ob = new THREE.FilmPass(this.rack.get("noiseIntensity").get(), this.rack.get('scanlinesIntensity').get(), this.rack.get('scanlinesCount').get(), this.rack.get('grayscale').get());
-      }
+      this.ob.uniforms.grayscale.value = this.rack.get("grayscale").get();
+      this.ob.uniforms.nIntensity.value = this.rack.get("noiseIntensity").get();
+      this.ob.uniforms.sIntensity.value = this.rack.get("scanlinesIntensity").get();
+      this.ob.uniforms.sCount.value = this.rack.get("scanlinesCount").get();
       return this.rack.set("out", this.ob);
     };
     return FilmPass;
@@ -172,6 +174,66 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.ob);
     };
     return VignettePass;
+  })();
+  ThreeNodes.nodes.types.PostProcessing.HorizontalBlurPass = (function() {
+    __extends(HorizontalBlurPass, ThreeNodes.NodeBase);
+    function HorizontalBlurPass() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      HorizontalBlurPass.__super__.constructor.apply(this, arguments);
+    }
+    HorizontalBlurPass.prototype.set_fields = function() {
+      var shader;
+      HorizontalBlurPass.__super__.set_fields.apply(this, arguments);
+      shader = THREE.ShaderExtras["horizontalBlur"];
+      this.ob = new THREE.ShaderPass(shader);
+      return this.rack.addFields({
+        inputs: {
+          "delta": 1.0 / 512.0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    HorizontalBlurPass.prototype.compute = function() {
+      this.ob.uniforms["h"].value = this.rack.get("delta").get();
+      return this.rack.set("out", this.ob);
+    };
+    return HorizontalBlurPass;
+  })();
+  ThreeNodes.nodes.types.PostProcessing.VerticalBlurPass = (function() {
+    __extends(VerticalBlurPass, ThreeNodes.NodeBase);
+    function VerticalBlurPass() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      VerticalBlurPass.__super__.constructor.apply(this, arguments);
+    }
+    VerticalBlurPass.prototype.set_fields = function() {
+      var shader;
+      VerticalBlurPass.__super__.set_fields.apply(this, arguments);
+      shader = THREE.ShaderExtras["verticalBlur"];
+      this.ob = new THREE.ShaderPass(shader);
+      return this.rack.addFields({
+        inputs: {
+          "delta": 1.0 / 512.0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    VerticalBlurPass.prototype.compute = function() {
+      this.ob.uniforms["v"].value = this.rack.get("delta").get();
+      return this.rack.set("out", this.ob);
+    };
+    return VerticalBlurPass;
   })();
   return ThreeNodes.nodes.types.PostProcessing.BleachPass = (function() {
     __extends(BleachPass, ThreeNodes.NodeBase);
