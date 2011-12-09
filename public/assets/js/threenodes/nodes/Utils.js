@@ -29,12 +29,100 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.add_center_textfield(this.rack.get("out", true));
     };
     Random.prototype.compute = function() {
-      var old;
-      old = this.rack.get("out", true).get();
       this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
       return this.rack.set("out", this.value);
     };
     return Random;
+  })();
+  ThreeNodes.nodes.types.Utils.LFO = (function() {
+    __extends(LFO, ThreeNodes.NodeBase);
+    function LFO() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      LFO.__super__.constructor.apply(this, arguments);
+    }
+    LFO.prototype.set_fields = function() {
+      LFO.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rndB = Math.random();
+      this.rndA = this.rndB;
+      this.rndrange = 1;
+      this.flip = 0;
+      this.taskinterval = 1;
+      this.taskintervalhold = 20;
+      this.clock = 0;
+      this.PI = 3.14159;
+      this.rack.addFields({
+        inputs: {
+          "min": 0,
+          "max": 1,
+          "duration": 1000,
+          "mode": {
+            type: "Float",
+            val: 0,
+            values: {
+              "sawtooth": 0,
+              "sine": 1,
+              "triangle": 2,
+              "square waver": 3,
+              "random": 4,
+              "random triangle": 5
+            }
+          }
+        },
+        outputs: {
+          "out": 0
+        }
+      });
+      return this.rack.add_center_textfield(this.rack.get("out", true));
+    };
+    LFO.prototype.compute = function() {
+      var duration, halfway, hi, lfoout, lfout, low, max, min, mode, range, src, srctmp, time;
+      duration = this.rack.get("duration").get();
+      min = this.rack.get("min").get();
+      max = this.rack.get("max").get();
+      mode = this.rack.get("mode").get();
+      this.clock = Date.now();
+      time = (this.taskinterval * this.clock) % duration;
+      src = time / duration;
+      range = max - min;
+      lfoout = 0;
+      lfout = (function() {
+        switch (mode) {
+          case 0:
+            return (src * range) + min;
+          case 1:
+            return (range * Math.sin(src * this.PI)) + min;
+          case 2:
+            halfway = duration / 2;
+            if (time < halfway) {
+              return (2 * src * range) + min;
+            } else {
+              srctmp = (halfway - (time - halfway)) / duration;
+              return (2 * srctmp * range) + min;
+            }
+            break;
+          case 3:
+            low = time < duration / 2;
+            hi = time >= duration / 2;
+            return low * min + hi * max;
+          case 4:
+            if (time >= duration - this.taskinterval) {
+              this.rndA = Math.random();
+            }
+            return (this.rndA * range) + min;
+          case 5:
+            if (time < this.taskinterval) {
+              this.rndA = this.rndB;
+              this.rndB = range * Math.random() + min;
+              this.rndrange = this.rndB - this.rndA;
+            }
+            return src * this.rndrange + this.rndA;
+        }
+      }).call(this);
+      return this.rack.set("out", lfout);
+    };
+    return LFO;
   })();
   ThreeNodes.nodes.types.Utils.Merge = (function() {
     __extends(Merge, ThreeNodes.NodeBase);
