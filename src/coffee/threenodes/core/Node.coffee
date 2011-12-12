@@ -1,5 +1,3 @@
-ThreeNodes.field_click_1 = false
-
 define [
   'jQuery',
   'Underscore', 
@@ -12,6 +10,12 @@ define [
   'order!threenodes/core/NodeConnection',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
+  ThreeNodes.field_click_1 = false
+  ThreeNodes.selected_nodes = $([])
+  ThreeNodes.nodes_offset =
+    top: 0
+    left: 0
+  
   class ThreeNodes.NodeBase
     constructor: (@x = 0, @y = 0, @inXML = false, @inJSON = false) ->
       @auto_evaluate = false
@@ -162,18 +166,40 @@ define [
     init: () =>
       self = this
       @main_view = $.tmpl(_view_node_template, this)
+      @main_view.data("object", this)
       @container.append(@main_view)
       @main_view.css
         left: @x
         top: @y
+      
+      $("#container").selectable
+        filter: ".node"
       @main_view.draggable
-        drag: () ->
+        start: (ev, ui) ->
+          ThreeNodes.selected_nodes = $(".ui-selected").each () ->
+            $(this).data("offset", $(this).offset())
+          if !$(this).hasClass("ui-selected")
+            $(this).addClass("ui-selected")
+          ThreeNodes.nodes_offset = $(this).offset()
+        drag: (ev, ui) ->
+          dt = ui.position.top - ThreeNodes.nodes_offset.top
+          dl = ui.position.left - ThreeNodes.nodes_offset.left
+          ThreeNodes.selected_nodes.not(this).each () ->
+            el = $(this)
+            offset = el.data("offset")
+            el.css
+              top: offset.top + dt
+              left: offset.left + dl
+            el.data("object").render_connections()
           self.render_connections()
         stop: () ->
-          self.render_connections()
+          ThreeNodes.selected_nodes.not(this).each () ->
+            el = $(this)
+            el.data("object").render_connections()
           pos = self.main_view.position()
           self.x = pos.left
           self.y = pos.top
+          self.render_connections()
       $(".head", @main_view).dblclick (e) ->
         $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
           self.render_connections()
