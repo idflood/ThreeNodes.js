@@ -57,7 +57,7 @@ define [
     
     init_context_menu: () =>
       self = this
-      #$(@main_view).contextMenu {menu: "node-context-menu"}, (action, el, pos) ->
+      #$(".head", @main_view).contextMenu {menu: "node-context-menu"}, (action, el, pos) ->
       #  if action == "remove_node"
       #    self.remove()
       $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
@@ -175,10 +175,12 @@ define [
       @main_view.draggable
         handle: ".head span"
         start: (ev, ui) ->
-          ThreeNodes.selected_nodes = $(".ui-selected").each () ->
-            $(this).data("offset", $(this).offset())
-          if !$(this).hasClass("ui-selected")
-            $(this).addClass("ui-selected")
+          if $(this).hasClass("ui-selected")
+            ThreeNodes.selected_nodes = $(".ui-selected").each () ->
+              $(this).data("offset", $(this).offset())
+          else
+            ThreeNodes.selected_nodes = $([])
+            $(".node").removeClass("ui-selected")
           ThreeNodes.nodes_offset = $(this).offset()
         drag: (ev, ui) ->
           dt = ui.position.top - ThreeNodes.nodes_offset.top

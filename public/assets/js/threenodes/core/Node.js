@@ -234,11 +234,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.main_view.draggable({
         handle: ".head span",
         start: function(ev, ui) {
-          ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
-            return $(this).data("offset", $(this).offset());
-          });
-          if (!$(this).hasClass("ui-selected")) {
-            $(this).addClass("ui-selected");
+          if ($(this).hasClass("ui-selected")) {
+            ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
+              return $(this).data("offset", $(this).offset());
+            });
+          } else {
+            ThreeNodes.selected_nodes = $([]);
+            $(".node").removeClass("ui-selected");
           }
           return ThreeNodes.nodes_offset = $(this).offset();
         },
