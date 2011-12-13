@@ -34,4 +34,5 @@ define [
         when "new" then @context.commandMap.execute("ClearWorkspaceCommand")
         when "open" then $("#main_file_input_open").click()
         when "save" then @context.commandMap.execute("SaveFileCommand")
-        when "rebuild shaders" then @context.commandMap.execute("RebuildShadersCommand")
+        when "rebuild all shaders" then @context.commandMap.execute("RebuildShadersCommand")
+        when "remove selected node(s)" then @context.commandMap.execute("RemoveSelectedNodesCommand")

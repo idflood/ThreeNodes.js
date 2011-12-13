@@ -57,9 +57,6 @@ define [
     
     init_context_menu: () =>
       self = this
-      #$(".head", @main_view).contextMenu {menu: "node-context-menu"}, (action, el, pos) ->
-      #  if action == "remove_node"
-      #    self.remove()
       $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
         if action == "remove_connection"
           f_name = $(el).attr("id")
