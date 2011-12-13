@@ -19,6 +19,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.y = y != null ? y : 0;
       this.inXML = inXML != null ? inXML : false;
       this.inJSON = inJSON != null ? inJSON : false;
+      this.compute_node_position = __bind(this.compute_node_position, this);
       this.init = __bind(this.init, this);
       this.remove_connection = __bind(this.remove_connection, this);
       this.add_out_connection = __bind(this.add_out_connection, this);
@@ -230,10 +231,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         left: this.x,
         top: this.y
       });
-      $("#container").selectable({
-        filter: ".node"
-      });
       this.main_view.draggable({
+        handle: ".head span",
         start: function(ev, ui) {
           ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
             return $(this).data("offset", $(this).offset());
@@ -248,29 +247,32 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           dt = ui.position.top - ThreeNodes.nodes_offset.top;
           dl = ui.position.left - ThreeNodes.nodes_offset.left;
           ThreeNodes.selected_nodes.not(this).each(function() {
-            var el, offset;
+            var dx, dy, el, offset;
             el = $(this);
             offset = el.data("offset");
+            dx = offset.top + dt;
+            dy = offset.left + dl;
             el.css({
-              top: offset.top + dt,
-              left: offset.left + dl
+              top: dx,
+              left: dy
             });
-            return el.data("object").render_connections();
+            el.data("object").render_connections();
+            return el.data("object").compute_node_position();
           });
           return self.render_connections();
         },
         stop: function() {
-          var pos;
           ThreeNodes.selected_nodes.not(this).each(function() {
             var el;
-            el = $(this);
-            return el.data("object").render_connections();
+            el = $(this).data("object");
+            return el.render_connections();
           });
-          pos = self.main_view.position();
-          self.x = pos.left;
-          self.y = pos.top;
+          self.compute_node_position();
           return self.render_connections();
         }
+      });
+      $("#container").selectable({
+        filter: ".node"
       });
       $(".head", this.main_view).dblclick(function(e) {
         return $(".options", self.main_view).animate({
@@ -279,9 +281,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.render_connections();
         });
       });
-      return $(".head", this.main_view).click(function(e) {
+      return this.main_view.click(function(e) {
         return self.rack.render_sidebar();
       });
+    };
+    NodeBase.prototype.compute_node_position = function() {
+      var pos;
+      pos = this.main_view.position();
+      this.x = pos.left;
+      return this.y = pos.top;
     };
     return NodeBase;
   })();

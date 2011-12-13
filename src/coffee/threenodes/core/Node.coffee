@@ -172,9 +172,8 @@ define [
         left: @x
         top: @y
       
-      $("#container").selectable
-        filter: ".node"
       @main_view.draggable
+        handle: ".head span"
         start: (ev, ui) ->
           ThreeNodes.selected_nodes = $(".ui-selected").each () ->
             $(this).data("offset", $(this).offset())
@@ -191,26 +190,32 @@ define [
             dy = offset.left + dl
             el.css
               top: dx
-              left: 
+              left: dy
             el.data("object").render_connections()
-            el.data("object").x = dx
-            el.data("object").y = dy
+            el.data("object").compute_node_position()
           self.render_connections()
         stop: () ->
           ThreeNodes.selected_nodes.not(this).each () ->
             el = $(this).data("object")
             el.render_connections()
-          pos = self.main_view.position()
-          self.x = pos.left
-          self.y = pos.top
+          self.compute_node_position()
           self.render_connections()
+      
+      $("#container").selectable
+        filter: ".node"
+      
       $(".head", @main_view).dblclick (e) ->
         $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
           self.render_connections()
           
-      $(".head", @main_view).click (e) ->
+      @main_view.click (e) ->
         self.rack.render_sidebar()
   
+    compute_node_position: () =>
+      pos = @main_view.position()
+      @x = pos.left
+      @y = pos.top
+    
   class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
     init: =>
       super
