@@ -278,8 +278,8 @@ define [
       return null
     
     render_sidebar: =>
-      create_subval_textinput("x")
-      create_subval_textinput("y")
+      @create_subval_textinput("x")
+      @create_subval_textinput("y")
       true
   
   class ThreeNodes.fields.types.Vector3 extends ThreeNodes.NodeField
@@ -290,9 +290,9 @@ define [
       return null
     
     render_sidebar: =>
-      create_subval_textinput("x")
-      create_subval_textinput("y")
-      create_subval_textinput("z")
+      @create_subval_textinput("x")
+      @create_subval_textinput("y")
+      @create_subval_textinput("z")
       true
   
   class ThreeNodes.fields.types.Vector4 extends ThreeNodes.NodeField
@@ -303,10 +303,10 @@ define [
       return null
     
     render_sidebar: =>
-      create_subval_textinput("x")
-      create_subval_textinput("y")
-      create_subval_textinput("z")
-      create_subval_textinput("w")
+      @create_subval_textinput("x")
+      @create_subval_textinput("y")
+      @create_subval_textinput("z")
+      @create_subval_textinput("w")
       true
   
   class ThreeNodes.fields.types.Quaternion extends ThreeNodes.NodeField
