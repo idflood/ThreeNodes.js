@@ -36,8 +36,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
           return $("#main_file_input_open").click();
         case "save":
           return this.context.commandMap.execute("SaveFileCommand");
-        case "rebuild shaders":
+        case "rebuild all shaders":
           return this.context.commandMap.execute("RebuildShadersCommand");
+        case "remove selected node(s)":
+          return this.context.commandMap.execute("RemoveSelectedNodesCommand");
       }
     };
     return AppMenuBar;
