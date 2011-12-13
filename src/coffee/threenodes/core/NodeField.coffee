@@ -155,8 +155,8 @@ define [
   
     create_subval_textinput: (subval) =>
       $target = @create_sidebar_container(subval)
-      f_in = create_textfield($target, "side-field-txt-input-#{subval}-#{@fid}")
-      link_textfield_to_subval(f_in, subval)
+      f_in = @create_textfield($target, "side-field-txt-input-#{subval}-#{@fid}")
+      @link_textfield_to_subval(f_in, subval)
   
   class ThreeNodes.fields.types.Any extends ThreeNodes.NodeField
     compute_value : (val) =>

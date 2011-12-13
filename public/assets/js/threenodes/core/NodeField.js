@@ -223,8 +223,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.create_subval_textinput = function(subval) {
       var $target, f_in;
       $target = this.create_sidebar_container(subval);
-      f_in = create_textfield($target, "side-field-txt-input-" + subval + "-" + this.fid);
-      return link_textfield_to_subval(f_in, subval);
+      f_in = this.create_textfield($target, "side-field-txt-input-" + subval + "-" + this.fid);
+      return this.link_textfield_to_subval(f_in, subval);
     };
     return NodeField;
   })();
