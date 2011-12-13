@@ -187,15 +187,19 @@ define [
           ThreeNodes.selected_nodes.not(this).each () ->
             el = $(this)
             offset = el.data("offset")
+            dx = offset.top + dt
+            dy = offset.left + dl
             el.css
-              top: offset.top + dt
-              left: offset.left + dl
+              top: dx
+              left: 
             el.data("object").render_connections()
+            el.data("object").x = dx
+            el.data("object").y = dy
           self.render_connections()
         stop: () ->
           ThreeNodes.selected_nodes.not(this).each () ->
-            el = $(this)
-            el.data("object").render_connections()
+            el = $(this).data("object")
+            el.render_connections()
           pos = self.main_view.position()
           self.x = pos.left
           self.y = pos.top
