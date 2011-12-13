@@ -437,8 +437,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return null;
     };
     Vector2.prototype.render_sidebar = function() {
-      create_subval_textinput("x");
-      create_subval_textinput("y");
+      this.create_subval_textinput("x");
+      this.create_subval_textinput("y");
       return true;
     };
     return Vector2;
@@ -459,9 +459,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return null;
     };
     Vector3.prototype.render_sidebar = function() {
-      create_subval_textinput("x");
-      create_subval_textinput("y");
-      create_subval_textinput("z");
+      this.create_subval_textinput("x");
+      this.create_subval_textinput("y");
+      this.create_subval_textinput("z");
       return true;
     };
     return Vector3;
@@ -482,10 +482,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return null;
     };
     Vector4.prototype.render_sidebar = function() {
-      create_subval_textinput("x");
-      create_subval_textinput("y");
-      create_subval_textinput("z");
-      create_subval_textinput("w");
+      this.create_subval_textinput("x");
+      this.create_subval_textinput("y");
+      this.create_subval_textinput("z");
+      this.create_subval_textinput("w");
       return true;
     };
     return Vector4;
