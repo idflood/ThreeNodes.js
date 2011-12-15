@@ -28,7 +28,8 @@ define [
       injector.mapSingleton "ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar
       @webgl = injector.get "ThreeNodes.WebglBase"
       @sidebar = injector.get "ThreeNodes.AppSidebar"
-      @sidebar = injector.get "ThreeNodes.AppMenuBar"
+      @menubar = injector.get "ThreeNodes.AppMenuBar"
+      @timeline = injector.get "AppTimeline"
       
       @add_window_resize_handler()
       @init_context_menus()
@@ -69,6 +70,7 @@ define [
       $("#sidebar-toggle").delay(delay_intro).fadeIn(0)
       
     render: () =>
+      @timeline.update()
       @trigger("render")
     
     on_ui_window_resize: () =>
@@ -76,7 +78,7 @@ define [
       h = $(window).height()
       $("#container-wrapper").css
         width: w
-        height: h - 25
+        height: h - 25 - 200
       $("#sidebar").css("height", h - 25)
       
     animate: () =>

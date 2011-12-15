@@ -10,30 +10,40 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.      
 
-Timeline.prototype.initGUI = function() {  
-  var self = this;     
+Timeline.prototype.initGUI = function( parameters ) {  
+  var self = this;
 
-  this.trackLabelWidth = 108;  
-  this.trackLabelHeight = 20; 
-  this.tracksScrollWidth = 16;  
+  this.trackLabelWidth = parameters.trackLabelWidth !== undefined ? parameters.trackLabelWidth : 108;
+  this.trackLabelHeight = parameters.trackLabelHeight !== undefined ? parameters.trackLabelHeight : 20;
+  this.tracksScrollWidth = parameters.tracksScrollWidth !== undefined ? parameters.tracksScrollWidth : 16;
   this.tracksScrollHeight = 0;
   this.tracksScrollThumbPos = 0;   
   this.tracksScrollThumbHeight = 0; 
   this.tracksScrollY = 0;    
   this.timeScrollWidth = 0;  
-  this.timeScrollHeight = 16;
+  this.timeScrollHeight = parameters.timeScrollHeight !== undefined ? parameters.timeScrollHeight : 16;
   this.timeScrollThumbPos = 0;   
   this.timeScrollThumbWidth = 0;   
   this.timeScrollX = 0;
-  this.headerHeight = 30;
-  this.canvasHeight = 200; 
+  this.headerHeight = parameters.headerHeight !== undefined ? parameters.headerHeight : 30;
+  this.canvasHeight = parameters.canvasHeight !== undefined ? parameters.canvasHeight : 200;
   this.draggingTime = false;    
   this.draggingTracksScrollThumb = false;    
   this.draggingTimeScrollThumb = false;
   this.draggingKeys = false;
   this.draggingTimeScale = false;
   this.selectedKeys = [];  
-  this.timeScale = 1;    
+  this.timeScale = parameters.timeScale !== undefined ? parameters.timeScale : 1;
+  this.colorBackground = parameters.colorBackground !== undefined ? parameters.colorBackground : "#EEEEEE";
+  this.colorButtonBackground = parameters.colorButtonBackground !== undefined ? parameters.colorButtonBackground : "#DDDDDD";
+  this.colorButtonStroke = parameters.colorButtonStroke !== undefined ? parameters.colorButtonStroke : "#777777";
+  this.colorScrollbar = parameters.colorScrollbar !== undefined ? parameters.colorScrollbar : "#DDDDDD";
+  this.colorScrollbarThumb = parameters.colorScrollbarThumb !== undefined ? parameters.colorScrollbarThumb : "#999999";
+  this.colorTimelineLabel = parameters.colorTimelineLabel !== undefined ? parameters.colorTimelineLabel : "#666666";
+  this.colorTimeScale = parameters.colorTimeScale !== undefined ? parameters.colorTimeScale : "#666666";
+  this.colorTimelineTick = parameters.colorTimelineTick !== undefined ? parameters.colorTimelineTick : "#999999";
+  this.colorHeaderBorder = parameters.colorHeaderBorder !== undefined ? parameters.colorHeaderBorder : "#000000";
+  this.colorTimeTicker = parameters.colorTimeTicker !== undefined ? parameters.colorTimeTicker : "#FF0000";
             
   this.trackNameCounter = 0; 
   this.initTracks();
@@ -42,7 +52,7 @@ Timeline.prototype.initGUI = function() {
   this.container = document.createElement("div");  
 	this.container.style.width = "100%";    
 	this.container.style.height = this.canvasHeight + "px";
-	this.container.style.background = "#EEEEEE";	
+	this.container.style.background = this.colorBackground;	
 	this.container.style.position = "fixed";		   
 	this.container.style.left = "0px";      	   
 	this.container.style.bottom = "0px";      	   
@@ -342,7 +352,7 @@ Timeline.prototype.preUpdate = function() {
 
 Timeline.prototype.updateGUI = function() {   
   if (!this.canvas) {    
-    this.initGUI();    
+    this.initGUI(this.parameters);    
   }                
   
   this.canvas.width = window.innerWidth;
@@ -368,13 +378,13 @@ Timeline.prototype.updateGUI = function() {
   this.c.clearRect(0, 0, w, h);   
                    
   //buttons  
-  this.drawRect(0*this.headerHeight - 4 * -1, 5, this.headerHeight - 8, this.headerHeight - 8, "#DDDDDD"); 
-  this.drawRect(1*this.headerHeight - 4 *  0, 5, this.headerHeight - 8, this.headerHeight - 8, "#DDDDDD"); 
-  this.drawRect(2*this.headerHeight - 4 *  1, 5, this.headerHeight - 8, this.headerHeight - 8, "#DDDDDD"); 
-  this.drawRect(3*this.headerHeight - 4 *  2, 5, this.headerHeight - 8, this.headerHeight - 8, "#DDDDDD"); 
+  this.drawRect(0*this.headerHeight - 4 * -1, 5, this.headerHeight - 8, this.headerHeight - 8, this.colorButtonBackground); 
+  this.drawRect(1*this.headerHeight - 4 *  0, 5, this.headerHeight - 8, this.headerHeight - 8, this.colorButtonBackground); 
+  this.drawRect(2*this.headerHeight - 4 *  1, 5, this.headerHeight - 8, this.headerHeight - 8, this.colorButtonBackground); 
+  this.drawRect(3*this.headerHeight - 4 *  2, 5, this.headerHeight - 8, this.headerHeight - 8, this.colorButtonBackground); 
   
   //play
-  this.c.strokeStyle = "#777777";
+  this.c.strokeStyle = this.colorButtonStroke;
   this.c.beginPath();
   this.c.moveTo(4 + 6.5, 5 + 5);
   this.c.lineTo(this.headerHeight - 8, this.headerHeight/2+1.5);
@@ -427,13 +437,13 @@ Timeline.prototype.updateGUI = function() {
   var timelineEnd = 10; 
   var lastTimeLabelX = 0;   
                                                                                  
-  this.c.fillStyle = "#666666";  
+  this.c.fillStyle = this.colorTimelineLabel;  
   var x = this.timeToX(0);
   //for(var sec=timelineStart; sec<timelineEnd; sec++) {                               
   var sec = timelineStart;
   while(x < this.canvas.width) {  
     x = this.timeToX(sec);
-    this.drawLine(x, 0, x, this.headerHeight*0.3, "#999999"); 
+    this.drawLine(x, 0, x, this.headerHeight*0.3, this.colorTimelineTick); 
                
     var minutes = Math.floor(sec / 60);
     var seconds = sec % 60;
@@ -447,7 +457,7 @@ Timeline.prototype.updateGUI = function() {
   }    
   
   //time ticker
-  this.drawLine(this.timeToX(this.time), 0, this.timeToX(this.time), h, "#FF0000"); 
+  this.drawLine(this.timeToX(this.time), 0, this.timeToX(this.time), h, this.colorTimeTicker); 
   
   //time scale
   
@@ -456,7 +466,7 @@ Timeline.prototype.updateGUI = function() {
     this.drawLine(7 + f*(this.trackLabelWidth-10), h - this.timeScrollHeight + 4, 7 + f*(this.trackLabelWidth - 10), h - 3, "#999999"); 
   }                                                                                                                                     
                      
-  this.c.fillStyle = "#666666";
+  this.c.fillStyle = this.colorTimeScale;
   this.c.beginPath();
   this.c.moveTo(7 + (1.0-this.timeScale)*(this.trackLabelWidth-10), h - 7);
   this.c.lineTo(11 + (1.0-this.timeScale)*(this.trackLabelWidth - 10), h - 1);
@@ -464,22 +474,22 @@ Timeline.prototype.updateGUI = function() {
   this.c.fill();
                                                                      
   //tracks scrollbar
-  this.drawRect(this.canvas.width - this.tracksScrollWidth, this.headerHeight + 1, this.tracksScrollWidth, this.tracksScrollHeight, "#DDDDDD");
+  this.drawRect(this.canvas.width - this.tracksScrollWidth, this.headerHeight + 1, this.tracksScrollWidth, this.tracksScrollHeight, this.colorScrollbar);
   if (this.tracksScrollThumbHeight < this.tracksScrollHeight) {
-    this.drawRect(this.canvas.width - this.tracksScrollWidth, this.headerHeight + 1 + this.tracksScrollThumbPos, this.tracksScrollWidth, this.tracksScrollThumbHeight, "#999999");
+    this.drawRect(this.canvas.width - this.tracksScrollWidth, this.headerHeight + 1 + this.tracksScrollThumbPos, this.tracksScrollWidth, this.tracksScrollThumbHeight, this.colorScrollbarThumb);
   } 
   
   //time scrollbar
-  this.drawRect(this.trackLabelWidth, h - this.timeScrollHeight, w - this.trackLabelWidth - this.tracksScrollWidth, this.timeScrollHeight, "#DDDDDD");  
+  this.drawRect(this.trackLabelWidth, h - this.timeScrollHeight, w - this.trackLabelWidth - this.tracksScrollWidth, this.timeScrollHeight, this.colorScrollbar);  
   if (this.timeScrollThumbWidth < this.timeScrollWidth) {
-    this.drawRect(this.trackLabelWidth + 1 + this.timeScrollThumbPos, h - this.timeScrollHeight, this.timeScrollThumbWidth, this.timeScrollHeight, "#999999");
+    this.drawRect(this.trackLabelWidth + 1 + this.timeScrollThumbPos, h - this.timeScrollHeight, this.timeScrollThumbWidth, this.timeScrollHeight, this.colorScrollbarThumb);
   }
   
   //header borders
-  this.drawLine(0, 0, w, 0, "#000000");  
-  this.drawLine(0, this.headerHeight, w, this.headerHeight, "#000000");
-  this.drawLine(0, h - this.timeScrollHeight, this.trackLabelWidth, h - this.timeScrollHeight, "#000000");
-  this.drawLine(this.trackLabelWidth, h - this.timeScrollHeight - 1, this.trackLabelWidth, h, "#000000");
+  this.drawLine(0, 0, w, 0, this.colorHeaderBorder);  
+  this.drawLine(0, this.headerHeight, w, this.headerHeight, this.colorHeaderBorder);
+  this.drawLine(0, h - this.timeScrollHeight, this.trackLabelWidth, h - this.timeScrollHeight, this.colorHeaderBorder);
+  this.drawLine(this.trackLabelWidth, h - this.timeScrollHeight - 1, this.trackLabelWidth, h, this.colorHeaderBorder);
 }        
 
 Timeline.prototype.timeToX = function(time) {   

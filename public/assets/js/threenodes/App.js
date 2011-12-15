@@ -28,7 +28,7 @@ ThreeNodes.flash_sound_value = {
   snare: 0,
   hat: 0
 };
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/AddConnectionCommand', 'order!threenodes/commands/RemoveConnectionCommand', 'order!threenodes/commands/CreateNodeCommand', 'order!threenodes/commands/SaveFileCommand', 'order!threenodes/commands/LoadLocalFileCommand', 'order!threenodes/commands/RebuildShadersCommand', 'order!threenodes/commands/RemoveSelectedNodesCommand'], function($, _, Backbone, NodeGraph, AppUI) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/ui/AppTimeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/AddConnectionCommand', 'order!threenodes/commands/RemoveConnectionCommand', 'order!threenodes/commands/CreateNodeCommand', 'order!threenodes/commands/SaveFileCommand', 'order!threenodes/commands/LoadLocalFileCommand', 'order!threenodes/commands/RebuildShadersCommand', 'order!threenodes/commands/RemoveSelectedNodesCommand'], function($, _, Backbone, NodeGraph, AppUI) {
   "use strict";  return ThreeNodes.App = (function() {
     function App(testing_mode) {
       this.testing_mode = testing_mode != null ? testing_mode : false;
@@ -53,6 +53,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.commandMap.register("RemoveSelectedNodesCommand", ThreeNodes.RemoveSelectedNodesCommand);
       this.injector.mapSingleton("NodeGraph", ThreeNodes.NodeGraph);
       this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);
+      this.injector.mapSingleton("AppTimeline", ThreeNodes.AppTimeline);
       this.injector.mapSingleton("AppUI", AppUI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
       this.injector.mapSingleton("ThreeNodes.WebglBase", ThreeNodes.WebglBase);
@@ -61,6 +62,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.webgl = this.injector.get("ThreeNodes.WebglBase");
       if (this.testing_mode === false) {
         this.init_ui();
+      } else {
+        this.timeline = injector.get("AppTimeline");
       }
     }
     App.prototype.init_ui = function() {

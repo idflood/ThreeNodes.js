@@ -35,6 +35,7 @@ define [
   'Backbone',
   'order!threenodes/core/NodeGraph',
   'order!threenodes/ui/AppUI',
+  'order!threenodes/ui/AppTimeline',
   'order!threenodes/utils/AppWebsocket',
   'order!threenodes/utils/Injector',
   'order!threenodes/utils/CommandMap',
@@ -75,6 +76,7 @@ define [
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
+      @injector.mapSingleton "AppTimeline", ThreeNodes.AppTimeline
       @injector.mapSingleton "AppUI", AppUI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       @injector.mapSingleton "ThreeNodes.WebglBase", ThreeNodes.WebglBase
@@ -85,6 +87,8 @@ define [
       
       if @testing_mode == false
         @init_ui()
+      else
+        @timeline = injector.get "AppTimeline"
     
     init_ui: () =>
       @ui = @injector.get "AppUI"

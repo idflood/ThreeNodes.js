@@ -20,7 +20,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       injector.mapSingleton("ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar);
       this.webgl = injector.get("ThreeNodes.WebglBase");
       this.sidebar = injector.get("ThreeNodes.AppSidebar");
-      this.sidebar = injector.get("ThreeNodes.AppMenuBar");
+      this.menubar = injector.get("ThreeNodes.AppMenuBar");
+      this.timeline = injector.get("AppTimeline");
       this.add_window_resize_handler();
       this.init_context_menus();
       this.show_application();
@@ -68,6 +69,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return $("#sidebar-toggle").delay(delay_intro).fadeIn(0);
     };
     AppUI.prototype.render = function() {
+      this.timeline.update();
       return this.trigger("render");
     };
     AppUI.prototype.on_ui_window_resize = function() {
@@ -76,7 +78,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       h = $(window).height();
       $("#container-wrapper").css({
         width: w,
-        height: h - 25
+        height: h - 25 - 200
       });
       return $("#sidebar").css("height", h - 25);
     };
