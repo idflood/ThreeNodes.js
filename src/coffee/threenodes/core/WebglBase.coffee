@@ -12,6 +12,7 @@ define [
   "order!libs/three-extras/js/postprocessing/FilmPass",
   "order!libs/three-extras/js/postprocessing/DotScreenPass",
 ], ($, _, Backbone) ->
+  "use strict"
   ThreeNodes.Webgl = {}
   class ThreeNodes.WebglBase
     constructor: () ->

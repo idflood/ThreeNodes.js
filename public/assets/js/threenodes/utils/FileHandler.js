@@ -1,6 +1,6 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/json2"], function($, _, Backbone) {
-  return ThreeNodes.FileHandler = (function() {
+  "use strict";  return ThreeNodes.FileHandler = (function() {
     function FileHandler() {
       this.load_local_file_input_changed = __bind(this.load_local_file_input_changed, this);
       this.load_from_xml_data = __bind(this.load_from_xml_data, this);

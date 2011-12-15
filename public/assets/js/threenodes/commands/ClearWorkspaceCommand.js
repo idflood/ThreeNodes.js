@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.ClearWorkspaceCommand = (function() {
+  "use strict";  return ThreeNodes.ClearWorkspaceCommand = (function() {
     function ClearWorkspaceCommand() {}
     ClearWorkspaceCommand.prototype.execute = function() {
       var injector, ng;

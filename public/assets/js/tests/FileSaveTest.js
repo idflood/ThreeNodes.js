@@ -1,4 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
+  "use strict";
   var FileSaveTest;
   return FileSaveTest = (function() {
     function FileSaveTest(app) {

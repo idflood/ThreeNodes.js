@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.CreateNodeCommand
     execute: (nodename, nodetype, dx = 0, dy = 0) ->
       injector = @context.injector

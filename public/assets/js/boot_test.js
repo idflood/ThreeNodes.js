@@ -6,6 +6,7 @@ require.config({
   }
 });
 require(['order!threenodes/App', 'tests/NodeGraphTest', 'tests/NodeFieldTest', 'tests/NodeConnectionTest', 'tests/FileSaveTest', 'tests/FileLoadTest', 'tests/ThreeJsIntegrationTest', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone', "order!libs/qunit-git"], function(App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest) {
+  "use strict";
   var app;
   app = new App(true);
   new NodeGraphTest(app);

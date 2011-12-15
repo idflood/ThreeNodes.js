@@ -10,4 +10,5 @@ require [
   'order!libs/underscore-min',
   'order!libs/backbone'
 ], (App) ->
+  "use strict"
   app = new App()

@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.CommandMap = (function() {
+  "use strict";  return ThreeNodes.CommandMap = (function() {
     function CommandMap(context) {
       this.context = context;
       this.commands = {};

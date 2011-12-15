@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.LoadLocalFileCommand = (function() {
+  "use strict";  return ThreeNodes.LoadLocalFileCommand = (function() {
     function LoadLocalFileCommand() {}
     LoadLocalFileCommand.prototype.execute = function(event) {
       var file_handler, injector;

@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.Injector
     constructor: (context) ->
       @context = context

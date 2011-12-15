@@ -1,6 +1,6 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  return ThreeNodes.NodeConnection = (function() {
+  "use strict";  return ThreeNodes.NodeConnection = (function() {
     function NodeConnection(from_field, to_field, cid) {
       this.from_field = from_field;
       this.to_field = to_field;

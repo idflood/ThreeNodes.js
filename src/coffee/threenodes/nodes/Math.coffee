@@ -9,6 +9,7 @@ define [
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
+  "use strict"
   class ThreeNodes.nodes.types.Math.Sin extends ThreeNodes.NodeNumberSimple
     process_val: (num, i) =>
       Math.sin(num)

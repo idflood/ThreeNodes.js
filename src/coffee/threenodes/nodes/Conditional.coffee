@@ -9,6 +9,7 @@ define [
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
+  "use strict"
   class ThreeNodes.nodes.types.Conditional.IfElse extends ThreeNodes.NodeBase
     set_fields: =>
       super

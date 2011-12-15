@@ -6,6 +6,7 @@ define [
   "order!libs/jquery.tmpl.min",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
 ], ($, _, Backbone, _view_menubar) ->
+  "use strict"
   class ThreeNodes.AppMenuBar
     constructor: () ->
       menu_bar_view = $.tmpl(_view_menubar, {})

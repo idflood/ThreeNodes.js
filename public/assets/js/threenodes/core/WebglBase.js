@@ -1,6 +1,6 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/three-extras/js/postprocessing/FilmPass", "order!libs/three-extras/js/postprocessing/DotScreenPass"], function($, _, Backbone) {
-  ThreeNodes.Webgl = {};
+  "use strict";  ThreeNodes.Webgl = {};
   return ThreeNodes.WebglBase = (function() {
     function WebglBase() {
       this.rebuild_all_shaders = __bind(this.rebuild_all_shaders, this);      console.log("webgl init...");

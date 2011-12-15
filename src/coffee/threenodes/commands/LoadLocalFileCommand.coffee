@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.LoadLocalFileCommand
     execute: (event) ->
       injector = @context.injector

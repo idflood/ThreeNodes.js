@@ -1,4 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
+  "use strict";
   var NodeFieldTest;
   return NodeFieldTest = (function() {
     function NodeFieldTest(app) {

@@ -4,6 +4,7 @@ define [
   'Backbone',
   "order!libs/qunit-git",
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeJsIntegrationTest
     constructor: (app) ->
       module "ThreeJsIntegrationTest"

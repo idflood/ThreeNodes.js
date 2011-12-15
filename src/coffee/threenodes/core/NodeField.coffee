@@ -7,6 +7,7 @@ define [
   'order!threenodes/utils/Utils',
   "order!libs/signals.min",
 ], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
+  "use strict"
   class ThreeNodes.NodeField
     @connections = false
     constructor: (@name, @val, @possible_values = false, @fid = ThreeNodes.Utils.get_uid()) ->

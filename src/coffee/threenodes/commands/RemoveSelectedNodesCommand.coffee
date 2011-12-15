@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.RemoveSelectedNodesCommand
     execute: (connection) ->
       $(".node.ui-selected").each () ->

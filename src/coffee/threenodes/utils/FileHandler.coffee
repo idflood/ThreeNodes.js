@@ -6,6 +6,7 @@ define [
   "order!libs/FileSaver.min",
   "order!libs/json2",
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.FileHandler
     save_local_file: () =>
       bb = new BlobBuilder()

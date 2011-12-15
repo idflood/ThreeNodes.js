@@ -14,6 +14,7 @@ define [
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   "order!libs/jquery.transform2d",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu) ->
+  "use strict"
   class ThreeNodes.AppUI
     constructor: () ->
       _.extend(@, Backbone.Events)

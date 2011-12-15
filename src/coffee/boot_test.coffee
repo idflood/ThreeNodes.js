@@ -17,6 +17,7 @@ require [
   'order!libs/backbone',
   "order!libs/qunit-git",
 ], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest) ->
+  "use strict"
   app = new App(true)
   new NodeGraphTest(app)
   new NodeFieldTest(app)

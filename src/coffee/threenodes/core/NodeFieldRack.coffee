@@ -4,6 +4,7 @@ define [
   'Backbone',
   'order!threenodes/core/NodeField',
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.NodeFieldRack
     constructor: (@node) ->
       @node_fields = {}

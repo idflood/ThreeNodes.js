@@ -5,6 +5,7 @@ ThreeNodes.Utils.get_uid = () ->
   ThreeNodes.uid += 1
   
 class ThreeNodes.Utils.Rc4Random
+  "use strict"
   # Rc4Random function taken from http://www.webdeveloper.com/forum/showthread.php?t=140572
   constructor: (seed) ->
     @keySchedule = []

@@ -1,6 +1,6 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min"], function($, _, Backbone) {
-  return ThreeNodes.AppSidebar = (function() {
+  "use strict";  return ThreeNodes.AppSidebar = (function() {
     function AppSidebar() {
       this.init_sidebar_tab_new_node = __bind(this.init_sidebar_tab_new_node, this);
       this.init_sidebar_search = __bind(this.init_sidebar_search, this);

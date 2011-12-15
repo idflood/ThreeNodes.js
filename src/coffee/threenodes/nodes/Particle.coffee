@@ -9,6 +9,7 @@ define [
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
+  "use strict"
   class ThreeNodes.nodes.types.Particle.ParticleSystem extends ThreeNodes.nodes.types.Three.Object3D
     set_fields: =>
       super

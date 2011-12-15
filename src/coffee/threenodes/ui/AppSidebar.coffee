@@ -5,6 +5,7 @@ define [
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.AppSidebar
     constructor: () ->
       _.extend(@, Backbone.Events)

@@ -15,6 +15,7 @@ define [
   'order!threenodes/nodes/Spread',
   'order!threenodes/nodes/Particle',
 ], ($, _, Backbone) ->
+  "use strict"
   class ThreeNodes.NodeGraph
     constructor: () ->
       @nodes = []

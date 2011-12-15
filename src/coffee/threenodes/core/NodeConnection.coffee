@@ -7,6 +7,7 @@ define [
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
+  "use strict"
   class ThreeNodes.NodeConnection
     constructor: (@from_field, @to_field, @cid = ThreeNodes.Utils.get_uid()) ->
       @is_valid = @validate_connection()

@@ -7,7 +7,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  ThreeNodes.nodes.types.Math.Sin = (function() {
+  "use strict";  ThreeNodes.nodes.types.Math.Sin = (function() {
     __extends(Sin, ThreeNodes.NodeNumberSimple);
     function Sin() {
       this.process_val = __bind(this.process_val, this);

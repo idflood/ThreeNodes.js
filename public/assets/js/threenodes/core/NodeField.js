@@ -7,7 +7,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", 'order!threenodes/utils/Utils', "order!libs/signals.min"], function($, _, Backbone, _view_node_field_in, _view_node_field_out) {
-  ThreeNodes.NodeField = (function() {
+  "use strict";  ThreeNodes.NodeField = (function() {
     NodeField.connections = false;
     function NodeField(name, val, possible_values, fid) {
       var self;

@@ -48,6 +48,7 @@ define [
   'order!threenodes/commands/RebuildShadersCommand',
   'order!threenodes/commands/RemoveSelectedNodesCommand',
 ], ($, _, Backbone, NodeGraph, AppUI) ->
+  "use strict"
   class ThreeNodes.App
     constructor: (@testing_mode = false) ->
       console.log "ThreeNodes app init..."
