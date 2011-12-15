@@ -26,6 +26,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       }
     };
     NodeConnection.prototype.validate_connection = function() {
+      if (!this.from_field || !this.to_field) {
+        return false;
+      }
       if (this.from_field.is_output === this.to_field.is_output) {
         return false;
       }

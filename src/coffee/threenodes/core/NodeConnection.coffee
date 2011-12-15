@@ -28,6 +28,10 @@ define [
         @from_field = f_out
     
     validate_connection: () =>
+      # make sure we have input and output
+      if !@from_field || !@to_field
+        return false
+      
       # never connect 2 outputs or 2 inputs
       if @from_field.is_output == @to_field.is_output
         return false

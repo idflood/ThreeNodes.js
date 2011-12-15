@@ -106,20 +106,12 @@ define [
       @apply_children()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.Mesh extends ThreeNodes.nodes.types.Three.Object3D
+  class Object3DwithMeshAndMaterial extends ThreeNodes.nodes.types.Three.Object3D
     set_fields: =>
       super
-      @rack.addFields
-        inputs:
-          "geometry": {type: "Geometry", val: new THREE.CubeGeometry( 200, 200, 200 )}
-          "material": {type: "Material", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
-          "overdraw": false
-      @ob = [new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())]
       @material_cache = false
       @geometry_cache = false
-      @last_slice_count = 1
-      @compute()
-    
+      
     rebuild_geometry: =>
       field = @rack.get('geometry')
       if field.connections.length > 0
@@ -146,6 +138,18 @@ define [
       else
         res = @rack.get('material').val.id
       res
+  
+  class ThreeNodes.nodes.types.Three.Mesh extends Object3DwithMeshAndMaterial
+    set_fields: =>
+      super
+      @rack.addFields
+        inputs:
+          "geometry": {type: "Geometry", val: new THREE.CubeGeometry( 200, 200, 200 )}
+          "material": {type: "Material", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
+          "overdraw": false
+      @ob = [new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())]
+      @last_slice_count = 1
+      @compute()
       
     compute: =>
       needs_rebuild = false
@@ -168,6 +172,57 @@ define [
         @ob = []
         for i in [0..numItems]
           item = new THREE.Mesh(@rack.get('geometry').get(i), @rack.get('material').get(i))
+          @ob[i] = item
+          
+      for i in [0..numItems]
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+      
+      if needs_rebuild == true
+        ThreeNodes.rebuild_all_shaders()
+      
+      @shadow_cache = @create_cache_object(@vars_shadow_options)
+      @geometry_cache = @get_geometry_cache()
+      @material_cache = @get_material_cache()
+      @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.Three.Line extends Object3DwithMeshAndMaterial
+    set_fields: =>
+      super
+      @rack.addFields
+        inputs:
+          "geometry": {type: "Geometry", val: new THREE.CubeGeometry( 200, 200, 200 )}
+          "material": {type: "Material", val: new THREE.LineBasicMaterial({color: 0xffffff})}
+          "type":
+            type: "Float"
+            val: THREE.LineStrip
+            values:
+              "LineStrip": THREE.LineStrip
+              "LinePieces": THREE.LinePieces
+      @ob = [new THREE.Line(@rack.get('geometry').get(), @rack.get('material').get())]
+      @last_slice_count = 1
+      @compute()
+      
+    compute: =>
+      needs_rebuild = false
+      numItems = @rack.getMaxInputSliceCount()
+      new_material_cache = @get_material_cache()
+      new_geometry_cache = @get_geometry_cache()
+      
+      if @last_slice_count != numItems
+        needs_rebuild = true
+        @last_slice_count = numItems
+      
+      if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
+        needs_rebuild = true
+      
+      if @material_cache != new_material_cache
+        # let's trigger a geometry rebuild so we have the appropriate buffers set
+        @rebuild_geometry()
+      
+      if @geometry_cache != new_geometry_cache || @material_cache != new_material_cache || needs_rebuild
+        @ob = []
+        for i in [0..numItems]
+          item = new THREE.Line(@rack.get('geometry').get(i), @rack.get('material').get(i))
           @ob[i] = item
           
       for i in [0..numItems]

@@ -73,6 +73,20 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
   
+  class ThreeNodes.nodes.types.Materials.LineBasicMaterial extends ThreeNodes.NodeMaterialBase
+    set_fields: =>
+      super
+      @ob = []
+      @material_class = THREE.LineBasicMaterial
+      @rack.addFields
+        inputs:
+          "color": {type: "Color", val: new THREE.Color(0xff0000)}
+          "linewidth": 1
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
+      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+  
   class ThreeNodes.nodes.types.Materials.MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
     set_fields: =>
       super

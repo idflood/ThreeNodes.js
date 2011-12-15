@@ -7,6 +7,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+  var Object3DwithMeshAndMaterial;
   ThreeNodes.nodes.types.Three.Object3D = (function() {
     __extends(Object3D, ThreeNodes.NodeBase);
     function Object3D() {
@@ -142,13 +143,65 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Scene;
   })();
-  ThreeNodes.nodes.types.Three.Mesh = (function() {
-    __extends(Mesh, ThreeNodes.nodes.types.Three.Object3D);
-    function Mesh() {
-      this.compute = __bind(this.compute, this);
+  Object3DwithMeshAndMaterial = (function() {
+    __extends(Object3DwithMeshAndMaterial, ThreeNodes.nodes.types.Three.Object3D);
+    function Object3DwithMeshAndMaterial() {
       this.get_material_cache = __bind(this.get_material_cache, this);
       this.get_geometry_cache = __bind(this.get_geometry_cache, this);
       this.rebuild_geometry = __bind(this.rebuild_geometry, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Object3DwithMeshAndMaterial.__super__.constructor.apply(this, arguments);
+    }
+    Object3DwithMeshAndMaterial.prototype.set_fields = function() {
+      Object3DwithMeshAndMaterial.__super__.set_fields.apply(this, arguments);
+      this.material_cache = false;
+      return this.geometry_cache = false;
+    };
+    Object3DwithMeshAndMaterial.prototype.rebuild_geometry = function() {
+      var field, geom;
+      field = this.rack.get('geometry');
+      if (field.connections.length > 0) {
+        geom = field.connections[0].from_field.node;
+        geom.cached = [];
+        return geom.compute();
+      } else {
+        return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
+      }
+    };
+    Object3DwithMeshAndMaterial.prototype.get_geometry_cache = function() {
+      var f, res, _i, _len, _ref;
+      res = "";
+      if (jQuery.type(this.rack.get('geometry').val) === "array") {
+        _ref = this.rack.get('geometry').val;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          f = _ref[_i];
+          res += f.id;
+        }
+      } else {
+        res = this.rack.get('geometry').val.id;
+      }
+      return res;
+    };
+    Object3DwithMeshAndMaterial.prototype.get_material_cache = function() {
+      var f, res, _i, _len, _ref;
+      res = "";
+      if (jQuery.type(this.rack.get('material').val) === "array") {
+        _ref = this.rack.get('material').val;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          f = _ref[_i];
+          res += f.id;
+        }
+      } else {
+        res = this.rack.get('material').val.id;
+      }
+      return res;
+    };
+    return Object3DwithMeshAndMaterial;
+  })();
+  ThreeNodes.nodes.types.Three.Mesh = (function() {
+    __extends(Mesh, Object3DwithMeshAndMaterial);
+    function Mesh() {
+      this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Mesh.__super__.constructor.apply(this, arguments);
     }
@@ -170,49 +223,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
       this.ob = [new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get())];
-      this.material_cache = false;
-      this.geometry_cache = false;
       this.last_slice_count = 1;
       return this.compute();
-    };
-    Mesh.prototype.rebuild_geometry = function() {
-      var field, geom;
-      field = this.rack.get('geometry');
-      if (field.connections.length > 0) {
-        geom = field.connections[0].from_field.node;
-        geom.cached = [];
-        return geom.compute();
-      } else {
-        return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
-      }
-    };
-    Mesh.prototype.get_geometry_cache = function() {
-      var f, res, _i, _len, _ref;
-      res = "";
-      if (jQuery.type(this.rack.get('geometry').val) === "array") {
-        _ref = this.rack.get('geometry').val;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          f = _ref[_i];
-          res += f.id;
-        }
-      } else {
-        res = this.rack.get('geometry').val.id;
-      }
-      return res;
-    };
-    Mesh.prototype.get_material_cache = function() {
-      var f, res, _i, _len, _ref;
-      res = "";
-      if (jQuery.type(this.rack.get('material').val) === "array") {
-        _ref = this.rack.get('material').val;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          f = _ref[_i];
-          res += f.id;
-        }
-      } else {
-        res = this.rack.get('material').val.id;
-      }
-      return res;
     };
     Mesh.prototype.compute = function() {
       var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
@@ -249,6 +261,77 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.ob);
     };
     return Mesh;
+  })();
+  ThreeNodes.nodes.types.Three.Line = (function() {
+    __extends(Line, Object3DwithMeshAndMaterial);
+    function Line() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Line.__super__.constructor.apply(this, arguments);
+    }
+    Line.prototype.set_fields = function() {
+      Line.__super__.set_fields.apply(this, arguments);
+      this.rack.addFields({
+        inputs: {
+          "geometry": {
+            type: "Geometry",
+            val: new THREE.CubeGeometry(200, 200, 200)
+          },
+          "material": {
+            type: "Material",
+            val: new THREE.LineBasicMaterial({
+              color: 0xffffff
+            })
+          },
+          "type": {
+            type: "Float",
+            val: THREE.LineStrip,
+            values: {
+              "LineStrip": THREE.LineStrip,
+              "LinePieces": THREE.LinePieces
+            }
+          }
+        }
+      });
+      this.ob = [new THREE.Line(this.rack.get('geometry').get(), this.rack.get('material').get())];
+      this.last_slice_count = 1;
+      return this.compute();
+    };
+    Line.prototype.compute = function() {
+      var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
+      needs_rebuild = false;
+      numItems = this.rack.getMaxInputSliceCount();
+      new_material_cache = this.get_material_cache();
+      new_geometry_cache = this.get_geometry_cache();
+      if (this.last_slice_count !== numItems) {
+        needs_rebuild = true;
+        this.last_slice_count = numItems;
+      }
+      if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
+        needs_rebuild = true;
+      }
+      if (this.material_cache !== new_material_cache) {
+        this.rebuild_geometry();
+      }
+      if (this.geometry_cache !== new_geometry_cache || this.material_cache !== new_material_cache || needs_rebuild) {
+        this.ob = [];
+        for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+          item = new THREE.Line(this.rack.get('geometry').get(i), this.rack.get('material').get(i));
+          this.ob[i] = item;
+        }
+      }
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
+      }
+      if (needs_rebuild === true) {
+        ThreeNodes.rebuild_all_shaders();
+      }
+      this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
+      this.geometry_cache = this.get_geometry_cache();
+      this.material_cache = this.get_material_cache();
+      return this.rack.set("out", this.ob);
+    };
+    return Line;
   })();
   ThreeNodes.nodes.types.Three.Camera = (function() {
     __extends(Camera, ThreeNodes.NodeBase);
