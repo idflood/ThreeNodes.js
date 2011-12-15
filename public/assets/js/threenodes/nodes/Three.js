@@ -572,6 +572,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
       ThreeNodes.Webgl.current_camera = this.rack.get("camera").get();
       ThreeNodes.Webgl.current_scene = this.rack.get("scene").get();
+      this.rack.get("camera").get().aspect = this.width / this.height;
+      this.rack.get("camera").get().updateProjectionMatrix();
       this.apply_post_fx();
       this.ob.clear();
       ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene;

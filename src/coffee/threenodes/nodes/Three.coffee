@@ -401,6 +401,10 @@ define [
       ThreeNodes.Webgl.current_camera = @rack.get("camera").get()
       ThreeNodes.Webgl.current_scene = @rack.get("scene").get()
       
+      #set the current aspect on the camera
+      @rack.get("camera").get().aspect = @width / @height
+      @rack.get("camera").get().updateProjectionMatrix()
+      
       @apply_post_fx()
       @ob.clear()
       ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
