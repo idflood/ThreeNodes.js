@@ -12,6 +12,7 @@ define [
     
     onRegister: () =>
       @timeline = new Timeline
+        displayOnlySelected: true
         colorBackground: "#333"
         colorButtonBackground: "#222222"
         colorButtonStroke: "#777"
@@ -21,7 +22,13 @@ define [
         colorTimelineTick: "#555"
         colorTimeScale: "#666"
         colorHeaderBorder: "#222"
-        colorTimeTicker: "#07f"
+        colorTimeTicker: "#f00"
+        colorTrackBottomLine: "#555"
+        colorPropertyLabel: "#999"
+        applyPropertyValue: (propertyAnim, t) ->
+          propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
+        getPropertyValue: (propertyAnim) ->
+          propertyAnim.target[propertyAnim.propertyName].get()
       Timeline.globalInstance = @timeline
       @timeline.loop(-1)
       @time = 0

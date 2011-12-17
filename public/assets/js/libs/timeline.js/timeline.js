@@ -16,11 +16,19 @@ var Timeline = function( parameters ) {
     
     this.name = "Global";
     this.anims = [];   
+    this.anims_container = [];
+    this.tracks = [];
     this.time = 0;      
     this.totalTime = 0; 
     this.loopCount = 0; 
     this.loopMode = 0;   
     this.playing = true;
+    this.applyPropertyValue = parameters.applyPropertyValue !== undefined ? parameters.applyPropertyValue : function(propertyAnim, t) {
+      propertyAnim.target[propertyAnim.propertyName] = propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t;
+    };
+    this.getPropertyValue = parameters.getPropertyValue !== undefined ? parameters.getPropertyValue : function(propertyAnim) {
+      return propertyAnim.target[propertyAnim.propertyName];
+    };
 };
 
 Timeline.currentInstance = null;     
@@ -111,7 +119,7 @@ Timeline.prototype.applyValues = function() {
         } 
         //if start time happened during last frame
         if (this.prevTime <= propertyAnim.startTime && propertyAnim.startTime <= this.time) {
-            propertyAnim.startValue = propertyAnim.target[propertyAnim.propertyName];
+            propertyAnim.startValue = this.getPropertyValue(propertyAnim);
             if (propertyAnim.startFunction) {
                 propertyAnim.startFunction.call(propertyAnim.target);
             }
@@ -129,7 +137,7 @@ Timeline.prototype.applyValues = function() {
         var t = (this.time - propertyAnim.startTime)/(propertyAnim.endTime - propertyAnim.startTime);                                                                                                                   
         t = propertyAnim.easing(t);
         t = Math.max(0, Math.min(t, 1));                                                                                        
-        propertyAnim.target[propertyAnim.propertyName] = propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t;                       
+        this.applyPropertyValue(propertyAnim, t);
     }
 };
 
@@ -147,6 +155,36 @@ function Anim(name, target, timeline, startFunction, endFunction) {
 
     this.startAnimation = startFunction;
     this.endAnimation = endFunction;
+    this.tracks = [];
+    this.objectTrack = {       
+      type: "object",
+      id: name,
+      name: name,
+      target: target,        
+      propertyTracks: []
+    };
+    if (!this.objectTrack.name) {
+      this.objectTrack.name = "Object" + timeline.trackNameCounter++;
+    }
+    timeline.tracks.push(this.objectTrack);
+    this.tracks.push(this.objectTrack);
+    
+    for(var propertyName in target) {
+      var prop = {
+        type: "property",
+        id: this.objectTrack.name + "." + propertyName, 
+        name: propertyName, 
+        propertyName: propertyName,  
+        target: target,
+        parent: this.objectTrack,
+        anims: [],
+        keys: []
+      };
+      this.objectTrack.propertyTracks.push(prop);
+      this.tracks.push(prop);
+    }
+    
+    timeline.anims_container.push(this)
 }
 
 //delay, properties, duration, easing
@@ -210,7 +248,8 @@ Anim.prototype.to = function() {
             endTime: this.timeline.time + delay + this.endTime + duration,
             easing: easing,
             endFunction: endFunc,
-            startFunction: startFunc
+            startFunction: startFunc,
+            container: this
         });
     }
     this.endTime += delay + duration;

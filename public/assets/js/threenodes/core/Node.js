@@ -44,6 +44,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.auto_evaluate = false;
       this.delays_output = false;
       this.dirty = true;
+      this.anim = false;
+      this.anim_obj = {};
+      this.is_animated = false;
       if (this.inXML) {
         this.nid = parseInt(this.inXML.attr("nid"));
         ThreeNodes.uid = this.nid;
@@ -222,7 +225,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return c;
     };
     NodeBase.prototype.init = function() {
-      var self;
+      var apptimeline, self;
       self = this;
       this.main_view = $.tmpl(_view_node_template, this);
       this.main_view.data("object", this);
@@ -283,8 +286,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.render_connections();
         });
       });
+      apptimeline = self.context.injector.get("AppTimeline");
       return this.main_view.click(function(e) {
-        return self.rack.render_sidebar();
+        self.rack.render_sidebar();
+        if (!self.anim) {
+          self.anim = anim("nid-" + self.nid, self.rack.node_fields_by_name.inputs);
+        }
+        return apptimeline.timeline.selectAnims([self.anim]);
       });
     };
     NodeBase.prototype.compute_node_position = function() {
@@ -310,7 +318,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     NodeNumberSimple.prototype.set_fields = function() {
       this.v_in = this.rack.addField("in", 0);
-      return this.v_out = this.rack.addField("out", 0, "outputs");
+      this.v_out = this.rack.addField("out", 0, "outputs");
+      return this.anim_obj = {
+        "in": 0
+      };
     };
     NodeNumberSimple.prototype.process_val = function(num, i) {
       return num;

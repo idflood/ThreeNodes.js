@@ -82,7 +82,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Mod.prototype.set_fields = function() {
       Mod.__super__.set_fields.apply(this, arguments);
-      return this.v_valy = this.rack.addField("y", 2);
+      this.v_valy = this.rack.addField("y", 2);
+      return this.anim_obj = {
+        "in": 0,
+        y: 0
+      };
     };
     Mod.prototype.process_val = function(num, i) {
       return num % this.v_valy.get(i);
@@ -98,7 +102,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Add.prototype.set_fields = function() {
       Add.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addField("y", 1);
+      this.v_factor = this.rack.addField("y", 1);
+      return this.anim_obj = {
+        "in": 0,
+        y: 0
+      };
     };
     Add.prototype.process_val = function(num, i) {
       return num + this.v_factor.get(i);
@@ -114,7 +122,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Subtract.prototype.set_fields = function() {
       Subtract.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addField("y", 1);
+      this.v_factor = this.rack.addField("y", 1);
+      return this.anim_obj = {
+        "in": 0,
+        y: 0
+      };
     };
     Subtract.prototype.process_val = function(num, i) {
       return num - this.v_factor.get(i);
@@ -130,7 +142,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Mult.prototype.set_fields = function() {
       Mult.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addField("factor", 2);
+      this.v_factor = this.rack.addField("factor", 2);
+      return this.anim_obj = {
+        "in": 0,
+        y: 0
+      };
     };
     Mult.prototype.process_val = function(num, i) {
       return num * this.v_factor.get(i);
@@ -146,7 +162,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Divide.prototype.set_fields = function() {
       Divide.__super__.set_fields.apply(this, arguments);
-      return this.v_factor = this.rack.addField("y", 2);
+      this.v_factor = this.rack.addField("y", 2);
+      return this.anim_obj = {
+        "in": 0,
+        y: 0
+      };
     };
     Divide.prototype.process_val = function(num, i) {
       return num / this.v_factor.get(i);
@@ -162,7 +182,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Min.prototype.set_fields = function() {
       Min.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addField("in", 0);
+      this.v_inb = this.rack.addField("in2", 0);
+      return this.anim_obj = {
+        "in": 0,
+        in2: 0
+      };
     };
     Min.prototype.process_val = function(num, i) {
       return Math.min(num, this.v_inb.get(i));
@@ -178,7 +202,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Max.prototype.set_fields = function() {
       Max.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addField("in2", 0);
+      this.v_inb = this.rack.addField("in2", 0);
+      return this.anim_obj = {
+        "in": 0,
+        in2: 0
+      };
     };
     Max.prototype.process_val = function(num, i) {
       return Math.max(num, this.v_inb.get(i));

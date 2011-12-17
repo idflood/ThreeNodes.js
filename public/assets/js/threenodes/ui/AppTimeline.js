@@ -7,6 +7,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
     }
     AppTimeline.prototype.onRegister = function() {
       this.timeline = new Timeline({
+        displayOnlySelected: true,
         colorBackground: "#333",
         colorButtonBackground: "#222222",
         colorButtonStroke: "#777",
@@ -16,7 +17,15 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         colorTimelineTick: "#555",
         colorTimeScale: "#666",
         colorHeaderBorder: "#222",
-        colorTimeTicker: "#07f"
+        colorTimeTicker: "#f00",
+        colorTrackBottomLine: "#555",
+        colorPropertyLabel: "#999",
+        applyPropertyValue: function(propertyAnim, t) {
+          return propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t);
+        },
+        getPropertyValue: function(propertyAnim) {
+          return propertyAnim.target[propertyAnim.propertyName].get();
+        }
       });
       Timeline.globalInstance = this.timeline;
       this.timeline.loop(-1);

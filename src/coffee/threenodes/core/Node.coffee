@@ -22,6 +22,9 @@ define [
       @auto_evaluate = false
       @delays_output = false
       @dirty = true
+      @anim = false
+      @anim_obj = {}
+      @is_animated = false
       
       if @inXML
         @nid = parseInt @inXML.attr("nid")
@@ -208,8 +211,12 @@ define [
         $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
           self.render_connections()
           
+      apptimeline = self.context.injector.get "AppTimeline"
       @main_view.click (e) ->
         self.rack.render_sidebar()
+        if !self.anim
+          self.anim = anim("nid-" + self.nid, self.rack.node_fields_by_name.inputs)
+        apptimeline.timeline.selectAnims([self.anim])
   
     compute_node_position: () =>
       pos = @main_view.position()
@@ -224,6 +231,7 @@ define [
     set_fields: =>
       @v_in = @rack.addField("in", 0)
       @v_out = @rack.addField("out", 0, "outputs")
+      @anim_obj = {in: 0}
       
     process_val: (num, i) => num
     
