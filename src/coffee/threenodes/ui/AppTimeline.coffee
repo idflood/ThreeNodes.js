@@ -25,6 +25,8 @@ define [
         colorTimeTicker: "#f00"
         colorTrackBottomLine: "#555"
         colorPropertyLabel: "#999"
+        setPropertyValue: (propertyAnim, t) ->
+          propertyAnim.target[propertyAnim.propertyName].set(t)
         applyPropertyValue: (propertyAnim, t) ->
           propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
         getPropertyValue: (propertyAnim) ->
@@ -37,5 +39,5 @@ define [
       n = Date.now()
       if @timeline
         dt = n - @time
-        @timeline.update(dt)
+        @timeline.update(dt / 1000)
       @time = n

@@ -20,6 +20,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         colorTimeTicker: "#f00",
         colorTrackBottomLine: "#555",
         colorPropertyLabel: "#999",
+        setPropertyValue: function(propertyAnim, t) {
+          return propertyAnim.target[propertyAnim.propertyName].set(t);
+        },
         applyPropertyValue: function(propertyAnim, t) {
           return propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t);
         },
@@ -36,7 +39,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       n = Date.now();
       if (this.timeline) {
         dt = n - this.time;
-        this.timeline.update(dt);
+        this.timeline.update(dt / 1000);
       }
       return this.time = n;
     };

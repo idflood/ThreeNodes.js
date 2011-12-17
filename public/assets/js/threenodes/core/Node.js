@@ -318,10 +318,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     NodeNumberSimple.prototype.set_fields = function() {
       this.v_in = this.rack.addField("in", 0);
-      this.v_out = this.rack.addField("out", 0, "outputs");
-      return this.anim_obj = {
-        "in": 0
-      };
+      return this.v_out = this.rack.addField("out", 0, "outputs");
     };
     NodeNumberSimple.prototype.process_val = function(num, i) {
       return num;

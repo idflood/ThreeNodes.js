@@ -82,11 +82,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Mod.prototype.set_fields = function() {
       Mod.__super__.set_fields.apply(this, arguments);
-      this.v_valy = this.rack.addField("y", 2);
-      return this.anim_obj = {
-        "in": 0,
-        y: 0
-      };
+      return this.v_valy = this.rack.addField("y", 2);
     };
     Mod.prototype.process_val = function(num, i) {
       return num % this.v_valy.get(i);
@@ -102,11 +98,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Add.prototype.set_fields = function() {
       Add.__super__.set_fields.apply(this, arguments);
-      this.v_factor = this.rack.addField("y", 1);
-      return this.anim_obj = {
-        "in": 0,
-        y: 0
-      };
+      return this.v_factor = this.rack.addField("y", 1);
     };
     Add.prototype.process_val = function(num, i) {
       return num + this.v_factor.get(i);
@@ -122,11 +114,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Subtract.prototype.set_fields = function() {
       Subtract.__super__.set_fields.apply(this, arguments);
-      this.v_factor = this.rack.addField("y", 1);
-      return this.anim_obj = {
-        "in": 0,
-        y: 0
-      };
+      return this.v_factor = this.rack.addField("y", 1);
     };
     Subtract.prototype.process_val = function(num, i) {
       return num - this.v_factor.get(i);
@@ -142,11 +130,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Mult.prototype.set_fields = function() {
       Mult.__super__.set_fields.apply(this, arguments);
-      this.v_factor = this.rack.addField("factor", 2);
-      return this.anim_obj = {
-        "in": 0,
-        y: 0
-      };
+      return this.v_factor = this.rack.addField("factor", 2);
     };
     Mult.prototype.process_val = function(num, i) {
       return num * this.v_factor.get(i);
@@ -162,11 +146,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Divide.prototype.set_fields = function() {
       Divide.__super__.set_fields.apply(this, arguments);
-      this.v_factor = this.rack.addField("y", 2);
-      return this.anim_obj = {
-        "in": 0,
-        y: 0
-      };
+      return this.v_factor = this.rack.addField("y", 2);
     };
     Divide.prototype.process_val = function(num, i) {
       return num / this.v_factor.get(i);

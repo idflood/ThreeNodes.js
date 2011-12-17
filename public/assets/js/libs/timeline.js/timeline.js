@@ -23,6 +23,9 @@ var Timeline = function( parameters ) {
     this.loopCount = 0; 
     this.loopMode = 0;   
     this.playing = true;
+    this.setPropertyValue = parameters.setPropertyValue !== undefined ? parameters.setPropertyValue : function(propertyAnim, t) {
+      propertyAnim.target[propertyAnim.propertyName] = t;
+    };
     this.applyPropertyValue = parameters.applyPropertyValue !== undefined ? parameters.applyPropertyValue : function(propertyAnim, t) {
       propertyAnim.target[propertyAnim.propertyName] = propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t;
     };
@@ -125,7 +128,7 @@ Timeline.prototype.applyValues = function() {
             }
         }
         if (this.prevTime <= propertyAnim.endTime && propertyAnim.endTime <= this.time) {                 
-            propertyAnim.target[propertyAnim.propertyName] = propertyAnim.endValue;
+            this.setPropertyValue(propertyAnim, propertyAnim.endValue);
             if (propertyAnim.endFunction) {
                 propertyAnim.endFunction.call(propertyAnim.target);
             }

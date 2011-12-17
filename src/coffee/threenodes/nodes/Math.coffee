@@ -38,7 +38,6 @@ define [
     set_fields: =>
       super
       @v_valy = @rack.addField("y", 2)
-      @anim_obj = {in: 0, y: 0}
     process_val: (num, i) =>
       num % @v_valy.get(i)
   
@@ -46,7 +45,6 @@ define [
     set_fields: =>
       super
       @v_factor = @rack.addField("y", 1)
-      @anim_obj = {in: 0, y: 0}
     process_val: (num, i) =>
       num + @v_factor.get(i)
   
@@ -54,7 +52,6 @@ define [
     set_fields: =>
       super
       @v_factor = @rack.addField("y", 1)
-      @anim_obj = {in: 0, y: 0}
     process_val: (num, i) =>
       num - @v_factor.get(i)
   
@@ -62,7 +59,6 @@ define [
     set_fields: =>
       super
       @v_factor = @rack.addField("factor", 2)
-      @anim_obj = {in: 0, y: 0}
     process_val: (num, i) =>
       num * @v_factor.get(i)
   
@@ -70,7 +66,6 @@ define [
     set_fields: =>
       super
       @v_factor = @rack.addField("y", 2)
-      @anim_obj = {in: 0, y: 0}
     process_val: (num, i) =>
       num / @v_factor.get(i)
   

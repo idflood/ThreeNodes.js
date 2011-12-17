@@ -231,7 +231,6 @@ define [
     set_fields: =>
       @v_in = @rack.addField("in", 0)
       @v_out = @rack.addField("out", 0, "outputs")
-      @anim_obj = {in: 0}
       
     process_val: (num, i) => num
     
