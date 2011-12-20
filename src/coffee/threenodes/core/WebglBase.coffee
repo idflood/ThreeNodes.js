@@ -38,7 +38,11 @@ define [
     
     rebuild_all_shaders: () =>
       console.log "rebuilding shaders"
-      console.log ThreeNodes.webgl_materials_node
       for n in ThreeNodes.webgl_materials_node
-        n.ob.program = false
-    
+        if $.type(n.ob) == "array"
+          for sub_material in n.ob
+            console.log sub_material
+            sub_material.program = false
+        else
+          n.ob.program = false
+      return true

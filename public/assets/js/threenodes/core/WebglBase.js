@@ -23,16 +23,23 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
       ThreeNodes.rebuild_all_shaders = this.rebuild_all_shaders;
     }
     WebglBase.prototype.rebuild_all_shaders = function() {
-      var n, _i, _len, _ref, _results;
+      var n, sub_material, _i, _j, _len, _len2, _ref, _ref2;
       console.log("rebuilding shaders");
-      console.log(ThreeNodes.webgl_materials_node);
       _ref = ThreeNodes.webgl_materials_node;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         n = _ref[_i];
-        _results.push(n.ob.program = false);
+        if ($.type(n.ob) === "array") {
+          _ref2 = n.ob;
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            sub_material = _ref2[_j];
+            console.log(sub_material);
+            sub_material.program = false;
+          }
+        } else {
+          n.ob.program = false;
+        }
       }
-      return _results;
+      return true;
     };
     return WebglBase;
   })();
