@@ -62,7 +62,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.value = "";
     };
     String.prototype.set_fields = function() {
-      return this.rack.addFields({
+      this.rack.addFields({
         inputs: {
           "string": ""
         },
@@ -73,6 +73,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
+      return this.rack.add_center_textfield(this.rack.get("string"));
     };
     String.prototype.compute = function() {
       return this.rack.set("out", this.rack.get("string").get());

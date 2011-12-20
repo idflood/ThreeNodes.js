@@ -217,7 +217,7 @@ define [
     render_sidebar: =>
       self = this
       $target = @create_sidebar_container()
-      f_in = create_textfield($target, "side-field-txt-input-#{@fid}")
+      f_in = @create_textfield($target, "side-field-txt-input-#{@fid}")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_in.val(v.toString())
       f_in.val(@get())

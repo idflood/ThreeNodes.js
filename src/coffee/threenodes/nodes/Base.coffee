@@ -42,6 +42,8 @@ define [
           "string": ""
         outputs:
           "out": {type: "Any", val: @value}
+     
+      @rack.add_center_textfield(@rack.get("string"))
     
     compute: =>
       @rack.set("out", @rack.get("string").get())

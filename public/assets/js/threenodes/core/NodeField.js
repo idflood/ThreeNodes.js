@@ -336,7 +336,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $target, f_in, self;
       self = this;
       $target = this.create_sidebar_container();
-      f_in = create_textfield($target, "side-field-txt-input-" + this.fid);
+      f_in = this.create_textfield($target, "side-field-txt-input-" + this.fid);
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
         return f_in.val(v.toString());
       };
