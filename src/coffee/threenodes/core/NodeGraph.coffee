@@ -68,6 +68,12 @@ define [
     addConnection: (c) ->
       @node_connections[@node_connections.length] = c
     
+    removeNode: (n) ->
+      ind = @nodes.indexOf(n)
+      if ind != -1
+        @nodes.splice(ind, 1)
+      delete @nodes_by_nid[n.nid]
+    
     removeConnection: (c) ->
       ind = @node_connections.indexOf(c)
       if ind != -1

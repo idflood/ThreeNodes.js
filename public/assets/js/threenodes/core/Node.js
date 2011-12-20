@@ -123,6 +123,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.out_connections.length !== 0;
     };
     NodeBase.prototype.remove = function() {
+      var ng;
+      ng = this.context.injector.get("NodeGraph");
+      ng.removeNode(this);
       this.rack.remove_all_connections();
       return this.main_view.remove();
     };

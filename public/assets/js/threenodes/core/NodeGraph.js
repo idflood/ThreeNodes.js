@@ -75,6 +75,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     NodeGraph.prototype.addConnection = function(c) {
       return this.node_connections[this.node_connections.length] = c;
     };
+    NodeGraph.prototype.removeNode = function(n) {
+      var ind;
+      ind = this.nodes.indexOf(n);
+      if (ind !== -1) {
+        this.nodes.splice(ind, 1);
+      }
+      return delete this.nodes_by_nid[n.nid];
+    };
     NodeGraph.prototype.removeConnection = function(c) {
       var ind;
       ind = this.node_connections.indexOf(c);
