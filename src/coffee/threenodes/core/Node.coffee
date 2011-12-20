@@ -88,8 +88,11 @@ define [
       @out_connections.length != 0
     
     remove: () =>
+      ng = @context.injector.get("NodeGraph")
+      ng.removeNode(this)
       @rack.remove_all_connections()
       @main_view.remove()
+      
       # todo: maybe remove fields
       # todo: remove sidebar attributes if this is the selected node
     

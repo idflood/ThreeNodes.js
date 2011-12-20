@@ -75,6 +75,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     NodeGraph.prototype.addConnection = function(c) {
       return this.node_connections[this.node_connections.length] = c;
     };
+    NodeGraph.prototype.removeNode = function(n) {
+      var ind;
+      ind = this.nodes.indexOf(n);
+      if (ind !== -1) {
+        this.nodes.splice(ind, 1);
+      }
+      if (this.nodes_by_nid[n.nid]) {
+        return delete this.nodes_by_nid[n.nid];
+      }
+    };
     NodeGraph.prototype.removeConnection = function(c) {
       var ind;
       ind = this.node_connections.indexOf(c);
@@ -86,12 +96,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       return this.nodes_by_nid[nid];
     };
     NodeGraph.prototype.remove_all_nodes = function() {
-      var node, _i, _len, _ref;
       $("#tab-attribute").html("");
-      _ref = this.nodes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        node = _ref[_i];
-        node.remove();
+      while (this.nodes.length > 0) {
+        this.nodes[0].remove();
       }
       return true;
     };
