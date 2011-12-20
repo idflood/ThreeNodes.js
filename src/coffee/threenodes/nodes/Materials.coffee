@@ -96,6 +96,7 @@ define [
       @rack.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
+          "map": {type: "Any", val: false}
           "reflectivity": 1
           "refractionRatio": 0.98
           "wireframe": false
@@ -103,7 +104,7 @@ define [
           "skinning": false
         outputs:
           "out": {type: "Any", val: @ob}
-      @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
+      @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
   
   class ThreeNodes.nodes.types.Materials.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
@@ -114,6 +115,7 @@ define [
       @rack.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
+          "map": {type: "Any", val: false}
           "ambient": {type: "Color", val: new THREE.Color(0x050505)}
           "specular": {type: "Color", val: new THREE.Color(0x111111)}
           "shininess": 30
@@ -124,5 +126,5 @@ define [
           "skinning": false
         outputs:
           "out": {type: "Any", val: @ob}
-      @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
+      @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)

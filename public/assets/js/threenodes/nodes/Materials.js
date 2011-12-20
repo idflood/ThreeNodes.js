@@ -151,6 +151,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             type: "Color",
             val: new THREE.Color(0xff0000)
           },
+          "map": {
+            type: "Any",
+            val: false
+          },
           "reflectivity": 1,
           "refractionRatio": 0.98,
           "wireframe": false,
@@ -167,7 +171,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      this.vars_rebuild_shader_on_change = ["transparent", "depthTest"];
+      this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     return MeshLambertMaterial;
@@ -187,6 +191,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "color": {
             type: "Color",
             val: new THREE.Color(0xff0000)
+          },
+          "map": {
+            type: "Any",
+            val: false
           },
           "ambient": {
             type: "Color",
@@ -213,7 +221,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      this.vars_rebuild_shader_on_change = ["transparent", "depthTest"];
+      this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     return MeshPhongMaterial;
