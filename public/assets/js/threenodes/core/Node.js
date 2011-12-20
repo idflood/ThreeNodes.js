@@ -288,9 +288,20 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       apptimeline = self.context.injector.get("AppTimeline");
       return this.main_view.click(function(e) {
+        var enabled, f, field;
         self.rack.render_sidebar();
         if (!self.anim) {
           self.anim = anim("nid-" + self.nid, self.rack.node_fields_by_name.inputs);
+          for (f in self.rack.node_fields_by_name.inputs) {
+            field = self.rack.node_fields_by_name.inputs[f];
+            enabled = false;
+            if (field.constructor === ThreeNodes.fields.types.Float ||  field.constructor === ThreeNodes.fields.types.Bool) {
+              enabled = true;
+            }
+            if (enabled === false) {
+              self.anim.disablePropoerty(f);
+            }
+          }
         }
         return apptimeline.timeline.selectAnims([self.anim]);
       });

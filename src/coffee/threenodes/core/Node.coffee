@@ -216,6 +216,14 @@ define [
         self.rack.render_sidebar()
         if !self.anim
           self.anim = anim("nid-" + self.nid, self.rack.node_fields_by_name.inputs)
+          # enable track animation only for number/boolean
+          for f of self.rack.node_fields_by_name.inputs
+            field = self.rack.node_fields_by_name.inputs[f]
+            enabled = false
+            if field.constructor == ThreeNodes.fields.types.Float || field.constructor == ThreeNodes.fields.types.Bool
+              enabled = true
+            if enabled == false
+              self.anim.disablePropoerty(f)
         apptimeline.timeline.selectAnims([self.anim])
   
     compute_node_position: () =>

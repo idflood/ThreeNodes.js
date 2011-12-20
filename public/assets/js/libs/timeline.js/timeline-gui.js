@@ -372,7 +372,10 @@ Timeline.prototype.getDisplayedTracks = function () {
   for(var i=0; i<current_anims_containers.length; i++) { 
     var anim_container = current_anims_containers[i];
     for(var j=0; j<anim_container.tracks.length; j++) {
-      result.push(anim_container.tracks[j]);
+      var track = anim_container.tracks[j];
+      if (track.type == "object" || (track.type == "property" && track.enabled == true)) {
+        result.push(track);
+      }
     }
   }
   return result;

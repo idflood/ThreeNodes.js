@@ -117,9 +117,14 @@ Timeline.prototype.findAnimationEnd = function() {
 Timeline.prototype.applyValues = function() {  
     for(var i=0 , l = this.anims.length; i<l; i++) {
         var propertyAnim = this.anims[i];
+        var anim_container = propertyAnim.container;
         if (this.time < propertyAnim.startTime) {
             continue;
         } 
+        var propertyTrack = anim_container.getPropertyTrack(propertyAnim.propertyName);
+        if (propertyTrack.enabled == false) {
+          continue;
+        }
         //if start time happened during last frame
         if (this.prevTime <= propertyAnim.startTime && propertyAnim.startTime <= this.time) {
             propertyAnim.startValue = this.getPropertyValue(propertyAnim);
@@ -179,6 +184,7 @@ function Anim(name, target, timeline, startFunction, endFunction) {
         name: propertyName, 
         propertyName: propertyName,  
         target: target,
+        enabled: true,
         parent: this.objectTrack,
         anims: [],
         keys: []
@@ -188,6 +194,34 @@ function Anim(name, target, timeline, startFunction, endFunction) {
     }
     
     timeline.anims_container.push(this)
+}
+
+Anim.prototype.disablePropoerty = function(propertyName) {
+  for(var i = 0; i < this.objectTrack.propertyTracks.length; i++){
+    var prop = this.objectTrack.propertyTracks[i];
+    if (prop.propertyName == propertyName) {
+      prop.enabled = false;
+    }
+  }
+}
+
+Anim.prototype.enablePropoerty = function(propertyName) {  
+  for(var i = 0; i < this.objectTrack.propertyTracks.length; i++){
+    var prop = this.objectTrack.propertyTracks[i];
+    if (prop.propertyName == propertyName) {
+      prop.enabled = true;
+    }
+  }
+}
+
+Anim.prototype.getPropertyTrack = function(propertyName) {
+  for(var i = 0; i < this.objectTrack.propertyTracks.length; i++){
+    var prop = this.objectTrack.propertyTracks[i];
+    if (prop.propertyName == propertyName) {
+      return prop;
+    }
+  }
+  return false;
 }
 
 //delay, properties, duration, easing
