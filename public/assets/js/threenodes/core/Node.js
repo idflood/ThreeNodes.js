@@ -21,6 +21,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.inJSON = inJSON != null ? inJSON : false;
       this.compute_node_position = __bind(this.compute_node_position, this);
       this.init = __bind(this.init, this);
+      this.enable_property_anim = __bind(this.enable_property_anim, this);
+      this.disable_property_anim = __bind(this.disable_property_anim, this);
       this.remove_connection = __bind(this.remove_connection, this);
       this.add_out_connection = __bind(this.add_out_connection, this);
       this.add_field_listener = __bind(this.add_field_listener, this);
@@ -224,6 +226,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return c;
     };
+    NodeBase.prototype.disable_property_anim = function(field) {
+      if (this.anim && field.is_output === false) {
+        return this.anim.disableProperty(field.name);
+      }
+    };
+    NodeBase.prototype.enable_property_anim = function(field) {
+      if (field.is_output === true || !this.anim) {
+        return false;
+      }
+      if (field.is_animation_property()) {
+        return this.anim.enableProperty(field.name);
+      }
+    };
     NodeBase.prototype.init = function() {
       var apptimeline, self;
       self = this;
@@ -287,24 +302,20 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         });
       });
       apptimeline = self.context.injector.get("AppTimeline");
-      return this.main_view.click(function(e) {
-        var enabled, f, field;
-        self.rack.render_sidebar();
-        if (!self.anim) {
-          self.anim = anim("nid-" + self.nid, self.rack.node_fields_by_name.inputs);
-          for (f in self.rack.node_fields_by_name.inputs) {
-            field = self.rack.node_fields_by_name.inputs[f];
-            enabled = false;
-            if (field.constructor === ThreeNodes.fields.types.Float ||  field.constructor === ThreeNodes.fields.types.Bool) {
-              enabled = true;
-            }
-            if (enabled === false) {
-              self.anim.disablePropoerty(f);
+      return this.main_view.click(__bind(function(e) {
+        var f, field;
+        this.rack.render_sidebar();
+        if (!this.anim) {
+          this.anim = anim("nid-" + this.nid, this.rack.node_fields_by_name.inputs);
+          for (f in this.rack.node_fields_by_name.inputs) {
+            field = this.rack.node_fields_by_name.inputs[f];
+            if (field.is_animation_property() === false) {
+              this.disable_property_anim(field);
             }
           }
         }
         return apptimeline.timeline.selectAnims([self.anim]);
-      });
+      }, this));
     };
     NodeBase.prototype.compute_node_position = function() {
       var pos;

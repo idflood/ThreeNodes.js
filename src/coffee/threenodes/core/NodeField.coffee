@@ -67,6 +67,11 @@ define [
         return 1
       return @val.length
     
+    is_animation_property: () =>
+      if this.constructor == ThreeNodes.fields.types.Float || this.constructor == ThreeNodes.fields.types.Bool
+        return true
+      return false
+    
     toJSON : () =>
       res =
         name: @name
@@ -101,6 +106,7 @@ define [
         @connections.push c
       if @is_output == true
         @node.add_out_connection(c, this)
+      @node.disable_property_anim(this)
       c
     
     unregister_connection: (c) =>
@@ -108,6 +114,8 @@ define [
       ind = @connections.indexOf(c)
       if ind != -1
         @connections.splice(ind, 1)
+      if @connections.length == 0
+        @node.enable_property_anim(this)
       
     # called on shift click on a field / remove all connections
     remove_connections: () =>

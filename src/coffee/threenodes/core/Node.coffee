@@ -164,6 +164,16 @@ define [
         @out_connections.splice(c_index, 1)
       c
   
+    disable_property_anim: (field) =>
+      if @anim && field.is_output == false
+        @anim.disableProperty(field.name)
+  
+    enable_property_anim: (field) =>
+      if field.is_output == true || !@anim
+        return false
+      if field.is_animation_property()
+        @anim.enableProperty(field.name)
+  
     init: () =>
       self = this
       @main_view = $.tmpl(_view_node_template, this)
@@ -212,18 +222,15 @@ define [
           self.render_connections()
           
       apptimeline = self.context.injector.get "AppTimeline"
-      @main_view.click (e) ->
-        self.rack.render_sidebar()
-        if !self.anim
-          self.anim = anim("nid-" + self.nid, self.rack.node_fields_by_name.inputs)
+      @main_view.click (e) =>
+        @rack.render_sidebar()
+        if !@anim
+          @anim = anim("nid-" + @nid, @rack.node_fields_by_name.inputs)
           # enable track animation only for number/boolean
-          for f of self.rack.node_fields_by_name.inputs
-            field = self.rack.node_fields_by_name.inputs[f]
-            enabled = false
-            if field.constructor == ThreeNodes.fields.types.Float || field.constructor == ThreeNodes.fields.types.Bool
-              enabled = true
-            if enabled == false
-              self.anim.disablePropoerty(f)
+          for f of @rack.node_fields_by_name.inputs
+            field = @rack.node_fields_by_name.inputs[f]
+            if field.is_animation_property() == false
+              @disable_property_anim(field)
         apptimeline.timeline.selectAnims([self.anim])
   
     compute_node_position: () =>

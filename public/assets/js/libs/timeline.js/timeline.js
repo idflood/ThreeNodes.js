@@ -196,7 +196,7 @@ function Anim(name, target, timeline, startFunction, endFunction) {
     timeline.anims_container.push(this)
 }
 
-Anim.prototype.disablePropoerty = function(propertyName) {
+Anim.prototype.disableProperty = function(propertyName) {
   for(var i = 0; i < this.objectTrack.propertyTracks.length; i++){
     var prop = this.objectTrack.propertyTracks[i];
     if (prop.propertyName == propertyName) {
@@ -205,7 +205,7 @@ Anim.prototype.disablePropoerty = function(propertyName) {
   }
 }
 
-Anim.prototype.enablePropoerty = function(propertyName) {  
+Anim.prototype.enableProperty = function(propertyName) {  
   for(var i = 0; i < this.objectTrack.propertyTracks.length; i++){
     var prop = this.objectTrack.propertyTracks[i];
     if (prop.propertyName == propertyName) {
