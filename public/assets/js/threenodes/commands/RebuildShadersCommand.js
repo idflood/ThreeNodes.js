@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.RebuildShadersCommand = (function() {
+  "use strict";  return ThreeNodes.RebuildShadersCommand = (function() {
     function RebuildShadersCommand() {}
     RebuildShadersCommand.prototype.execute = function() {
       var injector, webgl;

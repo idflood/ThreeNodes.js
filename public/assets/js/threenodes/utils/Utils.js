@@ -5,7 +5,7 @@ ThreeNodes.Utils.get_uid = function() {
   return ThreeNodes.uid += 1;
 };
 ThreeNodes.Utils.Rc4Random = (function() {
-  function Rc4Random(seed) {
+  "use strict";  function Rc4Random(seed) {
     this.getRandomNumber = __bind(this.getRandomNumber, this);
     this.getRandomByte = __bind(this.getRandomByte, this);
     var i, j, t, _ref, _ref2;

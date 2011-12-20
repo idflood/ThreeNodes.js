@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.CreateNodeCommand = (function() {
+  "use strict";  return ThreeNodes.CreateNodeCommand = (function() {
     function CreateNodeCommand() {}
     CreateNodeCommand.prototype.execute = function(nodename, nodetype, dx, dy) {
       var injector, ng;

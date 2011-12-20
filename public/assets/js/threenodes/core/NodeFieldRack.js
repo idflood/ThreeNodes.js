@@ -1,6 +1,6 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], function($, _, Backbone) {
-  return ThreeNodes.NodeFieldRack = (function() {
+  "use strict";  return ThreeNodes.NodeFieldRack = (function() {
     function NodeFieldRack(node) {
       this.node = node;
       this.add_center_textfield = __bind(this.add_center_textfield, this);

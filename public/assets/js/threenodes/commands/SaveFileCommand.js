@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.SaveFileCommand = (function() {
+  "use strict";  return ThreeNodes.SaveFileCommand = (function() {
     function SaveFileCommand() {}
     SaveFileCommand.prototype.execute = function() {
       var file_handler, injector;

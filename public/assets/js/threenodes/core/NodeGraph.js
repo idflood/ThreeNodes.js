@@ -1,6 +1,6 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order!threenodes/nodes/Base', 'order!threenodes/nodes/Conditional', 'order!threenodes/nodes/Geometry', 'order!threenodes/nodes/Lights', 'order!threenodes/nodes/Materials', 'order!threenodes/nodes/Math', 'order!threenodes/nodes/PostProcessing', 'order!threenodes/nodes/Three', 'order!threenodes/nodes/Utils', 'order!threenodes/nodes/Spread', 'order!threenodes/nodes/Particle'], function($, _, Backbone) {
-  return ThreeNodes.NodeGraph = (function() {
+  "use strict";  return ThreeNodes.NodeGraph = (function() {
     function NodeGraph() {
       this.get_node = __bind(this.get_node, this);
       this.render = __bind(this.render, this);
@@ -75,6 +75,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     NodeGraph.prototype.addConnection = function(c) {
       return this.node_connections[this.node_connections.length] = c;
     };
+    NodeGraph.prototype.removeNode = function(n) {
+      var ind;
+      ind = this.nodes.indexOf(n);
+      if (ind !== -1) {
+        this.nodes.splice(ind, 1);
+      }
+      if (this.nodes_by_nid[n.nid]) {
+        return delete this.nodes_by_nid[n.nid];
+      }
+    };
     NodeGraph.prototype.removeConnection = function(c) {
       var ind;
       ind = this.node_connections.indexOf(c);
@@ -86,12 +96,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       return this.nodes_by_nid[nid];
     };
     NodeGraph.prototype.remove_all_nodes = function() {
-      var node, _i, _len, _ref;
       $("#tab-attribute").html("");
-      _ref = this.nodes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        node = _ref[_i];
-        node.remove();
+      while (this.nodes.length > 0) {
+        this.nodes[0].remove();
       }
       return true;
     };

@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.RemoveSelectedNodesCommand = (function() {
+  "use strict";  return ThreeNodes.RemoveSelectedNodesCommand = (function() {
     function RemoveSelectedNodesCommand() {}
     RemoveSelectedNodesCommand.prototype.execute = function(connection) {
       return $(".node.ui-selected").each(function() {

@@ -1,5 +1,5 @@
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  return ThreeNodes.Injector = (function() {
+  "use strict";  return ThreeNodes.Injector = (function() {
     function Injector(context) {
       this.context = context;
       this.definitions = {
