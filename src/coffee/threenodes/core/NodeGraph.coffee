@@ -72,7 +72,8 @@ define [
       ind = @nodes.indexOf(n)
       if ind != -1
         @nodes.splice(ind, 1)
-      delete @nodes_by_nid[n.nid]
+      if @nodes_by_nid[n.nid]
+        delete @nodes_by_nid[n.nid]
     
     removeConnection: (c) ->
       ind = @node_connections.indexOf(c)
@@ -84,8 +85,8 @@ define [
     
     remove_all_nodes: () ->
       $("#tab-attribute").html("")
-      for node in @nodes
-        node.remove()
+      while @nodes.length > 0
+        @nodes[0].remove()
       true
     
     remove_all_connections: () ->
