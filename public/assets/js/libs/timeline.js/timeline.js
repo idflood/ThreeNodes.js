@@ -186,6 +186,7 @@ function Anim(name, target, timeline, startFunction, endFunction) {
         target: target,
         enabled: true,
         parent: this.objectTrack,
+        container: this,
         anims: [],
         keys: []
       };

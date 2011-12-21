@@ -818,7 +818,8 @@ Timeline.prototype.rebuildTrackAnimsFromKeys = function(track) {
 			delay: delay,
 			startTime: prevKeyTime,
 			endTime: key.time,
-			easing: prevKeyEasing   
+			easing: prevKeyEasing,
+			container: track.container
 		};  			
 		track.anims.push(anim);  
 		this.anims.push(anim);
@@ -855,7 +856,7 @@ Timeline.prototype.export = function() {
   prompt("Copy this:", code);
 }
 
-Timeline.prototype.save = function() {    
+Timeline.prototype.getKeysDataJSON = function () {
   var data = {};
   
   for(var i=0; i<this.tracks.length; i++) {
@@ -869,24 +870,11 @@ Timeline.prototype.save = function() {
   		});                                                            
   	}
   	data[track.id] = keysData;
-  }      
-  
-  localStorage["timeline.js.settings.canvasHeight"] = this.canvasHeight;                              
-  localStorage["timeline.js.settings.timeScale"] = this.timeScale;                              
-  localStorage["timeline.js.data." + this.name] = JSON.stringify(data);
-} 
+  }
+  return data;
+}
 
-Timeline.prototype.load = function() {      
-  if (localStorage["timeline.js.settings.canvasHeight"]) {
-    this.canvasHeight = localStorage["timeline.js.settings.canvasHeight"];                              
-  }
-  if (localStorage["timeline.js.settings.timeScale"]) {
-    this.timeScale = localStorage["timeline.js.settings.timeScale"];                              
-  }
-   
-  var dataString = localStorage["timeline.js.data." + this.name];
-  if (!dataString) return;                 
-  var data = JSON.parse(dataString);  
+Timeline.prototype.loadKeysDataFromJSON = function (data) {
   for(var i=0; i<this.tracks.length; i++) {
     var track = this.tracks[i];    
     if (!data[track.id]) {
@@ -905,5 +893,28 @@ Timeline.prototype.load = function() {
       }  
       this.rebuildTrackAnimsFromKeys(track);    
     }
-  }  
-}    
+  }
+  return true;
+}
+
+Timeline.prototype.save = function() {    
+  var data = this.getKeysDataJSON();
+  
+  localStorage["timeline.js.settings.canvasHeight"] = this.canvasHeight;                              
+  localStorage["timeline.js.settings.timeScale"] = this.timeScale;                              
+  localStorage["timeline.js.data." + this.name] = JSON.stringify(data);
+} 
+
+Timeline.prototype.load = function() {      
+  if (localStorage["timeline.js.settings.canvasHeight"]) {
+    this.canvasHeight = localStorage["timeline.js.settings.canvasHeight"];                              
+  }
+  if (localStorage["timeline.js.settings.timeScale"]) {
+    this.timeScale = localStorage["timeline.js.settings.timeScale"];                              
+  }
+   
+  var dataString = localStorage["timeline.js.data." + this.name];
+  if (!dataString) return;                 
+  var data = JSON.parse(dataString);  
+  this.loadKeysDataFromJSON(data);
+}
