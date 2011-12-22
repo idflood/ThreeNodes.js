@@ -631,47 +631,48 @@ Timeline.prototype.drawRombus = function(x, y, w, h, color, drawLeft, drawRight,
   }
 }             
 
-Timeline.prototype.initTracks = function() {
-  /*this.tracks = [];   
-  var current_anims = this.anims_container;
-  */
+Timeline.prototype.initTrackKeys = function(track) {
+  track.keys = [];
   
+  for(var j=0; j<track.anims.length; j++) {
+    var anim = track.anims[j];
+    if (anim.delay > 0) {  
+      var startValue = 0; 
+      var easing = anim.easing;           
+      if (j == 0) {
+        startValue = track.target[track.propertyName];
+      }                                        
+      else {
+        startValue = track.anims[j-1].endValue;
+      }  
+      track.keys.push({
+         time: anim.startTime,
+         value: startValue, 
+         easing: easing,
+         track: track,
+      });    
+    } 
+    var easing = Timeline.Easing.Linear.EaseNone;
+    if (j < track.anims.length - 1) {
+      if (track.anims[j+1].delay == 0) {
+        easing = track.anims[j+1].easing;
+      }
+    } 
+    track.keys.push({
+       time: anim.endTime,
+       value: anim.endValue, 
+       easing: easing,
+       track: track         
+    });
+  }
+}
+
+Timeline.prototype.initTracks = function() {
   //convert anims to keys
   for(var i=0; i<this.tracks.length; i++) {
     var track = this.tracks[i];
-    track.keys = [];
     if (track.type == "object") continue;
-    for(var j=0; j<track.anims.length; j++) {
-      var anim = track.anims[j];
-      if (anim.delay > 0) {  
-        var startValue = 0; 
-        var easing = anim.easing;           
-        if (j == 0) {
-          startValue = track.target[track.propertyName];
-        }                                        
-        else {
-          startValue = track.anims[j-1].endValue;
-        }  
-        track.keys.push({
-           time: anim.startTime,
-           value: startValue, 
-           easing: easing,
-           track: track,
-        });    
-      } 
-      var easing = Timeline.Easing.Linear.EaseNone;
-      if (j < track.anims.length - 1) {
-        if (track.anims[j+1].delay == 0) {
-          easing = track.anims[j+1].easing;
-        }
-      } 
-      track.keys.push({
-         time: anim.endTime,
-         value: anim.endValue, 
-         easing: easing,
-         track: track         
-      });
-    }
+    this.initTrackKeys(track);
   }
 }      
 
@@ -861,6 +862,9 @@ Timeline.prototype.getKeysDataJSON = function () {
   
   for(var i=0; i<this.tracks.length; i++) {
     var track = this.tracks[i];
+    if (track.type != "property") {
+      continue;
+    }
     var keysData = [];
     for(var j=0; j<track.keys.length; j++) {
   		keysData.push({

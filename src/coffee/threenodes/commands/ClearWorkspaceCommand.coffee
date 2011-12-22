@@ -12,3 +12,8 @@ define [
       ng.remove_all_nodes()
       @context.reset_global_variables()
       $("#webgl-window canvas").remove()
+      
+      # create a new timeline
+      $("#timeline-container, #keyEditDialog").remove()
+      timeline = injector.get "AppTimeline"
+      timeline.onRegister()

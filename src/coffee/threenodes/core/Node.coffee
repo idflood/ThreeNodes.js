@@ -49,11 +49,25 @@ define [
         @rack.fromXML(@inXML)
       else if @inJSON
         @rack.fromJSON(@inJSON)
-      
+        if @inJSON.anim != false
+          @loadAnimation()
+          
       @init_context_menu()
       
     typename: => String(@constructor.name)
     
+    loadAnimation: () =>
+      @anim = @createAnimContainer()
+      for propLabel, anims of @inJSON.anim
+        for propAnim in anims
+          param = {}
+          param[propAnim.propertyName] = propAnim.endValue
+          @anim.to(propAnim.delay, param, (propAnim.endTime - propAnim.startTime), Timeline.stringToEasingFunction(propAnim.easing))
+      # build keys from anim
+      for propTrack in @anim.objectTrack.propertyTracks
+        @anim.timeline.initTrackKeys(propTrack)
+      true
+      
     add_count_input : () =>
       @rack.addFields
         inputs:
@@ -103,10 +117,37 @@ define [
       # update node output values based on inputs
       @compute()
     
+    hasPropertyTrackAnim: () =>
+      for propTrack in @anim.objectTrack.propertyTracks
+        if propTrack.anims.length > 0
+          return true
+      false
+    
+    getAnimationData: () =>
+      if !@anim || !@anim.objectTrack || !@anim.objectTrack.propertyTracks || @hasPropertyTrackAnim() == false
+        return false
+      if @anim != false
+        res = {}
+        for propTrack in @anim.objectTrack.propertyTracks
+          res[propTrack.propertyName] = []
+          for anim in propTrack.anims
+            k = 
+              propertyName: anim.propertyName
+              startValue: anim.startValue
+              endValue: anim.endValue
+              delay: anim.delay
+              startTime: anim.startTime
+              endTime: anim.endTime
+              easing: Timeline.easingFunctionToString(anim.easing)
+            res[propTrack.propertyName].push(k)
+            
+      res
+    
     toJSON: () =>
       res =
         nid: @nid
         type: @typename()
+        anim: @getAnimationData()
         x: @x
         y: @y
         fields: @rack.toJSON()
@@ -176,7 +217,16 @@ define [
         return false
       if field.is_animation_property()
         @anim.enableProperty(field.name)
-  
+    
+    createAnimContainer: () =>
+      res = anim("nid-" + @nid, @rack.node_fields_by_name.inputs)
+      # enable track animation only for number/boolean
+      for f of @rack.node_fields_by_name.inputs
+        field = @rack.node_fields_by_name.inputs[f]
+        if field.is_animation_property() == false
+          @disable_property_anim(field)
+      return res
+    
     init: () =>
       self = this
       @main_view = $.tmpl(_view_node_template, this)
@@ -228,12 +278,7 @@ define [
       @main_view.click (e) =>
         @rack.render_sidebar()
         if !@anim
-          @anim = anim("nid-" + @nid, @rack.node_fields_by_name.inputs)
-          # enable track animation only for number/boolean
-          for f of @rack.node_fields_by_name.inputs
-            field = @rack.node_fields_by_name.inputs[f]
-            if field.is_animation_property() == false
-              @disable_property_anim(field)
+          @anim = @createAnimContainer()
         apptimeline.timeline.selectAnims([self.anim])
   
     compute_node_position: () =>

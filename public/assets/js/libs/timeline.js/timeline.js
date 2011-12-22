@@ -275,7 +275,7 @@ Anim.prototype.to = function() {
     }
     
     for(var propertyName in properties) {
-        this.timeline.anims.push({ 
+        var anim = { 
             timeline: this.timeline,
             targetName: this.name,  
             target: this.target,
@@ -288,7 +288,10 @@ Anim.prototype.to = function() {
             endFunction: endFunc,
             startFunction: startFunc,
             container: this
-        });
+        };
+        this.timeline.anims.push(anim);
+        propTrack = this.getPropertyTrack(propertyName);
+        propTrack.anims.push(anim);
     }
     this.endTime += delay + duration;
     return this;
