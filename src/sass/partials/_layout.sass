@@ -74,12 +74,31 @@ $c: $background_color - #050505
   left: 0
   z-index: 10
 
-#zoom-slider
+#bottom-toolbox
   position: absolute
   bottom: 20px + 200px
   right: 20px
+  width: 180px
+  z-index: 10
+#zoom-slider
+  position: absolute
+  right: 0
+  bottom: 0
   width: 100px
   z-index: 10
+#timeline-switcher
+  font-size: 10px
+  bottom: 0
+  right: 120px
+  text-align: right
+  position: absolute
+  width: 80px
+
+body.hidden-timeline
+  #bottom-toolbox
+    bottom: 50px !important
+  #timeline-container
+    bottom: -169px !important
 
 #footer
   display: none

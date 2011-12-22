@@ -8,7 +8,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.show_application = __bind(this.show_application, this);
       this.add_window_resize_handler = __bind(this.add_window_resize_handler, this);
       this.init_context_menus = __bind(this.init_context_menus, this);
+      this.init_timeline_switcher = __bind(this.init_timeline_switcher, this);
       this.init_resize_slider = __bind(this.init_resize_slider, this);
+      this.init_bottom_toolbox = __bind(this.init_bottom_toolbox, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
@@ -25,13 +27,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.add_window_resize_handler();
       this.init_context_menus();
       this.show_application();
-      this.init_resize_slider();
+      this.init_bottom_toolbox();
       return this.animate();
     };
-    AppUI.prototype.init_resize_slider = function() {
-      var scale_graph, self;
-      self = this;
-      $("body").append("<div id='zoom-slider'></div>");
+    AppUI.prototype.init_bottom_toolbox = function() {
+      var $container;
+      $("body").append("<div id='bottom-toolbox'></div>");
+      $container = $("#bottom-toolbox");
+      this.init_resize_slider($container);
+      return this.init_timeline_switcher($container);
+    };
+    AppUI.prototype.init_resize_slider = function($container) {
+      var scale_graph;
+      $container.append("<div id='zoom-slider'></div>");
       scale_graph = function(val) {
         var factor;
         factor = val / 100;
@@ -48,6 +56,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
           return scale_graph(ui.value);
         }
       });
+    };
+    AppUI.prototype.init_timeline_switcher = function($container) {
+      $container.append("<div id='timeline-switcher'><a href='#'>Toggle timeline</a></div>");
+      return $("#timeline-switcher a").click(__bind(function(e) {
+        e.preventDefault();
+        $("body").toggleClass("hidden-timeline");
+        return this.on_ui_window_resize();
+      }, this));
     };
     AppUI.prototype.init_context_menus = function() {
       var menu_field_menu, node_menu;
@@ -73,12 +89,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this.trigger("render");
     };
     AppUI.prototype.on_ui_window_resize = function() {
-      var h, w;
+      var h, hidden_timeline, timelinesize, w;
+      hidden_timeline = $("body").hasClass("hidden-timeline");
       w = $(window).width();
       h = $(window).height();
+      timelinesize = 200;
+      if (hidden_timeline) {
+        timelinesize = 30;
+      }
       $("#container-wrapper").css({
         width: w,
-        height: h - 25 - 200
+        height: h - 25 - timelinesize
       });
       return $("#sidebar").css("height", h - 25);
     };

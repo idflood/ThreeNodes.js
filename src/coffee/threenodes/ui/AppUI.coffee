@@ -34,12 +34,17 @@ define [
       @add_window_resize_handler()
       @init_context_menus()
       @show_application()
-      @init_resize_slider()
+      @init_bottom_toolbox()
       @animate()
     
-    init_resize_slider: () =>
-      self = this
-      $("body").append("<div id='zoom-slider'></div>")
+    init_bottom_toolbox: () =>
+      $("body").append("<div id='bottom-toolbox'></div>")
+      $container = $("#bottom-toolbox")
+      @init_resize_slider($container)
+      @init_timeline_switcher($container)
+    
+    init_resize_slider: ($container) =>
+      $container.append("<div id='zoom-slider'></div>")
       scale_graph = (val) ->
         factor = val / 100
         $("#container").css('transform', "scale(#{factor}, #{factor})")
@@ -50,6 +55,13 @@ define [
         value: 100
         change: (event, ui) -> scale_graph(ui.value)
         slide: (event, ui) -> scale_graph(ui.value) 
+    
+    init_timeline_switcher: ($container) =>
+      $container.append("<div id='timeline-switcher'><a href='#'>Toggle timeline</a></div>")
+      $("#timeline-switcher a").click (e) =>
+        e.preventDefault()
+        $("body").toggleClass "hidden-timeline"
+        @on_ui_window_resize()
     
     init_context_menus: () =>
       menu_field_menu = $.tmpl(_view_field_context_menu, {})
@@ -74,11 +86,15 @@ define [
       @trigger("render")
     
     on_ui_window_resize: () =>
+      hidden_timeline = $("body").hasClass "hidden-timeline"
       w = $(window).width()
       h = $(window).height()
+      timelinesize = 200
+      if hidden_timeline
+        timelinesize = 30
       $("#container-wrapper").css
         width: w
-        height: h - 25 - 200
+        height: h - 25 - timelinesize
       $("#sidebar").css("height", h - 25)
       
     animate: () =>
