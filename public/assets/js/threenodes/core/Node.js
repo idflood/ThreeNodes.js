@@ -86,22 +86,22 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return String(this.constructor.name);
     };
     NodeBase.prototype.loadAnimation = function() {
-      var anims, param, propAnim, propLabel, propTrack, _i, _j, _len, _len2, _ref, _ref2;
+      var anims, propKey, propLabel, track, _i, _len, _ref;
       this.anim = this.createAnimContainer();
       _ref = this.inJSON.anim;
       for (propLabel in _ref) {
         anims = _ref[propLabel];
+        track = this.anim.getPropertyTrack(propLabel);
         for (_i = 0, _len = anims.length; _i < _len; _i++) {
-          propAnim = anims[_i];
-          param = {};
-          param[propAnim.propertyName] = propAnim.endValue;
-          this.anim.to(propAnim.delay, param, propAnim.endTime - propAnim.startTime, Timeline.stringToEasingFunction(propAnim.easing));
+          propKey = anims[_i];
+          track.keys.push({
+            time: propKey.time,
+            value: propKey.value,
+            easing: Timeline.stringToEasingFunction(propKey.easing),
+            track: track
+          });
         }
-      }
-      _ref2 = this.anim.objectTrack.propertyTracks;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        propTrack = _ref2[_j];
-        this.anim.timeline.initTrackKeys(propTrack);
+        this.anim.timeline.rebuildTrackAnimsFromKeys(track);
       }
       return true;
     };
@@ -192,16 +192,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           propTrack = _ref[_i];
           res[propTrack.propertyName] = [];
-          _ref2 = propTrack.anims;
+          _ref2 = propTrack.keys;
           for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
             anim = _ref2[_j];
             k = {
-              propertyName: anim.propertyName,
-              startValue: anim.startValue,
-              endValue: anim.endValue,
-              delay: anim.delay,
-              startTime: anim.startTime,
-              endTime: anim.endTime,
+              time: anim.time,
+              value: anim.value,
               easing: Timeline.easingFunctionToString(anim.easing)
             };
             res[propTrack.propertyName].push(k);

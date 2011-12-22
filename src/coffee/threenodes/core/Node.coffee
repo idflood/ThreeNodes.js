@@ -59,13 +59,14 @@ define [
     loadAnimation: () =>
       @anim = @createAnimContainer()
       for propLabel, anims of @inJSON.anim
-        for propAnim in anims
-          param = {}
-          param[propAnim.propertyName] = propAnim.endValue
-          @anim.to(propAnim.delay, param, (propAnim.endTime - propAnim.startTime), Timeline.stringToEasingFunction(propAnim.easing))
-      # build keys from anim
-      for propTrack in @anim.objectTrack.propertyTracks
-        @anim.timeline.initTrackKeys(propTrack)
+        track = @anim.getPropertyTrack(propLabel)
+        for propKey in anims
+          track.keys.push
+            time: propKey.time,
+            value: propKey.value,          
+            easing: Timeline.stringToEasingFunction(propKey.easing),
+            track: track
+        @anim.timeline.rebuildTrackAnimsFromKeys(track)
       true
       
     add_count_input : () =>
@@ -130,14 +131,10 @@ define [
         res = {}
         for propTrack in @anim.objectTrack.propertyTracks
           res[propTrack.propertyName] = []
-          for anim in propTrack.anims
+          for anim in propTrack.keys
             k = 
-              propertyName: anim.propertyName
-              startValue: anim.startValue
-              endValue: anim.endValue
-              delay: anim.delay
-              startTime: anim.startTime
-              endTime: anim.endTime
+              time: anim.time
+              value: anim.value
               easing: Timeline.easingFunctionToString(anim.easing)
             res[propTrack.propertyName].push(k)
             
