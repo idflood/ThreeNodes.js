@@ -235,6 +235,7 @@ define [
       @main_view.draggable
         handle: ".head span"
         start: (ev, ui) ->
+          ev.stopPropagation()
           if $(this).hasClass("ui-selected")
             ThreeNodes.selected_nodes = $(".ui-selected").each () ->
               $(this).data("offset", $(this).offset())
@@ -270,7 +271,6 @@ define [
           nodes = []
           $selected.each () ->
             nodes.push($(this).data("object").anim)
-          console.log nodes
           apptimeline.timeline.selectAnims(nodes)
       
       $(".head", @main_view).dblclick (e) ->

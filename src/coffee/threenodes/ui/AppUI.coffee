@@ -13,6 +13,7 @@ define [
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   "order!libs/jquery.transform2d",
+  "order!libs/jquery-scrollview/jquery.scrollview",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu) ->
   "use strict"
   class ThreeNodes.AppUI
@@ -36,6 +37,9 @@ define [
       @show_application()
       @init_bottom_toolbox()
       @animate()
+      $("#container-wrapper").scrollview
+        grab:"assets/js/libs/jquery-scrollview/images/openhand.cur"
+        grabbing:"assets/js/libs/jquery-scrollview/images/closedhand.cur"
     
     init_bottom_toolbox: () =>
       $("body").append("<div id='bottom-toolbox'></div>")

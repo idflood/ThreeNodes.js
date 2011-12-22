@@ -330,6 +330,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.main_view.draggable({
         handle: ".head span",
         start: function(ev, ui) {
+          ev.stopPropagation();
           if ($(this).hasClass("ui-selected")) {
             ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
               return $(this).data("offset", $(this).offset());
@@ -378,7 +379,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           $selected.each(function() {
             return nodes.push($(this).data("object").anim);
           });
-          console.log(nodes);
           return apptimeline.timeline.selectAnims(nodes);
         }, this)
       });
