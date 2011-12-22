@@ -22,7 +22,6 @@ define [
       @auto_evaluate = false
       @delays_output = false
       @dirty = true
-      @anim = false
       @anim_obj = {}
       @is_animated = false
       
@@ -44,7 +43,7 @@ define [
       @main_view = false
       @init()
       @set_fields()
-      
+      @anim = @createAnimContainer()
       if @inXML
         @rack.fromXML(@inXML)
       else if @inJSON
@@ -266,6 +265,13 @@ define [
       
       $("#container").selectable
         filter: ".node"
+        stop: (event, ui) =>
+          $selected = $(".node.ui-selected")
+          nodes = []
+          $selected.each () ->
+            nodes.push($(this).data("object").anim)
+          console.log nodes
+          apptimeline.timeline.selectAnims(nodes)
       
       $(".head", @main_view).dblclick (e) ->
         $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
@@ -274,9 +280,6 @@ define [
       apptimeline = self.context.injector.get "AppTimeline"
       @main_view.click (e) =>
         @rack.render_sidebar()
-        if !@anim
-          @anim = @createAnimContainer()
-        apptimeline.timeline.selectAnims([self.anim])
   
     compute_node_position: () =>
       pos = @main_view.position()

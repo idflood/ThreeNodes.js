@@ -50,7 +50,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.auto_evaluate = false;
       this.delays_output = false;
       this.dirty = true;
-      this.anim = false;
       this.anim_obj = {};
       this.is_animated = false;
       if (this.inXML) {
@@ -72,6 +71,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.main_view = false;
       this.init();
       this.set_fields();
+      this.anim = this.createAnimContainer();
       if (this.inXML) {
         this.rack.fromXML(this.inXML);
       } else if (this.inJSON) {
@@ -370,7 +370,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
       $("#container").selectable({
-        filter: ".node"
+        filter: ".node",
+        stop: __bind(function(event, ui) {
+          var $selected, nodes;
+          $selected = $(".node.ui-selected");
+          nodes = [];
+          $selected.each(function() {
+            return nodes.push($(this).data("object").anim);
+          });
+          console.log(nodes);
+          return apptimeline.timeline.selectAnims(nodes);
+        }, this)
       });
       $(".head", this.main_view).dblclick(function(e) {
         return $(".options", self.main_view).animate({
@@ -381,11 +391,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       apptimeline = self.context.injector.get("AppTimeline");
       return this.main_view.click(__bind(function(e) {
-        this.rack.render_sidebar();
-        if (!this.anim) {
-          this.anim = this.createAnimContainer();
-        }
-        return apptimeline.timeline.selectAnims([self.anim]);
+        return this.rack.render_sidebar();
       }, this));
     };
     NodeBase.prototype.compute_node_position = function() {
