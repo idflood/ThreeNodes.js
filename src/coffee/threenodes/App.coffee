@@ -88,7 +88,7 @@ define [
       if @testing_mode == false
         @init_ui()
       else
-        @timeline = injector.get "AppTimeline"
+        @timeline = @injector.get "AppTimeline"
     
     init_ui: () =>
       @ui = @injector.get "AppUI"

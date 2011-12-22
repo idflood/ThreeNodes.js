@@ -63,7 +63,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       if (this.testing_mode === false) {
         this.init_ui();
       } else {
-        this.timeline = injector.get("AppTimeline");
+        this.timeline = this.injector.get("AppTimeline");
       }
     }
     App.prototype.init_ui = function() {
