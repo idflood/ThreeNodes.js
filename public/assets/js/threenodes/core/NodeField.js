@@ -30,6 +30,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.render_connections = __bind(this.render_connections, this);
       this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
+      this.is_animation_property = __bind(this.is_animation_property, this);
       this.getSliceCount = __bind(this.getSliceCount, this);
       this.isConnected = __bind(this.isConnected, this);
       this.isChanged = __bind(this.isChanged, this);
@@ -105,6 +106,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       }
       return this.val.length;
     };
+    NodeField.prototype.is_animation_property = function() {
+      if (this.constructor === ThreeNodes.fields.types.Float ||  this.constructor === ThreeNodes.fields.types.Bool) {
+        return true;
+      }
+      return false;
+    };
     NodeField.prototype.toJSON = function() {
       var res, val_type;
       res = {
@@ -149,6 +156,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       if (this.is_output === true) {
         this.node.add_out_connection(c, this);
       }
+      this.node.disable_property_anim(this);
       return c;
     };
     NodeField.prototype.unregister_connection = function(c) {
@@ -156,7 +164,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.node.remove_connection(c);
       ind = this.connections.indexOf(c);
       if (ind !== -1) {
-        return this.connections.splice(ind, 1);
+        this.connections.splice(ind, 1);
+      }
+      if (this.connections.length === 0) {
+        return this.node.enable_property_anim(this);
       }
     };
     NodeField.prototype.remove_connections = function() {

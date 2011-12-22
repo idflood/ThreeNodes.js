@@ -21,6 +21,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.inJSON = inJSON != null ? inJSON : false;
       this.compute_node_position = __bind(this.compute_node_position, this);
       this.init = __bind(this.init, this);
+      this.createAnimContainer = __bind(this.createAnimContainer, this);
+      this.enable_property_anim = __bind(this.enable_property_anim, this);
+      this.disable_property_anim = __bind(this.disable_property_anim, this);
       this.remove_connection = __bind(this.remove_connection, this);
       this.add_out_connection = __bind(this.add_out_connection, this);
       this.add_field_listener = __bind(this.add_field_listener, this);
@@ -30,6 +33,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
       this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
+      this.getAnimationData = __bind(this.getAnimationData, this);
+      this.hasPropertyTrackAnim = __bind(this.hasPropertyTrackAnim, this);
       this.update = __bind(this.update, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
       this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
@@ -40,10 +45,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.create_cache_object = __bind(this.create_cache_object, this);
       this.init_context_menu = __bind(this.init_context_menu, this);
       this.add_count_input = __bind(this.add_count_input, this);
+      this.loadAnimation = __bind(this.loadAnimation, this);
       this.typename = __bind(this.typename, this);
       this.auto_evaluate = false;
       this.delays_output = false;
       this.dirty = true;
+      this.anim = false;
+      this.anim_obj = {};
+      this.is_animated = false;
       if (this.inXML) {
         this.nid = parseInt(this.inXML.attr("nid"));
         ThreeNodes.uid = this.nid;
@@ -67,11 +76,34 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.rack.fromXML(this.inXML);
       } else if (this.inJSON) {
         this.rack.fromJSON(this.inJSON);
+        if (this.inJSON.anim !== false) {
+          this.loadAnimation();
+        }
       }
       return this.init_context_menu();
     };
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
+    };
+    NodeBase.prototype.loadAnimation = function() {
+      var anims, propKey, propLabel, track, _i, _len, _ref;
+      this.anim = this.createAnimContainer();
+      _ref = this.inJSON.anim;
+      for (propLabel in _ref) {
+        anims = _ref[propLabel];
+        track = this.anim.getPropertyTrack(propLabel);
+        for (_i = 0, _len = anims.length; _i < _len; _i++) {
+          propKey = anims[_i];
+          track.keys.push({
+            time: propKey.time,
+            value: propKey.value,
+            easing: Timeline.stringToEasingFunction(propKey.easing),
+            track: track
+          });
+        }
+        this.anim.timeline.rebuildTrackAnimsFromKeys(track);
+      }
+      return true;
     };
     NodeBase.prototype.add_count_input = function() {
       return this.rack.addFields({
@@ -138,11 +170,48 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.update = function() {
       return this.compute();
     };
+    NodeBase.prototype.hasPropertyTrackAnim = function() {
+      var propTrack, _i, _len, _ref;
+      _ref = this.anim.objectTrack.propertyTracks;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        propTrack = _ref[_i];
+        if (propTrack.anims.length > 0) {
+          return true;
+        }
+      }
+      return false;
+    };
+    NodeBase.prototype.getAnimationData = function() {
+      var anim, k, propTrack, res, _i, _j, _len, _len2, _ref, _ref2;
+      if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
+        return false;
+      }
+      if (this.anim !== false) {
+        res = {};
+        _ref = this.anim.objectTrack.propertyTracks;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          propTrack = _ref[_i];
+          res[propTrack.propertyName] = [];
+          _ref2 = propTrack.keys;
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            anim = _ref2[_j];
+            k = {
+              time: anim.time,
+              value: anim.value,
+              easing: Timeline.easingFunctionToString(anim.easing)
+            };
+            res[propTrack.propertyName].push(k);
+          }
+        }
+      }
+      return res;
+    };
     NodeBase.prototype.toJSON = function() {
       var res;
       res = {
         nid: this.nid,
         type: this.typename(),
+        anim: this.getAnimationData(),
         x: this.x,
         y: this.y,
         fields: this.rack.toJSON()
@@ -224,8 +293,32 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return c;
     };
+    NodeBase.prototype.disable_property_anim = function(field) {
+      if (this.anim && field.is_output === false) {
+        return this.anim.disableProperty(field.name);
+      }
+    };
+    NodeBase.prototype.enable_property_anim = function(field) {
+      if (field.is_output === true || !this.anim) {
+        return false;
+      }
+      if (field.is_animation_property()) {
+        return this.anim.enableProperty(field.name);
+      }
+    };
+    NodeBase.prototype.createAnimContainer = function() {
+      var f, field, res;
+      res = anim("nid-" + this.nid, this.rack.node_fields_by_name.inputs);
+      for (f in this.rack.node_fields_by_name.inputs) {
+        field = this.rack.node_fields_by_name.inputs[f];
+        if (field.is_animation_property() === false) {
+          this.disable_property_anim(field);
+        }
+      }
+      return res;
+    };
     NodeBase.prototype.init = function() {
-      var self;
+      var apptimeline, self;
       self = this;
       this.main_view = $.tmpl(_view_node_template, this);
       this.main_view.data("object", this);
@@ -286,9 +379,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.render_connections();
         });
       });
-      return this.main_view.click(function(e) {
-        return self.rack.render_sidebar();
-      });
+      apptimeline = self.context.injector.get("AppTimeline");
+      return this.main_view.click(__bind(function(e) {
+        this.rack.render_sidebar();
+        if (!this.anim) {
+          this.anim = this.createAnimContainer();
+        }
+        return apptimeline.timeline.selectAnims([self.anim]);
+      }, this));
     };
     NodeBase.prototype.compute_node_position = function() {
       var pos;

@@ -162,7 +162,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Min.prototype.set_fields = function() {
       Min.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addField("in", 0);
+      this.v_inb = this.rack.addField("in2", 0);
+      return this.anim_obj = {
+        "in": 0,
+        in2: 0
+      };
     };
     Min.prototype.process_val = function(num, i) {
       return Math.min(num, this.v_inb.get(i));
@@ -178,7 +182,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     Max.prototype.set_fields = function() {
       Max.__super__.set_fields.apply(this, arguments);
-      return this.v_inb = this.rack.addField("in2", 0);
+      this.v_inb = this.rack.addField("in2", 0);
+      return this.anim_obj = {
+        "in": 0,
+        in2: 0
+      };
     };
     Max.prototype.process_val = function(num, i) {
       return Math.max(num, this.v_inb.get(i));
