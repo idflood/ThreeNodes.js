@@ -1,5 +1,5 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!threenodes/core/WebglBase", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', 'order!threenodes/ui/AppMenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "order!threenodes/core/WebglBase", "order!libs/jquery.tmpl.min", 'order!threenodes/ui/AppSidebar', 'order!threenodes/ui/AppMenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
   "use strict";  return ThreeNodes.AppUI = (function() {
     function AppUI() {
       this.animate = __bind(this.animate, this);
@@ -28,7 +28,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.init_context_menus();
       this.show_application();
       this.init_bottom_toolbox();
-      return this.animate();
+      this.animate();
+      return $("#container-wrapper").scrollview({
+        grab: "assets/js/libs/jquery-scrollview/images/openhand.cur",
+        grabbing: "assets/js/libs/jquery-scrollview/images/closedhand.cur"
+      });
     };
     AppUI.prototype.init_bottom_toolbox = function() {
       var $container;
