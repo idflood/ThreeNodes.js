@@ -74,7 +74,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         c = new ThreeNodes.NodeConnection(from, to, connection.id);
         this.context.injector.applyContext(c);
       }
-      return ThreeNodes.uid = loaded_data.uid;
+      ThreeNodes.uid = loaded_data.uid;
+      return nodegraph.renderAllConnections();
     };
     FileHandler.prototype.load_from_xml_data = function(txt) {
       var loaded_data, nodegraph;
