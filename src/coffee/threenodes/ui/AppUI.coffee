@@ -37,9 +37,9 @@ define [
       @show_application()
       @init_bottom_toolbox()
       @animate()
-      $("#container-wrapper").scrollview
-        grab:"assets/js/libs/jquery-scrollview/images/openhand.cur"
-        grabbing:"assets/js/libs/jquery-scrollview/images/closedhand.cur"
+      #$("#container-wrapper").scrollview
+      #  grab:"assets/js/libs/jquery-scrollview/images/openhand.cur"
+      #  grabbing:"assets/js/libs/jquery-scrollview/images/closedhand.cur"
     
       @context.commandMap.execute "InitUrlHandler"
     

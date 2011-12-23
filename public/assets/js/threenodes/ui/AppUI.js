@@ -29,10 +29,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.show_application();
       this.init_bottom_toolbox();
       this.animate();
-      $("#container-wrapper").scrollview({
-        grab: "assets/js/libs/jquery-scrollview/images/openhand.cur",
-        grabbing: "assets/js/libs/jquery-scrollview/images/closedhand.cur"
-      });
       return this.context.commandMap.execute("InitUrlHandler");
     };
     AppUI.prototype.init_bottom_toolbox = function() {
