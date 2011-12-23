@@ -68,6 +68,11 @@ define [
     addConnection: (c) ->
       @node_connections[@node_connections.length] = c
     
+    renderAllConnections: () =>
+      for c in @node_connections
+        c.render()
+      return true
+    
     removeNode: (n) ->
       ind = @nodes.indexOf(n)
       if ind != -1

@@ -117,3 +117,4 @@ define [
           @line = ThreeNodes.svg.path(@get_path()).attr
             stroke: color
             fill: "none"
+            

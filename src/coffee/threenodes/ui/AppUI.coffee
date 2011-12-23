@@ -41,6 +41,8 @@ define [
         grab:"assets/js/libs/jquery-scrollview/images/openhand.cur"
         grabbing:"assets/js/libs/jquery-scrollview/images/closedhand.cur"
     
+      @context.commandMap.execute "InitUrlHandler"
+    
     init_bottom_toolbox: () =>
       $("body").append("<div id='bottom-toolbox'></div>")
       $container = $("#bottom-toolbox")

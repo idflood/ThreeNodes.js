@@ -3,6 +3,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
   "use strict";  return ThreeNodes.NodeGraph = (function() {
     function NodeGraph() {
       this.get_node = __bind(this.get_node, this);
+      this.renderAllConnections = __bind(this.renderAllConnections, this);
       this.render = __bind(this.render, this);
       this.get_component_by_type = __bind(this.get_component_by_type, this);
       this.create_node = __bind(this.create_node, this);      this.nodes = [];
@@ -74,6 +75,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     };
     NodeGraph.prototype.addConnection = function(c) {
       return this.node_connections[this.node_connections.length] = c;
+    };
+    NodeGraph.prototype.renderAllConnections = function() {
+      var c, _i, _len, _ref;
+      _ref = this.node_connections;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
+        c.render();
+      }
+      return true;
     };
     NodeGraph.prototype.removeNode = function(n) {
       var ind;

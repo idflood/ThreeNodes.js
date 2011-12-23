@@ -48,6 +48,8 @@ define [
   'order!threenodes/commands/LoadLocalFileCommand',
   'order!threenodes/commands/RebuildShadersCommand',
   'order!threenodes/commands/RemoveSelectedNodesCommand',
+  'order!threenodes/commands/InitUrlHandler',
+  "order!libs/jquery.ba-bbq.min",
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   "use strict"
   class ThreeNodes.App
@@ -73,6 +75,7 @@ define [
       @commandMap.register "LoadLocalFileCommand", ThreeNodes.LoadLocalFileCommand
       @commandMap.register "RebuildShadersCommand", ThreeNodes.RebuildShadersCommand
       @commandMap.register "RemoveSelectedNodesCommand", ThreeNodes.RemoveSelectedNodesCommand
+      @commandMap.register "InitUrlHandler", ThreeNodes.InitUrlHandler
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
@@ -89,6 +92,7 @@ define [
         @init_ui()
       else
         @timeline = @injector.get "AppTimeline"
+        @context.commandMap.execute "InitUrlHandler"
     
     init_ui: () =>
       @ui = @injector.get "AppUI"
