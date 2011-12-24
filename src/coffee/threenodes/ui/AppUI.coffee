@@ -37,11 +37,44 @@ define [
       @show_application()
       @init_bottom_toolbox()
       @animate()
+      @is_grabbing = false
+      
+      @scroll_target = $("#container-wrapper")
+      is_from_target = (e) ->
+        if e.target == $("#graph svg")[0]
+          return true
+        return false
+      @scroll_target.mousedown (e) =>
+        if is_from_target(e)
+          #middle click button
+          if e.which == 2
+            @is_grabbing = true
+            @xp = e.pageX
+            @yp = e.pageY
+      @scroll_target.mousemove (e) =>
+        if is_from_target(e)
+          if @is_grabbing == true
+            @scrollTo(@xp - e.pageX, @yp - e.pageY)
+            @xp = e.pageX
+            @yp = e.pageY
+      @scroll_target.mouseout => @stropgrab()
+      @scroll_target.mouseup (e) => 
+        if is_from_target(e)
+          if e.which == 2
+            @stropgrab()
       #$("#container-wrapper").scrollview
       #  grab:"assets/js/libs/jquery-scrollview/images/openhand.cur"
       #  grabbing:"assets/js/libs/jquery-scrollview/images/closedhand.cur"
     
       @context.commandMap.execute "InitUrlHandler"
+    
+    stropgrab: () =>
+      @is_grabbing = false
+    
+    scrollTo: (dx, dy) =>
+      x = @scroll_target.scrollLeft() + dx
+      y = @scroll_target.scrollTop() + dy
+      @scroll_target.scrollLeft(x).scrollTop(y)
     
     init_bottom_toolbox: () =>
       $("body").append("<div id='bottom-toolbox'></div>")
