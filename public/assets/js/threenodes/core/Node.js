@@ -67,8 +67,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.out_connections = [];
       this.rack = new ThreeNodes.NodeFieldRack(this, this.inXML);
       this.value = false;
-      this.name = false;
+      this.name = this.typename();
       this.main_view = false;
+      if (this.inJSON && this.inJSON.name && this.inJSON.name !== false) {
+        this.name = this.inJSON.name;
+      }
       this.init();
       this.set_fields();
       this.anim = this.createAnimContainer();
@@ -210,6 +213,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var res;
       res = {
         nid: this.nid,
+        name: this.name,
         type: this.typename(),
         anim: this.getAnimationData(),
         x: this.x,
@@ -398,11 +402,28 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         selectable._mouseStop(null);
         return self.rack.render_sidebar();
       });
-      return $(".head", this.main_view).dblclick(function(e) {
-        return $(".options", self.main_view).animate({
-          height: 'toggle'
-        }, 120, function() {
-          return self.render_connections();
+      return $(".head span", this.main_view).dblclick(function(e) {
+        var $input, apply_input_result, prev;
+        prev = $(this).html();
+        $(".head", self.main_view).append("<input type='text' />");
+        $(this).hide();
+        $input = $(".head input", self.main_view);
+        $input.val(prev);
+        apply_input_result = function() {
+          $(".head span", self.main_view).html($input.val()).show();
+          self.name = $input.val();
+          return $input.remove();
+        };
+        $input.blur(function(e) {
+          return apply_input_result();
+        });
+        $("#graph").click(function(e) {
+          return apply_input_result();
+        });
+        return $input.keydown(function(e) {
+          if (e.keyCode === 13) {
+            return apply_input_result();
+          }
         });
       });
     };

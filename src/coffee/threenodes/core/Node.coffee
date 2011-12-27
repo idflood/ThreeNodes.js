@@ -39,8 +39,11 @@ define [
       @out_connections = []
       @rack = new ThreeNodes.NodeFieldRack(this, @inXML)
       @value = false
-      @name = false
+      @name = @typename()
       @main_view = false
+      if @inJSON && @inJSON.name && @inJSON.name != false
+        @name = @inJSON.name
+      
       @init()
       @set_fields()
       @anim = @createAnimContainer()
@@ -142,6 +145,7 @@ define [
     toJSON: () =>
       res =
         nid: @nid
+        name: @name
         type: @typename()
         anim: @getAnimationData()
         x: @x
@@ -287,9 +291,30 @@ define [
         selectable._mouseStop(null)
         self.rack.render_sidebar()
       
-      $(".head", @main_view).dblclick (e) ->
-        $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
-          self.render_connections()
+      $(".head span", @main_view).dblclick (e) ->
+        prev = $(this).html()
+        $(".head", self.main_view).append("<input type='text' />")
+        $(this).hide()
+        $input = $(".head input", self.main_view)
+        $input.val(prev)
+        
+        apply_input_result = () ->
+          $(".head span", self.main_view).html($input.val()).show()
+          self.name = $input.val()
+          $input.remove()
+        
+        $input.blur (e) ->
+          apply_input_result()
+        
+        $("#graph").click (e) ->
+          apply_input_result()
+        
+        $input.keydown (e) ->
+          # on enter
+          if e.keyCode == 13
+            apply_input_result()
+      #  $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
+      #    self.render_connections()
   
     compute_node_position: () =>
       pos = @main_view.position()
