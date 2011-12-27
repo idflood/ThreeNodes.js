@@ -5,7 +5,6 @@ define [
   "text!templates/node.tmpl.html",
   "order!libs/jquery.tmpl.min",
   "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   "order!libs/colorpicker/js/colorpicker",
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',

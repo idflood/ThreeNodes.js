@@ -232,10 +232,10 @@ define [
         left: @x
         top: @y
       
+      apptimeline = self.context.injector.get "AppTimeline"
+      
       @main_view.draggable
-        handle: ".head span"
         start: (ev, ui) ->
-          ev.stopPropagation()
           if $(this).hasClass("ui-selected")
             ThreeNodes.selected_nodes = $(".ui-selected").each () ->
               $(this).data("offset", $(this).offset())
@@ -273,13 +273,23 @@ define [
             nodes.push($(this).data("object").anim)
           apptimeline.timeline.selectAnims(nodes)
       
+      @main_view.click (e) ->
+        if e.metaKey == false
+          $( ".node" ).removeClass("ui-selected")
+          $(this).addClass("ui-selecting")
+        else
+          if $(this).hasClass("ui-selected")
+            $(this).removeClass("ui-selected")
+          else
+            $(this).addClass("ui-selecting")
+        selectable = $("#container").data("selectable")
+        selectable.refresh()
+        selectable._mouseStop(null)
+        self.rack.render_sidebar()
+      
       $(".head", @main_view).dblclick (e) ->
         $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
           self.render_connections()
-          
-      apptimeline = self.context.injector.get "AppTimeline"
-      @main_view.click (e) =>
-        @rack.render_sidebar()
   
     compute_node_position: () =>
       pos = @main_view.position()

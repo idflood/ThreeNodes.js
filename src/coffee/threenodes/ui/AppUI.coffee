@@ -62,9 +62,6 @@ define [
         if is_from_target(e)
           if e.which == 2
             @stropgrab()
-      #$("#container-wrapper").scrollview
-      #  grab:"assets/js/libs/jquery-scrollview/images/openhand.cur"
-      #  grabbing:"assets/js/libs/jquery-scrollview/images/closedhand.cur"
     
       @context.commandMap.execute "InitUrlHandler"
     

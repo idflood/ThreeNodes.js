@@ -327,10 +327,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         left: this.x,
         top: this.y
       });
+      apptimeline = self.context.injector.get("AppTimeline");
       this.main_view.draggable({
-        handle: ".head span",
         start: function(ev, ui) {
-          ev.stopPropagation();
           if ($(this).hasClass("ui-selected")) {
             ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
               return $(this).data("offset", $(this).offset());
@@ -382,17 +381,30 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return apptimeline.timeline.selectAnims(nodes);
         }, this)
       });
-      $(".head", this.main_view).dblclick(function(e) {
+      this.main_view.click(function(e) {
+        var selectable;
+        if (e.metaKey === false) {
+          $(".node").removeClass("ui-selected");
+          $(this).addClass("ui-selecting");
+        } else {
+          if ($(this).hasClass("ui-selected")) {
+            $(this).removeClass("ui-selected");
+          } else {
+            $(this).addClass("ui-selecting");
+          }
+        }
+        selectable = $("#container").data("selectable");
+        selectable.refresh();
+        selectable._mouseStop(null);
+        return self.rack.render_sidebar();
+      });
+      return $(".head", this.main_view).dblclick(function(e) {
         return $(".options", self.main_view).animate({
           height: 'toggle'
         }, 120, function() {
           return self.render_connections();
         });
       });
-      apptimeline = self.context.injector.get("AppTimeline");
-      return this.main_view.click(__bind(function(e) {
-        return this.rack.render_sidebar();
-      }, this));
     };
     NodeBase.prototype.compute_node_position = function() {
       var pos;

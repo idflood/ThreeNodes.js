@@ -4,7 +4,6 @@ define [
   'Backbone',
   "text!templates/app_menubar.tmpl.html",
   "order!libs/jquery.tmpl.min",
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
 ], ($, _, Backbone, _view_menubar) ->
   "use strict"
   class ThreeNodes.AppMenuBar
