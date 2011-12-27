@@ -118,7 +118,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.init_context_menu = function() {
       var self;
       self = this;
-      return $(".field", this.main_view).contextMenu({
+      return $(".field a", this.main_view).contextMenu({
         menu: "field-context-menu"
       }, function(action, el, pos) {
         var f_name, f_type, field;
@@ -273,7 +273,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       f_name = $field.attr("id");
       f_type = $field.parent().attr("class");
       field = this.rack.node_fields[f_type][f_name];
-      $field.click(function(e) {
+      $("a", $field).click(function(e) {
         e.preventDefault();
         if (e.shiftKey === true) {
           return field.remove_connections();

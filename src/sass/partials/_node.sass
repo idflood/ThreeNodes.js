@@ -27,23 +27,20 @@ $c: 100
     +clearfix
     width: 100%
   
-  .head, .field
-    cursor: pointer
-  
-  .field a
+  .field a span
     display: inline-block
     width: $field-button-size
     height: $field-button-size
     background: #555
     +border-radius($field-button-size)
   
-  .field:hover
+  .field a:hover
     color: #fff
-    a
+    span
       background: #fff
   
-  .field.field-possible-target
-    a
+  .field.field-possible-target a
+    span
       background: $main_color
   
   .inputs, .outputs
@@ -58,9 +55,9 @@ $c: 100
       width: 100%
       vertical-align: middle
   
-  .inputs a
+  .inputs a span
     margin-right: $field-label-padding
-  .outputs a
+  .outputs a span
     margin-left: $field-label-padding
 
 // utility classes

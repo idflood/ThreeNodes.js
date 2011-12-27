@@ -78,7 +78,7 @@ define [
     
     init_context_menu: () =>
       self = this
-      $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
+      $(".field a", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
         if action == "remove_connection"
           f_name = $(el).attr("id")
           f_type = $(el).parent().attr("class")
@@ -189,7 +189,7 @@ define [
       f_name = $field.attr("id")
       f_type = $field.parent().attr("class")
       field = @rack.node_fields[f_type][f_name]
-      $field.click (e) ->
+      $("a", $field).click (e) ->
         e.preventDefault()
         if e.shiftKey == true
           field.remove_connections()
