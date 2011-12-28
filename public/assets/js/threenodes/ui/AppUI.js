@@ -45,12 +45,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         }
         return false;
       };
+      this.scroll_target.bind("contextmenu", function(e) {
+        return false;
+      });
       this.scroll_target.mousedown(__bind(function(e) {
         if (is_from_target(e)) {
-          if (e.which === 2) {
+          if (e.which === 2 || e.which === 3) {
             this.is_grabbing = true;
             this.xp = e.pageX;
-            return this.yp = e.pageY;
+            this.yp = e.pageY;
+            return false;
           }
         }
       }, this));
@@ -68,7 +72,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       }, this));
       this.scroll_target.mouseup(__bind(function(e) {
         if (is_from_target(e)) {
-          if (e.which === 2) {
+          if (e.which === 2 || e.which === 3) {
             return this.stropgrab();
           }
         }

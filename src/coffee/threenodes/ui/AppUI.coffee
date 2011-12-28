@@ -49,13 +49,16 @@ define [
         if e.target == $("#graph svg")[0]
           return true
         return false
+      @scroll_target.bind "contextmenu", (e) ->
+        return false
       @scroll_target.mousedown (e) =>
         if is_from_target(e)
-          #middle click button
-          if e.which == 2
+          #middle or right click button
+          if e.which == 2 || e.which == 3
             @is_grabbing = true
             @xp = e.pageX
             @yp = e.pageY
+            return false
       @scroll_target.mousemove (e) =>
         if is_from_target(e)
           if @is_grabbing == true
@@ -65,7 +68,7 @@ define [
       @scroll_target.mouseout => @stropgrab()
       @scroll_target.mouseup (e) => 
         if is_from_target(e)
-          if e.which == 2
+          if e.which == 2 || e.which == 3
             @stropgrab()
     
       @context.commandMap.execute "InitUrlHandler"
