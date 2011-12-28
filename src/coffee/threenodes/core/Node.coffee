@@ -78,9 +78,9 @@ define [
     
     init_context_menu: () =>
       self = this
-      $(".field .inner-field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
+      $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
         if action == "remove_connection"
-          field = $(el).parent().data("object")
+          field = $(el).data("object")
           field.remove_connections()
     
     create_cache_object: (values) =>
@@ -200,8 +200,8 @@ define [
         helper: () ->
           $("<div class='ui-widget-drag-helper'></div>")
         scroll: true
-        axis: true
-        containment: "document"
+        #axis: true
+        #containment: "document"
         cursor: 'pointer'
         cursorAt:
           left: 0
@@ -218,21 +218,10 @@ define [
               opacity: 0
         drag: (event, ui) ->
           if ThreeNodes.svg_connecting_line
-            # check that left button is pressed
-            # this doesn't work in firefox, event.originalEvent.which == 1 even if button is not pressed
-            if event.originalEvent.which == 1
-              pos = $("span", event.target).position()
-              ThreeNodes.svg_connecting_line.attr
-                path: get_path(pos, ui.position, self.main_view.position())
-            else
-              ThreeNodes.svg_connecting_line.attr
-                opacity: 0
-              draggable = $(this).data("draggable")
-              # hack to make click and then click drag to work
-              delay = (ms, func) -> setTimeout func, ms
-              delay 1, ->
-                draggable.cancel()
-                $("#graph").mouseup()
+            pos = $("span", event.target).position()
+            ThreeNodes.svg_connecting_line.attr
+              path: get_path(pos, ui.position, self.main_view.position())
+            return true
               
       accept_class = ".outputs .inner-field"
       if field.is_output == true

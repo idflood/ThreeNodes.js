@@ -18,7 +18,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       ThreeNodes.svg = this.svg;
       ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
         stroke: "#fff",
-        'stroke-dasharray': ".",
+        'stroke-dasharray': "-",
         fill: "none",
         opacity: 0
       });

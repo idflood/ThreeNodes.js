@@ -118,12 +118,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.init_context_menu = function() {
       var self;
       self = this;
-      return $(".field .inner-field", this.main_view).contextMenu({
+      return $(".field", this.main_view).contextMenu({
         menu: "field-context-menu"
       }, function(action, el, pos) {
         var field;
         if (action === "remove_connection") {
-          field = $(el).parent().data("object");
+          field = $(el).data("object");
           return field.remove_connections();
         }
       });
@@ -287,8 +287,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return $("<div class='ui-widget-drag-helper'></div>");
         },
         scroll: true,
-        axis: true,
-        containment: "document",
         cursor: 'pointer',
         cursorAt: {
           left: 0,
@@ -311,26 +309,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         },
         drag: function(event, ui) {
-          var delay, draggable, pos;
+          var pos;
           if (ThreeNodes.svg_connecting_line) {
-            if (event.originalEvent.which === 1) {
-              pos = $("span", event.target).position();
-              return ThreeNodes.svg_connecting_line.attr({
-                path: get_path(pos, ui.position, self.main_view.position())
-              });
-            } else {
-              ThreeNodes.svg_connecting_line.attr({
-                opacity: 0
-              });
-              draggable = $(this).data("draggable");
-              delay = function(ms, func) {
-                return setTimeout(func, ms);
-              };
-              return delay(1, function() {
-                draggable.cancel();
-                return $("#graph").mouseup();
-              });
-            }
+            pos = $("span", event.target).position();
+            ThreeNodes.svg_connecting_line.attr({
+              path: get_path(pos, ui.position, self.main_view.position())
+            });
+            return true;
           }
         }
       });

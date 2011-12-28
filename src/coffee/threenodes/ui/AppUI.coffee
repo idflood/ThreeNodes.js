@@ -23,7 +23,7 @@ define [
       ThreeNodes.svg = @svg
       ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
         stroke: "#fff"
-        'stroke-dasharray': "."
+        'stroke-dasharray': "-"
         fill: "none"
         opacity: 0
     
