@@ -384,3 +384,9 @@ define [
         if val.constructor == THREE.Texture || val instanceof THREE.Texture
           return val
       return null
+  class ThreeNodes.fields.types.Fog extends ThreeNodes.NodeField
+    compute_value : (val) =>
+      if $.type(val) == "object"
+        if val.constructor == THREE.Fog || val.constructor == THREE.FogExp2
+          return val
+      return null

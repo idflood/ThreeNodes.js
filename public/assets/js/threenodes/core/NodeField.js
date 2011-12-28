@@ -644,7 +644,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
     return Material;
   })();
-  return ThreeNodes.fields.types.Texture = (function() {
+  ThreeNodes.fields.types.Texture = (function() {
     __extends(Texture, ThreeNodes.NodeField);
     function Texture() {
       this.compute_value = __bind(this.compute_value, this);
@@ -659,5 +659,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return null;
     };
     return Texture;
+  })();
+  return ThreeNodes.fields.types.Fog = (function() {
+    __extends(Fog, ThreeNodes.NodeField);
+    function Fog() {
+      this.compute_value = __bind(this.compute_value, this);
+      Fog.__super__.constructor.apply(this, arguments);
+    }
+    Fog.prototype.compute_value = function(val) {
+      if ($.type(val) === "object") {
+        if (val.constructor === THREE.Fog || val.constructor === THREE.FogExp2) {
+          return val;
+        }
+      }
+      return null;
+    };
+    return Fog;
   })();
 });
