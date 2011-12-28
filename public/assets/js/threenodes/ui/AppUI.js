@@ -11,12 +11,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.init_timeline_switcher = __bind(this.init_timeline_switcher, this);
       this.init_resize_slider = __bind(this.init_resize_slider, this);
       this.init_bottom_toolbox = __bind(this.init_bottom_toolbox, this);
+      this.scrollTo = __bind(this.scrollTo, this);
+      this.stropgrab = __bind(this.stropgrab, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
     }
     AppUI.prototype.onRegister = function() {
-      var injector;
+      var injector, is_from_target;
       injector = this.context.injector;
       injector.mapSingleton("ThreeNodes.AppSidebar", ThreeNodes.AppSidebar);
       injector.mapSingleton("ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar);
@@ -29,7 +31,52 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.show_application();
       this.init_bottom_toolbox();
       this.animate();
+      this.is_grabbing = false;
+      this.scroll_target = $("#container-wrapper");
+      is_from_target = function(e) {
+        if (e.target === $("#graph svg")[0]) {
+          return true;
+        }
+        return false;
+      };
+      this.scroll_target.mousedown(__bind(function(e) {
+        if (is_from_target(e)) {
+          if (e.which === 2) {
+            this.is_grabbing = true;
+            this.xp = e.pageX;
+            return this.yp = e.pageY;
+          }
+        }
+      }, this));
+      this.scroll_target.mousemove(__bind(function(e) {
+        if (is_from_target(e)) {
+          if (this.is_grabbing === true) {
+            this.scrollTo(this.xp - e.pageX, this.yp - e.pageY);
+            this.xp = e.pageX;
+            return this.yp = e.pageY;
+          }
+        }
+      }, this));
+      this.scroll_target.mouseout(__bind(function() {
+        return this.stropgrab();
+      }, this));
+      this.scroll_target.mouseup(__bind(function(e) {
+        if (is_from_target(e)) {
+          if (e.which === 2) {
+            return this.stropgrab();
+          }
+        }
+      }, this));
       return this.context.commandMap.execute("InitUrlHandler");
+    };
+    AppUI.prototype.stropgrab = function() {
+      return this.is_grabbing = false;
+    };
+    AppUI.prototype.scrollTo = function(dx, dy) {
+      var x, y;
+      x = this.scroll_target.scrollLeft() + dx;
+      y = this.scroll_target.scrollTop() + dy;
+      return this.scroll_target.scrollLeft(x).scrollTop(y);
     };
     AppUI.prototype.init_bottom_toolbox = function() {
       var $container;

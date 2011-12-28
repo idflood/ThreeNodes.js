@@ -67,8 +67,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.out_connections = [];
       this.rack = new ThreeNodes.NodeFieldRack(this, this.inXML);
       this.value = false;
-      this.name = false;
+      this.name = this.typename();
       this.main_view = false;
+      if (this.inJSON && this.inJSON.name && this.inJSON.name !== false) {
+        this.name = this.inJSON.name;
+      }
       this.init();
       this.set_fields();
       this.anim = this.createAnimContainer();
@@ -115,7 +118,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.init_context_menu = function() {
       var self;
       self = this;
-      return $(".field", this.main_view).contextMenu({
+      return $(".field a", this.main_view).contextMenu({
         menu: "field-context-menu"
       }, function(action, el, pos) {
         var f_name, f_type, field;
@@ -210,6 +213,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var res;
       res = {
         nid: this.nid,
+        name: this.name,
         type: this.typename(),
         anim: this.getAnimationData(),
         x: this.x,
@@ -269,7 +273,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       f_name = $field.attr("id");
       f_type = $field.parent().attr("class");
       field = this.rack.node_fields[f_type][f_name];
-      $field.click(function(e) {
+      $("a", $field).click(function(e) {
         e.preventDefault();
         if (e.shiftKey === true) {
           return field.remove_connections();
@@ -327,10 +331,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         left: this.x,
         top: this.y
       });
+      apptimeline = self.context.injector.get("AppTimeline");
       this.main_view.draggable({
-        handle: ".head span",
         start: function(ev, ui) {
-          ev.stopPropagation();
           if ($(this).hasClass("ui-selected")) {
             ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
               return $(this).data("offset", $(this).offset());
@@ -382,17 +385,47 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return apptimeline.timeline.selectAnims(nodes);
         }, this)
       });
-      $(".head", this.main_view).dblclick(function(e) {
-        return $(".options", self.main_view).animate({
-          height: 'toggle'
-        }, 120, function() {
-          return self.render_connections();
+      this.main_view.click(function(e) {
+        var selectable;
+        if (e.metaKey === false) {
+          $(".node").removeClass("ui-selected");
+          $(this).addClass("ui-selecting");
+        } else {
+          if ($(this).hasClass("ui-selected")) {
+            $(this).removeClass("ui-selected");
+          } else {
+            $(this).addClass("ui-selecting");
+          }
+        }
+        selectable = $("#container").data("selectable");
+        selectable.refresh();
+        selectable._mouseStop(null);
+        return self.rack.render_sidebar();
+      });
+      return $(".head span", this.main_view).dblclick(function(e) {
+        var $input, apply_input_result, prev;
+        prev = $(this).html();
+        $(".head", self.main_view).append("<input type='text' />");
+        $(this).hide();
+        $input = $(".head input", self.main_view);
+        $input.val(prev);
+        apply_input_result = function() {
+          $(".head span", self.main_view).html($input.val()).show();
+          self.name = $input.val();
+          return $input.remove();
+        };
+        $input.blur(function(e) {
+          return apply_input_result();
+        });
+        $("#graph").click(function(e) {
+          return apply_input_result();
+        });
+        return $input.keydown(function(e) {
+          if (e.keyCode === 13) {
+            return apply_input_result();
+          }
         });
       });
-      apptimeline = self.context.injector.get("AppTimeline");
-      return this.main_view.click(__bind(function(e) {
-        return this.rack.render_sidebar();
-      }, this));
     };
     NodeBase.prototype.compute_node_position = function() {
       var pos;
