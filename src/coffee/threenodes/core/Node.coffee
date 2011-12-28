@@ -11,6 +11,7 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
+  
   ThreeNodes.field_click_1 = false
   ThreeNodes.selected_nodes = $([])
   ThreeNodes.nodes_offset =

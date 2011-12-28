@@ -85,7 +85,7 @@ define [
       "\t\t<connection id='#{@cid}' from='#{@from_field.fid}' to='#{@to_field.fid}'/>\n"
   
     get_field_position: (field) ->
-      o1 = $("#fid-#{field.fid} a").offset()
+      o1 = $("#fid-#{field.fid} a span").offset()
       diff = 3
       o1.top += diff
       o1.left += diff
