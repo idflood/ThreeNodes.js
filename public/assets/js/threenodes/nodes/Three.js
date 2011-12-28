@@ -103,6 +103,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var current_scene;
       Scene.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.Scene();
+      this.v_fog = this.rack.addField("fog", {
+        type: 'Any',
+        val: null
+      });
       return current_scene = this.ob;
     };
     Scene.prototype.apply_children = function() {
@@ -415,6 +419,77 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.ob);
     };
     return Texture;
+  })();
+  ThreeNodes.nodes.types.Three.Fog = (function() {
+    __extends(Fog, ThreeNodes.NodeBase);
+    function Fog() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Fog.__super__.constructor.apply(this, arguments);
+    }
+    Fog.prototype.set_fields = function() {
+      Fog.__super__.set_fields.apply(this, arguments);
+      this.ob = false;
+      return this.rack.addFields({
+        inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(0xffffff)
+          },
+          "near": 1,
+          "far": 1000
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    Fog.prototype.compute = function() {
+      if (this.ob === false) {
+        this.ob = new THREE.Fog(0xffffff, 1, 1000);
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.set("out", this.ob);
+    };
+    return Fog;
+  })();
+  ThreeNodes.nodes.types.Three.FogExp2 = (function() {
+    __extends(FogExp2, ThreeNodes.NodeBase);
+    function FogExp2() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      FogExp2.__super__.constructor.apply(this, arguments);
+    }
+    FogExp2.prototype.set_fields = function() {
+      FogExp2.__super__.set_fields.apply(this, arguments);
+      this.ob = false;
+      return this.rack.addFields({
+        inputs: {
+          "color": {
+            type: "Color",
+            val: new THREE.Color(0xffffff)
+          },
+          "density": 0.00025
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+    };
+    FogExp2.prototype.compute = function() {
+      if (this.ob === false) {
+        this.ob = new THREE.FogExp2(0xffffff, 0.00025);
+      }
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.set("out", this.ob);
+    };
+    return FogExp2;
   })();
   return ThreeNodes.nodes.types.Three.WebGLRenderer = (function() {
     __extends(WebGLRenderer, ThreeNodes.NodeBase);

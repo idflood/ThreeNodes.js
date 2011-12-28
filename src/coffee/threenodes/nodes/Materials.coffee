@@ -68,6 +68,7 @@ define [
           "wireframeLinecap": 1
           "vertexColors": false
           "skinning": false
+          "fog": true
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
@@ -101,6 +102,7 @@ define [
           "wireframe": false
           "vertexColors": {type: "Any", val: false}
           "skinning": false
+          "fog": true
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
@@ -123,6 +125,7 @@ define [
           "wireframe": false
           "vertexColors": {type: "Any", val: false}
           "skinning": false
+          "fog": true
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]

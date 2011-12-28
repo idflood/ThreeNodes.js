@@ -65,6 +65,7 @@ define [
     set_fields: =>
       super
       @ob = new THREE.Scene()
+      @v_fog = @rack.addField("fog", {type: 'Any', val: null})
       current_scene = @ob
   
     apply_children: =>
@@ -279,7 +280,42 @@ define [
           @cached = @ob
           
       @rack.set("out", @ob)
-      
+  
+  class ThreeNodes.nodes.types.Three.Fog extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @ob = false
+      @rack.addFields
+        inputs:
+          "color": {type: "Color", val: new THREE.Color(0xffffff)}
+          "near": 1
+          "far": 1000
+        outputs:
+          "out": {type: "Any", val: @ob}
+  
+    compute: =>
+      if @ob == false
+        @ob = new THREE.Fog(0xffffff, 1, 1000)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.Three.FogExp2 extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @ob = false
+      @rack.addFields
+        inputs:
+          "color": {type: "Color", val: new THREE.Color(0xffffff)}
+          "density": 0.00025
+        outputs:
+          "out": {type: "Any", val: @ob}
+  
+    compute: =>
+      if @ob == false
+        @ob = new THREE.FogExp2(0xffffff, 0.00025)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.set("out", @ob)
+  
   class ThreeNodes.nodes.types.Three.WebGLRenderer extends ThreeNodes.NodeBase
     set_fields: =>
       super
