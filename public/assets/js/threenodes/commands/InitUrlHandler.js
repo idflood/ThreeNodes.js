@@ -30,7 +30,6 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
         return setTimeout(func, ms);
       };
       init_url = function() {
-        console.log("yes");
         return $(window).trigger('hashchange');
       };
       return delay(500, function() {

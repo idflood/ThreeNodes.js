@@ -96,7 +96,9 @@ define [
       layout = _view_node_field_in
       if @is_output
         layout = _view_node_field_out
-      $.tmpl(layout, this)
+      el = $.tmpl(layout, this)
+      el.data("object", this)
+      el
       
     compute_value : (val) =>
       val

@@ -139,12 +139,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return false;
     };
     NodeField.prototype.render_button = function() {
-      var layout;
+      var el, layout;
       layout = _view_node_field_in;
       if (this.is_output) {
         layout = _view_node_field_out;
       }
-      return $.tmpl(layout, this);
+      el = $.tmpl(layout, this);
+      el.data("object", this);
+      return el;
     };
     NodeField.prototype.compute_value = function(val) {
       return val;

@@ -83,9 +83,9 @@ define [
     
     toXML: () ->
       "\t\t<connection id='#{@cid}' from='#{@from_field.fid}' to='#{@to_field.fid}'/>\n"
-  
+    
     get_field_position: (field) ->
-      o1 = $("#fid-#{field.fid} a span").offset()
+      o1 = $("#fid-#{field.fid} .inner-field span").offset()
       diff = 3
       o1.top += diff
       o1.left += diff

@@ -11,7 +11,6 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  
   ThreeNodes.field_click_1 = false
   ThreeNodes.selected_nodes = $([])
   ThreeNodes.nodes_offset =
@@ -79,11 +78,9 @@ define [
     
     init_context_menu: () =>
       self = this
-      $(".field a", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
+      $(".field .inner-field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
         if action == "remove_connection"
-          f_name = $(el).attr("id")
-          f_type = $(el).parent().attr("class")
-          field = self.rack.node_fields[f_type][f_name]
+          field = $(el).parent().data("object")
           field.remove_connections()
     
     create_cache_object: (values) =>
@@ -187,16 +184,70 @@ define [
     
     add_field_listener: ($field) =>
       self = this
-      f_name = $field.attr("id")
-      f_type = $field.parent().attr("class")
-      field = @rack.node_fields[f_type][f_name]
-      $("a", $field).click (e) ->
-        e.preventDefault()
-        if e.shiftKey == true
-          field.remove_connections()
-        else
-          self.create_field_connection(field)
-      this
+      field = $field.data("object")
+      get_path = (start, end, offset) ->
+        "M#{start.left + offset.left + 2} #{start.top + offset.top + 2} L#{end.left + offset.left} #{end.top + offset.top}"
+      
+      highlight_possible_targets = () ->
+        target = ".outputs .field"
+        if field.is_output == true
+          target = ".inputs .field"
+        $(target).filter () ->
+          $(this).parent().parent().parent().attr("id") != "nid-#{self.nid}"
+        .addClass "field-possible-target"
+      
+      $(".inner-field", $field).draggable
+        helper: () ->
+          $("<div class='ui-widget-drag-helper'></div>")
+        scroll: true
+        axis: true
+        containment: "document"
+        cursor: 'pointer'
+        cursorAt:
+          left: 0
+          top: 0
+        start: (event, ui) ->
+          highlight_possible_targets()
+          if ThreeNodes.svg_connecting_line
+            ThreeNodes.svg_connecting_line.attr
+              opacity: 1
+        stop: (event, ui) ->
+          $(".field").removeClass "field-possible-target"
+          if ThreeNodes.svg_connecting_line
+            ThreeNodes.svg_connecting_line.attr
+              opacity: 0
+        drag: (event, ui) ->
+          if ThreeNodes.svg_connecting_line
+            # check that left button is pressed
+            # this doesn't work in firefox, event.originalEvent.which == 1 even if button is not pressed
+            if event.originalEvent.which == 1
+              pos = $("span", event.target).position()
+              ThreeNodes.svg_connecting_line.attr
+                path: get_path(pos, ui.position, self.main_view.position())
+            else
+              ThreeNodes.svg_connecting_line.attr
+                opacity: 0
+              draggable = $(this).data("draggable")
+              # hack to make click and then click drag to work
+              delay = (ms, func) -> setTimeout func, ms
+              delay 1, ->
+                draggable.cancel()
+                $("#graph").mouseup()
+              
+      accept_class = ".outputs .inner-field"
+      if field.is_output == true
+        accept_class = ".inputs .inner-field"
+      
+      $(".inner-field", $field).droppable
+        accept: accept_class
+        activeClass: "ui-state-active"
+        hoverClass: "ui-state-hover"
+        drop: (event, ui) ->
+          origin = $(ui.draggable).parent()
+          field2 = origin.data("object")
+          self.context.injector.instanciate(ThreeNodes.NodeConnection, field, field2)
+      
+      return this
       
     add_out_connection: (c, field) =>
       if @out_connections.indexOf(c) == -1
@@ -238,6 +289,7 @@ define [
         top: @y
       
       apptimeline = self.context.injector.get "AppTimeline"
+      
       
       @main_view.draggable
         start: (ev, ui) ->

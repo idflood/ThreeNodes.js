@@ -26,6 +26,5 @@ define [
         
       delay = (ms, func) -> setTimeout func, ms
       init_url = () ->
-        console.log "yes"
         $(window).trigger( 'hashchange' )
       delay 500, -> init_url()

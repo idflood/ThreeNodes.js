@@ -118,14 +118,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.init_context_menu = function() {
       var self;
       self = this;
-      return $(".field a", this.main_view).contextMenu({
+      return $(".field .inner-field", this.main_view).contextMenu({
         menu: "field-context-menu"
       }, function(action, el, pos) {
-        var f_name, f_type, field;
+        var field;
         if (action === "remove_connection") {
-          f_name = $(el).attr("id");
-          f_type = $(el).parent().attr("class");
-          field = self.rack.node_fields[f_type][f_name];
+          field = $(el).parent().data("object");
           return field.remove_connections();
         }
       });
@@ -268,17 +266,87 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return _results;
     };
     NodeBase.prototype.add_field_listener = function($field) {
-      var f_name, f_type, field, self;
+      var accept_class, field, get_path, highlight_possible_targets, self;
       self = this;
-      f_name = $field.attr("id");
-      f_type = $field.parent().attr("class");
-      field = this.rack.node_fields[f_type][f_name];
-      $("a", $field).click(function(e) {
-        e.preventDefault();
-        if (e.shiftKey === true) {
-          return field.remove_connections();
-        } else {
-          return self.create_field_connection(field);
+      field = $field.data("object");
+      get_path = function(start, end, offset) {
+        return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left) + " " + (end.top + offset.top);
+      };
+      highlight_possible_targets = function() {
+        var target;
+        target = ".outputs .field";
+        if (field.is_output === true) {
+          target = ".inputs .field";
+        }
+        return $(target).filter(function() {
+          return $(this).parent().parent().parent().attr("id") !== ("nid-" + self.nid);
+        }).addClass("field-possible-target");
+      };
+      $(".inner-field", $field).draggable({
+        helper: function() {
+          return $("<div class='ui-widget-drag-helper'></div>");
+        },
+        scroll: true,
+        axis: true,
+        containment: "document",
+        cursor: 'pointer',
+        cursorAt: {
+          left: 0,
+          top: 0
+        },
+        start: function(event, ui) {
+          highlight_possible_targets();
+          if (ThreeNodes.svg_connecting_line) {
+            return ThreeNodes.svg_connecting_line.attr({
+              opacity: 1
+            });
+          }
+        },
+        stop: function(event, ui) {
+          $(".field").removeClass("field-possible-target");
+          if (ThreeNodes.svg_connecting_line) {
+            return ThreeNodes.svg_connecting_line.attr({
+              opacity: 0
+            });
+          }
+        },
+        drag: function(event, ui) {
+          var delay, draggable, pos;
+          if (ThreeNodes.svg_connecting_line) {
+            if (event.originalEvent.which === 1) {
+              pos = $("span", event.target).position();
+              return ThreeNodes.svg_connecting_line.attr({
+                path: get_path(pos, ui.position, self.main_view.position())
+              });
+            } else {
+              ThreeNodes.svg_connecting_line.attr({
+                opacity: 0
+              });
+              draggable = $(this).data("draggable");
+              delay = function(ms, func) {
+                return setTimeout(func, ms);
+              };
+              return delay(1, function() {
+                draggable.cancel();
+                return $("#graph").mouseup();
+              });
+            }
+          }
+        }
+      });
+      accept_class = ".outputs .inner-field";
+      if (field.is_output === true) {
+        accept_class = ".inputs .inner-field";
+      }
+      $(".inner-field", $field).droppable({
+        accept: accept_class,
+        activeClass: "ui-state-active",
+        hoverClass: "ui-state-hover",
+        drop: function(event, ui) {
+          var field2, origin;
+          origin = $(ui.draggable).parent();
+          field2 = origin.data("object");
+          return self.context.injector.instanciate(ThreeNodes.NodeConnection, field, field2);
         }
       });
       return this;

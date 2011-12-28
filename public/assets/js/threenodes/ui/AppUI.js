@@ -16,6 +16,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
+      ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
+        stroke: "#fff",
+        'stroke-dasharray': ".",
+        fill: "none",
+        opacity: 0
+      });
     }
     AppUI.prototype.onRegister = function() {
       var injector, is_from_target;

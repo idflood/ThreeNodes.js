@@ -27,19 +27,30 @@ $c: 100
     +clearfix
     width: 100%
   
-  .field a span
+  .inner-field
+    background: transparent
+    cursor: pointer
     display: inline-block
-    width: $field-button-size
-    height: $field-button-size
-    background: #555
-    +border-radius($field-button-size)
   
-  .field a:hover
-    color: #fff
     span
-      background: #fff
+      display: inline-block
+      width: $field-button-size
+      height: $field-button-size
+      background: #555
+      +border-radius($field-button-size)
   
-  .field.field-possible-target a
+    &:hover
+      color: #fff
+      span
+        background: #fff
+  
+  .field-possible-target .inner-field, .inner-field.ui-state-hover
+    color: #aaa
+    span
+      background: #ccc
+  
+  .inner-field.ui-state-hover
+    color: $main_color
     span
       background: $main_color
   
@@ -55,9 +66,9 @@ $c: 100
       width: 100%
       vertical-align: middle
   
-  .inputs a span
+  .inputs .inner-field span
     margin-right: $field-label-padding
-  .outputs a span
+  .outputs .inner-field span
     margin-left: $field-label-padding
 
 // utility classes

@@ -21,6 +21,11 @@ define [
       _.extend(@, Backbone.Events)
       @svg = Raphael("graph", 4000, 4000)
       ThreeNodes.svg = @svg
+      ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
+        stroke: "#fff"
+        'stroke-dasharray': "."
+        fill: "none"
+        opacity: 0
     
     onRegister: () =>
       injector = @context.injector
