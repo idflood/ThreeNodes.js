@@ -547,9 +547,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.old_bg = false;
       this.apply_bg_color();
       self = this;
-      return this.webgl_container.click(function(e) {
-        return self.create_popup_view();
-      });
+      if (this.context.player_mode === false) {
+        return this.webgl_container.click(function(e) {
+          return self.create_popup_view();
+        });
+      }
     };
     WebGLRenderer.prototype.create_popup_view = function() {
       this.preview_mode = false;
@@ -598,7 +600,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       h = this.rack.get('height').get();
       dw = w;
       dh = h;
-      if (this.win === false) {
+      if (this.win === false && this.context.player_mode === false) {
         maxw = 220;
         r = w / h;
         dw = maxw;

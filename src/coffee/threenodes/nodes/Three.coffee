@@ -348,8 +348,9 @@ define [
       @old_bg = false
       @apply_bg_color()
       self = this
-      @webgl_container.click (e) ->
-        self.create_popup_view()
+      if @context.player_mode == false
+        @webgl_container.click (e) ->
+          self.create_popup_view()
     
     create_popup_view: ->
       @preview_mode = false
@@ -390,7 +391,7 @@ define [
       h = @rack.get('height').get()
       dw = w
       dh = h
-      if @win == false
+      if @win == false && @context.player_mode == false
         maxw = 220
         r = w / h
         dw = maxw

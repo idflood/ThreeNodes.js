@@ -88,11 +88,15 @@ define [
       @socket = @injector.get "AppWebsocket"
       @webgl = @injector.get "ThreeNodes.WebglBase"
       
+      urlOpts = $.deparam.querystring()
+      @player_mode = urlOpts.player == "true"
+      if @player_mode == true
+        $("body").addClass "player-mode"
       if @testing_mode == false
         @init_ui()
       else
         @timeline = @injector.get "AppTimeline"
-        @context.commandMap.execute "InitUrlHandler"
+        @commandMap.execute "InitUrlHandler"
     
     init_ui: () =>
       @ui = @injector.get "AppUI"

@@ -224,7 +224,7 @@ define [
             return true
               
       accept_class = ".outputs .inner-field"
-      if field.is_output == true
+      if field && field.is_output == true
         accept_class = ".inputs .inner-field"
       
       $(".inner-field", $field).droppable
@@ -268,18 +268,13 @@ define [
           @disable_property_anim(field)
       return res
     
-    init: () =>
-      self = this
+    init_main_view: () =>
       @main_view = $.tmpl(_view_node_template, this)
       @main_view.data("object", this)
       @container.append(@main_view)
       @main_view.css
         left: @x
         top: @y
-      
-      apptimeline = self.context.injector.get "AppTimeline"
-      
-      
       @main_view.draggable
         start: (ev, ui) ->
           if $(this).hasClass("ui-selected")
@@ -357,7 +352,14 @@ define [
             apply_input_result()
       #  $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
       #    self.render_connections()
-  
+    
+    init: () =>
+      self = this
+      if @context.player_mode == false
+        @init_main_view()
+      
+      apptimeline = self.context.injector.get "AppTimeline"
+    
     compute_node_position: () =>
       pos = @main_view.position()
       @x = pos.left

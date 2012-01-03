@@ -19,23 +19,26 @@ define [
   class ThreeNodes.AppUI
     constructor: () ->
       _.extend(@, Backbone.Events)
-      @svg = Raphael("graph", 4000, 4000)
-      ThreeNodes.svg = @svg
-      ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
-        stroke: "#fff"
-        'stroke-dasharray': "-"
-        fill: "none"
-        opacity: 0
     
     onRegister: () =>
       injector = @context.injector
+      @player_mode = @context.player_mode
       
       injector.mapSingleton "ThreeNodes.AppSidebar", ThreeNodes.AppSidebar
       injector.mapSingleton "ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar
+      
       @webgl = injector.get "ThreeNodes.WebglBase"
-      @sidebar = injector.get "ThreeNodes.AppSidebar"
-      @menubar = injector.get "ThreeNodes.AppMenuBar"
-      @timeline = injector.get "AppTimeline"
+      if @context.player_mode == false
+        @svg = Raphael("graph", 4000, 4000)
+        ThreeNodes.svg = @svg
+        ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
+          stroke: "#fff"
+          'stroke-dasharray': "-"
+          fill: "none"
+          opacity: 0
+        @sidebar = injector.get "ThreeNodes.AppSidebar"
+        @menubar = injector.get "ThreeNodes.AppMenuBar"
+        @timeline = injector.get "AppTimeline"
       
       @add_window_resize_handler()
       @init_context_menus()
@@ -126,7 +129,8 @@ define [
       $("#sidebar-toggle").delay(delay_intro).fadeIn(0)
       
     render: () =>
-      @timeline.update()
+      if @timeline
+        @timeline.update()
       @trigger("render")
     
     on_ui_window_resize: () =>

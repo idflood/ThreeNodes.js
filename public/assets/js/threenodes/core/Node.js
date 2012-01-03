@@ -21,6 +21,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.inJSON = inJSON != null ? inJSON : false;
       this.compute_node_position = __bind(this.compute_node_position, this);
       this.init = __bind(this.init, this);
+      this.init_main_view = __bind(this.init_main_view, this);
       this.createAnimContainer = __bind(this.createAnimContainer, this);
       this.enable_property_anim = __bind(this.enable_property_anim, this);
       this.disable_property_anim = __bind(this.disable_property_anim, this);
@@ -320,7 +321,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
       accept_class = ".outputs .inner-field";
-      if (field.is_output === true) {
+      if (field && field.is_output === true) {
         accept_class = ".inputs .inner-field";
       }
       $(".inner-field", $field).droppable({
@@ -374,9 +375,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return res;
     };
-    NodeBase.prototype.init = function() {
-      var apptimeline, self;
-      self = this;
+    NodeBase.prototype.init_main_view = function() {
       this.main_view = $.tmpl(_view_node_template, this);
       this.main_view.data("object", this);
       this.container.append(this.main_view);
@@ -384,7 +383,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         left: this.x,
         top: this.y
       });
-      apptimeline = self.context.injector.get("AppTimeline");
       this.main_view.draggable({
         start: function(ev, ui) {
           if ($(this).hasClass("ui-selected")) {
@@ -479,6 +477,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         });
       });
+    };
+    NodeBase.prototype.init = function() {
+      var apptimeline, self;
+      self = this;
+      if (this.context.player_mode === false) {
+        this.init_main_view();
+      }
+      return apptimeline = self.context.injector.get("AppTimeline");
     };
     NodeBase.prototype.compute_node_position = function() {
       var pos;

@@ -31,6 +31,7 @@ ThreeNodes.flash_sound_value = {
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/ui/AppTimeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/AddConnectionCommand', 'order!threenodes/commands/RemoveConnectionCommand', 'order!threenodes/commands/CreateNodeCommand', 'order!threenodes/commands/SaveFileCommand', 'order!threenodes/commands/LoadLocalFileCommand', 'order!threenodes/commands/RebuildShadersCommand', 'order!threenodes/commands/RemoveSelectedNodesCommand', 'order!threenodes/commands/InitUrlHandler', "order!libs/jquery.ba-bbq.min"], function($, _, Backbone, NodeGraph, AppUI) {
   "use strict";  return ThreeNodes.App = (function() {
     function App(testing_mode) {
+      var urlOpts;
       this.testing_mode = testing_mode != null ? testing_mode : false;
       this.init_ui = __bind(this.init_ui, this);
       console.log("ThreeNodes app init...");
@@ -61,11 +62,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.nodegraph = this.injector.get("NodeGraph");
       this.socket = this.injector.get("AppWebsocket");
       this.webgl = this.injector.get("ThreeNodes.WebglBase");
+      urlOpts = $.deparam.querystring();
+      this.player_mode = urlOpts.player === "true";
+      if (this.player_mode === true) {
+        $("body").addClass("player-mode");
+      }
       if (this.testing_mode === false) {
         this.init_ui();
       } else {
         this.timeline = this.injector.get("AppTimeline");
-        this.context.commandMap.execute("InitUrlHandler");
+        this.commandMap.execute("InitUrlHandler");
       }
     }
     App.prototype.init_ui = function() {

@@ -14,24 +14,27 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.scrollTo = __bind(this.scrollTo, this);
       this.stropgrab = __bind(this.stropgrab, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
-      this.svg = Raphael("graph", 4000, 4000);
-      ThreeNodes.svg = this.svg;
-      ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
-        stroke: "#fff",
-        'stroke-dasharray': "-",
-        fill: "none",
-        opacity: 0
-      });
     }
     AppUI.prototype.onRegister = function() {
       var injector, is_from_target;
       injector = this.context.injector;
+      this.player_mode = this.context.player_mode;
       injector.mapSingleton("ThreeNodes.AppSidebar", ThreeNodes.AppSidebar);
       injector.mapSingleton("ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar);
       this.webgl = injector.get("ThreeNodes.WebglBase");
-      this.sidebar = injector.get("ThreeNodes.AppSidebar");
-      this.menubar = injector.get("ThreeNodes.AppMenuBar");
-      this.timeline = injector.get("AppTimeline");
+      if (this.context.player_mode === false) {
+        this.svg = Raphael("graph", 4000, 4000);
+        ThreeNodes.svg = this.svg;
+        ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
+          stroke: "#fff",
+          'stroke-dasharray': "-",
+          fill: "none",
+          opacity: 0
+        });
+        this.sidebar = injector.get("ThreeNodes.AppSidebar");
+        this.menubar = injector.get("ThreeNodes.AppMenuBar");
+        this.timeline = injector.get("AppTimeline");
+      }
       this.add_window_resize_handler();
       this.init_context_menus();
       this.show_application();
@@ -143,7 +146,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return $("#sidebar-toggle").delay(delay_intro).fadeIn(0);
     };
     AppUI.prototype.render = function() {
-      this.timeline.update();
+      if (this.timeline) {
+        this.timeline.update();
+      }
       return this.trigger("render");
     };
     AppUI.prototype.on_ui_window_resize = function() {
