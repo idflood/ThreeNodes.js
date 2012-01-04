@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/core/NodeField',
+  'order!threenodes/core/NodeFieldRackView',
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.NodeFieldRack
@@ -13,6 +14,9 @@ define [
       @node_fields_by_name = {}
       @node_fields_by_name.inputs = {}
       @node_fields_by_name.outputs = {}
+    
+    onRegister: () ->
+      @view = @context.injector.instanciate(ThreeNodes.NodeFieldRackView, {node: @node})
   
     get: (key, is_out = false) ->
       if is_out == true
@@ -137,7 +141,10 @@ define [
         @node_fields.outputs["fid-" + field.fid] = field
         @node_fields_by_name.outputs[field.name] = field
         $(".outputs", @node.main_view).append(field.render_button())
-      @node.add_field_listener($("#fid-#{field.fid}"))
+      
+      if @view
+        @view.add_field_listener($("#fid-#{field.fid}"))
+      
       field
     
     render_sidebar: () =>

@@ -39,7 +39,7 @@ define [
       @container = $("#container")
       
       @out_connections = []
-      @rack = new ThreeNodes.NodeFieldRack(this, @inXML)
+      @rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this, @inXML)
       @value = false
       @name = @typename()
       @main_view = false
@@ -70,6 +70,18 @@ define [
       @view.init_context_menu()
       
     typename: => String(@constructor.name)
+    
+    init: () =>
+      if @context.player_mode == false
+        @init_main_view()
+      
+      @apptimeline = @context.injector.get "AppTimeline"
+    
+    init_main_view: () =>
+      self = this
+      @main_view = $.tmpl(_view_node_template, this)
+      @main_view.data("object", this)
+      @container.append(@main_view)
     
     loadAnimation: () =>
       @anim = @createAnimContainer()
@@ -184,60 +196,6 @@ define [
       res = []
       for v in vals
         res[res.length] = @rack.get(v).get()
-    
-    add_field_listener: ($field) =>
-      self = this
-      field = $field.data("object")
-      get_path = (start, end, offset) ->
-        "M#{start.left + offset.left + 2} #{start.top + offset.top + 2} L#{end.left + offset.left} #{end.top + offset.top}"
-      
-      highlight_possible_targets = () ->
-        target = ".outputs .field"
-        if field.is_output == true
-          target = ".inputs .field"
-        $(target).filter () ->
-          $(this).parent().parent().parent().attr("id") != "nid-#{self.nid}"
-        .addClass "field-possible-target"
-      
-      $(".inner-field", $field).draggable
-        helper: () ->
-          $("<div class='ui-widget-drag-helper'></div>")
-        scroll: true
-        cursor: 'pointer'
-        cursorAt:
-          left: 0
-          top: 0
-        start: (event, ui) ->
-          highlight_possible_targets()
-          if ThreeNodes.svg_connecting_line
-            ThreeNodes.svg_connecting_line.attr
-              opacity: 1
-        stop: (event, ui) ->
-          $(".field").removeClass "field-possible-target"
-          if ThreeNodes.svg_connecting_line
-            ThreeNodes.svg_connecting_line.attr
-              opacity: 0
-        drag: (event, ui) ->
-          if ThreeNodes.svg_connecting_line
-            pos = $("span", event.target).position()
-            ThreeNodes.svg_connecting_line.attr
-              path: get_path(pos, ui.position, self.main_view.position())
-            return true
-              
-      accept_class = ".outputs .inner-field"
-      if field && field.is_output == true
-        accept_class = ".inputs .inner-field"
-      
-      $(".inner-field", $field).droppable
-        accept: accept_class
-        activeClass: "ui-state-active"
-        hoverClass: "ui-state-hover"
-        drop: (event, ui) ->
-          origin = $(ui.draggable).parent()
-          field2 = origin.data("object")
-          self.context.injector.instanciate(ThreeNodes.NodeConnection, field, field2)
-      
-      return this
       
     add_out_connection: (c, field) =>
       if @out_connections.indexOf(c) == -1
@@ -268,19 +226,6 @@ define [
         if field.is_animation_property() == false
           @disable_property_anim(field)
       return res
-    
-    init_main_view: () =>
-      self = this
-      @main_view = $.tmpl(_view_node_template, this)
-      @main_view.data("object", this)
-      @container.append(@main_view)
-    
-    init: () =>
-      self = this
-      if @context.player_mode == false
-        @init_main_view()
-      
-      @apptimeline = self.context.injector.get "AppTimeline"
   
   class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
     init: =>

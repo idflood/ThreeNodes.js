@@ -19,14 +19,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.y = y != null ? y : 0;
       this.inXML = inXML != null ? inXML : false;
       this.inJSON = inJSON != null ? inJSON : false;
-      this.init = __bind(this.init, this);
-      this.init_main_view = __bind(this.init_main_view, this);
       this.createAnimContainer = __bind(this.createAnimContainer, this);
       this.enable_property_anim = __bind(this.enable_property_anim, this);
       this.disable_property_anim = __bind(this.disable_property_anim, this);
       this.remove_connection = __bind(this.remove_connection, this);
       this.add_out_connection = __bind(this.add_out_connection, this);
-      this.add_field_listener = __bind(this.add_field_listener, this);
       this.get_cached_array = __bind(this.get_cached_array, this);
       this.create_field_connection = __bind(this.create_field_connection, this);
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
@@ -44,6 +41,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.create_cache_object = __bind(this.create_cache_object, this);
       this.add_count_input = __bind(this.add_count_input, this);
       this.loadAnimation = __bind(this.loadAnimation, this);
+      this.init_main_view = __bind(this.init_main_view, this);
+      this.init = __bind(this.init, this);
       this.typename = __bind(this.typename, this);
       this.auto_evaluate = false;
       this.delays_output = false;
@@ -63,7 +62,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.onRegister = function() {
       this.container = $("#container");
       this.out_connections = [];
-      this.rack = new ThreeNodes.NodeFieldRack(this, this.inXML);
+      this.rack = this.context.injector.instanciate(ThreeNodes.NodeFieldRack, this, this.inXML);
       this.value = false;
       this.name = this.typename();
       this.main_view = false;
@@ -94,6 +93,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
+    };
+    NodeBase.prototype.init = function() {
+      if (this.context.player_mode === false) {
+        this.init_main_view();
+      }
+      return this.apptimeline = this.context.injector.get("AppTimeline");
+    };
+    NodeBase.prototype.init_main_view = function() {
+      var self;
+      self = this;
+      this.main_view = $.tmpl(_view_node_template, this);
+      this.main_view.data("object", this);
+      return this.container.append(this.main_view);
     };
     NodeBase.prototype.loadAnimation = function() {
       var anims, propKey, propLabel, track, _i, _len, _ref;
@@ -256,77 +268,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return _results;
     };
-    NodeBase.prototype.add_field_listener = function($field) {
-      var accept_class, field, get_path, highlight_possible_targets, self;
-      self = this;
-      field = $field.data("object");
-      get_path = function(start, end, offset) {
-        return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left) + " " + (end.top + offset.top);
-      };
-      highlight_possible_targets = function() {
-        var target;
-        target = ".outputs .field";
-        if (field.is_output === true) {
-          target = ".inputs .field";
-        }
-        return $(target).filter(function() {
-          return $(this).parent().parent().parent().attr("id") !== ("nid-" + self.nid);
-        }).addClass("field-possible-target");
-      };
-      $(".inner-field", $field).draggable({
-        helper: function() {
-          return $("<div class='ui-widget-drag-helper'></div>");
-        },
-        scroll: true,
-        cursor: 'pointer',
-        cursorAt: {
-          left: 0,
-          top: 0
-        },
-        start: function(event, ui) {
-          highlight_possible_targets();
-          if (ThreeNodes.svg_connecting_line) {
-            return ThreeNodes.svg_connecting_line.attr({
-              opacity: 1
-            });
-          }
-        },
-        stop: function(event, ui) {
-          $(".field").removeClass("field-possible-target");
-          if (ThreeNodes.svg_connecting_line) {
-            return ThreeNodes.svg_connecting_line.attr({
-              opacity: 0
-            });
-          }
-        },
-        drag: function(event, ui) {
-          var pos;
-          if (ThreeNodes.svg_connecting_line) {
-            pos = $("span", event.target).position();
-            ThreeNodes.svg_connecting_line.attr({
-              path: get_path(pos, ui.position, self.main_view.position())
-            });
-            return true;
-          }
-        }
-      });
-      accept_class = ".outputs .inner-field";
-      if (field && field.is_output === true) {
-        accept_class = ".inputs .inner-field";
-      }
-      $(".inner-field", $field).droppable({
-        accept: accept_class,
-        activeClass: "ui-state-active",
-        hoverClass: "ui-state-hover",
-        drop: function(event, ui) {
-          var field2, origin;
-          origin = $(ui.draggable).parent();
-          field2 = origin.data("object");
-          return self.context.injector.instanciate(ThreeNodes.NodeConnection, field, field2);
-        }
-      });
-      return this;
-    };
     NodeBase.prototype.add_out_connection = function(c, field) {
       if (this.out_connections.indexOf(c) === -1) {
         this.out_connections.push(c);
@@ -364,21 +305,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       }
       return res;
-    };
-    NodeBase.prototype.init_main_view = function() {
-      var self;
-      self = this;
-      this.main_view = $.tmpl(_view_node_template, this);
-      this.main_view.data("object", this);
-      return this.container.append(this.main_view);
-    };
-    NodeBase.prototype.init = function() {
-      var self;
-      self = this;
-      if (this.context.player_mode === false) {
-        this.init_main_view();
-      }
-      return this.apptimeline = self.context.injector.get("AppTimeline");
     };
     return NodeBase;
   })();

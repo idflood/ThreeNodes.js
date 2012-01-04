@@ -106,7 +106,7 @@ define [
         stop: () ->
           ThreeNodes.selected_nodes.not(this).each () ->
             el = $(this).data("object")
-            el.render_connections()
+            el.view.render_connections()
           self.compute_node_position()
           self.render_connections()
   

@@ -122,7 +122,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           ThreeNodes.selected_nodes.not(this).each(function() {
             var el;
             el = $(this).data("object");
-            return el.render_connections();
+            return el.view.render_connections();
           });
           self.compute_node_position();
           return self.render_connections();
