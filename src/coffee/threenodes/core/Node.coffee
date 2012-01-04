@@ -42,20 +42,13 @@ define [
       @rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this, @inXML)
       @value = false
       @name = @typename()
+      @apptimeline = @context.injector.get "AppTimeline"
       @main_view = false
       if @inJSON && @inJSON.name && @inJSON.name != false
         @name = @inJSON.name
       
-      @init()
-      @view = new ThreeNodes.NodeView
-        el: @main_view
-        x: @x
-        y: @y
-        name: @name
-        rack: @rack
-        apptimeline: @apptimeline
-        
-      @context.injector.applyContext @view
+      if @context.player_mode == false
+        @init_main_view()
       
       @set_fields()
       @anim = @createAnimContainer()
@@ -66,16 +59,21 @@ define [
         if @inJSON.anim != false
           @loadAnimation()
       
-      # add field context menu after they have been created
-      @view.init_context_menu()
-      
-    typename: => String(@constructor.name)
+      if @main_view != false
+        @view = new ThreeNodes.NodeView
+          el: @main_view
+          x: @x
+          y: @y
+          name: @name
+          rack: @rack
+          apptimeline: @apptimeline
+          
+        @context.injector.applyContext @view
+        # add field context menu after they have been created
+        @view.init_context_menu()
+      return true
     
-    init: () =>
-      if @context.player_mode == false
-        @init_main_view()
-      
-      @apptimeline = @context.injector.get "AppTimeline"
+    typename: => String(@constructor.name)
     
     init_main_view: () =>
       self = this

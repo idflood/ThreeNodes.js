@@ -11,10 +11,9 @@ define [
   "use strict"
   ThreeNodes.NodeView = Backbone.View.extend
     initialize: () ->
-      console.log "view init"
+      return true
+    
     onRegister: () ->
-      console.log "view registered"
-      #@init_context_menu()
       $(@el).css
         left: @options.x
         top: @options.y

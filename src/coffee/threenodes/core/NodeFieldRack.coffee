@@ -14,9 +14,12 @@ define [
       @node_fields_by_name = {}
       @node_fields_by_name.inputs = {}
       @node_fields_by_name.outputs = {}
+      @view = false
     
     onRegister: () ->
-      @view = @context.injector.instanciate(ThreeNodes.NodeFieldRackView, {node: @node})
+      if @context.player_mode == false
+        @view = @context.injector.instanciate(ThreeNodes.NodeFieldRackView, {node: @node})
+      return true
   
     get: (key, is_out = false) ->
       if is_out == true
@@ -142,7 +145,7 @@ define [
         @node_fields_by_name.outputs[field.name] = field
         $(".outputs", @node.main_view).append(field.render_button())
       
-      if @view
+      if @view != false
         @view.add_field_listener($("#fid-#{field.fid}"))
       
       field

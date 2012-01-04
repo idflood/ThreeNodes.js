@@ -24,11 +24,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       this.node_fields_by_name = {};
       this.node_fields_by_name.inputs = {};
       this.node_fields_by_name.outputs = {};
+      this.view = false;
     }
     NodeFieldRack.prototype.onRegister = function() {
-      return this.view = this.context.injector.instanciate(ThreeNodes.NodeFieldRackView, {
-        node: this.node
-      });
+      if (this.context.player_mode === false) {
+        this.view = this.context.injector.instanciate(ThreeNodes.NodeFieldRackView, {
+          node: this.node
+        });
+      }
+      return true;
     };
     NodeFieldRack.prototype.get = function(key, is_out) {
       if (is_out == null) {
@@ -212,7 +216,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
         this.node_fields_by_name.outputs[field.name] = field;
         $(".outputs", this.node.main_view).append(field.render_button());
       }
-      if (this.view) {
+      if (this.view !== false) {
         this.view.add_field_listener($("#fid-" + field.fid));
       }
       return field;

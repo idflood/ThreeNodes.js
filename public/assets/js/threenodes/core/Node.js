@@ -42,7 +42,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.add_count_input = __bind(this.add_count_input, this);
       this.loadAnimation = __bind(this.loadAnimation, this);
       this.init_main_view = __bind(this.init_main_view, this);
-      this.init = __bind(this.init, this);
       this.typename = __bind(this.typename, this);
       this.auto_evaluate = false;
       this.delays_output = false;
@@ -65,20 +64,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack = this.context.injector.instanciate(ThreeNodes.NodeFieldRack, this, this.inXML);
       this.value = false;
       this.name = this.typename();
+      this.apptimeline = this.context.injector.get("AppTimeline");
       this.main_view = false;
       if (this.inJSON && this.inJSON.name && this.inJSON.name !== false) {
         this.name = this.inJSON.name;
       }
-      this.init();
-      this.view = new ThreeNodes.NodeView({
-        el: this.main_view,
-        x: this.x,
-        y: this.y,
-        name: this.name,
-        rack: this.rack,
-        apptimeline: this.apptimeline
-      });
-      this.context.injector.applyContext(this.view);
+      if (this.context.player_mode === false) {
+        this.init_main_view();
+      }
       this.set_fields();
       this.anim = this.createAnimContainer();
       if (this.inXML) {
@@ -89,16 +82,22 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           this.loadAnimation();
         }
       }
-      return this.view.init_context_menu();
+      if (this.main_view !== false) {
+        this.view = new ThreeNodes.NodeView({
+          el: this.main_view,
+          x: this.x,
+          y: this.y,
+          name: this.name,
+          rack: this.rack,
+          apptimeline: this.apptimeline
+        });
+        this.context.injector.applyContext(this.view);
+        this.view.init_context_menu();
+      }
+      return true;
     };
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
-    };
-    NodeBase.prototype.init = function() {
-      if (this.context.player_mode === false) {
-        this.init_main_view();
-      }
-      return this.apptimeline = this.context.injector.get("AppTimeline");
     };
     NodeBase.prototype.init_main_view = function() {
       var self;

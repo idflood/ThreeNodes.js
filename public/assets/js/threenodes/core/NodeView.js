@@ -2,10 +2,9 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   "use strict";  ThreeNodes.NodeView = Backbone.View.extend({
     initialize: function() {
-      return console.log("view init");
+      return true;
     },
     onRegister: function() {
-      console.log("view registered");
       $(this.el).css({
         left: this.options.x,
         top: this.options.y
