@@ -8,6 +8,7 @@ define [
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/core/NodeConnection',
+  'order!threenodes/core/NodeView',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
@@ -36,6 +37,7 @@ define [
     
     onRegister: () ->
       @container = $("#container")
+      
       @out_connections = []
       @rack = new ThreeNodes.NodeFieldRack(this, @inXML)
       @value = false
@@ -45,6 +47,16 @@ define [
         @name = @inJSON.name
       
       @init()
+      @view = new ThreeNodes.NodeView
+        el: @main_view
+        x: @x
+        y: @y
+        name: @name
+        rack: @rack
+        apptimeline: @apptimeline
+        
+      @context.injector.applyContext @view
+      
       @set_fields()
       @anim = @createAnimContainer()
       if @inXML
@@ -53,8 +65,9 @@ define [
         @rack.fromJSON(@inJSON)
         if @inJSON.anim != false
           @loadAnimation()
-          
-      @init_context_menu()
+      
+      # add field context menu after they have been created
+      @view.init_context_menu()
       
     typename: => String(@constructor.name)
     
@@ -75,13 +88,6 @@ define [
       @rack.addFields
         inputs:
           "count" : 1
-    
-    init_context_menu: () =>
-      self = this
-      $(".field", @main_view).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
-        if action == "remove_connection"
-          field = $(el).data("object")
-          field.remove_connections()
     
     create_cache_object: (values) =>
       res = {}
@@ -143,11 +149,11 @@ define [
     toJSON: () =>
       res =
         nid: @nid
-        name: @name
+        name: @view.options.name
         type: @typename()
         anim: @getAnimationData()
-        x: @x
-        y: @y
+        x: @view.options.x
+        y: @view.options.y
         fields: @rack.toJSON()
       res
     
@@ -173,9 +179,6 @@ define [
         c = @context.injector.instanciate(ThreeNodes.NodeConnection, ThreeNodes.field_click_1, field_click_2)
         $(".field").removeClass "field-possible-target"
         ThreeNodes.field_click_1 = false
-        
-    render_connections: () =>
-      @rack.render_connections()
     
     get_cached_array: (vals) =>
       res = []
@@ -200,8 +203,6 @@ define [
         helper: () ->
           $("<div class='ui-widget-drag-helper'></div>")
         scroll: true
-        #axis: true
-        #containment: "document"
         cursor: 'pointer'
         cursorAt:
           left: 0
@@ -269,102 +270,18 @@ define [
       return res
     
     init_main_view: () =>
+      self = this
       @main_view = $.tmpl(_view_node_template, this)
       @main_view.data("object", this)
       @container.append(@main_view)
-      @main_view.css
-        left: @x
-        top: @y
-      @main_view.draggable
-        start: (ev, ui) ->
-          if $(this).hasClass("ui-selected")
-            ThreeNodes.selected_nodes = $(".ui-selected").each () ->
-              $(this).data("offset", $(this).offset())
-          else
-            ThreeNodes.selected_nodes = $([])
-            $(".node").removeClass("ui-selected")
-          ThreeNodes.nodes_offset = $(this).offset()
-        drag: (ev, ui) ->
-          dt = ui.position.top - ThreeNodes.nodes_offset.top
-          dl = ui.position.left - ThreeNodes.nodes_offset.left
-          ThreeNodes.selected_nodes.not(this).each () ->
-            el = $(this)
-            offset = el.data("offset")
-            dx = offset.top + dt
-            dy = offset.left + dl
-            el.css
-              top: dx
-              left: dy
-            el.data("object").render_connections()
-            el.data("object").compute_node_position()
-          self.render_connections()
-        stop: () ->
-          ThreeNodes.selected_nodes.not(this).each () ->
-            el = $(this).data("object")
-            el.render_connections()
-          self.compute_node_position()
-          self.render_connections()
-      
-      $("#container").selectable
-        filter: ".node"
-        stop: (event, ui) =>
-          $selected = $(".node.ui-selected")
-          nodes = []
-          $selected.each () ->
-            nodes.push($(this).data("object").anim)
-          apptimeline.timeline.selectAnims(nodes)
-      
-      @main_view.click (e) ->
-        if e.metaKey == false
-          $( ".node" ).removeClass("ui-selected")
-          $(this).addClass("ui-selecting")
-        else
-          if $(this).hasClass("ui-selected")
-            $(this).removeClass("ui-selected")
-          else
-            $(this).addClass("ui-selecting")
-        selectable = $("#container").data("selectable")
-        selectable.refresh()
-        selectable._mouseStop(null)
-        self.rack.render_sidebar()
-      
-      $(".head span", @main_view).dblclick (e) ->
-        prev = $(this).html()
-        $(".head", self.main_view).append("<input type='text' />")
-        $(this).hide()
-        $input = $(".head input", self.main_view)
-        $input.val(prev)
-        
-        apply_input_result = () ->
-          $(".head span", self.main_view).html($input.val()).show()
-          self.name = $input.val()
-          $input.remove()
-        
-        $input.blur (e) ->
-          apply_input_result()
-        
-        $("#graph").click (e) ->
-          apply_input_result()
-        
-        $input.keydown (e) ->
-          # on enter
-          if e.keyCode == 13
-            apply_input_result()
-      #  $(".options", self.main_view).animate {height: 'toggle'}, 120, () ->
-      #    self.render_connections()
     
     init: () =>
       self = this
       if @context.player_mode == false
         @init_main_view()
       
-      apptimeline = self.context.injector.get "AppTimeline"
-    
-    compute_node_position: () =>
-      pos = @main_view.position()
-      @x = pos.left
-      @y = pos.top
-    
+      @apptimeline = self.context.injector.get "AppTimeline"
+  
   class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
     init: =>
       super

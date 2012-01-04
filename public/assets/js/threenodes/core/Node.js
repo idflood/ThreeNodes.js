@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeConnection', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeConnection', 'order!threenodes/core/NodeView', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   "use strict";  ThreeNodes.field_click_1 = false;
   ThreeNodes.selected_nodes = $([]);
   ThreeNodes.nodes_offset = {
@@ -19,7 +19,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.y = y != null ? y : 0;
       this.inXML = inXML != null ? inXML : false;
       this.inJSON = inJSON != null ? inJSON : false;
-      this.compute_node_position = __bind(this.compute_node_position, this);
       this.init = __bind(this.init, this);
       this.init_main_view = __bind(this.init_main_view, this);
       this.createAnimContainer = __bind(this.createAnimContainer, this);
@@ -29,7 +28,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.add_out_connection = __bind(this.add_out_connection, this);
       this.add_field_listener = __bind(this.add_field_listener, this);
       this.get_cached_array = __bind(this.get_cached_array, this);
-      this.render_connections = __bind(this.render_connections, this);
       this.create_field_connection = __bind(this.create_field_connection, this);
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
       this.toXML = __bind(this.toXML, this);
@@ -44,7 +42,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       this.input_value_has_changed = __bind(this.input_value_has_changed, this);
       this.create_cache_object = __bind(this.create_cache_object, this);
-      this.init_context_menu = __bind(this.init_context_menu, this);
       this.add_count_input = __bind(this.add_count_input, this);
       this.loadAnimation = __bind(this.loadAnimation, this);
       this.typename = __bind(this.typename, this);
@@ -74,6 +71,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.name = this.inJSON.name;
       }
       this.init();
+      this.view = new ThreeNodes.NodeView({
+        el: this.main_view,
+        x: this.x,
+        y: this.y,
+        name: this.name,
+        rack: this.rack,
+        apptimeline: this.apptimeline
+      });
+      this.context.injector.applyContext(this.view);
       this.set_fields();
       this.anim = this.createAnimContainer();
       if (this.inXML) {
@@ -84,7 +90,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           this.loadAnimation();
         }
       }
-      return this.init_context_menu();
+      return this.view.init_context_menu();
     };
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
@@ -113,19 +119,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.addFields({
         inputs: {
           "count": 1
-        }
-      });
-    };
-    NodeBase.prototype.init_context_menu = function() {
-      var self;
-      self = this;
-      return $(".field", this.main_view).contextMenu({
-        menu: "field-context-menu"
-      }, function(action, el, pos) {
-        var field;
-        if (action === "remove_connection") {
-          field = $(el).data("object");
-          return field.remove_connections();
         }
       });
     };
@@ -212,11 +205,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var res;
       res = {
         nid: this.nid,
-        name: this.name,
+        name: this.view.options.name,
         type: this.typename(),
         anim: this.getAnimationData(),
-        x: this.x,
-        y: this.y,
+        x: this.view.options.x,
+        y: this.view.options.y,
         fields: this.rack.toJSON()
       };
       return res;
@@ -252,9 +245,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         $(".field").removeClass("field-possible-target");
         return ThreeNodes.field_click_1 = false;
       }
-    };
-    NodeBase.prototype.render_connections = function() {
-      return this.rack.render_connections();
     };
     NodeBase.prototype.get_cached_array = function(vals) {
       var res, v, _i, _len, _results;
@@ -376,121 +366,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return res;
     };
     NodeBase.prototype.init_main_view = function() {
+      var self;
+      self = this;
       this.main_view = $.tmpl(_view_node_template, this);
       this.main_view.data("object", this);
-      this.container.append(this.main_view);
-      this.main_view.css({
-        left: this.x,
-        top: this.y
-      });
-      this.main_view.draggable({
-        start: function(ev, ui) {
-          if ($(this).hasClass("ui-selected")) {
-            ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
-              return $(this).data("offset", $(this).offset());
-            });
-          } else {
-            ThreeNodes.selected_nodes = $([]);
-            $(".node").removeClass("ui-selected");
-          }
-          return ThreeNodes.nodes_offset = $(this).offset();
-        },
-        drag: function(ev, ui) {
-          var dl, dt;
-          dt = ui.position.top - ThreeNodes.nodes_offset.top;
-          dl = ui.position.left - ThreeNodes.nodes_offset.left;
-          ThreeNodes.selected_nodes.not(this).each(function() {
-            var dx, dy, el, offset;
-            el = $(this);
-            offset = el.data("offset");
-            dx = offset.top + dt;
-            dy = offset.left + dl;
-            el.css({
-              top: dx,
-              left: dy
-            });
-            el.data("object").render_connections();
-            return el.data("object").compute_node_position();
-          });
-          return self.render_connections();
-        },
-        stop: function() {
-          ThreeNodes.selected_nodes.not(this).each(function() {
-            var el;
-            el = $(this).data("object");
-            return el.render_connections();
-          });
-          self.compute_node_position();
-          return self.render_connections();
-        }
-      });
-      $("#container").selectable({
-        filter: ".node",
-        stop: __bind(function(event, ui) {
-          var $selected, nodes;
-          $selected = $(".node.ui-selected");
-          nodes = [];
-          $selected.each(function() {
-            return nodes.push($(this).data("object").anim);
-          });
-          return apptimeline.timeline.selectAnims(nodes);
-        }, this)
-      });
-      this.main_view.click(function(e) {
-        var selectable;
-        if (e.metaKey === false) {
-          $(".node").removeClass("ui-selected");
-          $(this).addClass("ui-selecting");
-        } else {
-          if ($(this).hasClass("ui-selected")) {
-            $(this).removeClass("ui-selected");
-          } else {
-            $(this).addClass("ui-selecting");
-          }
-        }
-        selectable = $("#container").data("selectable");
-        selectable.refresh();
-        selectable._mouseStop(null);
-        return self.rack.render_sidebar();
-      });
-      return $(".head span", this.main_view).dblclick(function(e) {
-        var $input, apply_input_result, prev;
-        prev = $(this).html();
-        $(".head", self.main_view).append("<input type='text' />");
-        $(this).hide();
-        $input = $(".head input", self.main_view);
-        $input.val(prev);
-        apply_input_result = function() {
-          $(".head span", self.main_view).html($input.val()).show();
-          self.name = $input.val();
-          return $input.remove();
-        };
-        $input.blur(function(e) {
-          return apply_input_result();
-        });
-        $("#graph").click(function(e) {
-          return apply_input_result();
-        });
-        return $input.keydown(function(e) {
-          if (e.keyCode === 13) {
-            return apply_input_result();
-          }
-        });
-      });
+      return this.container.append(this.main_view);
     };
     NodeBase.prototype.init = function() {
-      var apptimeline, self;
+      var self;
       self = this;
       if (this.context.player_mode === false) {
         this.init_main_view();
       }
-      return apptimeline = self.context.injector.get("AppTimeline");
-    };
-    NodeBase.prototype.compute_node_position = function() {
-      var pos;
-      pos = this.main_view.position();
-      this.x = pos.left;
-      return this.y = pos.top;
+      return this.apptimeline = self.context.injector.get("AppTimeline");
     };
     return NodeBase;
   })();
