@@ -48,6 +48,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.dirty = true;
       this.anim_obj = {};
       this.is_animated = false;
+      this.view = false;
       if (this.inXML) {
         this.nid = parseInt(this.inXML.attr("nid"));
         ThreeNodes.uid = this.nid;
@@ -59,13 +60,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
     }
     NodeBase.prototype.onRegister = function() {
-      this.container = $("#container");
       this.out_connections = [];
-      this.rack = this.context.injector.instanciate(ThreeNodes.NodeFieldRack, this, this.inXML);
       this.value = false;
+      this.main_view = false;
+      this.container = $("#container");
       this.name = this.typename();
       this.apptimeline = this.context.injector.get("AppTimeline");
-      this.main_view = false;
+      this.rack = this.context.injector.instanciate(ThreeNodes.NodeFieldRack, this, this.inXML);
       if (this.inJSON && this.inJSON.name && this.inJSON.name !== false) {
         this.name = this.inJSON.name;
       }
@@ -82,16 +83,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           this.loadAnimation();
         }
       }
-      if (this.main_view !== false) {
-        this.view = new ThreeNodes.NodeView({
-          el: this.main_view,
-          x: this.x,
-          y: this.y,
-          name: this.name,
-          rack: this.rack,
-          apptimeline: this.apptimeline
-        });
-        this.context.injector.applyContext(this.view);
+      if (this.view !== false) {
         this.view.init_context_menu();
       }
       return true;
@@ -100,11 +92,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return String(this.constructor.name);
     };
     NodeBase.prototype.init_main_view = function() {
-      var self;
-      self = this;
       this.main_view = $.tmpl(_view_node_template, this);
       this.main_view.data("object", this);
-      return this.container.append(this.main_view);
+      this.container.append(this.main_view);
+      this.view = new ThreeNodes.NodeView({
+        el: this.main_view,
+        x: this.x,
+        y: this.y,
+        name: this.name,
+        rack: this.rack,
+        apptimeline: this.apptimeline
+      });
+      return this.context.injector.applyContext(this.view);
     };
     NodeBase.prototype.loadAnimation = function() {
       var anims, propKey, propLabel, track, _i, _len, _ref;

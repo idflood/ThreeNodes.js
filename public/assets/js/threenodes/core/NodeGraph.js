@@ -78,6 +78,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     };
     NodeGraph.prototype.renderAllConnections = function() {
       var c, _i, _len, _ref;
+      console.log("render all connections");
       _ref = this.node_connections;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         c = _ref[_i];

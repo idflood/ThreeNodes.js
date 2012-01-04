@@ -29,6 +29,7 @@ define [
       injector.mapSingleton "ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar
       
       @webgl = injector.get "ThreeNodes.WebglBase"
+      
       if @context.player_mode == false
         @svg = Raphael("graph", 4000, 4000)
         ThreeNodes.svg = @svg
@@ -43,9 +44,9 @@ define [
       
       @add_window_resize_handler()
       @init_context_menus()
-      @show_application()
       @init_bottom_toolbox()
       @animate()
+      @show_application()
       @is_grabbing = false
       
       @scroll_target = $("#container-wrapper")
@@ -124,10 +125,13 @@ define [
     
     show_application: () =>
       delay_intro = 500
-      $("body > header").delay(delay_intro).fadeOut(0)
-      $("#sidebar").delay(delay_intro).fadeIn(0)
-      $("#container-wrapper").delay(delay_intro).fadeIn(0)
-      $("#sidebar-toggle").delay(delay_intro).fadeIn(0)
+      $("body > header").delay(delay_intro).hide()
+      $("#sidebar").delay(delay_intro).show()
+      $("#container-wrapper").delay(delay_intro).show()
+      $("#sidebar-toggle").delay(delay_intro).show()
+      
+      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph.renderAllConnections()
       
     render: () =>
       if @timeline

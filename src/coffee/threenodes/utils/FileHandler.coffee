@@ -58,7 +58,8 @@ define [
         c = new ThreeNodes.NodeConnection(from, to, connection.id)
         @context.injector.applyContext(c)
       ThreeNodes.uid = loaded_data.uid
-      nodegraph.renderAllConnections()
+      delay = (ms, func) -> setTimeout func, ms
+      delay 1, -> nodegraph.renderAllConnections()
     
     load_from_xml_data: (txt) =>
       nodegraph = @context.injector.get("NodeGraph")

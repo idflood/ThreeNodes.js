@@ -25,6 +25,7 @@ define [
       @dirty = true
       @anim_obj = {}
       @is_animated = false
+      @view = false
       
       if @inXML
         @nid = parseInt @inXML.attr("nid")
@@ -36,39 +37,40 @@ define [
         @nid = ThreeNodes.Utils.get_uid()
     
     onRegister: () ->
-      @container = $("#container")
-      
       @out_connections = []
-      @rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this, @inXML)
       @value = false
+      @main_view = false
+      
+      @container = $("#container")
       @name = @typename()
       @apptimeline = @context.injector.get "AppTimeline"
-      @main_view = false
+      
+      @rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this, @inXML)
+      
       if @inJSON && @inJSON.name && @inJSON.name != false
         @name = @inJSON.name
       
+      # init view
       if @context.player_mode == false
         @init_main_view()
       
+      # init fields
       @set_fields()
+      
+      # init animation for current fields
       @anim = @createAnimContainer()
+      
+      # set fields values from saved data
       if @inXML
         @rack.fromXML(@inXML)
       else if @inJSON
         @rack.fromJSON(@inJSON)
+        
+        # load animation
         if @inJSON.anim != false
           @loadAnimation()
       
-      if @main_view != false
-        @view = new ThreeNodes.NodeView
-          el: @main_view
-          x: @x
-          y: @y
-          name: @name
-          rack: @rack
-          apptimeline: @apptimeline
-          
-        @context.injector.applyContext @view
+      if @view != false
         # add field context menu after they have been created
         @view.init_context_menu()
       return true
@@ -76,10 +78,18 @@ define [
     typename: => String(@constructor.name)
     
     init_main_view: () =>
-      self = this
       @main_view = $.tmpl(_view_node_template, this)
       @main_view.data("object", this)
       @container.append(@main_view)
+      @view = new ThreeNodes.NodeView
+        el: @main_view
+        x: @x
+        y: @y
+        name: @name
+        rack: @rack
+        apptimeline: @apptimeline
+        
+      @context.injector.applyContext @view
     
     loadAnimation: () =>
       @anim = @createAnimContainer()

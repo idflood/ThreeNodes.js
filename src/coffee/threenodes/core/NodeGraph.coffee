@@ -69,6 +69,7 @@ define [
       @node_connections[@node_connections.length] = c
     
     renderAllConnections: () =>
+      console.log "render all connections"
       for c in @node_connections
         c.render()
       return true

@@ -88,14 +88,8 @@ define [
       @socket = @injector.get "AppWebsocket"
       @webgl = @injector.get "ThreeNodes.WebglBase"
       
-      #urlOpts = $.deparam.querystring()
       @player_mode = false
-      #@player_mode = urlOpts.player == "true"
-      #if @player_mode == true
-      #  $("body").addClass "player-mode"
-      #else
-      #  $("body").addClass "editor-mode"
-      
+            
       if @testing_mode == false
         @ui = @injector.get "AppUI"
         @ui.bind("render", @nodegraph.render)

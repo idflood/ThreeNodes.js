@@ -86,7 +86,7 @@ define [
   
     render_connections: () =>
       for connection in @connections
-          connection.render()
+        connection.render()
       true
     
     render_sidebar: =>
@@ -119,7 +119,7 @@ define [
       if @connections.length == 0
         @node.enable_property_anim(this)
       
-    # called on shift click on a field / remove all connections
+    # remove all connections
     remove_connections: () =>
       @connections[0].remove() while @connections.length > 0
       true
