@@ -38,9 +38,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       }
       this.add_window_resize_handler();
       this.init_context_menus();
-      this.show_application();
       this.init_bottom_toolbox();
       this.animate();
+      this.show_application();
       this.is_grabbing = false;
       this.scroll_target = $("#container-wrapper");
       is_from_target = function(e) {
@@ -139,12 +139,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this.on_ui_window_resize();
     };
     AppUI.prototype.show_application = function() {
-      var delay_intro;
+      var delay_intro, nodegraph;
       delay_intro = 500;
-      $("body > header").delay(delay_intro).fadeOut(0);
-      $("#sidebar").delay(delay_intro).fadeIn(0);
-      $("#container-wrapper").delay(delay_intro).fadeIn(0);
-      return $("#sidebar-toggle").delay(delay_intro).fadeIn(0);
+      $("body > header").delay(delay_intro).hide();
+      $("#sidebar").delay(delay_intro).show();
+      $("#container-wrapper").delay(delay_intro).show();
+      $("#sidebar-toggle").delay(delay_intro).show();
+      nodegraph = this.context.injector.get("NodeGraph");
+      return nodegraph.renderAllConnections();
     };
     AppUI.prototype.render = function() {
       if (this.timeline) {

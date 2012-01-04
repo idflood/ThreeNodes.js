@@ -55,7 +55,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       return res;
     };
     FileHandler.prototype.load_from_json_data = function(txt) {
-      var c, component, connection, from, from_node, loaded_data, n, node, nodegraph, to, to_node, _i, _j, _len, _len2, _ref, _ref2;
+      var c, component, connection, delay, from, from_node, loaded_data, n, node, nodegraph, to, to_node, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
       loaded_data = JSON.parse(txt);
       _ref = loaded_data.nodes;
@@ -75,7 +75,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         this.context.injector.applyContext(c);
       }
       ThreeNodes.uid = loaded_data.uid;
-      return nodegraph.renderAllConnections();
+      delay = function(ms, func) {
+        return setTimeout(func, ms);
+      };
+      return delay(1, function() {
+        return nodegraph.renderAllConnections();
+      });
     };
     FileHandler.prototype.load_from_xml_data = function(txt) {
       var loaded_data, nodegraph;
