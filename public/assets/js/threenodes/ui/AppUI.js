@@ -18,6 +18,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     AppUI.prototype.onRegister = function() {
       var injector, is_from_target;
       injector = this.context.injector;
+      this.context.commandMap.execute("InitUrlHandler");
       this.player_mode = this.context.player_mode;
       injector.mapSingleton("ThreeNodes.AppSidebar", ThreeNodes.AppSidebar);
       injector.mapSingleton("ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar);
@@ -80,7 +81,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
           }
         }
       }, this));
-      return this.context.commandMap.execute("InitUrlHandler");
+      return true;
     };
     AppUI.prototype.stropgrab = function() {
       return this.is_grabbing = false;

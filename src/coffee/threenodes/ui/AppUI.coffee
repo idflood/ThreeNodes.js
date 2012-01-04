@@ -22,6 +22,7 @@ define [
     
     onRegister: () =>
       injector = @context.injector
+      @context.commandMap.execute "InitUrlHandler"
       @player_mode = @context.player_mode
       
       injector.mapSingleton "ThreeNodes.AppSidebar", ThreeNodes.AppSidebar
@@ -74,7 +75,7 @@ define [
           if e.which == 2 || e.which == 3
             @stropgrab()
     
-      @context.commandMap.execute "InitUrlHandler"
+      return true
     
     stropgrab: () =>
       @is_grabbing = false
