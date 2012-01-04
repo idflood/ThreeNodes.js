@@ -92,6 +92,8 @@ define [
       @player_mode = urlOpts.player == "true"
       if @player_mode == true
         $("body").addClass "player-mode"
+      else
+        $("body").addClass "editor-mode"
       if @testing_mode == false
         @init_ui()
       else

@@ -66,6 +66,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.player_mode = urlOpts.player === "true";
       if (this.player_mode === true) {
         $("body").addClass("player-mode");
+      } else {
+        $("body").addClass("editor-mode");
       }
       if (this.testing_mode === false) {
         this.init_ui();
