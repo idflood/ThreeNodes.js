@@ -81,7 +81,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
     };
     NodeConnection.prototype.get_field_position = function(field) {
       var diff, o1;
-      o1 = $("#fid-" + field.fid + " a span").offset();
+      o1 = $("#fid-" + field.fid + " .inner-field span").offset();
       diff = 3;
       o1.top += diff;
       o1.left += diff;

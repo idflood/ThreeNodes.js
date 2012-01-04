@@ -1,5 +1,5 @@
 define(['order!libs/backbone'], function(){
-  _.noConflict();
+  //_.noConflict();
   //$.noConflict();
   return Backbone.noConflict();
 });

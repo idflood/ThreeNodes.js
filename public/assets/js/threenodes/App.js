@@ -1,5 +1,4 @@
 var ThreeNodes;
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 ThreeNodes = {};
 ThreeNodes.websocket_enabled = false;
 ThreeNodes.nodes = {
@@ -32,7 +31,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
   "use strict";  return ThreeNodes.App = (function() {
     function App(testing_mode) {
       this.testing_mode = testing_mode != null ? testing_mode : false;
-      this.init_ui = __bind(this.init_ui, this);
       console.log("ThreeNodes app init...");
       this.current_scene = false;
       this.current_camera = false;
@@ -61,17 +59,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.nodegraph = this.injector.get("NodeGraph");
       this.socket = this.injector.get("AppWebsocket");
       this.webgl = this.injector.get("ThreeNodes.WebglBase");
+      this.player_mode = false;
       if (this.testing_mode === false) {
-        this.init_ui();
+        this.ui = this.injector.get("AppUI");
+        this.ui.bind("render", this.nodegraph.render);
       } else {
         this.timeline = this.injector.get("AppTimeline");
-        this.context.commandMap.execute("InitUrlHandler");
+        this.commandMap.execute("InitUrlHandler");
       }
     }
-    App.prototype.init_ui = function() {
-      this.ui = this.injector.get("AppUI");
-      return this.ui.bind("render", this.nodegraph.render);
-    };
     App.prototype.clear_workspace = function() {
       return this.context.commandMap.execute("ClearWorkspaceCommand");
     };

@@ -1,5 +1,5 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', 'order!threenodes/core/NodeFieldRackView'], function($, _, Backbone) {
   "use strict";  return ThreeNodes.NodeFieldRack = (function() {
     function NodeFieldRack(node) {
       this.node = node;
@@ -24,7 +24,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
       this.node_fields_by_name = {};
       this.node_fields_by_name.inputs = {};
       this.node_fields_by_name.outputs = {};
+      this.view = false;
     }
+    NodeFieldRack.prototype.onRegister = function() {
+      if (this.context.player_mode === false) {
+        this.view = this.context.injector.instanciate(ThreeNodes.NodeFieldRackView, {
+          node: this.node
+        });
+      }
+      return true;
+    };
     NodeFieldRack.prototype.get = function(key, is_out) {
       if (is_out == null) {
         is_out = false;
@@ -207,7 +216,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField'], 
         this.node_fields_by_name.outputs[field.name] = field;
         $(".outputs", this.node.main_view).append(field.render_button());
       }
-      this.node.add_field_listener($("#fid-" + field.fid));
+      if (this.view !== false) {
+        this.view.add_field_listener($("#fid-" + field.fid));
+      }
       return field;
     };
     NodeFieldRack.prototype.render_sidebar = function() {

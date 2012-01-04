@@ -91,7 +91,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "wireframe": false,
           "wireframeLinecap": 1,
           "vertexColors": false,
-          "skinning": false
+          "skinning": false,
+          "fog": true
         },
         outputs: {
           "out": {
@@ -162,7 +163,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             type: "Any",
             val: false
           },
-          "skinning": false
+          "skinning": false,
+          "fog": true
         },
         outputs: {
           "out": {
@@ -212,7 +214,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             type: "Any",
             val: false
           },
-          "skinning": false
+          "skinning": false,
+          "fog": true
         },
         outputs: {
           "out": {
