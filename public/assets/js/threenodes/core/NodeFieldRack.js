@@ -27,11 +27,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       this.view = false;
     }
     NodeFieldRack.prototype.onRegister = function() {
-      if (this.context.player_mode === false) {
-        this.view = this.context.injector.instanciate(ThreeNodes.NodeFieldRackView, {
-          node: this.node
-        });
-      }
+      this.view = this.context.injector.instanciate(ThreeNodes.NodeFieldRackView, {
+        node: this.node
+      });
       return true;
     };
     NodeFieldRack.prototype.get = function(key, is_out) {

@@ -17,8 +17,8 @@ define [
       @view = false
     
     onRegister: () ->
-      if @context.player_mode == false
-        @view = @context.injector.instanciate(ThreeNodes.NodeFieldRackView, {node: @node})
+      #if @context.player_mode == false
+      @view = @context.injector.instanciate(ThreeNodes.NodeFieldRackView, {node: @node})
       return true
   
     get: (key, is_out = false) ->

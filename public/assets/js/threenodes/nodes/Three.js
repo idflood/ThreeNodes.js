@@ -547,11 +547,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.old_bg = false;
       this.apply_bg_color();
       self = this;
-      if (this.context.player_mode === false) {
-        return this.webgl_container.click(function(e) {
-          return self.create_popup_view();
-        });
-      }
+      this.webgl_container.click(__bind(function(e) {
+        if (this.context.player_mode === false) {
+          return this.create_popup_view();
+        }
+      }, this));
+      return this;
     };
     WebGLRenderer.prototype.create_popup_view = function() {
       this.preview_mode = false;

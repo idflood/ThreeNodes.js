@@ -51,8 +51,8 @@ define [
         @name = @inJSON.name
       
       # init view
-      if @context.player_mode == false
-        @init_main_view()
+      #if @context.player_mode == false
+      @init_main_view()
       
       # init fields
       @set_fields()

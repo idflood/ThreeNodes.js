@@ -11,6 +11,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.init_timeline_switcher = __bind(this.init_timeline_switcher, this);
       this.init_resize_slider = __bind(this.init_resize_slider, this);
       this.init_bottom_toolbox = __bind(this.init_bottom_toolbox, this);
+      this.init_display_mode_switch = __bind(this.init_display_mode_switch, this);
+      this.switch_display_mode = __bind(this.switch_display_mode, this);
       this.scrollTo = __bind(this.scrollTo, this);
       this.stropgrab = __bind(this.stropgrab, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
@@ -23,22 +25,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       injector.mapSingleton("ThreeNodes.AppSidebar", ThreeNodes.AppSidebar);
       injector.mapSingleton("ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar);
       this.webgl = injector.get("ThreeNodes.WebglBase");
-      if (this.context.player_mode === false) {
-        this.svg = Raphael("graph", 4000, 4000);
-        ThreeNodes.svg = this.svg;
-        ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
-          stroke: "#fff",
-          'stroke-dasharray': "-",
-          fill: "none",
-          opacity: 0
-        });
-        this.sidebar = injector.get("ThreeNodes.AppSidebar");
-        this.menubar = injector.get("ThreeNodes.AppMenuBar");
-        this.timeline = injector.get("AppTimeline");
-      }
+      this.svg = Raphael("graph", 4000, 4000);
+      ThreeNodes.svg = this.svg;
+      ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
+        stroke: "#fff",
+        'stroke-dasharray': "-",
+        fill: "none",
+        opacity: 0
+      });
+      this.sidebar = injector.get("ThreeNodes.AppSidebar");
+      this.menubar = injector.get("ThreeNodes.AppMenuBar");
+      this.timeline = injector.get("AppTimeline");
       this.add_window_resize_handler();
       this.init_context_menus();
       this.init_bottom_toolbox();
+      this.init_display_mode_switch();
       this.animate();
       this.show_application();
       this.is_grabbing = false;
@@ -91,6 +92,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       x = this.scroll_target.scrollLeft() + dx;
       y = this.scroll_target.scrollTop() + dy;
       return this.scroll_target.scrollLeft(x).scrollTop(y);
+    };
+    AppUI.prototype.switch_display_mode = function() {
+      $("body").toggleClass("player-mode");
+      $("body").toggleClass("editor-mode");
+      this.context.player_mode = $("body").hasClass("player-mode");
+      if (this.context.player_mode === false) {
+        this.context.injector.get("NodeGraph").renderAllConnections();
+      }
+      return this;
+    };
+    AppUI.prototype.init_display_mode_switch = function() {
+      $("body").append("<div id='display-mode-switch'>switch mode</div>");
+      return $("#display-mode-switch").click(__bind(function(e) {
+        return this.switch_display_mode();
+      }, this));
     };
     AppUI.prototype.init_bottom_toolbox = function() {
       var $container;

@@ -29,22 +29,22 @@ define [
       injector.mapSingleton "ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar
       
       @webgl = injector.get "ThreeNodes.WebglBase"
-      
-      if @context.player_mode == false
-        @svg = Raphael("graph", 4000, 4000)
-        ThreeNodes.svg = @svg
-        ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
-          stroke: "#fff"
-          'stroke-dasharray': "-"
-          fill: "none"
-          opacity: 0
-        @sidebar = injector.get "ThreeNodes.AppSidebar"
-        @menubar = injector.get "ThreeNodes.AppMenuBar"
-        @timeline = injector.get "AppTimeline"
+    
+      @svg = Raphael("graph", 4000, 4000)
+      ThreeNodes.svg = @svg
+      ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
+        stroke: "#fff"
+        'stroke-dasharray': "-"
+        fill: "none"
+        opacity: 0
+      @sidebar = injector.get "ThreeNodes.AppSidebar"
+      @menubar = injector.get "ThreeNodes.AppMenuBar"
+      @timeline = injector.get "AppTimeline"
       
       @add_window_resize_handler()
       @init_context_menus()
       @init_bottom_toolbox()
+      @init_display_mode_switch()
       @animate()
       @show_application()
       @is_grabbing = false
@@ -85,6 +85,19 @@ define [
       x = @scroll_target.scrollLeft() + dx
       y = @scroll_target.scrollTop() + dy
       @scroll_target.scrollLeft(x).scrollTop(y)
+    
+    switch_display_mode: () =>
+      $("body").toggleClass("player-mode")
+      $("body").toggleClass("editor-mode")
+      @context.player_mode = $("body").hasClass("player-mode")
+      if @context.player_mode == false
+        @context.injector.get("NodeGraph").renderAllConnections()
+      return this
+    
+    init_display_mode_switch: () =>
+      $("body").append("<div id='display-mode-switch'>switch mode</div>")
+      $("#display-mode-switch").click (e) =>
+        @switch_display_mode()
     
     init_bottom_toolbox: () =>
       $("body").append("<div id='bottom-toolbox'></div>")

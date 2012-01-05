@@ -348,9 +348,11 @@ define [
       @old_bg = false
       @apply_bg_color()
       self = this
-      if @context.player_mode == false
-        @webgl_container.click (e) ->
-          self.create_popup_view()
+      
+      @webgl_container.click (e) =>
+        if @context.player_mode == false
+          @create_popup_view()
+      return this
     
     create_popup_view: ->
       @preview_mode = false
