@@ -18,10 +18,9 @@ define [
         
         if url.indexOf("play/") == 0
           url = url.replace("play/", "")
-          @context.player_mode = true
-          $("body").addClass "player-mode"
+          @context.commandMap.execute("SetDisplayModeCommand", true)
         else
-          $("body").addClass "editor-mode"
+          @context.commandMap.execute("SetDisplayModeCommand", false)
         
         if url.indexOf("example/") == 0
           filename = url.replace("example/", "")

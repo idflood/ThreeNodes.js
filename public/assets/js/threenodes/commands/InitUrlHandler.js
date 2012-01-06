@@ -15,10 +15,9 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
         }
         if (url.indexOf("play/") === 0) {
           url = url.replace("play/", "");
-          this.context.player_mode = true;
-          $("body").addClass("player-mode");
+          this.context.commandMap.execute("SetDisplayModeCommand", true);
         } else {
-          $("body").addClass("editor-mode");
+          this.context.commandMap.execute("SetDisplayModeCommand", false);
         }
         if (url.indexOf("example/") === 0) {
           filename = url.replace("example/", "");

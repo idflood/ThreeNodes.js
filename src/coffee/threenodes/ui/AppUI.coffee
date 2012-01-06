@@ -87,11 +87,7 @@ define [
       @scroll_target.scrollLeft(x).scrollTop(y)
     
     switch_display_mode: () =>
-      $("body").toggleClass("player-mode")
-      $("body").toggleClass("editor-mode")
-      @context.player_mode = $("body").hasClass("player-mode")
-      if @context.player_mode == false
-        @context.injector.get("NodeGraph").renderAllConnections()
+      @context.commandMap.execute("SetDisplayModeCommand", !@context.player_mode)
       return this
     
     init_display_mode_switch: () =>

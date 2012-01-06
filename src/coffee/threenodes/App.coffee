@@ -48,6 +48,7 @@ define [
   'order!threenodes/commands/LoadLocalFileCommand',
   'order!threenodes/commands/RebuildShadersCommand',
   'order!threenodes/commands/RemoveSelectedNodesCommand',
+  'order!threenodes/commands/SetDisplayModeCommand',
   'order!threenodes/commands/InitUrlHandler',
   "order!libs/jquery.ba-bbq.min",
 ], ($, _, Backbone, NodeGraph, AppUI) ->
@@ -76,6 +77,7 @@ define [
       @commandMap.register "RebuildShadersCommand", ThreeNodes.RebuildShadersCommand
       @commandMap.register "RemoveSelectedNodesCommand", ThreeNodes.RemoveSelectedNodesCommand
       @commandMap.register "InitUrlHandler", ThreeNodes.InitUrlHandler
+      @commandMap.register "SetDisplayModeCommand", ThreeNodes.SetDisplayModeCommand
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket

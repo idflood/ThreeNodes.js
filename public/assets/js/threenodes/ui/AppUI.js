@@ -94,12 +94,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this.scroll_target.scrollLeft(x).scrollTop(y);
     };
     AppUI.prototype.switch_display_mode = function() {
-      $("body").toggleClass("player-mode");
-      $("body").toggleClass("editor-mode");
-      this.context.player_mode = $("body").hasClass("player-mode");
-      if (this.context.player_mode === false) {
-        this.context.injector.get("NodeGraph").renderAllConnections();
-      }
+      this.context.commandMap.execute("SetDisplayModeCommand", !this.context.player_mode);
       return this;
     };
     AppUI.prototype.init_display_mode_switch = function() {
