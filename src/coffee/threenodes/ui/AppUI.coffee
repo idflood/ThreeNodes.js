@@ -155,7 +155,7 @@ define [
       hidden_timeline = $("body").hasClass "hidden-timeline"
       w = $(window).width()
       h = $(window).height()
-      timelinesize = 200
+      timelinesize = 203
       if hidden_timeline
         timelinesize = 30
       $("#container-wrapper").css

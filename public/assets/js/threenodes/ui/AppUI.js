@@ -175,7 +175,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       hidden_timeline = $("body").hasClass("hidden-timeline");
       w = $(window).width();
       h = $(window).height();
-      timelinesize = 200;
+      timelinesize = 203;
       if (hidden_timeline) {
         timelinesize = 30;
       }
