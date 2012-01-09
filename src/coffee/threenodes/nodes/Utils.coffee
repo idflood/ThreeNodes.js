@@ -173,24 +173,16 @@ define [
     set_fields: =>
       super
       @auto_evaluate = true
-      @position = 
-        left: 0
-        top: 0
       @rack.addFields
         outputs:
           "xy": {type: "Vector2", val: new THREE.Vector2()}
           "x" : 0
           "y" : 0
-      if ThreeNodes.Webgl.current_renderer
-        # todo: add this event when required (webgl popup)
-        $(ThreeNodes.Webgl.current_renderer.domElement).mousemove (e) =>
-          @position.x = e.offsetX
-          @position.y = e.offsetY
       
     compute: =>
-      @rack.set("xy", new THREE.Vector2(@position.x, @position.y))
-      @rack.set("x", @position.x)
-      @rack.set("y", @position.y)
+      @rack.set("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY))
+      @rack.set("x", ThreeNodes.mouseX)
+      @rack.set("y", ThreeNodes.mouseY)
   
   class ThreeNodes.nodes.types.Utils.Timer extends ThreeNodes.NodeBase
     set_fields: =>

@@ -349,10 +349,16 @@ define [
       @apply_bg_color()
       self = this
       
+      @add_mouse_handler()
       @webgl_container.click (e) =>
         if @context.player_mode == false
           @create_popup_view()
       return this
+    
+    add_mouse_handler: =>
+      $(@ob.domElement).mousemove (e) ->
+        ThreeNodes.mouseX = e.layerX
+        ThreeNodes.mouseY = e.layerY
     
     create_popup_view: ->
       @preview_mode = false
@@ -365,12 +371,14 @@ define [
         margin: 0
       @apply_bg_color(true)
       @apply_size(true)
+      @add_mouse_handler()
     
     create_preview_view: ->
       @preview_mode = true
       @webgl_container.append( @ob.domElement )
       @apply_bg_color(true)
       @apply_size(true)
+      @add_mouse_handler()
     
     apply_bg_color: (force_refresh = false) ->
       new_val = @rack.get('bg_color').get().getContextStyle()

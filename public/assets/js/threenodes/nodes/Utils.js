@@ -267,11 +267,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Mouse.prototype.set_fields = function() {
       Mouse.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
-      this.position = {
-        left: 0,
-        top: 0
-      };
-      this.rack.addFields({
+      return this.rack.addFields({
         outputs: {
           "xy": {
             type: "Vector2",
@@ -281,17 +277,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "y": 0
         }
       });
-      if (ThreeNodes.Webgl.current_renderer) {
-        return $(ThreeNodes.Webgl.current_renderer.domElement).mousemove(__bind(function(e) {
-          this.position.x = e.offsetX;
-          return this.position.y = e.offsetY;
-        }, this));
-      }
     };
     Mouse.prototype.compute = function() {
-      this.rack.set("xy", new THREE.Vector2(this.position.x, this.position.y));
-      this.rack.set("x", this.position.x);
-      return this.rack.set("y", this.position.y);
+      this.rack.set("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY));
+      this.rack.set("x", ThreeNodes.mouseX);
+      return this.rack.set("y", ThreeNodes.mouseY);
     };
     return Mouse;
   })();

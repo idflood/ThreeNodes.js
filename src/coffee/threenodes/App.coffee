@@ -19,6 +19,9 @@ ThreeNodes.nodes =
     PostProcessing: {}
     Particle: {}
 
+ThreeNodes.mouseX = 0
+ThreeNodes.mouseY = 0
+
 ThreeNodes.fields =
   types: {}
 
