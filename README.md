@@ -22,16 +22,14 @@ This will automatically compile coffescript files to javascript, sass to css and
 1. install node.js 0.4.x (http://nodejs.org/)
 2. install npm (https://github.com/isaacs/npm)
 3. install compass/coffeescript (http://compass-style.org/ and http://jashkenas.github.com/coffee-script/)
-4. optional: install vogue (https://github.com/andrewdavey/vogue)
-5. cd in ThreeNodes
-6. npm install -d
+4. cd in ThreeNodes
+5. npm install -d
 
 ## Usage
 1. cd in ThreeNodes
 2. node server.js
-3. if vogue is installed open another terminal and simply call "vogue" in ThreeNodes.js/public/ directory
-4. with firefox or chrome go to http://localhost:8042/
-5. allow this site to create popups (for webglrender node)
+3. with firefox or chrome go to http://localhost:8042/
+4. allow this site to create popups (for webglrender node)
 
 ## Howto create a simple scene
 First, create a webglrenderer node. Then add a scene and connect it to the "scene" of the webgl node. On the scene children you would connect a "merge" and to it a mesh. With that there should be a red cube showing in the renderer window.
