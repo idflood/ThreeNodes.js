@@ -499,6 +499,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.add_renderer_to_dom = __bind(this.add_renderer_to_dom, this);
       this.apply_post_fx = __bind(this.apply_post_fx, this);
       this.apply_size = __bind(this.apply_size, this);
+      this.add_mouse_handler = __bind(this.add_mouse_handler, this);
       this.set_fields = __bind(this.set_fields, this);
       WebGLRenderer.__super__.constructor.apply(this, arguments);
     }
@@ -547,12 +548,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.old_bg = false;
       this.apply_bg_color();
       self = this;
+      this.add_mouse_handler();
       this.webgl_container.click(__bind(function(e) {
         if (this.context.player_mode === false) {
           return this.create_popup_view();
         }
       }, this));
       return this;
+    };
+    WebGLRenderer.prototype.add_mouse_handler = function() {
+      return $(this.ob.domElement).mousemove(function(e) {
+        ThreeNodes.mouseX = e.layerX;
+        return ThreeNodes.mouseY = e.layerY;
+      });
     };
     WebGLRenderer.prototype.create_popup_view = function() {
       this.preview_mode = false;
@@ -564,13 +572,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         margin: 0
       });
       this.apply_bg_color(true);
-      return this.apply_size(true);
+      this.apply_size(true);
+      return this.add_mouse_handler();
     };
     WebGLRenderer.prototype.create_preview_view = function() {
       this.preview_mode = true;
       this.webgl_container.append(this.ob.domElement);
       this.apply_bg_color(true);
-      return this.apply_size(true);
+      this.apply_size(true);
+      return this.add_mouse_handler();
     };
     WebGLRenderer.prototype.apply_bg_color = function(force_refresh) {
       var new_val;
