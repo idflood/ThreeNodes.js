@@ -257,6 +257,44 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SoundInput;
   })();
+  ThreeNodes.nodes.types.Utils.Mouse = (function() {
+    __extends(Mouse, ThreeNodes.NodeBase);
+    function Mouse() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Mouse.__super__.constructor.apply(this, arguments);
+    }
+    Mouse.prototype.set_fields = function() {
+      Mouse.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.position = {
+        left: 0,
+        top: 0
+      };
+      this.rack.addFields({
+        outputs: {
+          "xy": {
+            type: "Vector2",
+            val: new THREE.Vector2()
+          },
+          "x": 0,
+          "y": 0
+        }
+      });
+      if (ThreeNodes.Webgl.current_renderer) {
+        return $(ThreeNodes.Webgl.current_renderer.domElement).mousemove(__bind(function(e) {
+          this.position.x = e.offsetX;
+          return this.position.y = e.offsetY;
+        }, this));
+      }
+    };
+    Mouse.prototype.compute = function() {
+      this.rack.set("xy", new THREE.Vector2(this.position.x, this.position.y));
+      this.rack.set("x", this.position.x);
+      return this.rack.set("y", this.position.y);
+    };
+    return Mouse;
+  })();
   return ThreeNodes.nodes.types.Utils.Timer = (function() {
     __extends(Timer, ThreeNodes.NodeBase);
     function Timer() {

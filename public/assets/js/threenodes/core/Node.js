@@ -70,9 +70,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.inJSON && this.inJSON.name && this.inJSON.name !== false) {
         this.name = this.inJSON.name;
       }
-      if (this.context.player_mode === false) {
-        this.init_main_view();
-      }
+      this.init_main_view();
       this.set_fields();
       this.anim = this.createAnimContainer();
       if (this.inXML) {
