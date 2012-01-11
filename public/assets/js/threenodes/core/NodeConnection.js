@@ -79,6 +79,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
     NodeConnection.prototype.toXML = function() {
       return "\t\t<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>\n";
     };
+    NodeConnection.prototype.toCode = function() {
+      var res;
+      res = "var connection_" + this.cid + "_data = {\n";
+      res += "\t" + ("id: " + this.cid + ",\n");
+      res += "\t" + ("from_node: " + this.from_field.node.nid + ", from: " + this.from_field.name + ",\n");
+      res += "\t" + ("to_node: " + this.to_field.node.nid + ", to: " + this.to_field.name + "\n");
+      res += "};\n";
+      res += "var connection_" + this.cid + " = nodegraph.createConnectionFromObject(connection_" + this.cid + "_data);\n";
+      return res;
+    };
     NodeConnection.prototype.get_field_position = function(field) {
       var diff, o1;
       o1 = $("#fid-" + field.fid + " .inner-field span").offset();

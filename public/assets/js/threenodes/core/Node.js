@@ -232,7 +232,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var component, ng, res;
       ng = this.context.injector.get("NodeGraph");
       component = ng.get_component_by_type(this.typename());
-      res = "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\");\n";
+      res = "\n// node: " + this.view.options.name + "\n";
+      res += "var node_" + this.nid + "_data = {\n";
+      res += "\t" + ("nid: " + this.nid + ",\n");
+      res += "\t" + ("name: " + this.view.options.name + ",\n");
+      res += "\t" + ("type: " + (this.typename()) + ",\n");
+      res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
+      res += "\t" + ("anim: " + (this.getAnimationData()) + "\n");
+      res += "};\n";
+      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", 0, 0, false, node_" + this.nid + "_data);\n";
       return res;
     };
     NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions, index) {

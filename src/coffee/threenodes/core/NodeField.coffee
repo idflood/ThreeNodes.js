@@ -81,6 +81,13 @@ define [
         res.val = @get()
       res
     
+    toCode: () =>
+      res = ""
+      val_type = jQuery.type(@get())
+      if val_type != "object" && val_type != "array"
+        res = "\t\t{name: #{@name}, val: #{@get()}},\n"
+      res
+    
     toXML : () =>
       "\t\t\t<field fid='#{@fid}' val='#{@get()}'/>\n"
   

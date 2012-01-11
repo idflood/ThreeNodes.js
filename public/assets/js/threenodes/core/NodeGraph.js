@@ -4,6 +4,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     function NodeGraph() {
       this.get_node = __bind(this.get_node, this);
       this.renderAllConnections = __bind(this.renderAllConnections, this);
+      this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
       this.render = __bind(this.render, this);
       this.get_component_by_type = __bind(this.get_component_by_type, this);
       this.create_node = __bind(this.create_node, this);      this.nodes = [];
@@ -75,6 +76,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
     };
     NodeGraph.prototype.addConnection = function(c) {
       return this.node_connections[this.node_connections.length] = c;
+    };
+    NodeGraph.prototype.createConnectionFromObject = function(connection) {
+      var c, from, from_node, to, to_node;
+      from_node = this.get_node(connection.from_node.toString());
+      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()];
+      to_node = this.get_node(connection.to_node.toString());
+      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()];
+      c = new ThreeNodes.NodeConnection(from, to, connection.id);
+      this.context.injector.applyContext(c);
+      return c;
     };
     NodeGraph.prototype.renderAllConnections = function() {
       var c, _i, _len, _ref;

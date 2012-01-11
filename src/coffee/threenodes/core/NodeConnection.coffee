@@ -84,6 +84,15 @@ define [
     toXML: () ->
       "\t\t<connection id='#{@cid}' from='#{@from_field.fid}' to='#{@to_field.fid}'/>\n"
     
+    toCode: () ->
+      res = "var connection_#{@cid}_data = {\n"
+      res += "\t" + "id: #{@cid},\n"
+      res += "\t" + "from_node: #{@from_field.node.nid}, from: #{@from_field.name},\n"
+      res += "\t" + "to_node: #{@to_field.node.nid}, to: #{@to_field.name}\n"
+      res += "};\n"
+      res += "var connection_#{@cid} = nodegraph.createConnectionFromObject(connection_#{@cid}_data);\n"
+      res
+    
     get_field_position: (field) ->
       o1 = $("#fid-#{field.fid} .inner-field span").offset()
       diff = 3

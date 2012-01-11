@@ -29,6 +29,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.render_sidebar = __bind(this.render_sidebar, this);
       this.render_connections = __bind(this.render_connections, this);
       this.toXML = __bind(this.toXML, this);
+      this.toCode = __bind(this.toCode, this);
       this.toJSON = __bind(this.toJSON, this);
       this.is_animation_property = __bind(this.is_animation_property, this);
       this.getSliceCount = __bind(this.getSliceCount, this);
@@ -120,6 +121,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       val_type = jQuery.type(this.get());
       if (val_type !== "object" && val_type !== "array") {
         res.val = this.get();
+      }
+      return res;
+    };
+    NodeField.prototype.toCode = function() {
+      var res, val_type;
+      res = "";
+      val_type = jQuery.type(this.get());
+      if (val_type !== "object" && val_type !== "array") {
+        res = "\t\t{name: " + this.name + ", val: " + (this.get()) + "},\n";
       }
       return res;
     };

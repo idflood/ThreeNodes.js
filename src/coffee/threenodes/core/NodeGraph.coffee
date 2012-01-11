@@ -68,6 +68,15 @@ define [
     addConnection: (c) ->
       @node_connections[@node_connections.length] = c
     
+    createConnectionFromObject: (connection) =>
+      from_node = @get_node(connection.from_node.toString())
+      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
+      to_node = @get_node(connection.to_node.toString())
+      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
+      c = new ThreeNodes.NodeConnection(from, to, connection.id)
+      @context.injector.applyContext(c)
+      c
+    
     renderAllConnections: () =>
       console.log "render all connections"
       for c in @node_connections

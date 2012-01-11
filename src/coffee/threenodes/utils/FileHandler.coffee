@@ -16,13 +16,36 @@ define [
     
     export_code: () =>
       nodegraph = @context.injector.get("NodeGraph")
+      res = "//\n"
+      res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
+      res += "//\n\n"
+      res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});"
+      res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone'], function(App) {"
+      res += "\n\n"
+      res += '"use strict";\n'
+      res += "var app = new App();\n"
+      res += "var nodegraph = app.nodegraph;\n\n"
+      res += "//\n"
+      res += "// nodes\n"
+      res += "//\n"
       
-      res = "var nodegraph = new ThreeNodes.NodeGraph();\n\n"
-      res += "# nodes\n"
       for node in nodegraph.nodes
         res += node.toCode()
       
-      console.log res
+      res += "\n"
+      res += "//\n"
+      res += "// connections\n"
+      res += "//\n\n"
+      
+      for c in nodegraph.node_connections
+        res += c.toCode()
+        
+      res += "\n\n"
+      res += "});"
+      
+      bb = new BlobBuilder()
+      bb.append(res)
+      fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
       
     get_local_json: () =>
       nodegraph = @context.injector.get("NodeGraph")
@@ -61,12 +84,8 @@ define [
         n = nodegraph.create_node(component, node.type, node.x, node.y, false, node)
       
       for connection in loaded_data.connections
-        from_node = nodegraph.get_node(connection.from_node.toString())
-        from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
-        to_node = nodegraph.get_node(connection.to_node.toString())
-        to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
-        c = new ThreeNodes.NodeConnection(from, to, connection.id)
-        @context.injector.applyContext(c)
+        nodegraph.createConnectionFromObject(connection)
+      
       ThreeNodes.uid = loaded_data.uid
       delay = (ms, func) -> setTimeout func, ms
       delay 1, -> nodegraph.renderAllConnections()

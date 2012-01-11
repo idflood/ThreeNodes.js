@@ -80,6 +80,13 @@ define [
         out: jQuery.map(@node_fields.outputs, (f, i) -> f.toJSON()) 
       res
     
+    toCode: =>
+      res = "{in: [\n"
+      for field of @node_fields.inputs
+        res += @node_fields.inputs[field].toCode()
+      res += "\t]}"
+      res
+    
     toXML: =>
       res = "\t\t<in>\n"
       for f of @node_fields.inputs

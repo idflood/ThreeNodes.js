@@ -11,6 +11,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       this.fromXML = __bind(this.fromXML, this);
       this.fromJSON = __bind(this.fromJSON, this);
       this.toXML = __bind(this.toXML, this);
+      this.toCode = __bind(this.toCode, this);
       this.toJSON = __bind(this.toJSON, this);
       this.remove_all_connections = __bind(this.remove_all_connections, this);
       this.render_connections = __bind(this.render_connections, this);
@@ -128,6 +129,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
           return f.toJSON();
         })
       };
+      return res;
+    };
+    NodeFieldRack.prototype.toCode = function() {
+      var field, res;
+      res = "{in: [\n";
+      for (field in this.node_fields.inputs) {
+        res += this.node_fields.inputs[field].toCode();
+      }
+      res += "\t]}";
       return res;
     };
     NodeFieldRack.prototype.toXML = function() {
