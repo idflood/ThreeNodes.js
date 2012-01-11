@@ -101,8 +101,10 @@ define [
         @ui = @injector.get "AppUI"
         @ui.bind("render", @nodegraph.render)
       else
+        $("body").addClass "test-mode"
         @timeline = @injector.get "AppTimeline"
         @commandMap.execute "InitUrlHandler"
+      return true
     
     clear_workspace: () ->
       @context.commandMap.execute "ClearWorkspaceCommand"
