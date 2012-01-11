@@ -235,12 +235,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       res = "\n// node: " + this.view.options.name + "\n";
       res += "var node_" + this.nid + "_data = {\n";
       res += "\t" + ("nid: " + this.nid + ",\n");
-      res += "\t" + ("name: " + this.view.options.name + ",\n");
-      res += "\t" + ("type: " + (this.typename()) + ",\n");
+      res += "\t" + ("name: '" + this.view.options.name + "',\n");
+      res += "\t" + ("type: '" + (this.typename()) + "',\n");
       res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
       res += "\t" + ("anim: " + (this.getAnimationData()) + "\n");
       res += "};\n";
-      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", 0, 0, false, node_" + this.nid + "_data);\n";
+      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + this.view.options.x + ", " + this.view.options.y + ", false, node_" + this.nid + "_data);\n";
       return res;
     };
     NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions, index) {

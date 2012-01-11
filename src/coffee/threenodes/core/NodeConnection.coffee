@@ -87,8 +87,8 @@ define [
     toCode: () ->
       res = "var connection_#{@cid}_data = {\n"
       res += "\t" + "id: #{@cid},\n"
-      res += "\t" + "from_node: #{@from_field.node.nid}, from: #{@from_field.name},\n"
-      res += "\t" + "to_node: #{@to_field.node.nid}, to: #{@to_field.name}\n"
+      res += "\t" + "from_node: #{@from_field.node.nid}, from: '#{@from_field.name}',\n"
+      res += "\t" + "to_node: #{@to_field.node.nid}, to: '#{@to_field.name}'\n"
       res += "};\n"
       res += "var connection_#{@cid} = nodegraph.createConnectionFromObject(connection_#{@cid}_data);\n"
       res

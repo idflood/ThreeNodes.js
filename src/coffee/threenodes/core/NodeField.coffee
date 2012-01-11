@@ -85,7 +85,9 @@ define [
       res = ""
       val_type = jQuery.type(@get())
       if val_type != "object" && val_type != "array"
-        res = "\t\t{name: #{@name}, val: #{@get()}},\n"
+        res = "\t\t{name: '#{@name}', val: #{@get()}},\n"
+      else
+        res = "\t\t{name: '#{@name}'},\n"
       res
     
     toXML : () =>

@@ -187,12 +187,12 @@ define [
       res = "\n// node: #{@view.options.name}\n"
       res += "var node_#{@nid}_data = {\n"
       res += "\t" + "nid: #{@nid},\n"
-      res += "\t" + "name: #{@view.options.name},\n"
-      res += "\t" + "type: #{@typename()},\n"
+      res += "\t" + "name: '#{@view.options.name}',\n"
+      res += "\t" + "type: '#{@typename()}',\n"
       res += "\t" + "fields: #{@rack.toCode()},\n"
       res += "\t" + "anim: #{@getAnimationData()}\n"
       res += "};\n"
-      res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", 0, 0, false, node_#{@nid}_data);\n"
+      res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", #{@view.options.x}, #{@view.options.y}, false, node_#{@nid}_data);\n"
       return res
     
     apply_fields_to_val: (afields, target, exceptions = [], index) =>

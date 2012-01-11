@@ -81,7 +81,7 @@ define [
       res
     
     toCode: =>
-      res = "{in: [\n"
+      res = "{'in': [\n"
       for field of @node_fields.inputs
         res += @node_fields.inputs[field].toCode()
       res += "\t]}"

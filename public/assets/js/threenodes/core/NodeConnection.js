@@ -83,8 +83,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       var res;
       res = "var connection_" + this.cid + "_data = {\n";
       res += "\t" + ("id: " + this.cid + ",\n");
-      res += "\t" + ("from_node: " + this.from_field.node.nid + ", from: " + this.from_field.name + ",\n");
-      res += "\t" + ("to_node: " + this.to_field.node.nid + ", to: " + this.to_field.name + "\n");
+      res += "\t" + ("from_node: " + this.from_field.node.nid + ", from: '" + this.from_field.name + "',\n");
+      res += "\t" + ("to_node: " + this.to_field.node.nid + ", to: '" + this.to_field.name + "'\n");
       res += "};\n";
       res += "var connection_" + this.cid + " = nodegraph.createConnectionFromObject(connection_" + this.cid + "_data);\n";
       return res;

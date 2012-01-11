@@ -133,7 +133,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
     };
     NodeFieldRack.prototype.toCode = function() {
       var field, res;
-      res = "{in: [\n";
+      res = "{'in': [\n";
       for (field in this.node_fields.inputs) {
         res += this.node_fields.inputs[field].toCode();
       }

@@ -129,7 +129,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       res = "";
       val_type = jQuery.type(this.get());
       if (val_type !== "object" && val_type !== "array") {
-        res = "\t\t{name: " + this.name + ", val: " + (this.get()) + "},\n";
+        res = "\t\t{name: '" + this.name + "', val: " + (this.get()) + "},\n";
+      } else {
+        res = "\t\t{name: '" + this.name + "'},\n";
       }
       return res;
     };
