@@ -7,6 +7,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       this.load_from_json_data = __bind(this.load_from_json_data, this);
       this.get_local_xml = __bind(this.get_local_xml, this);
       this.get_local_json = __bind(this.get_local_json, this);
+      this.export_code = __bind(this.export_code, this);
       this.save_local_file = __bind(this.save_local_file, this);
     }
     FileHandler.prototype.save_local_file = function() {
@@ -15,6 +16,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       result_string = this.get_local_json();
       bb.append(result_string);
       return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json");
+    };
+    FileHandler.prototype.export_code = function() {
+      var node, nodegraph, res, _i, _len, _ref;
+      nodegraph = this.context.injector.get("NodeGraph");
+      res = "var nodegraph = new ThreeNodes.NodeGraph();\n\n";
+      res += "# nodes\n";
+      _ref = nodegraph.nodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        res += node.toCode();
+      }
+      return console.log(res);
     };
     FileHandler.prototype.get_local_json = function() {
       var nodegraph, res;

@@ -181,6 +181,12 @@ define [
       pos = @main_view.position()
       "\t\t\t<node nid='#{@nid}' type='#{@typename()}' x='#{pos.left}' y='#{pos.top}'>#{@rack.toXML()}</node>\n"
     
+    toCode: () =>
+      ng = @context.injector.get("NodeGraph")
+      component = ng.get_component_by_type(@typename())
+      res = "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\");\n"
+      return res
+    
     apply_fields_to_val: (afields, target, exceptions = [], index) =>
       for f of afields
         nf = afields[f]

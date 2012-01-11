@@ -53,6 +53,7 @@ define [
   'order!threenodes/commands/RemoveSelectedNodesCommand',
   'order!threenodes/commands/SetDisplayModeCommand',
   'order!threenodes/commands/InitUrlHandler',
+  'order!threenodes/commands/ExportCodeCommand',
   "order!libs/jquery.ba-bbq.min",
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   "use strict"
@@ -81,6 +82,7 @@ define [
       @commandMap.register "RemoveSelectedNodesCommand", ThreeNodes.RemoveSelectedNodesCommand
       @commandMap.register "InitUrlHandler", ThreeNodes.InitUrlHandler
       @commandMap.register "SetDisplayModeCommand", ThreeNodes.SetDisplayModeCommand
+      @commandMap.register "ExportCodeCommand", ThreeNodes.ExportCodeCommand
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket

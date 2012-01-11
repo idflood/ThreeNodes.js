@@ -14,6 +14,16 @@ define [
       bb.append(result_string)
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json")
     
+    export_code: () =>
+      nodegraph = @context.injector.get("NodeGraph")
+      
+      res = "var nodegraph = new ThreeNodes.NodeGraph();\n\n"
+      res += "# nodes\n"
+      for node in nodegraph.nodes
+        res += node.toCode()
+      
+      console.log res
+      
     get_local_json: () =>
       nodegraph = @context.injector.get("NodeGraph")
       res = 
