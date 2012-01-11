@@ -67,9 +67,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
         this.ui = this.injector.get("AppUI");
         this.ui.bind("render", this.nodegraph.render);
       } else {
+        $("body").addClass("test-mode");
         this.timeline = this.injector.get("AppTimeline");
         this.commandMap.execute("InitUrlHandler");
       }
+      return true;
     }
     App.prototype.clear_workspace = function() {
       return this.context.commandMap.execute("ClearWorkspaceCommand");
