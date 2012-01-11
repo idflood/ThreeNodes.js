@@ -27,6 +27,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.get_cached_array = __bind(this.get_cached_array, this);
       this.create_field_connection = __bind(this.create_field_connection, this);
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
+      this.toCode = __bind(this.toCode, this);
       this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
       this.getAnimationData = __bind(this.getAnimationData, this);
@@ -226,6 +227,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var pos;
       pos = this.main_view.position();
       return "\t\t\t<node nid='" + this.nid + "' type='" + (this.typename()) + "' x='" + pos.left + "' y='" + pos.top + "'>" + (this.rack.toXML()) + "</node>\n";
+    };
+    NodeBase.prototype.toCode = function() {
+      var component, ng, res;
+      ng = this.context.injector.get("NodeGraph");
+      component = ng.get_component_by_type(this.typename());
+      res = "\n// node: " + this.view.options.name + "\n";
+      res += "var node_" + this.nid + "_data = {\n";
+      res += "\t" + ("nid: " + this.nid + ",\n");
+      res += "\t" + ("name: '" + this.view.options.name + "',\n");
+      res += "\t" + ("type: '" + (this.typename()) + "',\n");
+      res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
+      res += "\t" + ("anim: " + (this.getAnimationData()) + "\n");
+      res += "};\n";
+      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + this.view.options.x + ", " + this.view.options.y + ", false, node_" + this.nid + "_data);\n";
+      return res;
     };
     NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions, index) {
       var f, nf, _results;

@@ -7,6 +7,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       this.load_from_json_data = __bind(this.load_from_json_data, this);
       this.get_local_xml = __bind(this.get_local_xml, this);
       this.get_local_json = __bind(this.get_local_json, this);
+      this.export_code = __bind(this.export_code, this);
       this.save_local_file = __bind(this.save_local_file, this);
     }
     FileHandler.prototype.save_local_file = function() {
@@ -15,6 +16,41 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       result_string = this.get_local_json();
       bb.append(result_string);
       return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json");
+    };
+    FileHandler.prototype.export_code = function() {
+      var bb, c, fileSaver, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
+      nodegraph = this.context.injector.get("NodeGraph");
+      res = "//\n";
+      res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n";
+      res += "//\n\n";
+      res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});";
+      res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone'], function(App) {";
+      res += "\n\n";
+      res += '"use strict";\n';
+      res += "var app = new App();\n";
+      res += "var nodegraph = app.nodegraph;\n\n";
+      res += "//\n";
+      res += "// nodes\n";
+      res += "//\n";
+      _ref = nodegraph.nodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        res += node.toCode();
+      }
+      res += "\n";
+      res += "//\n";
+      res += "// connections\n";
+      res += "//\n\n";
+      _ref2 = nodegraph.node_connections;
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        c = _ref2[_j];
+        res += c.toCode();
+      }
+      res += "\n\n";
+      res += "});";
+      bb = new BlobBuilder();
+      bb.append(res);
+      return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js");
     };
     FileHandler.prototype.get_local_json = function() {
       var nodegraph, res;
@@ -55,7 +91,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       return res;
     };
     FileHandler.prototype.load_from_json_data = function(txt) {
-      var c, component, connection, delay, from, from_node, loaded_data, n, node, nodegraph, to, to_node, _i, _j, _len, _len2, _ref, _ref2;
+      var component, connection, delay, loaded_data, n, node, nodegraph, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
       loaded_data = JSON.parse(txt);
       _ref = loaded_data.nodes;
@@ -67,12 +103,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       _ref2 = loaded_data.connections;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         connection = _ref2[_j];
-        from_node = nodegraph.get_node(connection.from_node.toString());
-        from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()];
-        to_node = nodegraph.get_node(connection.to_node.toString());
-        to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()];
-        c = new ThreeNodes.NodeConnection(from, to, connection.id);
-        this.context.injector.applyContext(c);
+        nodegraph.createConnectionFromObject(connection);
       }
       ThreeNodes.uid = loaded_data.uid;
       delay = function(ms, func) {

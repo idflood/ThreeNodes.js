@@ -36,6 +36,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
           return $("#main_file_input_open").click();
         case "save":
           return this.context.commandMap.execute("SaveFileCommand");
+        case "export to code":
+          return this.context.commandMap.execute("ExportCodeCommand");
         case "rebuild all shaders":
           return this.context.commandMap.execute("RebuildShadersCommand");
         case "remove selected node(s)":
