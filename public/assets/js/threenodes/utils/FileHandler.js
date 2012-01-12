@@ -47,6 +47,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         res += c.toCode();
       }
       res += "\n\n";
+      res += "// set player mode\n";
+      res += "app.commandMap.execute('SetDisplayModeCommand', true);\n";
       res += "});";
       bb = new BlobBuilder();
       bb.append(res);

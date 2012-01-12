@@ -41,6 +41,8 @@ define [
         res += c.toCode()
         
       res += "\n\n"
+      res += "// set player mode\n"
+      res += "app.commandMap.execute('SetDisplayModeCommand', true);\n"
       res += "});"
       
       bb = new BlobBuilder()
