@@ -160,7 +160,7 @@ var node_84_data = {
   name: 'Mult',
   type: 'Mult',
   fields: {'in': [
-    {name: 'in', val: 2211},
+    {name: 'in', val: 4840},
     {name: 'factor', val: 0.001},
   ]},
   anim: false
@@ -174,7 +174,7 @@ var node_89_data = {
   type: 'Vector3',
   fields: {'in': [
     {name: 'x', val: 0},
-    {name: 'y', val: 2.211},
+    {name: 'y', val: 4.84},
     {name: 'z', val: 0},
   ]},
   anim: false
@@ -247,4 +247,6 @@ var connection_99_data = {
 var connection_99 = nodegraph.createConnectionFromObject(connection_99_data);
 
 
+// set player mode
+app.commandMap.execute('SetDisplayModeCommand', true);
 });
