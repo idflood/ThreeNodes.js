@@ -30,6 +30,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.toCode = __bind(this.toCode, this);
       this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
+      this.getAnimationDataToCode = __bind(this.getAnimationDataToCode, this);
       this.getAnimationData = __bind(this.getAnimationData, this);
       this.hasPropertyTrackAnim = __bind(this.hasPropertyTrackAnim, this);
       this.update = __bind(this.update, this);
@@ -210,6 +211,28 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return res;
     };
+    NodeBase.prototype.getAnimationDataToCode = function() {
+      var anim, propTrack, res, _i, _j, _len, _len2, _ref, _ref2;
+      res = "false";
+      if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
+        return res;
+      }
+      if (this.anim !== false) {
+        res = "{\n";
+        _ref = this.anim.objectTrack.propertyTracks;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          propTrack = _ref[_i];
+          res += "\t\t" + ("'" + propTrack.propertyName + "' : [\n");
+          _ref2 = propTrack.keys;
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            anim = _ref2[_j];
+            res += "\t\t\t" + ("{time: " + anim.time + ", value: " + anim.value + ", easing: '" + (Timeline.easingFunctionToString(anim.easing)) + "'},\n");
+          }
+          res += "\t\t" + "],\n";
+        }
+        return res += "\t}";
+      }
+    };
     NodeBase.prototype.toJSON = function() {
       var res;
       res = {
@@ -238,7 +261,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       res += "\t" + ("name: '" + this.view.options.name + "',\n");
       res += "\t" + ("type: '" + (this.typename()) + "',\n");
       res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
-      res += "\t" + ("anim: " + (this.getAnimationData()) + "\n");
+      res += "\t" + ("anim: " + (this.getAnimationDataToCode()) + "\n");
       res += "};\n";
       res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + this.view.options.x + ", " + this.view.options.y + ", false, node_" + this.nid + "_data);\n";
       return res;

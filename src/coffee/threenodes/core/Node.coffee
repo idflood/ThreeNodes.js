@@ -166,6 +166,19 @@ define [
             
       res
     
+    getAnimationDataToCode: () =>
+      res = "false"
+      if !@anim || !@anim.objectTrack || !@anim.objectTrack.propertyTracks || @hasPropertyTrackAnim() == false
+        return res
+      if @anim != false
+        res = "{\n"
+        for propTrack in @anim.objectTrack.propertyTracks
+          res += "\t\t" + "'#{propTrack.propertyName}' : [\n"
+          for anim in propTrack.keys
+            res += "\t\t\t" + "{time: #{anim.time}, value: #{anim.value}, easing: '#{Timeline.easingFunctionToString(anim.easing)}'},\n"
+          res += "\t\t" + "],\n"
+        res += "\t}"
+    
     toJSON: () =>
       res =
         nid: @nid
@@ -190,7 +203,7 @@ define [
       res += "\t" + "name: '#{@view.options.name}',\n"
       res += "\t" + "type: '#{@typename()}',\n"
       res += "\t" + "fields: #{@rack.toCode()},\n"
-      res += "\t" + "anim: #{@getAnimationData()}\n"
+      res += "\t" + "anim: #{@getAnimationDataToCode()}\n"
       res += "};\n"
       res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", #{@view.options.x}, #{@view.options.y}, false, node_#{@nid}_data);\n"
       return res
