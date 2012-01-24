@@ -370,11 +370,27 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return num;
     };
     NodeNumberSimple.prototype.compute = function() {
-      var i, numItems, res;
+      var i, numItems, ref, res;
       res = [];
       numItems = this.rack.getMaxInputSliceCount();
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        res[i] = this.process_val(this.v_in.get(i), i);
+        ref = this.v_in.get(i);
+        switch ($.type(ref)) {
+          case "number":
+            res[i] = this.process_val(ref, i);
+            break;
+          case "object":
+            switch (ref.constructor) {
+              case THREE.Vector2:
+                res[i].x = this.process_val(ref.x, i);
+                res[i].y = this.process_val(ref.y, i);
+                break;
+              case THREE.Vector3:
+                res[i].x = this.process_val(ref.x, i);
+                res[i].y = this.process_val(ref.y, i);
+                res[i].z = this.process_val(ref.z, i);
+            }
+        }
       }
       this.v_out.set(res);
       return true;

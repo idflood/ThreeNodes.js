@@ -33,65 +33,110 @@ define [
     process_val: (num, i) =>
       Math.floor(num)
   
-  class ThreeNodes.nodes.types.Math.Mod extends ThreeNodes.NodeNumberSimple
-    set_fields: =>
-      super
-      @v_valy = @rack.addField("y", {type: "Any", val: 2})
-    process_val: (num, i) =>
-      num % @v_valy.get(i)
+  class ThreeNodes.NodeNumberParam1 extends ThreeNodes.NodeNumberSimple
+    process_val: (num, numb, i) =>
+      num + numb
+    
+    apply_num_to_vec2: (a, b, i) =>
+      switch $.type(a)
+        when "number" then new THREE.Vector2(@process_val(a, b.x, i), @process_val(a, b.y, i))
+        when "object" then new THREE.Vector2(@process_val(a.x, b, i), @process_val(a.y, b, i))
+    
+    apply_num_to_vec3: (a, b, i) =>
+      switch $.type(a)
+        when "number" then new THREE.Vector3(@process_val(a, b.x, i), @process_val(a, b.y, i), @process_val(a, b.z, i))
+        when "object" then new THREE.Vector3(@process_val(a.x, b, i), @process_val(a.y, b, i), @process_val(a.z, b, i))
+      
+    compute: =>
+      res = []
+      numItems = @rack.getMaxInputSliceCount()
+      for i in [0..numItems]
+        ref = @v_in.get(i)
+        refb = @v_factor.get(i)
+        switch $.type(ref)
+          when "number"
+            switch $.type(refb)
+              when "number" then res[i] = @process_val(ref, refb, i)
+              when "object"
+                switch refb.constructor
+                  when THREE.Vector2 then res[i] = @apply_num_to_vec2(ref, refb, i)
+                  when THREE.Vector3 then res[i] = @apply_num_to_vec3(ref, refb, i)
+          when "object"
+            switch ref.constructor
+              when THREE.Vector2
+                switch $.type(refb)
+                  when "number" then res[i] = @apply_num_to_vec2(ref, refb, i)
+                  when "object" then res[i] = new THREE.Vector2(@process_val(ref.x, refb.x, i), @process_val(ref.y, refb.y, i))
+              when THREE.Vector3
+                switch $.type(refb)
+                  when "number" then res[i] = @apply_num_to_vec3(ref, refb, i)
+                  when "object" then res[i] = new THREE.Vector3(@process_val(ref.x, refb.x, i), @process_val(ref.y, refb.y, i), @process_val(ref.z, refb.z, i))
+        
+      #if @v_out.get() != res
+      @v_out.set res
+      true
   
-  class ThreeNodes.nodes.types.Math.Add extends ThreeNodes.NodeNumberSimple
-    set_fields: =>
-      super
-      @v_factor = @rack.addField("y", {type: "Any", val: 1})
-    process_val: (num, i) =>
-      num + @v_factor.get(i)
-  
-  class ThreeNodes.nodes.types.Math.Subtract extends ThreeNodes.NodeNumberSimple
-    set_fields: =>
-      super
-      @v_factor = @rack.addField("y", {type: "Any", val: 1})
-    process_val: (num, i) =>
-      num - @v_factor.get(i)
-  
-  class ThreeNodes.nodes.types.Math.Mult extends ThreeNodes.NodeNumberSimple
-    set_fields: =>
-      super
-      @v_factor = @rack.addField("factor", {type: "Any", val: 2})
-    process_val: (num, i) =>
-      num * @v_factor.get(i)
-  
-  class ThreeNodes.nodes.types.Math.Divide extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.types.Math.Mod extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
       @v_factor = @rack.addField("y", {type: "Any", val: 2})
-    process_val: (num, i) =>
-      num / @v_factor.get(i)
+    process_val: (num, numb, i) =>
+      num % numb
   
-  class ThreeNodes.nodes.types.Math.Min extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.types.Math.Add extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_inb = @rack.addField("in2", {type: "Any", val: 0})
-      @anim_obj = {in: 0, in2: 0}
-    process_val: (num, i) =>
-      Math.min(num, @v_inb.get(i))
+      @v_factor = @rack.addField("y", {type: "Any", val: 1})
+    process_val: (num, numb, i) =>
+      num + numb
   
-  class ThreeNodes.nodes.types.Math.Max extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.types.Math.Subtract extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_inb = @rack.addField("in2", {type: "Any", val: 0})
+      @v_factor = @rack.addField("y", {type: "Any", val: 1})
+    process_val: (num, numb, i) =>
+      num - numb
+  
+  class ThreeNodes.nodes.types.Math.Mult extends ThreeNodes.NodeNumberParam1
+    set_fields: =>
+      super
+      @v_factor = @rack.addField("factor", {type: "Any", val: 2})
+    
+    process_val: (num, numb, i) =>
+      num * numb
+    
+                
+  class ThreeNodes.nodes.types.Math.Divide extends ThreeNodes.NodeNumberParam1
+    set_fields: =>
+      super
+      @v_factor = @rack.addField("y", {type: "Any", val: 2})
+    process_val: (num, numb, i) =>
+      num / numb
+  
+  class ThreeNodes.nodes.types.Math.Min extends ThreeNodes.NodeNumberParam1
+    set_fields: =>
+      super
+      @v_factor = @rack.addField("in2", {type: "Any", val: 0})
       @anim_obj = {in: 0, in2: 0}
-    process_val: (num, i) =>
-      Math.max(num, @v_inb.get(i))
+    process_val: (num, numb, i) =>
+      Math.min(num, numb)
+  
+  class ThreeNodes.nodes.types.Math.Max extends ThreeNodes.NodeNumberParam1
+    set_fields: =>
+      super
+      @v_factor = @rack.addField("in2", {type: "Any", val: 0})
+      @anim_obj = {in: 0, in2: 0}
+    process_val: (num, numb, i) =>
+      Math.max(num, numb)
       
-  class ThreeNodes.nodes.types.Math.Attenuation extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.types.Math.Attenuation extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
       @def_val = @rack.addField("default", 0)
       @reset_val = @rack.addField("reset", false)
       @factor = @rack.addField("factor", 0.8)
       @val = @def_val.get()
-    process_val: (num, i) =>
+    process_val: (num, numb, i) =>
       if @reset_val.get() == true
         @val = @def_val.get()
       @val = @val + (@v_in.get() - @val) * @factor.get()

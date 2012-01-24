@@ -277,7 +277,19 @@ define [
       res = []
       numItems = @rack.getMaxInputSliceCount()
       for i in [0..numItems]
-        res[i] = @process_val(@v_in.get(i), i)
+        ref = @v_in.get(i)
+        switch $.type(ref)
+          when "number" then res[i] = @process_val(ref, i)
+          when "object"
+            switch ref.constructor
+              when THREE.Vector2
+                res[i].x = @process_val(ref.x, i)
+                res[i].y = @process_val(ref.y, i)
+              when THREE.Vector3
+                res[i].x = @process_val(ref.x, i)
+                res[i].y = @process_val(ref.y, i)
+                res[i].z = @process_val(ref.z, i)
+        
       #if @v_out.get() != res
       @v_out.set res
       true

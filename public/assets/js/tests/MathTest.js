@@ -23,10 +23,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         n2.rack.get("z").set(3);
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n2_out, node_mult.v_in);
         ng.render();
-        equals($.type(n1.v_out.val[0]), "Object", "Mult node output an object");
-        equals(node_mult.v_out.get().x, 2, "mult.x = 2 * 1 = 2");
-        equals(node_mult.v_out.get().y, 4, "mult.y = 2 * 2 = 4");
-        return equals(node_mult.v_out.get().z, 6, "mult.z = 2 * 3 = 6");
+        equals($.type(node_mult.v_out.val[0]), "object", "Mult node output an object");
+        equals(node_mult.v_out.get().x, 3, "mult.x = 3 * 1 = 3");
+        equals(node_mult.v_out.get().y, 6, "mult.y = 3 * 2 = 6");
+        return equals(node_mult.v_out.get().z, 9, "mult.z = 3 * 3 = 9");
       });
     }
     return MathTest;
