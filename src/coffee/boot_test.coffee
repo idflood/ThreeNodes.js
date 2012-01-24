@@ -9,6 +9,7 @@ require [
   'tests/NodeGraphTest',
   'tests/NodeFieldTest',
   'tests/NodeConnectionTest',
+  'tests/MathTest',
   'tests/FileSaveTest',
   'tests/FileLoadTest',
   'tests/ThreeJsIntegrationTest',
@@ -16,12 +17,13 @@ require [
   'order!libs/underscore-min',
   'order!libs/backbone',
   "order!libs/qunit-git",
-], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest) ->
+], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest) ->
   "use strict"
   app = new App(true)
   new NodeGraphTest(app)
   new NodeFieldTest(app)
   new NodeConnectionTest(app)
+  new MathTest(app)
   new FileSaveTest(app)
   new FileLoadTest(app)
   new ThreeJsIntegrationTest(app)
