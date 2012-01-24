@@ -25,8 +25,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng.render();
         equals($.type(n1.v_out.val[0]), "Object", "Mult node output an object");
         equals(node_mult.v_out.get().x, 2, "mult.x = 2 * 1 = 2");
-        equals(node_mult.v_out.get().y, 4, "mult.x = 2 * 2 = 4");
-        return equals(node_mult.v_out.get().z, 6, "mult.x = 2 * 3 = 6");
+        equals(node_mult.v_out.get().y, 4, "mult.y = 2 * 2 = 4");
+        return equals(node_mult.v_out.get().z, 6, "mult.z = 2 * 3 = 6");
       });
     }
     return MathTest;
