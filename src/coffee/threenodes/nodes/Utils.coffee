@@ -151,6 +151,97 @@ define [
       if @value != old
         @rack.set("out", @value)
   
+  class ThreeNodes.nodes.types.Utils.Mp3Input extends ThreeNodes.NodeBase
+    # code inspired by http://airtightinteractive.com/demos/js/reactive/
+    
+    is_chrome: => navigator.userAgent.toLowerCase().indexOf('chrome') > -1
+    
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      @counter = 0
+      @rack.addFields
+        inputs:
+          "url": ""
+        outputs:
+          "average" : 0
+          
+      if @is_chrome()
+        @audioContext = new window.webkitAudioContext()
+      else
+        $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
+      @url_cache = @rack.get("url").get()
+    
+    onRegister: () ->
+      super
+      if @rack.get("url").get() != ""
+        @loadAudio(@rack.get("url").get())
+    
+    finishLoad: () =>
+      @source.buffer = @audioBuffer
+      @source.looping = true
+      @source.noteOn(0.0)
+      @onSoundLoad()
+    
+    loadAudio: (url) =>
+      @source = @audioContext.createBufferSource()
+      @analyser = @audioContext.createAnalyser()
+      @analyser.fftSize = 1024
+      
+      # Connect audio processing graph
+      @source.connect(@analyser)
+      @analyser.connect(@audioContext.destination)
+      @loadAudioBuffer(url)
+    
+    loadAudioBuffer: (url) =>
+      request = new XMLHttpRequest()
+      request.open("GET", url, true)
+      request.responseType = "arraybuffer"
+      request.onload = () =>
+        @audioBuffer = @audioContext.createBuffer(request.response, false )
+        @finishLoad()
+      request.send()
+      this
+    
+    onSoundLoad: () =>
+      @freqByteData = new Uint8Array(@analyser.frequencyBinCount)
+      @timeByteData = new Uint8Array(@analyser.frequencyBinCount)
+    
+    getAverageLevel: () =>
+      if !@freqByteData
+        return 0
+      length = @freqByteData.length
+      sum = 0
+      for i in [0..length-1]
+        sum += @freqByteData[i]
+      return sum
+    
+    remove: () =>
+      super
+      if @source
+        @source.noteOff(0.0)
+        @source.disconnect()
+      @freqByteData = false
+      @timeByteData = false
+      @audioBuffer = false
+      @audioContext = false
+      @source = false
+      
+      
+    compute: () =>
+      #console.log flash_sound_value
+      if !@is_chrome()
+        return
+      if @url_cache != @rack.get("url").get()
+        @url_cache = @rack.get("url").get()
+        @loadAudio(@url_cache)
+      if @analyser
+        @analyser.smoothingTimeConstant = 0.1
+        @analyser.getByteFrequencyData(@freqByteData)
+        @analyser.getByteTimeDomainData(@timeByteData)
+        
+        @rack.set("average", @getAverageLevel())
+  
   class ThreeNodes.nodes.types.Utils.SoundInput extends ThreeNodes.NodeBase
     set_fields: =>
       super

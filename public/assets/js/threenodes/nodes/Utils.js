@@ -228,6 +228,119 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Get;
   })();
+  ThreeNodes.nodes.types.Utils.Mp3Input = (function() {
+    __extends(Mp3Input, ThreeNodes.NodeBase);
+    function Mp3Input() {
+      this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.getAverageLevel = __bind(this.getAverageLevel, this);
+      this.onSoundLoad = __bind(this.onSoundLoad, this);
+      this.loadAudioBuffer = __bind(this.loadAudioBuffer, this);
+      this.loadAudio = __bind(this.loadAudio, this);
+      this.finishLoad = __bind(this.finishLoad, this);
+      this.set_fields = __bind(this.set_fields, this);
+      this.is_chrome = __bind(this.is_chrome, this);
+      Mp3Input.__super__.constructor.apply(this, arguments);
+    }
+    Mp3Input.prototype.is_chrome = function() {
+      return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    };
+    Mp3Input.prototype.set_fields = function() {
+      Mp3Input.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.counter = 0;
+      this.rack.addFields({
+        inputs: {
+          "url": ""
+        },
+        outputs: {
+          "average": 0
+        }
+      });
+      if (this.is_chrome()) {
+        this.audioContext = new window.webkitAudioContext();
+      } else {
+        $(".options", this.main_view).prepend('<p class="warning">This node currently require chrome.</p>');
+      }
+      return this.url_cache = this.rack.get("url").get();
+    };
+    Mp3Input.prototype.onRegister = function() {
+      Mp3Input.__super__.onRegister.apply(this, arguments);
+      if (this.rack.get("url").get() !== "") {
+        return this.loadAudio(this.rack.get("url").get());
+      }
+    };
+    Mp3Input.prototype.finishLoad = function() {
+      this.source.buffer = this.audioBuffer;
+      this.source.looping = true;
+      this.source.noteOn(0.0);
+      return this.onSoundLoad();
+    };
+    Mp3Input.prototype.loadAudio = function(url) {
+      this.source = this.audioContext.createBufferSource();
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 1024;
+      this.source.connect(this.analyser);
+      this.analyser.connect(this.audioContext.destination);
+      return this.loadAudioBuffer(url);
+    };
+    Mp3Input.prototype.loadAudioBuffer = function(url) {
+      var request;
+      request = new XMLHttpRequest();
+      request.open("GET", url, true);
+      request.responseType = "arraybuffer";
+      request.onload = __bind(function() {
+        this.audioBuffer = this.audioContext.createBuffer(request.response, false);
+        return this.finishLoad();
+      }, this);
+      request.send();
+      return this;
+    };
+    Mp3Input.prototype.onSoundLoad = function() {
+      this.freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
+      return this.timeByteData = new Uint8Array(this.analyser.frequencyBinCount);
+    };
+    Mp3Input.prototype.getAverageLevel = function() {
+      var i, length, sum, _ref;
+      if (!this.freqByteData) {
+        return 0;
+      }
+      length = this.freqByteData.length;
+      sum = 0;
+      for (i = 0, _ref = length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+        sum += this.freqByteData[i];
+      }
+      return sum;
+    };
+    Mp3Input.prototype.remove = function() {
+      Mp3Input.__super__.remove.apply(this, arguments);
+      if (this.source) {
+        this.source.noteOff(0.0);
+        this.source.disconnect();
+      }
+      this.freqByteData = false;
+      this.timeByteData = false;
+      this.audioBuffer = false;
+      this.audioContext = false;
+      return this.source = false;
+    };
+    Mp3Input.prototype.compute = function() {
+      if (!this.is_chrome()) {
+        return;
+      }
+      if (this.url_cache !== this.rack.get("url").get()) {
+        this.url_cache = this.rack.get("url").get();
+        this.loadAudio(this.url_cache);
+      }
+      if (this.analyser) {
+        this.analyser.smoothingTimeConstant = 0.1;
+        this.analyser.getByteFrequencyData(this.freqByteData);
+        this.analyser.getByteTimeDomainData(this.timeByteData);
+        return this.rack.set("average", this.getAverageLevel());
+      }
+    };
+    return Mp3Input;
+  })();
   ThreeNodes.nodes.types.Utils.SoundInput = (function() {
     __extends(SoundInput, ThreeNodes.NodeBase);
     function SoundInput() {
