@@ -36,42 +36,42 @@ define [
   class ThreeNodes.nodes.types.Math.Mod extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
-      @v_valy = @rack.addField("y", 2)
+      @v_valy = @rack.addField("y", {type: "Any", val: 2})
     process_val: (num, i) =>
       num % @v_valy.get(i)
   
   class ThreeNodes.nodes.types.Math.Add extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", 1)
+      @v_factor = @rack.addField("y", {type: "Any", val: 1})
     process_val: (num, i) =>
       num + @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Subtract extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", 1)
+      @v_factor = @rack.addField("y", {type: "Any", val: 1})
     process_val: (num, i) =>
       num - @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Mult extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
-      @v_factor = @rack.addField("factor", 2)
+      @v_factor = @rack.addField("factor", {type: "Any", val: 2})
     process_val: (num, i) =>
       num * @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Divide extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", 2)
+      @v_factor = @rack.addField("y", {type: "Any", val: 2})
     process_val: (num, i) =>
       num / @v_factor.get(i)
   
   class ThreeNodes.nodes.types.Math.Min extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
-      @v_inb = @rack.addField("in2", 0)
+      @v_inb = @rack.addField("in2", {type: "Any", val: 0})
       @anim_obj = {in: 0, in2: 0}
     process_val: (num, i) =>
       Math.min(num, @v_inb.get(i))
@@ -79,7 +79,7 @@ define [
   class ThreeNodes.nodes.types.Math.Max extends ThreeNodes.NodeNumberSimple
     set_fields: =>
       super
-      @v_inb = @rack.addField("in2", 0)
+      @v_inb = @rack.addField("in2", {type: "Any", val: 0})
       @anim_obj = {in: 0, in2: 0}
     process_val: (num, i) =>
       Math.max(num, @v_inb.get(i))

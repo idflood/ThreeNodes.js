@@ -357,8 +357,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.value = 0;
     };
     NodeNumberSimple.prototype.set_fields = function() {
-      this.v_in = this.rack.addField("in", 0);
-      return this.v_out = this.rack.addField("out", 0, "outputs");
+      this.v_in = this.rack.addField("in", {
+        type: "Any",
+        val: 0
+      });
+      return this.v_out = this.rack.addField("out", {
+        type: "Any",
+        val: 0
+      }, "outputs");
     };
     NodeNumberSimple.prototype.process_val = function(num, i) {
       return num;
