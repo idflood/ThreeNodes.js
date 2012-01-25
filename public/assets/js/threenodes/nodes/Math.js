@@ -161,7 +161,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Mod.prototype.set_fields = function() {
       Mod.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
-        type: "Any",
+        type: "Float",
         val: 2
       });
     };
@@ -180,7 +180,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Add.prototype.set_fields = function() {
       Add.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
-        type: "Any",
+        type: "Float",
         val: 1
       });
     };
@@ -199,7 +199,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Subtract.prototype.set_fields = function() {
       Subtract.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
-        type: "Any",
+        type: "Float",
         val: 1
       });
     };
@@ -218,7 +218,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Mult.prototype.set_fields = function() {
       Mult.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("factor", {
-        type: "Any",
+        type: "Float",
         val: 2
       });
     };
@@ -237,7 +237,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Divide.prototype.set_fields = function() {
       Divide.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
-        type: "Any",
+        type: "Float",
         val: 2
       });
     };
@@ -256,7 +256,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Min.prototype.set_fields = function() {
       Min.__super__.set_fields.apply(this, arguments);
       this.v_factor = this.rack.addField("in2", {
-        type: "Any",
+        type: "Float",
         val: 0
       });
       return this.anim_obj = {
@@ -279,7 +279,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Max.prototype.set_fields = function() {
       Max.__super__.set_fields.apply(this, arguments);
       this.v_factor = this.rack.addField("in2", {
-        type: "Any",
+        type: "Float",
         val: 0
       });
       return this.anim_obj = {
@@ -303,14 +303,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       Attenuation.__super__.set_fields.apply(this, arguments);
       this.def_val = this.rack.addField("default", 0);
       this.reset_val = this.rack.addField("reset", false);
-      this.factor = this.rack.addField("factor", 0.8);
+      this.v_factor = this.rack.addField("factor", 0.8);
       return this.val = this.def_val.get();
     };
     Attenuation.prototype.process_val = function(num, numb, i) {
-      if (this.reset_val.get() === true) {
-        this.val = this.def_val.get();
+      if (this.reset_val.get(i) === true) {
+        this.val = this.def_val.get(i);
       }
-      this.val = this.val + (this.v_in.get() - this.val) * this.factor.get();
+      this.val = this.val + (this.v_in.get(i) - this.val) * this.v_factor.get(i);
       return this.val;
     };
     return Attenuation;

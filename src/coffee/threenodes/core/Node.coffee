@@ -268,8 +268,8 @@ define [
       @value = 0
       
     set_fields: =>
-      @v_in = @rack.addField("in", {type: "Any", val: 0})
-      @v_out = @rack.addField("out", {type: "Any", val: 0}, "outputs")
+      @v_in = @rack.addField("in", {type: "Float", val: 0})
+      @v_out = @rack.addField("out", {type: "Float", val: 0}, "outputs")
       
     process_val: (num, i) => num
     

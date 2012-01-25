@@ -79,28 +79,28 @@ define [
   class ThreeNodes.nodes.types.Math.Mod extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Any", val: 2})
+      @v_factor = @rack.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
       num % numb
   
   class ThreeNodes.nodes.types.Math.Add extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Any", val: 1})
+      @v_factor = @rack.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
       num + numb
   
   class ThreeNodes.nodes.types.Math.Subtract extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Any", val: 1})
+      @v_factor = @rack.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
       num - numb
   
   class ThreeNodes.nodes.types.Math.Mult extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_factor = @rack.addField("factor", {type: "Any", val: 2})
+      @v_factor = @rack.addField("factor", {type: "Float", val: 2})
     
     process_val: (num, numb, i) =>
       num * numb
@@ -109,14 +109,14 @@ define [
   class ThreeNodes.nodes.types.Math.Divide extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Any", val: 2})
+      @v_factor = @rack.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
       num / numb
   
   class ThreeNodes.nodes.types.Math.Min extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_factor = @rack.addField("in2", {type: "Any", val: 0})
+      @v_factor = @rack.addField("in2", {type: "Float", val: 0})
       @anim_obj = {in: 0, in2: 0}
     process_val: (num, numb, i) =>
       Math.min(num, numb)
@@ -124,7 +124,7 @@ define [
   class ThreeNodes.nodes.types.Math.Max extends ThreeNodes.NodeNumberParam1
     set_fields: =>
       super
-      @v_factor = @rack.addField("in2", {type: "Any", val: 0})
+      @v_factor = @rack.addField("in2", {type: "Float", val: 0})
       @anim_obj = {in: 0, in2: 0}
     process_val: (num, numb, i) =>
       Math.max(num, numb)
@@ -134,10 +134,10 @@ define [
       super
       @def_val = @rack.addField("default", 0)
       @reset_val = @rack.addField("reset", false)
-      @factor = @rack.addField("factor", 0.8)
+      @v_factor = @rack.addField("factor", 0.8)
       @val = @def_val.get()
     process_val: (num, numb, i) =>
-      if @reset_val.get() == true
-        @val = @def_val.get()
-      @val = @val + (@v_in.get() - @val) * @factor.get()
+      if @reset_val.get(i) == true
+        @val = @def_val.get(i)
+      @val = @val + (@v_in.get(i) - @val) * @v_factor.get(i)
       @val

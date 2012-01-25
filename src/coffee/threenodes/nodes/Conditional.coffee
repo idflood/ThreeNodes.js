@@ -39,7 +39,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get() && @rack.get("val2").get()
+      res = @rack.get("val1").get() != false && @rack.get("val2").get() != false
       @rack.set("out", res)
   
   class ThreeNodes.nodes.types.Conditional.Or extends ThreeNodes.NodeBase
@@ -53,7 +53,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get() || @rack.get("val2").get()
+      res = @rack.get("val1").get() != false || @rack.get("val2").get() != false
       @rack.set("out", res)
   
   class ThreeNodes.nodes.types.Conditional.Equal extends ThreeNodes.NodeBase
@@ -67,7 +67,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get() == @rack.get("val2").get()
+      res = @rack.get("val1").get(0) == @rack.get("val2").get(0)
       @rack.set("out", res)
   
   class ThreeNodes.nodes.types.Conditional.Smaller extends ThreeNodes.NodeBase
@@ -81,7 +81,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get() < @rack.get("val2").get()
+      res = @rack.get("val1").get(0) < @rack.get("val2").get(0)
       @rack.set("out", res)
   
   class ThreeNodes.nodes.types.Conditional.Greater extends ThreeNodes.NodeBase
@@ -95,5 +95,5 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get() > @rack.get("val2").get()
+      res = @rack.get("val1").get(0) > @rack.get("val2").get(0)
       @rack.set("out", res)

@@ -358,11 +358,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     NodeNumberSimple.prototype.set_fields = function() {
       this.v_in = this.rack.addField("in", {
-        type: "Any",
+        type: "Float",
         val: 0
       });
       return this.v_out = this.rack.addField("out", {
-        type: "Any",
+        type: "Float",
         val: 0
       }, "outputs");
     };

@@ -283,6 +283,9 @@ define [
     compute_value : (val) =>
       switch $.type(val)
         when "number", "string" then return parseFloat(val)
+        when "object"
+          if val.constructor == THREE.Vector2 || val.constructor == THREE.Vector3
+            return val
         when "boolean"
           if val
             return 1
