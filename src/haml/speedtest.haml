@@ -1,0 +1,40 @@
+!!! 5
+%html{:lang => "en", "xml:lang" => "en", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %meta{:content => "text/html;charset=UTF-8", "http-equiv" => "content-type"}/
+    %title ThreeNodes.js::speedtests
+    %script{:'data-main' => "assets/js/boot_speedtest.js", :src => "assets/js/libs/require-jquery.js"}
+    %link{:href => "assets/css/qunit-git.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "favicon2.ico", :rel => "shortcut icon", :type => "image/x-icon"}/
+  
+  %body
+    #hidden_container{:style => "display:none;visibility:hidden;"}
+      #container-wrapper
+        #container
+          #graph
+      
+      #sidebar
+        %ul
+          %li
+            %a{:href => "#tab-new"} New
+          %li
+            %a{:href => "#tab-attribute"} Attribute
+          %li
+            %a{:href => "#tab-system"} System
+        #tab-attribute
+          empty...
+        #tab-new
+          %input#node_filter{:type => "input", :placeholder => "Search"}
+        #tab-system
+          %ul
+            %li
+              %a.new_file{:href => "#"} New File
+            %li
+              %a.open_file{:href => "#"} Open File
+              %input#main_file_input_open{:type => "file", :multiple => "false"}
+            %li
+              %a.save_file{:href => "#"} Save File
+            %li
+              %a.rebuild_shaders{:href => "#"} Rebuild shaders
+      
+      #sidebar-toggle

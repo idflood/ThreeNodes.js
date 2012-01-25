@@ -10,3 +10,6 @@ task 'build', 'Build single application file from source files', ->
   exec_and_log 'coffee -b -o public/assets/js/threenodes/ -c src/coffee/threenodes/'
   exec_and_log 'coffee -b -o public/assets/js/ -c src/coffee/boot_test.coffee'
   exec_and_log 'coffee -b -o public/assets/js/tests/ -c src/coffee/tests/'
+  
+  exec_and_log 'coffee -b -o public/assets/js/ -c src/coffee/boot_speedtest.coffee'
+  exec_and_log 'coffee -b -o public/assets/js/speedtests/ -c src/coffee/speedtests/'
