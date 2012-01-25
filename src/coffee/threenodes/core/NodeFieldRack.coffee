@@ -168,7 +168,7 @@ define [
       $(".options .center", @node.main_view).append("<div><input type='text' id='f-txt-input-#{field.fid}' /></div>")
       f_in = $("#f-txt-input-#{field.fid}")
       field.on_value_update_hooks.update_center_textfield = (v) ->
-        if v
+        if v != null
           f_in.val(v.toString().substring(0, 10))
       f_in.val(field.get())
       if field.is_output == true

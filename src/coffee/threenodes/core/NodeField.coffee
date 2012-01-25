@@ -26,6 +26,7 @@ define [
       @changed = true
       @node.dirty = true
       new_val = @on_value_changed(v)
+      
       if $.type(new_val) == "array"
         tmp_val = _.filter new_val, (item) ->
           item != null
@@ -287,7 +288,7 @@ define [
           if val.constructor == THREE.Vector2 || val.constructor == THREE.Vector3
             return val
         when "boolean"
-          if val
+          if val == true
             return 1
           else
             return 0
