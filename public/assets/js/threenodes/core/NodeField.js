@@ -435,8 +435,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         case "number":
         case "string":
           return parseFloat(val);
+        case "object":
+          if (val.constructor === THREE.Vector2 ||  val.constructor === THREE.Vector3) {
+            return val;
+          }
+          break;
         case "boolean":
-          if (val) {
+          if (val === true) {
             return 1;
           } else {
             return 0;

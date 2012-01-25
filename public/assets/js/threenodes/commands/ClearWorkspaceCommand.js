@@ -11,7 +11,8 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       $("#webgl-window canvas").remove();
       $("#timeline-container, #keyEditDialog").remove();
       timeline = injector.get("AppTimeline");
-      return timeline.onRegister();
+      timeline.onRegister();
+      return ThreeNodes.sound_nodes = [];
     };
     return ClearWorkspaceCommand;
   })();

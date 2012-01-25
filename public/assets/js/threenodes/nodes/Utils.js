@@ -228,6 +228,141 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Get;
   })();
+  ThreeNodes.nodes.types.Utils.Mp3Input = (function() {
+    __extends(Mp3Input, ThreeNodes.NodeBase);
+    function Mp3Input() {
+      this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.getAverageLevel = __bind(this.getAverageLevel, this);
+      this.onSoundLoad = __bind(this.onSoundLoad, this);
+      this.loadAudioBuffer = __bind(this.loadAudioBuffer, this);
+      this.loadAudio = __bind(this.loadAudio, this);
+      this.finishLoad = __bind(this.finishLoad, this);
+      this.set_fields = __bind(this.set_fields, this);
+      this.is_chrome = __bind(this.is_chrome, this);
+      Mp3Input.__super__.constructor.apply(this, arguments);
+    }
+    Mp3Input.prototype.is_chrome = function() {
+      return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    };
+    Mp3Input.prototype.set_fields = function() {
+      Mp3Input.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.counter = 0;
+      this.rack.addFields({
+        inputs: {
+          "url": "",
+          "smoothingTime": 0.1
+        },
+        outputs: {
+          "average": 0,
+          "low": 0,
+          "medium": 0,
+          "high": 0
+        }
+      });
+      if (this.is_chrome()) {
+        this.audioContext = new window.webkitAudioContext();
+      } else {
+        $(".options", this.main_view).prepend('<p class="warning">This node currently require chrome.</p>');
+      }
+      this.url_cache = this.rack.get("url").get();
+      return ThreeNodes.sound_nodes.push(this);
+    };
+    Mp3Input.prototype.onRegister = function() {
+      Mp3Input.__super__.onRegister.apply(this, arguments);
+      if (this.rack.get("url").get() !== "") {
+        return this.loadAudio(this.rack.get("url").get());
+      }
+    };
+    Mp3Input.prototype.finishLoad = function() {
+      this.source.buffer = this.audioBuffer;
+      this.source.looping = true;
+      this.source.noteOn(0.0);
+      return this.onSoundLoad();
+    };
+    Mp3Input.prototype.loadAudio = function(url) {
+      this.source = this.audioContext.createBufferSource();
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 1024;
+      this.source.connect(this.analyser);
+      this.analyser.connect(this.audioContext.destination);
+      return this.loadAudioBuffer(url);
+    };
+    Mp3Input.prototype.loadAudioBuffer = function(url) {
+      var request;
+      request = new XMLHttpRequest();
+      request.open("GET", url, true);
+      request.responseType = "arraybuffer";
+      request.onload = __bind(function() {
+        this.audioBuffer = this.audioContext.createBuffer(request.response, false);
+        return this.finishLoad();
+      }, this);
+      request.send();
+      return this;
+    };
+    Mp3Input.prototype.onSoundLoad = function() {
+      this.freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
+      return this.timeByteData = new Uint8Array(this.analyser.frequencyBinCount);
+    };
+    Mp3Input.prototype.getAverageLevel = function(start, max) {
+      var i, length, sum;
+      if (start == null) {
+        start = 0;
+      }
+      if (max == null) {
+        max = 512;
+      }
+      if (!this.freqByteData) {
+        return 0;
+      }
+      start = Math.floor(start);
+      max = Math.floor(max);
+      length = max - start;
+      sum = 0;
+      for (i = start; start <= max ? i <= max : i >= max; start <= max ? i++ : i--) {
+        sum += this.freqByteData[i];
+      }
+      return sum / length;
+    };
+    Mp3Input.prototype.remove = function() {
+      Mp3Input.__super__.remove.apply(this, arguments);
+      if (this.source) {
+        this.source.noteOff(0.0);
+        this.source.disconnect();
+      }
+      this.freqByteData = false;
+      this.timeByteData = false;
+      this.audioBuffer = false;
+      this.audioContext = false;
+      return this.source = false;
+    };
+    Mp3Input.prototype.compute = function() {
+      var length, length3rd;
+      if (!this.is_chrome()) {
+        return;
+      }
+      if (this.url_cache !== this.rack.get("url").get()) {
+        this.url_cache = this.rack.get("url").get();
+        this.loadAudio(this.url_cache);
+      }
+      if (this.analyser) {
+        this.analyser.smoothingTimeConstant = this.rack.get("smoothingTime").get();
+        this.analyser.getByteFrequencyData(this.freqByteData);
+        this.analyser.getByteTimeDomainData(this.timeByteData);
+      }
+      if (this.freqByteData) {
+        length = this.freqByteData.length;
+        length3rd = length / 3;
+        this.rack.set("average", this.getAverageLevel(0, length - 1));
+        this.rack.set("low", this.getAverageLevel(0, length3rd - 1));
+        this.rack.set("medium", this.getAverageLevel(length3rd, (length3rd * 2) - 1));
+        this.rack.set("high", this.getAverageLevel(length3rd * 2, length - 1));
+      }
+      return true;
+    };
+    return Mp3Input;
+  })();
   ThreeNodes.nodes.types.Utils.SoundInput = (function() {
     __extends(SoundInput, ThreeNodes.NodeBase);
     function SoundInput() {
