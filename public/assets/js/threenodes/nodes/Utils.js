@@ -266,7 +266,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       } else {
         $(".options", this.main_view).prepend('<p class="warning">This node currently require chrome.</p>');
       }
-      return this.url_cache = this.rack.get("url").get();
+      this.url_cache = this.rack.get("url").get();
+      return ThreeNodes.sound_nodes.push(this);
     };
     Mp3Input.prototype.onRegister = function() {
       Mp3Input.__super__.onRegister.apply(this, arguments);

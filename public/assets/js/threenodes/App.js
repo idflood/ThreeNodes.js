@@ -17,6 +17,7 @@ ThreeNodes.nodes = {
     Particle: {}
   }
 };
+ThreeNodes.sound_nodes = [];
 ThreeNodes.mouseX = 0;
 ThreeNodes.mouseY = 0;
 ThreeNodes.fields = {

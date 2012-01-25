@@ -17,3 +17,4 @@ define [
       $("#timeline-container, #keyEditDialog").remove()
       timeline = injector.get "AppTimeline"
       timeline.onRegister()
+      ThreeNodes.sound_nodes = []

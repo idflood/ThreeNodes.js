@@ -19,6 +19,8 @@ ThreeNodes.nodes =
     PostProcessing: {}
     Particle: {}
 
+ThreeNodes.sound_nodes = []
+
 ThreeNodes.mouseX = 0
 ThreeNodes.mouseY = 0
 
