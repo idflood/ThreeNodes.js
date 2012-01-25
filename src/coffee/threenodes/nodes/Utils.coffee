@@ -163,8 +163,12 @@ define [
       @rack.addFields
         inputs:
           "url": ""
+          "smoothingTime": 0.1
         outputs:
           "average" : 0
+          "low" : 0
+          "medium" : 0
+          "high" : 0
           
       if @is_chrome()
         @audioContext = new window.webkitAudioContext()
@@ -207,14 +211,16 @@ define [
       @freqByteData = new Uint8Array(@analyser.frequencyBinCount)
       @timeByteData = new Uint8Array(@analyser.frequencyBinCount)
     
-    getAverageLevel: () =>
+    getAverageLevel: (start = 0, max = 512) =>
       if !@freqByteData
         return 0
-      length = @freqByteData.length
+      start = Math.floor(start)
+      max = Math.floor(max)
+      length = max - start
       sum = 0
-      for i in [0..length-1]
+      for i in [start..max]
         sum += @freqByteData[i]
-      return sum
+      return sum / length
     
     remove: () =>
       super
@@ -236,11 +242,19 @@ define [
         @url_cache = @rack.get("url").get()
         @loadAudio(@url_cache)
       if @analyser
-        @analyser.smoothingTimeConstant = 0.1
+        @analyser.smoothingTimeConstant = @rack.get("smoothingTime").get()
         @analyser.getByteFrequencyData(@freqByteData)
         @analyser.getByteTimeDomainData(@timeByteData)
+      
+      if @freqByteData
+        length = @freqByteData.length
+        length3rd = length / 3
         
-        @rack.set("average", @getAverageLevel())
+        @rack.set("average", @getAverageLevel(0, length - 1))
+        @rack.set("low", @getAverageLevel(0, length3rd - 1))
+        @rack.set("medium", @getAverageLevel(length3rd, (length3rd * 2) - 1))
+        @rack.set("high", @getAverageLevel(length3rd * 2, length - 1))
+      return true
   
   class ThreeNodes.nodes.types.Utils.SoundInput extends ThreeNodes.NodeBase
     set_fields: =>

@@ -251,10 +251,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.counter = 0;
       this.rack.addFields({
         inputs: {
-          "url": ""
+          "url": "",
+          "smoothingTime": 0.1
         },
         outputs: {
-          "average": 0
+          "average": 0,
+          "low": 0,
+          "medium": 0,
+          "high": 0
         }
       });
       if (this.is_chrome()) {
@@ -300,17 +304,25 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
       return this.timeByteData = new Uint8Array(this.analyser.frequencyBinCount);
     };
-    Mp3Input.prototype.getAverageLevel = function() {
-      var i, length, sum, _ref;
+    Mp3Input.prototype.getAverageLevel = function(start, max) {
+      var i, length, sum;
+      if (start == null) {
+        start = 0;
+      }
+      if (max == null) {
+        max = 512;
+      }
       if (!this.freqByteData) {
         return 0;
       }
-      length = this.freqByteData.length;
+      start = Math.floor(start);
+      max = Math.floor(max);
+      length = max - start;
       sum = 0;
-      for (i = 0, _ref = length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+      for (i = start; start <= max ? i <= max : i >= max; start <= max ? i++ : i--) {
         sum += this.freqByteData[i];
       }
-      return sum;
+      return sum / length;
     };
     Mp3Input.prototype.remove = function() {
       Mp3Input.__super__.remove.apply(this, arguments);
@@ -325,6 +337,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.source = false;
     };
     Mp3Input.prototype.compute = function() {
+      var length, length3rd;
       if (!this.is_chrome()) {
         return;
       }
@@ -333,11 +346,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.loadAudio(this.url_cache);
       }
       if (this.analyser) {
-        this.analyser.smoothingTimeConstant = 0.1;
+        this.analyser.smoothingTimeConstant = this.rack.get("smoothingTime").get();
         this.analyser.getByteFrequencyData(this.freqByteData);
         this.analyser.getByteTimeDomainData(this.timeByteData);
-        return this.rack.set("average", this.getAverageLevel());
       }
+      if (this.freqByteData) {
+        length = this.freqByteData.length;
+        length3rd = length / 3;
+        this.rack.set("average", this.getAverageLevel(0, length - 1));
+        this.rack.set("low", this.getAverageLevel(0, length3rd - 1));
+        this.rack.set("medium", this.getAverageLevel(length3rd, (length3rd * 2) - 1));
+        this.rack.set("high", this.getAverageLevel(length3rd * 2, length - 1));
+      }
+      return true;
     };
     return Mp3Input;
   })();
