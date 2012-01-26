@@ -32,6 +32,9 @@ var Timeline = function( parameters ) {
     this.getPropertyValue = parameters.getPropertyValue !== undefined ? parameters.getPropertyValue : function(propertyAnim) {
       return propertyAnim.target[propertyAnim.propertyName];
     };
+    
+    this.onStop = parameters.onStop !== undefined ? parameters.onStop : function() {};
+    this.onPlay = parameters.onPlay !== undefined ? parameters.onPlay : function(time) {};
 };
 
 Timeline.currentInstance = null;     
@@ -56,14 +59,17 @@ Timeline.prototype.stop = function() {
     this.playing = false;  
     this.time = 0;       
     this.prevTime = this.time - 1/30; //FIXME 1/30
+    this.onStop();
 };
 
 Timeline.prototype.pause = function() {
     this.playing = false;  
+    this.onStop();
 };
 
 Timeline.prototype.play = function() {
     this.playing = true;
+    this.onPlay(this.time);
 };
 
 Timeline.prototype.start = function() {

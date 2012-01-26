@@ -171,6 +171,7 @@ Timeline.prototype.onDocumentMouseMove = function(event) {
     if (this.time < 0) this.time = 0;
     if (this.time > animationEnd) this.time = animationEnd;  
     this.prevTime = this.time - 1/30; //FIXME: hardcoded frame delta 1/30
+    this.onPlay(this.time);
   }  
   if (this.draggingKeys) {
     for(var i=0; i<this.selectedKeys.length; i++) {

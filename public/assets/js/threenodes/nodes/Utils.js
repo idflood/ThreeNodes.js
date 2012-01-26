@@ -237,6 +237,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.onSoundLoad = __bind(this.onSoundLoad, this);
       this.loadAudioBuffer = __bind(this.loadAudioBuffer, this);
       this.loadAudio = __bind(this.loadAudio, this);
+      this.createSound = __bind(this.createSound, this);
       this.finishLoad = __bind(this.finishLoad, this);
       this.set_fields = __bind(this.set_fields, this);
       this.is_chrome = __bind(this.is_chrome, this);
@@ -275,18 +276,38 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return this.loadAudio(this.rack.get("url").get());
       }
     };
+    Mp3Input.prototype.stopSound = function() {
+      if (this.source) {
+        return this.source.noteOff(0.0);
+      }
+    };
+    Mp3Input.prototype.playSound = function(time) {
+      if (this.source && this.audioContext && this.audioBuffer) {
+        this.stopSound();
+        this.source = this.createSound();
+        return this.source.noteGrainOn(0, time, this.audioBuffer.duration - time);
+      }
+    };
     Mp3Input.prototype.finishLoad = function() {
       this.source.buffer = this.audioBuffer;
       this.source.looping = true;
       this.source.noteOn(0.0);
       return this.onSoundLoad();
     };
+    Mp3Input.prototype.createSound = function() {
+      var src;
+      src = this.audioContext.createBufferSource();
+      if (this.audioBuffer) {
+        src.buffer = this.audioBuffer;
+      }
+      src.connect(this.analyser);
+      this.analyser.connect(this.audioContext.destination);
+      return src;
+    };
     Mp3Input.prototype.loadAudio = function(url) {
-      this.source = this.audioContext.createBufferSource();
       this.analyser = this.audioContext.createAnalyser();
       this.analyser.fftSize = 1024;
-      this.source.connect(this.analyser);
-      this.analyser.connect(this.audioContext.destination);
+      this.source = this.createSound();
       return this.loadAudioBuffer(url);
     };
     Mp3Input.prototype.loadAudioBuffer = function(url) {

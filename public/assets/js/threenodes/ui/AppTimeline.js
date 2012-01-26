@@ -28,6 +28,26 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         },
         getPropertyValue: function(propertyAnim) {
           return propertyAnim.target[propertyAnim.propertyName].get();
+        },
+        onStop: function() {
+          var node, _i, _len, _ref, _results;
+          _ref = ThreeNodes.sound_nodes;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.stopSound());
+          }
+          return _results;
+        },
+        onPlay: function(time) {
+          var node, _i, _len, _ref, _results;
+          _ref = ThreeNodes.sound_nodes;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.playSound(time));
+          }
+          return _results;
         }
       });
       Timeline.globalInstance = this.timeline;

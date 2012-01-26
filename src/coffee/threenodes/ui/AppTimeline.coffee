@@ -31,6 +31,12 @@ define [
           propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
         getPropertyValue: (propertyAnim) ->
           propertyAnim.target[propertyAnim.propertyName].get()
+        onStop: () ->
+          for node in ThreeNodes.sound_nodes
+            node.stopSound()
+        onPlay: (time) ->
+          for node in ThreeNodes.sound_nodes
+            node.playSound(time)
       Timeline.globalInstance = @timeline
       @timeline.loop(-1)
       @time = 0

@@ -152,8 +152,6 @@ define [
         @rack.set("out", @value)
   
   class ThreeNodes.nodes.types.Utils.Mp3Input extends ThreeNodes.NodeBase
-    # code inspired by http://airtightinteractive.com/demos/js/reactive/
-    
     is_chrome: => navigator.userAgent.toLowerCase().indexOf('chrome') > -1
     
     set_fields: =>
@@ -182,20 +180,35 @@ define [
       if @rack.get("url").get() != ""
         @loadAudio(@rack.get("url").get())
     
+    stopSound: () ->
+      if @source
+        @source.noteOff(0.0)
+    
+    playSound: (time) ->
+      if @source && @audioContext && @audioBuffer
+        @stopSound()
+        @source = @createSound()
+        @source.noteGrainOn(0, time, @audioBuffer.duration - time)
+    
     finishLoad: () =>
       @source.buffer = @audioBuffer
       @source.looping = true
       @source.noteOn(0.0)
       @onSoundLoad()
     
+    createSound: () =>
+      src = @audioContext.createBufferSource()
+      if @audioBuffer
+        src.buffer = @audioBuffer
+      src.connect(@analyser)
+      @analyser.connect(@audioContext.destination)
+      return src
+    
     loadAudio: (url) =>
-      @source = @audioContext.createBufferSource()
       @analyser = @audioContext.createAnalyser()
       @analyser.fftSize = 1024
       
-      # Connect audio processing graph
-      @source.connect(@analyser)
-      @analyser.connect(@audioContext.destination)
+      @source = @createSound()
       @loadAudioBuffer(url)
     
     loadAudioBuffer: (url) =>
