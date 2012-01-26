@@ -23,6 +23,7 @@ var Timeline = function( parameters ) {
     this.loopCount = 0; 
     this.loopMode = 0;   
     this.playing = true;
+    this.maxTime = this.parameters.maxTime !== undefined ? this.parameters.maxTime : 0;
     this.setPropertyValue = this.parameters.setPropertyValue !== undefined ? this.parameters.setPropertyValue : function(propertyAnim, t) {
       propertyAnim.target[propertyAnim.propertyName] = t;
     };
@@ -118,8 +119,9 @@ Timeline.prototype.findAnimationEnd = function() {
         if (this.anims[i].endTime > endTime) {
             endTime = this.anims[i].endTime;
         }
-    }             
-    return endTime;
+    }
+    
+    return Math.max(endTime, this.maxTime);
 };
 
 Timeline.prototype.applyValues = function() {  

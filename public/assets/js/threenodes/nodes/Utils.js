@@ -278,7 +278,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     Mp3Input.prototype.stopSound = function() {
       if (this.source) {
-        return this.source.noteOff(0.0);
+        this.source.noteOff(0.0);
+        this.source.disconnect(0);
+        return console.log("stop sound");
       }
     };
     Mp3Input.prototype.playSound = function(time) {
@@ -293,6 +295,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.source.looping = true;
       this.onSoundLoad();
       this.source.noteOn(0.0);
+      Timeline.getGlobalInstance().maxTime = this.audioBuffer.duration;
       Timeline.getGlobalInstance().stop();
       return Timeline.getGlobalInstance().play();
     };

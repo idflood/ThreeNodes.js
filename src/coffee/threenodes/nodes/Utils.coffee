@@ -183,6 +183,8 @@ define [
     stopSound: () ->
       if @source
         @source.noteOff(0.0)
+        @source.disconnect(0)
+        console.log "stop sound"
     
     playSound: (time) ->
       if @source && @audioContext && @audioBuffer
@@ -197,6 +199,9 @@ define [
       @onSoundLoad()
       
       @source.noteOn(0.0)
+      
+      Timeline.getGlobalInstance().maxTime = @audioBuffer.duration;
+      
       # reset the global timeline when the sound is loaded
       Timeline.getGlobalInstance().stop();
       Timeline.getGlobalInstance().play();
