@@ -193,8 +193,13 @@ define [
     finishLoad: () =>
       @source.buffer = @audioBuffer
       @source.looping = true
-      @source.noteOn(0.0)
+      
       @onSoundLoad()
+      
+      @source.noteOn(0.0)
+      # reset the global timeline when the sound is loaded
+      Timeline.getGlobalInstance().stop();
+      Timeline.getGlobalInstance().play();
     
     createSound: () =>
       src = @audioContext.createBufferSource()

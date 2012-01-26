@@ -291,8 +291,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Mp3Input.prototype.finishLoad = function() {
       this.source.buffer = this.audioBuffer;
       this.source.looping = true;
+      this.onSoundLoad();
       this.source.noteOn(0.0);
-      return this.onSoundLoad();
+      Timeline.getGlobalInstance().stop();
+      return Timeline.getGlobalInstance().play();
     };
     Mp3Input.prototype.createSound = function() {
       var src;
