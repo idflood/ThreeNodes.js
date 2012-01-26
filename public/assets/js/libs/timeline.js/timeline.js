@@ -97,6 +97,7 @@ Timeline.prototype.update = function(dt) {
         if (this.time > animationEnd) {
             this.loopCount++;
             this.time = 0;
+            this.onPlay(0);
         }
         if (this.loopMode == -1) {
             //loop infinitely
@@ -104,6 +105,7 @@ Timeline.prototype.update = function(dt) {
         else {
             if (this.loopCount >= this.loopMode) {
                 this.playing = false;
+                this.onStop();
             }
         }
     }     
