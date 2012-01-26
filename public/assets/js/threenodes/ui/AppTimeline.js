@@ -6,6 +6,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
     }
     AppTimeline.prototype.onRegister = function() {
+      var ng;
+      ng = this.context.injector.get("NodeGraph");
       this.timeline = new Timeline({
         displayOnlySelected: true,
         colorBackground: "#333",
@@ -28,6 +30,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         },
         getPropertyValue: function(propertyAnim) {
           return propertyAnim.target[propertyAnim.propertyName].get();
+        },
+        onTrackRebuild: function() {
+          var node, _i, _len, _ref, _results;
+          _ref = ng.nodes;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.onTimelineRebuild());
+          }
+          return _results;
         },
         onStop: function() {
           var node, _i, _len, _ref, _results;

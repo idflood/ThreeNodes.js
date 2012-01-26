@@ -11,6 +11,7 @@ define [
       _.extend(@, Backbone.Events)
     
     onRegister: () =>
+      ng = @context.injector.get("NodeGraph")
       @timeline = new Timeline
         displayOnlySelected: true
         colorBackground: "#333"
@@ -31,6 +32,9 @@ define [
           propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
         getPropertyValue: (propertyAnim) ->
           propertyAnim.target[propertyAnim.propertyName].get()
+        onTrackRebuild: () ->
+          for node in ng.nodes
+            node.onTimelineRebuild()
         onStop: () ->
           for node in ThreeNodes.sound_nodes
             node.stopSound()

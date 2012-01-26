@@ -50,6 +50,7 @@ Timeline.prototype.initGUI = function( parameters ) {
   this.colorTrackBottomLine = parameters.colorTrackBottomLine !== undefined ? parameters.colorTrackBottomLine : "#FFFFFF";
   this.colorObjectLabel = parameters.colorObjectLabel !== undefined ? parameters.colorObjectLabel : "#000000";
   this.colorPropertyLabel = parameters.colorPropertyLabel !== undefined ? parameters.colorPropertyLabel : "#555555";
+  this.onTrackRebuild = parameters.onTrackRebuild !== undefined ? parameters.onTrackRebuild : function(){};
             
   this.trackNameCounter = 0; 
   this.initTracks();
@@ -784,6 +785,7 @@ Timeline.prototype.rebuildSelectedTracks = function() {
     this.rebuildTrackAnimsFromKeys(this.selectedKeys[i].track);
   }     
   this.save();
+  this.onTrackRebuild();
 }
 
 Timeline.prototype.rebuildTrackAnimsFromKeys = function(track) {   

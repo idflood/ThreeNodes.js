@@ -23,18 +23,18 @@ var Timeline = function( parameters ) {
     this.loopCount = 0; 
     this.loopMode = 0;   
     this.playing = true;
-    this.setPropertyValue = parameters.setPropertyValue !== undefined ? parameters.setPropertyValue : function(propertyAnim, t) {
+    this.setPropertyValue = this.parameters.setPropertyValue !== undefined ? this.parameters.setPropertyValue : function(propertyAnim, t) {
       propertyAnim.target[propertyAnim.propertyName] = t;
     };
-    this.applyPropertyValue = parameters.applyPropertyValue !== undefined ? parameters.applyPropertyValue : function(propertyAnim, t) {
+    this.applyPropertyValue = this.parameters.applyPropertyValue !== undefined ? this.parameters.applyPropertyValue : function(propertyAnim, t) {
       propertyAnim.target[propertyAnim.propertyName] = propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t;
     };
-    this.getPropertyValue = parameters.getPropertyValue !== undefined ? parameters.getPropertyValue : function(propertyAnim) {
+    this.getPropertyValue = this.parameters.getPropertyValue !== undefined ? this.parameters.getPropertyValue : function(propertyAnim) {
       return propertyAnim.target[propertyAnim.propertyName];
     };
     
-    this.onStop = parameters.onStop !== undefined ? parameters.onStop : function() {};
-    this.onPlay = parameters.onPlay !== undefined ? parameters.onPlay : function(time) {};
+    this.onStop = this.parameters.onStop !== undefined ? this.parameters.onStop : function() {};
+    this.onPlay = this.parameters.onPlay !== undefined ? this.parameters.onPlay : function(time) {};
 };
 
 Timeline.currentInstance = null;     

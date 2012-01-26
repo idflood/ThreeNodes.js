@@ -73,6 +73,8 @@ define [
       if @view != false
         # add field context menu after they have been created
         @view.init_context_menu()
+      
+      @onTimelineRebuild()
       return true
     
     typename: => String(@constructor.name)
@@ -103,7 +105,22 @@ define [
             track: track
         @anim.timeline.rebuildTrackAnimsFromKeys(track)
       true
-      
+    
+    onTimelineRebuild: () =>
+      nodeAnimation = false
+      for propTrack in @anim.objectTrack.propertyTracks
+        $target = $('.inputs .field-' + propTrack.name , @main_view)
+        if propTrack.anims.length > 0
+          $target.addClass "has-animation"
+          nodeAnimation = true
+        else
+          $target.removeClass "has-animation"
+      if nodeAnimation == true
+        $(@main_view).addClass "node-has-animation"
+      else
+        $(@main_view).removeClass "node-has-animation"
+      true
+    
     add_count_input : () =>
       @rack.addFields
         inputs:
