@@ -291,13 +291,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
     };
     Mp3Input.prototype.finishLoad = function() {
+      var delay;
       this.source.buffer = this.audioBuffer;
       this.source.looping = true;
       this.onSoundLoad();
-      this.source.noteOn(0.0);
       Timeline.getGlobalInstance().maxTime = this.audioBuffer.duration;
-      Timeline.getGlobalInstance().stop();
-      return Timeline.getGlobalInstance().play();
+      delay = function(ms, func) {
+        return setTimeout(func, ms);
+      };
+      return delay(1000, __bind(function() {
+        Timeline.getGlobalInstance().stop();
+        return Timeline.getGlobalInstance().play();
+      }, this));
     };
     Mp3Input.prototype.createSound = function() {
       var src;
@@ -310,6 +315,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return src;
     };
     Mp3Input.prototype.loadAudio = function(url) {
+      Timeline.getGlobalInstance().stop();
       this.analyser = this.audioContext.createAnalyser();
       this.analyser.fftSize = 1024;
       this.source = this.createSound();

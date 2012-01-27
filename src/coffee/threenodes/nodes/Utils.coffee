@@ -198,13 +198,14 @@ define [
       
       @onSoundLoad()
       
-      @source.noteOn(0.0)
-      
       Timeline.getGlobalInstance().maxTime = @audioBuffer.duration;
       
-      # reset the global timeline when the sound is loaded
-      Timeline.getGlobalInstance().stop();
-      Timeline.getGlobalInstance().play();
+      # looks like the sound is not immediatly ready so add a little delay
+      delay = (ms, func) -> setTimeout func, ms
+      delay 1000, () =>
+        # reset the global timeline when the sound is loaded
+        Timeline.getGlobalInstance().stop();
+        Timeline.getGlobalInstance().play();
     
     createSound: () =>
       src = @audioContext.createBufferSource()
@@ -215,6 +216,9 @@ define [
       return src
     
     loadAudio: (url) =>
+      # stop the main timeline when we start to load
+      Timeline.getGlobalInstance().stop();
+      
       @analyser = @audioContext.createAnalyser()
       @analyser.fftSize = 1024
       
