@@ -176,7 +176,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       });
       toolbox_pos = timelinesize + 20;
       $("#bottom-toolbox").attr("style", "bottom: " + toolbox_pos + "px !important;");
-      return $("#sidebar").css("height", h - 25);
+      return $("#sidebar").css({
+        bottom: timelinesize
+      });
     };
     AppUI.prototype.animate = function() {
       this.render();

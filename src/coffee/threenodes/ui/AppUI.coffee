@@ -160,7 +160,9 @@ define [
       toolbox_pos = timelinesize + 20
       $("#bottom-toolbox").attr("style", "bottom: #{toolbox_pos}px !important;")
       
-      $("#sidebar").css("height", h - 25)
+      $("#sidebar").css
+        bottom: timelinesize
+        #"height" h - 25)
       
     animate: () =>
       @render()
