@@ -18,3 +18,5 @@ define [
       timeline = injector.get "AppTimeline"
       timeline.onRegister()
       ThreeNodes.sound_nodes = []
+      
+      @context.commandMap.execute "OnUiResizeCommand"

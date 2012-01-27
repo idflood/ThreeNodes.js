@@ -12,7 +12,8 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       $("#timeline-container, #keyEditDialog").remove();
       timeline = injector.get("AppTimeline");
       timeline.onRegister();
-      return ThreeNodes.sound_nodes = [];
+      ThreeNodes.sound_nodes = [];
+      return this.context.commandMap.execute("OnUiResizeCommand");
     };
     return ClearWorkspaceCommand;
   })();
