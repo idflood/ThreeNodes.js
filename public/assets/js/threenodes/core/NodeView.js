@@ -138,7 +138,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           $selected = $(".node.ui-selected");
           nodes = [];
           $selected.each(function() {
-            return nodes.push($(this).data("object").anim);
+            var ob;
+            ob = $(this).data("object");
+            ob.anim.objectTrack.name = $(".head span", ob.main_view).html();
+            return nodes.push(ob.anim);
           });
           return self.options.apptimeline.timeline.selectAnims(nodes);
         }, this)

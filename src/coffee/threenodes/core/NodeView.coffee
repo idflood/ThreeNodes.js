@@ -117,7 +117,9 @@ define [
           $selected = $(".node.ui-selected")
           nodes = []
           $selected.each () ->
-            nodes.push($(this).data("object").anim)
+            ob = $(this).data("object")
+            ob.anim.objectTrack.name = $(".head span", ob.main_view).html()
+            nodes.push(ob.anim)
           self.options.apptimeline.timeline.selectAnims(nodes)
   
   return ThreeNodes.NodeView
