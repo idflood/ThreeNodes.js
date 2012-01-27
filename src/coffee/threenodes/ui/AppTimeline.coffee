@@ -12,6 +12,10 @@ define [
     
     onRegister: () =>
       ng = @context.injector.get("NodeGraph")
+      
+      # reset canvas height
+      localStorage["timeline.js.settings.canvasHeight"] = 42
+      
       @timeline = new Timeline
         displayOnlySelected: true
         colorBackground: "#333"
@@ -26,6 +30,8 @@ define [
         colorTimeTicker: "#f00"
         colorTrackBottomLine: "#555"
         colorPropertyLabel: "#999"
+        onGuiSave: () =>
+          @context.commandMap.execute "OnUiResizeCommand"
         setPropertyValue: (propertyAnim, t) ->
           propertyAnim.target[propertyAnim.propertyName].set(t)
         applyPropertyValue: (propertyAnim, t) ->
@@ -42,6 +48,7 @@ define [
           for node in ThreeNodes.sound_nodes
             node.playSound(time)
       Timeline.globalInstance = @timeline
+      
       @timeline.loop(-1)
       @time = 0
     

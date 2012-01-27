@@ -51,6 +51,7 @@ Timeline.prototype.initGUI = function( parameters ) {
   this.colorObjectLabel = parameters.colorObjectLabel !== undefined ? parameters.colorObjectLabel : "#000000";
   this.colorPropertyLabel = parameters.colorPropertyLabel !== undefined ? parameters.colorPropertyLabel : "#555555";
   this.onTrackRebuild = parameters.onTrackRebuild !== undefined ? parameters.onTrackRebuild : function(){};
+  this.onGuiSave = parameters.onGuiSave !== undefined ? parameters.onGuiSave : function(){};
             
   this.trackNameCounter = 0; 
   this.initTracks();
@@ -67,6 +68,7 @@ Timeline.prototype.initGUI = function( parameters ) {
 	document.body.appendChild(this.container);     
   
   this.splitter = document.createElement("div");
+  this.splitter.id = "timeline-splitter"
   this.splitter.style.width = "100%";       
   this.splitter.style.height = "4px";
   this.splitter.style.cursor = "ns-resize";
@@ -75,7 +77,8 @@ Timeline.prototype.initGUI = function( parameters ) {
 	this.splitter.style.bottom = (this.canvasHeight - 2) + "px";   
 	this.splitter.addEventListener("mousedown", function() {
 	  function mouseMove(e) {         
-	    var h = (window.innerHeight - e.clientY);  
+	    var h = (window.innerHeight - e.clientY);
+	    h = Math.max(h, 42);
 	    self.splitter.style.bottom = (h - 2) + "px";
 	    self.container.style.height = h + "px";
 	    self.canvasHeight = h;     	                                     
@@ -910,6 +913,7 @@ Timeline.prototype.save = function() {
   localStorage["timeline.js.settings.canvasHeight"] = this.canvasHeight;                              
   localStorage["timeline.js.settings.timeScale"] = this.timeScale;                              
   localStorage["timeline.js.data." + this.name] = JSON.stringify(data);
+  this.onGuiSave();
 } 
 
 Timeline.prototype.load = function() {      

@@ -8,6 +8,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
     AppTimeline.prototype.onRegister = function() {
       var ng;
       ng = this.context.injector.get("NodeGraph");
+      localStorage["timeline.js.settings.canvasHeight"] = 42;
       this.timeline = new Timeline({
         displayOnlySelected: true,
         colorBackground: "#333",
@@ -22,6 +23,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         colorTimeTicker: "#f00",
         colorTrackBottomLine: "#555",
         colorPropertyLabel: "#999",
+        onGuiSave: __bind(function() {
+          return this.context.commandMap.execute("OnUiResizeCommand");
+        }, this),
         setPropertyValue: function(propertyAnim, t) {
           return propertyAnim.target[propertyAnim.propertyName].set(t);
         },

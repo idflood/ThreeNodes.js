@@ -47,6 +47,7 @@ define [
       @init_display_mode_switch()
       @animate()
       @show_application()
+      @on_ui_window_resize()
       @is_grabbing = false
       
       @scroll_target = $("#container-wrapper")
@@ -99,7 +100,7 @@ define [
       $("body").append("<div id='bottom-toolbox'></div>")
       $container = $("#bottom-toolbox")
       @init_resize_slider($container)
-      @init_timeline_switcher($container)
+      #@init_timeline_switcher($container)
     
     init_resize_slider: ($container) =>
       $container.append("<div id='zoom-slider'></div>")
@@ -148,15 +149,17 @@ define [
       @trigger("render")
     
     on_ui_window_resize: () =>
-      hidden_timeline = $("body").hasClass "hidden-timeline"
       w = $(window).width()
       h = $(window).height()
-      timelinesize = 203
-      if hidden_timeline
-        timelinesize = 30
+      timelinesize = parseInt(localStorage["timeline.js.settings.canvasHeight"])
+      
       $("#container-wrapper").css
         width: w
-        height: h - 25 - timelinesize
+        height: h - 26 - timelinesize
+      
+      toolbox_pos = timelinesize + 20
+      $("#bottom-toolbox").attr("style", "bottom: #{toolbox_pos}px !important;")
+      
       $("#sidebar").css("height", h - 25)
       
     animate: () =>
