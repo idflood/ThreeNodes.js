@@ -78,7 +78,7 @@ Timeline.prototype.initGUI = function( parameters ) {
 	this.splitter.addEventListener("mousedown", function() {
 	  function mouseMove(e) {         
 	    var h = (window.innerHeight - e.clientY);
-	    h = Math.max(h, 42);
+	    h = Math.max(h, 47);
 	    self.splitter.style.bottom = (h - 2) + "px";
 	    self.container.style.height = h + "px";
 	    self.canvasHeight = h;     	                                     

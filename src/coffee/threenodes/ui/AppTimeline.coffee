@@ -14,7 +14,7 @@ define [
       ng = @context.injector.get("NodeGraph")
       
       # reset canvas height
-      localStorage["timeline.js.settings.canvasHeight"] = 42
+      localStorage["timeline.js.settings.canvasHeight"] = 47
       
       @timeline = new Timeline
         displayOnlySelected: true
