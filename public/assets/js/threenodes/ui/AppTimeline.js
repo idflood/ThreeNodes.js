@@ -6,6 +6,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
     }
     AppTimeline.prototype.onRegister = function() {
+      var ng;
+      ng = this.context.injector.get("NodeGraph");
+      localStorage["timeline.js.settings.canvasHeight"] = 46;
       this.timeline = new Timeline({
         displayOnlySelected: true,
         colorBackground: "#333",
@@ -20,6 +23,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         colorTimeTicker: "#f00",
         colorTrackBottomLine: "#555",
         colorPropertyLabel: "#999",
+        onGuiSave: __bind(function() {
+          return this.context.commandMap.execute("OnUiResizeCommand");
+        }, this),
         setPropertyValue: function(propertyAnim, t) {
           return propertyAnim.target[propertyAnim.propertyName].set(t);
         },
@@ -28,6 +34,36 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         },
         getPropertyValue: function(propertyAnim) {
           return propertyAnim.target[propertyAnim.propertyName].get();
+        },
+        onTrackRebuild: function() {
+          var node, _i, _len, _ref, _results;
+          _ref = ng.nodes;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.onTimelineRebuild());
+          }
+          return _results;
+        },
+        onStop: function() {
+          var node, _i, _len, _ref, _results;
+          _ref = ThreeNodes.sound_nodes;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.stopSound());
+          }
+          return _results;
+        },
+        onPlay: function(time) {
+          var node, _i, _len, _ref, _results;
+          _ref = ThreeNodes.sound_nodes;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.playSound(time));
+          }
+          return _results;
         }
       });
       Timeline.globalInstance = this.timeline;

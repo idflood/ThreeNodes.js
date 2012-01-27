@@ -42,6 +42,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.init_display_mode_switch();
       this.animate();
       this.show_application();
+      this.on_ui_window_resize();
       this.is_grabbing = false;
       this.scroll_target = $("#container-wrapper");
       is_from_target = function(e) {
@@ -107,8 +108,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       var $container;
       $("body").append("<div id='bottom-toolbox'></div>");
       $container = $("#bottom-toolbox");
-      this.init_resize_slider($container);
-      return this.init_timeline_switcher($container);
+      return this.init_resize_slider($container);
     };
     AppUI.prototype.init_resize_slider = function($container) {
       var scale_graph;
@@ -166,18 +166,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this.trigger("render");
     };
     AppUI.prototype.on_ui_window_resize = function() {
-      var h, hidden_timeline, timelinesize, w;
-      hidden_timeline = $("body").hasClass("hidden-timeline");
+      var h, timelinesize, toolbox_pos, w;
       w = $(window).width();
       h = $(window).height();
-      timelinesize = 203;
-      if (hidden_timeline) {
-        timelinesize = 30;
-      }
+      timelinesize = parseInt(localStorage["timeline.js.settings.canvasHeight"]);
       $("#container-wrapper").css({
         width: w,
-        height: h - 25 - timelinesize
+        height: h - 26 - timelinesize
       });
+      toolbox_pos = timelinesize + 20;
+      $("#bottom-toolbox").attr("style", "bottom: " + toolbox_pos + "px !important;");
       return $("#sidebar").css("height", h - 25);
     };
     AppUI.prototype.animate = function() {

@@ -23,15 +23,19 @@ var Timeline = function( parameters ) {
     this.loopCount = 0; 
     this.loopMode = 0;   
     this.playing = true;
-    this.setPropertyValue = parameters.setPropertyValue !== undefined ? parameters.setPropertyValue : function(propertyAnim, t) {
+    this.maxTime = this.parameters.maxTime !== undefined ? this.parameters.maxTime : 0;
+    this.setPropertyValue = this.parameters.setPropertyValue !== undefined ? this.parameters.setPropertyValue : function(propertyAnim, t) {
       propertyAnim.target[propertyAnim.propertyName] = t;
     };
-    this.applyPropertyValue = parameters.applyPropertyValue !== undefined ? parameters.applyPropertyValue : function(propertyAnim, t) {
+    this.applyPropertyValue = this.parameters.applyPropertyValue !== undefined ? this.parameters.applyPropertyValue : function(propertyAnim, t) {
       propertyAnim.target[propertyAnim.propertyName] = propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t;
     };
-    this.getPropertyValue = parameters.getPropertyValue !== undefined ? parameters.getPropertyValue : function(propertyAnim) {
+    this.getPropertyValue = this.parameters.getPropertyValue !== undefined ? this.parameters.getPropertyValue : function(propertyAnim) {
       return propertyAnim.target[propertyAnim.propertyName];
     };
+    
+    this.onStop = this.parameters.onStop !== undefined ? this.parameters.onStop : function() {};
+    this.onPlay = this.parameters.onPlay !== undefined ? this.parameters.onPlay : function(time) {};
 };
 
 Timeline.currentInstance = null;     
@@ -56,14 +60,17 @@ Timeline.prototype.stop = function() {
     this.playing = false;  
     this.time = 0;       
     this.prevTime = this.time - 1/30; //FIXME 1/30
+    this.onStop();
 };
 
 Timeline.prototype.pause = function() {
     this.playing = false;  
+    this.onStop();
 };
 
 Timeline.prototype.play = function() {
     this.playing = true;
+    this.onPlay(this.time);
 };
 
 Timeline.prototype.start = function() {
@@ -91,6 +98,7 @@ Timeline.prototype.update = function(dt) {
         if (this.time > animationEnd) {
             this.loopCount++;
             this.time = 0;
+            this.onPlay(0);
         }
         if (this.loopMode == -1) {
             //loop infinitely
@@ -98,6 +106,7 @@ Timeline.prototype.update = function(dt) {
         else {
             if (this.loopCount >= this.loopMode) {
                 this.playing = false;
+                this.onStop();
             }
         }
     }     
@@ -110,8 +119,9 @@ Timeline.prototype.findAnimationEnd = function() {
         if (this.anims[i].endTime > endTime) {
             endTime = this.anims[i].endTime;
         }
-    }             
-    return endTime;
+    }
+    
+    return Math.max(endTime, this.maxTime);
 };
 
 Timeline.prototype.applyValues = function() {  

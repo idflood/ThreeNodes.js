@@ -42,6 +42,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.input_value_has_changed = __bind(this.input_value_has_changed, this);
       this.create_cache_object = __bind(this.create_cache_object, this);
       this.add_count_input = __bind(this.add_count_input, this);
+      this.onTimelineRebuild = __bind(this.onTimelineRebuild, this);
       this.loadAnimation = __bind(this.loadAnimation, this);
       this.init_main_view = __bind(this.init_main_view, this);
       this.typename = __bind(this.typename, this);
@@ -86,6 +87,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.view !== false) {
         this.view.init_context_menu();
       }
+      this.onTimelineRebuild();
       return true;
     };
     NodeBase.prototype.typename = function() {
@@ -122,6 +124,27 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           });
         }
         this.anim.timeline.rebuildTrackAnimsFromKeys(track);
+      }
+      return true;
+    };
+    NodeBase.prototype.onTimelineRebuild = function() {
+      var $target, nodeAnimation, propTrack, _i, _len, _ref;
+      nodeAnimation = false;
+      _ref = this.anim.objectTrack.propertyTracks;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        propTrack = _ref[_i];
+        $target = $('.inputs .field-' + propTrack.name, this.main_view);
+        if (propTrack.anims.length > 0) {
+          $target.addClass("has-animation");
+          nodeAnimation = true;
+        } else {
+          $target.removeClass("has-animation");
+        }
+      }
+      if (nodeAnimation === true) {
+        $(this.main_view).addClass("node-has-animation");
+      } else {
+        $(this.main_view).removeClass("node-has-animation");
       }
       return true;
     };
