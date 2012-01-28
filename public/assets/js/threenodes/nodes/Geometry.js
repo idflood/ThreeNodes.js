@@ -271,7 +271,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return TorusKnotGeometry;
   })();
-  return ThreeNodes.nodes.types.Geometry.OctahedronGeometry = (function() {
+  ThreeNodes.nodes.types.Geometry.OctahedronGeometry = (function() {
     __extends(OctahedronGeometry, ThreeNodes.NodeBase);
     function OctahedronGeometry() {
       this.compute = __bind(this.compute, this);
@@ -312,32 +312,73 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return OctahedronGeometry;
   })();
+  return ThreeNodes.nodes.types.Geometry.TextGeometry = (function() {
+    __extends(TextGeometry, ThreeNodes.NodeBase);
+    function TextGeometry() {
+      this.compute = __bind(this.compute, this);
+      this.get_cache_array = __bind(this.get_cache_array, this);
+      this.set_fields = __bind(this.set_fields, this);
+      TextGeometry.__super__.constructor.apply(this, arguments);
+    }
+    TextGeometry.prototype.set_fields = function() {
+      TextGeometry.__super__.set_fields.apply(this, arguments);
+      this.ob = false;
+      this.rack.addFields({
+        inputs: {
+          "text": "Example",
+          "font": {
+            type: "Any",
+            val: {}
+          },
+          "size": 100,
+          "height": 20,
+          "curveSegments": 4,
+          "bevelEnabled": false,
+          "bevelThickness": 0,
+          "bevelSize": 0
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.cached = this.get_cache_array();
+    };
+    TextGeometry.prototype.get_cache_array = function() {
+      return [this.rack.get("font").get(), this.rack.get("text").get(), this.rack.get("size").get(), this.rack.get("height").get(), this.rack.get("curveSegments").get(), this.rack.get("bevelEnabled").get(), this.rack.get("bevelThickness").get(), this.rack.get("bevelSize").get()];
+    };
+    TextGeometry.prototype.compute = function() {
+      var font, has_font_attribute, new_cache;
+      new_cache = this.get_cache_array();
+      font = this.rack.get("font").get();
+      has_font_attribute = function(f) {
+        if (font["font"] && font["weight"]) {
+          return true;
+        }
+        return false;
+      };
+      if (!has_font_attribute(font) ||  this.rack.get("text").get() === "") {
+        this.ob = false;
+        this.rack.set("out", this.ob);
+        return false;
+      }
+      if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
+        console.log("building text " + font.font + " / " + font.weight);
+        this.ob = new THREE.TextGeometry(this.rack.get("text").get(), {
+          size: this.rack.get("size").get(),
+          height: this.rack.get("height").get(),
+          font: font.font,
+          weight: font.weight,
+          curveSegments: this.rack.get("curveSegments").get()
+        });
+        this.ob.computeBoundingBox();
+        this.ob.computeVertexNormals();
+        this.cached = new_cache;
+      }
+      return this.rack.set("out", this.ob);
+    };
+    return TextGeometry;
+  })();
 });
-/*
-# todo: maybe use require to load the font as required
-# see: https://github.com/idflood/three.js/blob/master/examples/canvas_geometry_text.html
-class nodes.types.Geometry.TextGeometry extends NodeBase
-  set_fields: =>
-    super
-    @ob = new THREE.TextGeometry(".")
-    
-    # todo: implement other attributes (height, bevel, ...)
-    @rack.addFields
-      inputs:
-        "text": "."
-      outputs:
-        "out": {type: "Any", val: @ob}
-    @cached = @get_cache_array()
-  
-  get_cache_array: =>
-    [@rack.get("text").get()]
-
-  compute: =>
-    new_cache = @get_cache_array()
-    if flatArraysAreEquals(new_cache, @cached) == false
-      @ob = new THREE.SphereGeometry(@rack.get("text").get())
-      @cached = new_cache
-    #@apply_fields_to_val(@rack.node_fields.inputs, @ob, ["text"])
-    @rack.set("out", @ob)
-    
-*/
