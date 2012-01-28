@@ -8,7 +8,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
     AppTimeline.prototype.onRegister = function() {
       var ng;
       ng = this.context.injector.get("NodeGraph");
-      localStorage["timeline.js.settings.canvasHeight"] = 46;
+      localStorage["timeline.js.settings.canvasHeight"] = 46 + 120;
       this.timeline = new Timeline({
         displayOnlySelected: true,
         colorBackground: "#333",
