@@ -452,7 +452,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Mouse;
   })();
-  return ThreeNodes.nodes.types.Utils.Timer = (function() {
+  ThreeNodes.nodes.types.Utils.Timer = (function() {
     __extends(Timer, ThreeNodes.NodeBase);
     function Timer() {
       this.compute = __bind(this.compute, this);
@@ -498,5 +498,106 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("out", this.counter);
     };
     return Timer;
+  })();
+  return ThreeNodes.nodes.types.Utils.Font = (function() {
+    __extends(Font, ThreeNodes.NodeBase);
+    function Font() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Font.__super__.constructor.apply(this, arguments);
+    }
+    Font.prototype.set_fields = function() {
+      var dir, i;
+      Font.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.ob = "";
+      dir = "../fonts/";
+      this.files = {
+        "helvetiker": {
+          "normal": dir + "helvetiker_regular.typeface",
+          "bold": dir + "helvetiker_bold.typeface"
+        },
+        "optimer": {
+          "normal": dir + "optimer_regular.typeface",
+          "bold": dir + "optimer_bold.typeface"
+        },
+        "gentilis": {
+          "normal": dir + "gentilis_regular.typeface",
+          "bold": dir + "gentilis_bold.typeface"
+        },
+        "droid sans": {
+          "normal": dir + "droid/droid_sans_regular.typeface",
+          "bold": dir + "droid/droid_sans_bold.typeface"
+        },
+        "droid serif": {
+          "normal": dir + "droid/droid_serif_regular.typeface",
+          "bold": dir + "droid/droid_serif_bold.typeface"
+        }
+      };
+      this.rack.addFields({
+        inputs: {
+          "font": {
+            type: "Float",
+            val: 0,
+            values: {
+              "helvetiker": 0,
+              "optimer": 1,
+              "gentilis": 2,
+              "droid sans": 3,
+              "droid serif": 4
+            }
+          },
+          "weight": {
+            type: "Float",
+            val: 0,
+            values: {
+              "normal": 0,
+              "bold": 1
+            }
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      this.reverseFontMap = {};
+      this.reverseWeightMap = {};
+      for (i in this.rack.node_fields_by_name.inputs.weight.possible_values) {
+        this.reverseWeightMap[this.rack.node_fields_by_name.inputs.weight.possible_values[i]] = i;
+      }
+      for (i in this.rack.node_fields_by_name.inputs.font.possible_values) {
+        this.reverseFontMap[this.rack.node_fields_by_name.inputs.font.possible_values[i]] = i;
+      }
+      this.fontcache = -1;
+      return this.weightcache = -1;
+    };
+    Font.prototype.compute = function() {
+      var findex, font, weight, windex;
+      findex = parseInt(this.rack.get("font").get());
+      windex = parseInt(this.rack.get("weight").get());
+      if (findex > 4 || findex < 0) {
+        findex = 0;
+      }
+      if (windex !== 0 || windex !== 1) {
+        windex = 0;
+      }
+      font = this.reverseFontMap[findex];
+      weight = this.reverseWeightMap[windex];
+      if (findex !== this.fontcache ||  windex !== this.weightcache) {
+        require([this.files[font][weight]], __bind(function() {
+          return this.ob = {
+            font: font,
+            weight: weight
+          };
+        }, this));
+      }
+      this.fontcache = findex;
+      this.weightcache = windex;
+      return this.rack.set("out", this.ob);
+    };
+    return Font;
   })();
 });

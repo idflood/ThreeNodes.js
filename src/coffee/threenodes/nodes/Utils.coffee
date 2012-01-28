@@ -348,3 +348,78 @@ define [
         @counter = 0
       @old = now
       @rack.set("out", @counter)
+  
+  class ThreeNodes.nodes.types.Utils.Font extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      @ob = ""
+      dir = "../fonts/"
+      @files =
+        "helvetiker":
+          "normal": dir + "helvetiker_regular.typeface"
+          "bold": dir + "helvetiker_bold.typeface"
+        "optimer":
+          "normal": dir + "optimer_regular.typeface"
+          "bold": dir + "optimer_bold.typeface"
+        "gentilis":
+          "normal": dir + "gentilis_regular.typeface"
+          "bold": dir + "gentilis_bold.typeface"
+        "droid sans":
+          "normal": dir + "droid/droid_sans_regular.typeface"
+          "bold": dir + "droid/droid_sans_bold.typeface"
+        "droid serif":
+          "normal": dir + "droid/droid_serif_regular.typeface"
+          "bold": dir + "droid/droid_serif_bold.typeface"
+      @rack.addFields
+        inputs:
+          "font": 
+            type: "Float"
+            val: 0
+            values:
+              "helvetiker": 0
+              "optimer": 1
+              "gentilis": 2
+              "droid sans": 3
+              "droid serif": 4
+          "weight":
+            type: "Float"
+            val: 0
+            values:
+              "normal": 0
+              "bold": 1
+        outputs:
+          "out": {type: "Any", val: @ob}
+      
+      @reverseFontMap = {}
+      @reverseWeightMap = {}
+      
+      for i of @rack.node_fields_by_name.inputs.weight.possible_values
+        @reverseWeightMap[@rack.node_fields_by_name.inputs.weight.possible_values[i]] = i
+      
+      for i of @rack.node_fields_by_name.inputs.font.possible_values
+        @reverseFontMap[@rack.node_fields_by_name.inputs.font.possible_values[i]] = i
+      
+      @fontcache = -1
+      @weightcache = -1
+    
+    compute: =>
+      findex = parseInt(@rack.get("font").get())
+      windex = parseInt(@rack.get("weight").get())
+      if findex > 4 || findex < 0
+        findex = 0
+      if windex != 0 || windex != 1
+        windex = 0
+      font = @reverseFontMap[findex]
+      weight = @reverseWeightMap[windex]
+      
+      if findex != @fontcache || windex != @weightcache
+        # load the font file
+        require [@files[font][weight]], () =>
+          @ob =
+            font: font
+            weight: weight
+      
+      @fontcache = findex
+      @weightcache = windex
+      @rack.set("out", @ob)

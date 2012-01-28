@@ -244,7 +244,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       f_in = $("#f-txt-input-" + field.fid);
       field.on_value_update_hooks.update_center_textfield = function(v) {
         if (v !== null) {
-          return f_in.val(v.toString().substring(0, 10));
+          return f_in.val(v.toString());
         }
       };
       f_in.val(field.get());

@@ -214,32 +214,53 @@ define [
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
-
-###
-# todo: maybe use require to load the font as required
-# see: https://github.com/idflood/three.js/blob/master/examples/canvas_geometry_text.html
-class nodes.types.Geometry.TextGeometry extends NodeBase
-  set_fields: =>
-    super
-    @ob = new THREE.TextGeometry(".")
-    
-    # todo: implement other attributes (height, bevel, ...)
-    @rack.addFields
-      inputs:
-        "text": "."
-      outputs:
-        "out": {type: "Any", val: @ob}
-    @cached = @get_cache_array()
   
-  get_cache_array: =>
-    [@rack.get("text").get()]
-
-  compute: =>
-    new_cache = @get_cache_array()
-    if flatArraysAreEquals(new_cache, @cached) == false
-      @ob = new THREE.SphereGeometry(@rack.get("text").get())
-      @cached = new_cache
-    #@apply_fields_to_val(@rack.node_fields.inputs, @ob, ["text"])
-    @rack.set("out", @ob)
+  class ThreeNodes.nodes.types.Geometry.TextGeometry extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @ob = false
+      
+      @rack.addFields
+        inputs:
+          "text": "Example"
+          "font": {type: "Any", val: {}}
+          "size": 100
+          "height": 20
+          "curveSegments": 4
+          "bevelEnabled": false
+          "bevelThickness": 0
+          "bevelSize": 0
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @cached = @get_cache_array()
     
-###
+    get_cache_array: =>
+      [@rack.get("font").get(), @rack.get("text").get(), @rack.get("size").get(), @rack.get("height").get(), @rack.get("curveSegments").get(),
+        @rack.get("bevelEnabled").get(), @rack.get("bevelThickness").get(), @rack.get("bevelSize").get()]
+  
+    compute: =>
+      new_cache = @get_cache_array()
+      font = this.rack.get("font").get()
+      has_font_attribute = (f) ->
+        if font["font"] && font["weight"]
+          return true
+        false
+      
+      if !has_font_attribute(font) || this.rack.get("text").get() == ""
+        @ob = false
+        @rack.set("out", @ob)
+        return false
+      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        console.log "building text #{font.font} / #{font.weight}"
+        @ob = new THREE.TextGeometry @rack.get("text").get(),
+          size: @rack.get("size").get()
+          height: @rack.get("height").get()
+          font: font.font
+          weight: font.weight
+          curveSegments: @rack.get("curveSegments").get()
+        @ob.computeBoundingBox()
+        @ob.computeVertexNormals()
+        
+        @cached = new_cache
+      
+      @rack.set("out", @ob)
