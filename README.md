@@ -1,5 +1,5 @@
 #ThreeNodes.js
-<img src="http://github.com/idflood/ThreeNodes.js/raw/master/misc/screenshot1.jpg" width="900" height="489" alt="screenshot v 0.01">
+<img src="http://github.com/idflood/ThreeNodes.js/raw/master/misc/screenshot1.jpg" width="852" height="436" alt="screenshot version 0.02">
 
 This is an attempt to make something like "vvvv" in javascript, html and webgl.
 
@@ -11,9 +11,10 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - should be possible to switch interface for live performance (selection of buttons/toggle)
 
 ## Some ideas
-- timeline (global and "local")
-- use flash or processing via websockets to get incoming sound, live or mp3
-- create something like a player that loads a saved project and only display the result
+- local timelines ?
+- grouping (multiple nodes in one, possibility to have multiple instances)
+- some kind of library panel like in flash to manage images/fonts/groups... 
+- preloader
 - maybe add processingjs.org as an alternative to three.js
 
 ## Development setup
