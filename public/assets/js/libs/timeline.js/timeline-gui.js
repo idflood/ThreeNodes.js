@@ -33,6 +33,9 @@ Timeline.prototype.initGUI = function( parameters ) {
   this.draggingTimeScrollThumb = false;
   this.draggingKeys = false;
   this.draggingTimeScale = false;
+  this.draggingSelectKeys = false;
+  this.mousePositionDown = {x: 0, y: 0};
+  this.mousePositionMove = {x: 0, y: 0};
   this.selectedKeys = [];  
   this.selectedAnims = [];
   this.displayedTracks = [];
@@ -75,8 +78,11 @@ Timeline.prototype.initGUI = function( parameters ) {
   this.splitter.style.position = "fixed";	  
   this.splitter.style.left = "0px";	  
 	this.splitter.style.bottom = (this.canvasHeight - 2) + "px";   
-	this.splitter.addEventListener("mousedown", function() {
+	this.splitter.addEventListener("mousedown", function(e) {
+	  // use preventDefault to help avoid unwanted scrolling
+	  e.preventDefault();
 	  function mouseMove(e) {         
+	    e.preventDefault();
 	    var h = (window.innerHeight - e.clientY);
 	    h = Math.max(h, 46);
 	    self.splitter.style.bottom = (h - 2) + "px";
@@ -130,11 +136,18 @@ Timeline.prototype.initGUI = function( parameters ) {
   }, false);
 }                                                  
 
-Timeline.prototype.onMouseDown = function(event) {   
-  this.selectedKeys = [];    
+Timeline.prototype.onMouseDown = function(event) {  
+  if (event.shiftKey == false && event.metaKey == false) {
+    this.selectedKeys = [];
+  }
   
   var x = event.layerX;
   var y = event.layerY;
+  
+  // store mouse start position
+  this.mousePositionStart = x;
+  this.mousePositionDown.x = x;
+  this.mousePositionDown.y = y;
   
   if (x > this.trackLabelWidth && y < this.headerHeight) {
     //timeline
@@ -150,10 +163,13 @@ Timeline.prototype.onMouseDown = function(event) {
   }
   else if (x > this.trackLabelWidth && y > this.headerHeight && y < this.canvasHeight - this.timeScrollHeight) {
     //keys
-    this.selectKeys(event.layerX, event.layerY);
+    this.selectKeys({x: event.layerX, y: event.layerY}, false, event.shiftKey || event.metaKey);
     if (this.selectedKeys.length > 0) {
       this.draggingKeys = true;
-    }       
+    }
+    else {
+      this.draggingSelectKeys = true;
+    }
     this.cancelKeyClick = false;
   }       
   else if (x < this.trackLabelWidth && y > this.canvasHeight - this.timeScrollHeight) {         
@@ -192,10 +208,12 @@ Timeline.prototype.onMouseWheel = function(event) {
   }
 }
 
-
 Timeline.prototype.onDocumentMouseMove = function(event) { 
   var x = event.layerX;
   var y = event.layerY;
+  var timeOffset = this.xToTime(x) - this.xToTime(this.mousePositionStart);
+  this.mousePositionMove.x = x;
+  this.mousePositionMove.y = y;
   
   if (this.draggingTime) {
     this.time = this.xToTime(x);
@@ -208,7 +226,7 @@ Timeline.prototype.onDocumentMouseMove = function(event) {
   if (this.draggingKeys) {
     for(var i=0; i<this.selectedKeys.length; i++) {
       var draggedKey = this.selectedKeys[i];
-      draggedKey.time = Math.max(0, this.xToTime(x));
+      draggedKey.time = Math.max(0, draggedKey.time + timeOffset);
       this.sortTrackKeys(draggedKey.track);
       this.rebuildSelectedTracks();
     } 
@@ -219,6 +237,7 @@ Timeline.prototype.onDocumentMouseMove = function(event) {
     this.timeScale = Math.max(0.01, Math.min((this.trackLabelWidth - x) / this.trackLabelWidth, 1));    
     this.save();
   }
+  this.mousePositionStart = x;
 }
 
 Timeline.prototype.onCanvasMouseMove = function(event) { 
@@ -263,7 +282,14 @@ Timeline.prototype.onMouseUp = function(event) {
   }        
   if (this.draggingKeys) {
     this.draggingKeys = false;    
-  }     
+  }
+  if (this.draggingSelectKeys) {
+    // todo: implement selection of keys based on p1 & p2
+    var p1 = this.mousePositionDown;
+    var p2 = {x: event.layerX, y: event.layerY};
+    this.selectKeys(p1, p2, event.shiftKey || event.metaKey);
+    this.draggingSelectKeys = false;
+  }
   if (this.draggingTracksScrollThumb) {
     this.draggingTracksScrollThumb = false;
   }        
@@ -317,10 +343,11 @@ Timeline.prototype.onMouseDoubleClick = function(event) {
 }                                           
 
 Timeline.prototype.addKeyAt = function(mouseX, mouseY) {
-  var selectedTrack = this.getTrackAt(mouseX, mouseY);
-  if (!selectedTrack) {
+  var selectedTrack = this.getTrackAt({x: mouseX, y: mouseY});
+  if (selectedTrack.length == 0) {
     return;
   }
+  selectedTrack = selectedTrack[0];
   
   var newKey = {
       time: this.xToTime(mouseX),
@@ -353,35 +380,62 @@ Timeline.prototype.addKeyAt = function(mouseX, mouseY) {
   this.rebuildSelectedTracks();      
 }                                                                                  
 
-Timeline.prototype.getTrackAt = function(mouseX, mouseY) {                     
+Timeline.prototype.getTrackAt = function(p1, p2) {
+  var result = [];                  
   var scrollY = this.tracksScrollY * (this.displayedTracks.length * this.trackLabelHeight - this.canvas.height + this.headerHeight);
-  var clickedTrackNumber = Math.floor((mouseY - this.headerHeight + scrollY)/this.trackLabelHeight);
-                                                 
-  if (clickedTrackNumber >= 0 && clickedTrackNumber >= this.displayedTracks.length || this.displayedTracks[clickedTrackNumber].type == "object") {    
-    return null;
-  }    
-  
-  return this.displayedTracks[clickedTrackNumber];  
+  var clickedTrackNumber = clickedTrackNumber2 = Math.floor((p1.y - this.headerHeight + scrollY)/this.trackLabelHeight);
+  if (p2) {
+    clickedTrackNumber2 =  Math.floor((p2.y - this.headerHeight + scrollY)/this.trackLabelHeight);
+    if (clickedTrackNumber2 < clickedTrackNumber) {
+      var tmp = clickedTrackNumber2;
+      clickedTrackNumber2 = clickedTrackNumber;
+      clickedTrackNumber = tmp;
+    }
+  }
+  for (var i = clickedTrackNumber; i <= clickedTrackNumber2; i++) {
+    if (i >= 0 && i < this.displayedTracks.length && this.displayedTracks[i].type != "object") {    
+      result.push(this.displayedTracks[i]);
+    }
+  }
+
+  return result;
 }
 
-Timeline.prototype.selectKeys = function(mouseX, mouseY) {                         
-  this.selectedKeys = [];
-  
-  var selectedTrack = this.getTrackAt(mouseX, mouseY);
-  
-  if (!selectedTrack) {
+Timeline.prototype.selectKeys = function(p1, p2, keepPreviousSelection) {
+  if (!keepPreviousSelection) {
+    this.selectedKeys = [];
+  }
+
+  var selectedTracks = this.getTrackAt(p1, p2);
+
+  if (selectedTracks.length == 0) {
     return;
   }
 
-  for(var i=0; i<selectedTrack.keys.length; i++) {
-    var key = selectedTrack.keys[i];
-    var x = this.timeToX(key.time);    
-    
-    if (x >= mouseX - this.trackLabelHeight*0.3 && x <= mouseX + this.trackLabelHeight*0.3) {
-      this.selectedKeys.push(key); 
-      break;
+  // sort p1 and p2 by x
+  if (p2 && p2.x < p1.x) {
+    var tmp = p2;
+    p2 = p1;
+    p1 = tmp;
+  }
+
+  for (var k = 0; k < selectedTracks.length; k++) {
+    var track = selectedTracks[k];
+    for(var i = 0; i < track.keys.length; i++) {
+      var key = track.keys[i];
+      var x = this.timeToX(key.time);
+      var maxX = p2 ? p2.x : p1.x;
+      
+      if (x >= p1.x - this.trackLabelHeight*0.3 && x <= maxX + this.trackLabelHeight*0.3) {
+        // prevent key from being added twice to the selected array
+        if (this.selectedKeys.indexOf(key) == -1) {
+          this.selectedKeys.push(key); 
+        }
+        
+        //break;
+      }
     }
-  }    
+  }
 }
 
 Timeline.prototype.selectAnims = function(anims) {
@@ -525,6 +579,17 @@ Timeline.prototype.updateGUI = function() {
     yshift -= scrollY;
     if (yshift < this.headerHeight) continue;
     this.drawTrack(track, yshift);
+  }
+  
+  // draw selection
+  if (this.draggingSelectKeys) {
+    var p1 = this.mousePositionDown;
+    var p2 = this.mousePositionMove;
+    this.c.strokeStyle = this.colorButtonStroke;
+    this.c.fillStyle = this.colorTimelineLabel;
+    this.c.globalAlpha = 0.3;
+    this.drawRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+    this.c.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
   }
   
   this.c.restore();
