@@ -56,6 +56,7 @@ define [
   'order!threenodes/commands/SetDisplayModeCommand',
   'order!threenodes/commands/InitUrlHandler',
   'order!threenodes/commands/ExportCodeCommand',
+  'order!threenodes/commands/ExportImageCommand',
   'order!threenodes/commands/OnUiResizeCommand',
   "order!libs/jquery.ba-bbq.min",
 ], ($, _, Backbone, NodeGraph, AppUI) ->
@@ -86,6 +87,7 @@ define [
       @commandMap.register "InitUrlHandler", ThreeNodes.InitUrlHandler
       @commandMap.register "SetDisplayModeCommand", ThreeNodes.SetDisplayModeCommand
       @commandMap.register "ExportCodeCommand", ThreeNodes.ExportCodeCommand
+      @commandMap.register "ExportImageCommand", ThreeNodes.ExportImageCommand
       @commandMap.register "OnUiResizeCommand", ThreeNodes.OnUiResizeCommand
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph

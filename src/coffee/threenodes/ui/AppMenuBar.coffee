@@ -35,5 +35,6 @@ define [
         when "open" then $("#main_file_input_open").click()
         when "save" then @context.commandMap.execute("SaveFileCommand")
         when "export to code" then @context.commandMap.execute("ExportCodeCommand")
+        when "export image" then @context.commandMap.execute("ExportImageCommand")
         when "rebuild all shaders" then @context.commandMap.execute("RebuildShadersCommand")
         when "remove selected node(s)" then @context.commandMap.execute("RemoveSelectedNodesCommand")
