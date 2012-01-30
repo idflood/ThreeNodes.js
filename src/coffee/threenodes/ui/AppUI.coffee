@@ -146,7 +146,8 @@ define [
     render: () =>
       if @timeline
         @timeline.update()
-      @trigger("render")
+      if ThreeNodes.is_playing == true
+        @trigger("render")
     
     on_ui_window_resize: () =>
       w = $(window).width()

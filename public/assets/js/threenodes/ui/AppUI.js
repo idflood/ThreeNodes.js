@@ -163,7 +163,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       if (this.timeline) {
         this.timeline.update();
       }
-      return this.trigger("render");
+      if (ThreeNodes.is_playing === true) {
+        return this.trigger("render");
+      }
     };
     AppUI.prototype.on_ui_window_resize = function() {
       var h, timelinesize, toolbox_pos, w;

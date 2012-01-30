@@ -39,7 +39,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
         case "export to code":
           return this.context.commandMap.execute("ExportCodeCommand");
         case "export image":
-          return this.context.commandMap.execute("ExportImageCommand");
+          return this.context.commandMap.execute("ExportImageCommand", "exported-image.png");
         case "rebuild all shaders":
           return this.context.commandMap.execute("RebuildShadersCommand");
         case "remove selected node(s)":

@@ -7,7 +7,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
       this.current_scene = new THREE.Scene();
       this.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
       this.current_renderer = new THREE.WebGLRenderer({
-        clearColor: 0x000000
+        clearColor: 0x000000,
+        preserveDrawingBuffer: true
       });
       this.current_renderer.autoClear = false;
       this.effectScreen = new THREE.ShaderPass(THREE.ShaderExtras["screen"]);
