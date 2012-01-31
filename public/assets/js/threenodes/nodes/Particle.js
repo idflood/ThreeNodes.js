@@ -174,6 +174,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     SparksEmitter.prototype.remove = function() {
       SparksEmitter.__super__.remove.apply(this, arguments);
       if (this.ob) {
+        this.ob.removeCallback("created");
+        this.ob.removeCallback("dead");
         return this.ob.stop();
       }
     };

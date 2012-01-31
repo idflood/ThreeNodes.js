@@ -116,6 +116,8 @@ define [
     remove: =>
       super
       if @ob
+        @ob.removeCallback "created"
+        @ob.removeCallback "dead"
         @ob.stop()
   
   class ThreeNodes.nodes.types.Particle.SparksAge extends ThreeNodes.NodeBase
