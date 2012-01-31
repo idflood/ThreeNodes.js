@@ -116,6 +116,13 @@ $animation_color: #f00
     @extend .inline-float
     width: 50%
 
+.no-inputs
+  .inputs
+    display: none
+    visibility: hidden
+  .outputs
+    width: 100%
+
 // base
 .node-Number
   @extend .width-150
@@ -165,6 +172,11 @@ $animation_color: #f00
   @extend .width-150
   @extend .ratio-80-20
 
+// particle
+.node-SparksMove
+  @extend .width-80
+  @extend .no-inputs
+
 // special nodes
 .node-WebGLRenderer
   @extend .width-120
@@ -173,6 +185,10 @@ $animation_color: #f00
   .outputs
     display: none
     visibility: hidden
+
+.node-Mouse
+  @extend .width-80
+  @extend .no-inputs
 
 .node-Color
   @extend .width-80
