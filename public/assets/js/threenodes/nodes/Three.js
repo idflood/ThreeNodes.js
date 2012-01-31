@@ -557,10 +557,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this;
     };
     WebGLRenderer.prototype.add_mouse_handler = function() {
-      return $(this.ob.domElement).mousemove(function(e) {
+      $(this.ob.domElement).unbind("mousemove");
+      $(this.ob.domElement).bind("mousemove", function(e) {
         ThreeNodes.mouseX = e.layerX;
         return ThreeNodes.mouseY = e.layerY;
       });
+      return this;
     };
     WebGLRenderer.prototype.create_popup_view = function() {
       this.preview_mode = false;
@@ -573,14 +575,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       this.apply_bg_color(true);
       this.apply_size(true);
-      return this.add_mouse_handler();
+      this.add_mouse_handler();
+      return this;
     };
     WebGLRenderer.prototype.create_preview_view = function() {
       this.preview_mode = true;
       this.webgl_container.append(this.ob.domElement);
       this.apply_bg_color(true);
       this.apply_size(true);
-      return this.add_mouse_handler();
+      this.add_mouse_handler();
+      return this;
     };
     WebGLRenderer.prototype.apply_bg_color = function(force_refresh) {
       var new_val;
