@@ -179,6 +179,60 @@ define [
       @ob._min = @rack.get("max").get()
       @rack.set("initializer", @ob)
   
+  class ThreeNodes.nodes.types.Particle.ParticlePool extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      @ob = new THREE.Geometry()
+      @rack.addFields
+        inputs:
+          "maxParticles": 10000
+          "emitter":  {type: "Any", val: false}
+        outputs:
+          "geometry": {type: "Any", val: @ob}
+      @emitter = @rack.get("emitter").get()
+      @init_pool()
+    
+    
+    init_pool: =>
+      @pool =
+        pools: []
+        get: () ->
+          if @pools.length > 0
+            return @pools.pop()
+          return null
+        add: (v) ->
+          @pools.push(v)
+          
+      new_pos = () ->
+        new THREE.Vertex(new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY))
+      for i in [0..@rack.get("maxParticles").get() - 1]
+        pos = new_pos()
+        @ob.vertices.push(pos)
+        @pool.add(pos)
+    
+    on_particle_created: (particle) ->
+      target = particle.target
+      @ob.vertices[target].position = particle.position
+    
+    on_particle_dead: (particle) ->
+      target = particle.target
+      if target
+        @ob.vertices[target].position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)
+        @pool.add(particle.target)
+    
+    compute: () =>
+      if @emitter != @rack.get("emitter").get()
+        @emitter = @rack.get("emitter").get()
+        # init callbacks and start new emitter
+        if @emitter != false
+          @emitter.addCallback "created", @on_particle_created
+          @emitter.addCallback "dead", @on_particle_dead
+          @emitter.start()
+      
+      if @emitter != false
+        @rack.set("geometry", @ob)
+    
   class ThreeNodes.nodes.types.Particle.RandomCloudGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super

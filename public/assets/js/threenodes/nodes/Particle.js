@@ -326,6 +326,89 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksLifetime;
   })();
+  ThreeNodes.nodes.types.Particle.ParticlePool = (function() {
+    __extends(ParticlePool, ThreeNodes.NodeBase);
+    function ParticlePool() {
+      this.compute = __bind(this.compute, this);
+      this.init_pool = __bind(this.init_pool, this);
+      this.set_fields = __bind(this.set_fields, this);
+      ParticlePool.__super__.constructor.apply(this, arguments);
+    }
+    ParticlePool.prototype.set_fields = function() {
+      ParticlePool.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.ob = new THREE.Geometry();
+      this.rack.addFields({
+        inputs: {
+          "maxParticles": 10000,
+          "emitter": {
+            type: "Any",
+            val: false
+          }
+        },
+        outputs: {
+          "geometry": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      this.emitter = this.rack.get("emitter").get();
+      return this.init_pool();
+    };
+    ParticlePool.prototype.init_pool = function() {
+      var i, new_pos, pos, _ref, _results;
+      this.pool = {
+        pools: [],
+        get: function() {
+          if (this.pools.length > 0) {
+            return this.pools.pop();
+          }
+          return null;
+        },
+        add: function(v) {
+          return this.pools.push(v);
+        }
+      };
+      new_pos = function() {
+        return new THREE.Vertex(new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY));
+      };
+      _results = [];
+      for (i = 0, _ref = this.rack.get("maxParticles").get() - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+        pos = new_pos();
+        this.ob.vertices.push(pos);
+        _results.push(this.pool.add(pos));
+      }
+      return _results;
+    };
+    ParticlePool.prototype.on_particle_created = function(particle) {
+      var target;
+      target = particle.target;
+      return this.ob.vertices[target].position = particle.position;
+    };
+    ParticlePool.prototype.on_particle_dead = function(particle) {
+      var target;
+      target = particle.target;
+      if (target) {
+        this.ob.vertices[target].position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+        return this.pool.add(particle.target);
+      }
+    };
+    ParticlePool.prototype.compute = function() {
+      if (this.emitter !== this.rack.get("emitter").get()) {
+        this.emitter = this.rack.get("emitter").get();
+        if (this.emitter !== false) {
+          this.emitter.addCallback("created", this.on_particle_created);
+          this.emitter.addCallback("dead", this.on_particle_dead);
+          this.emitter.start();
+        }
+      }
+      if (this.emitter !== false) {
+        return this.rack.set("geometry", this.ob);
+      }
+    };
+    return ParticlePool;
+  })();
   return ThreeNodes.nodes.types.Particle.RandomCloudGeometry = (function() {
     __extends(RandomCloudGeometry, ThreeNodes.NodeBase);
     function RandomCloudGeometry() {
