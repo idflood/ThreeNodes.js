@@ -356,9 +356,11 @@ define [
       return this
     
     add_mouse_handler: =>
-      $(@ob.domElement).mousemove (e) ->
+      $(@ob.domElement).unbind "mousemove"
+      $(@ob.domElement).bind "mousemove", (e) ->
         ThreeNodes.mouseX = e.layerX
         ThreeNodes.mouseY = e.layerY
+      return this
     
     create_popup_view: ->
       @preview_mode = false
@@ -372,6 +374,7 @@ define [
       @apply_bg_color(true)
       @apply_size(true)
       @add_mouse_handler()
+      return this
     
     create_preview_view: ->
       @preview_mode = true
@@ -379,6 +382,7 @@ define [
       @apply_bg_color(true)
       @apply_size(true)
       @add_mouse_handler()
+      return this
     
     apply_bg_color: (force_refresh = false) ->
       new_val = @rack.get('bg_color').get().getContextStyle()
