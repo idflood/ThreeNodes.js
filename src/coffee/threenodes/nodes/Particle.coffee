@@ -7,6 +7,8 @@ define [
   "order!libs/jquery.contextMenu",
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',
+  "order!libs/Tween",
+  "order!libs/Sparks",
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
   class ThreeNodes.nodes.types.Particle.ParticleSystem extends ThreeNodes.nodes.types.Three.Object3D
@@ -67,6 +69,116 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
 
+  class ThreeNodes.nodes.types.Particle.SparksEmitter extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "counter": {type: "Any", val: new SPARKS.SteadyCounter(10)}
+          "initializers": {type: "Any", val: []}
+          "actions": {type: "Any", val: []}
+        outputs:
+          "out": {type: "Any", val: @ob}
+      @ob = new SPARKS.Emitter(@rack.get("counter").get())
+    compute: =>
+      @ob.update()
+      
+      @rack.set("out", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksAge extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "easing": {type: "Any", val: TWEEN.Easing.Linear}
+        outputs:
+          "action": {type: "Any", val: @ob}
+      @ob = new SPARKS.Age(@rack.get("easing").get())
+    compute: =>
+      @ob._easing = @rack.get("easing").get()
+      @rack.set("action", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksAccelerate extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "vector": {type: "Vector3", val: new THREE.Vector3(0, 1, 0)}
+        outputs:
+          "action": {type: "Any", val: @ob}
+      @ob = new SPARKS.Accelerate(@rack.get("vector").get())
+    compute: =>
+      @ob.acceleration = @rack.get("vector").get()
+      @rack.set("action", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksAccelerateFactor extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "factor": 2.0
+        outputs:
+          "action": {type: "Any", val: @ob}
+      @ob = new SPARKS.AccelerateFactor(@rack.get("factor").get())
+    compute: =>
+      @ob.factor = @rack.get("factor").get()
+      @rack.set("action", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksAccelerateVelocity extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "factor": 2.0
+        outputs:
+          "action": {type: "Any", val: @ob}
+      @ob = new SPARKS.AccelerateVelocity(@rack.get("factor").get())
+    compute: =>
+      @ob.factor = @rack.get("factor").get()
+      @rack.set("action", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksRandomDrift extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "vector": {type: "Vector3", val: new THREE.Vector3(0, 1, 0)}
+        outputs:
+          "action": {type: "Any", val: @ob}
+      @ob = new SPARKS.RandomDrift(@rack.get("vector").get())
+    compute: =>
+      @ob.drift = @rack.get("vector").get()
+      @rack.set("action", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksLifetime extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "min": 4
+          "max": 7
+        outputs:
+          "initializer": {type: "Any", val: @ob}
+      @ob = new SPARKS.Lifetime(@rack.get("min").get(), @rack.get("max").get())
+    compute: =>
+      @ob._min = @rack.get("min").get()
+      @ob._min = @rack.get("max").get()
+      @rack.set("initializer", @ob)
+  
   class ThreeNodes.nodes.types.Particle.RandomCloudGeometry extends ThreeNodes.NodeBase
     set_fields: =>
       super

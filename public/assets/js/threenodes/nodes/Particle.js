@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils', "order!libs/Tween", "order!libs/Sparks"], function($, _, Backbone, _view_node_template) {
   "use strict";  ThreeNodes.nodes.types.Particle.ParticleSystem = (function() {
     __extends(ParticleSystem, ThreeNodes.nodes.types.Three.Object3D);
     function ParticleSystem() {
@@ -100,6 +100,231 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
     return ParticleBasicMaterial;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksEmitter = (function() {
+    __extends(SparksEmitter, ThreeNodes.NodeBase);
+    function SparksEmitter() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksEmitter.__super__.constructor.apply(this, arguments);
+    }
+    SparksEmitter.prototype.set_fields = function() {
+      SparksEmitter.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "counter": {
+            type: "Any",
+            val: new SPARKS.SteadyCounter(10)
+          },
+          "initializers": {
+            type: "Any",
+            val: []
+          },
+          "actions": {
+            type: "Any",
+            val: []
+          }
+        },
+        outputs: {
+          "out": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
+    };
+    SparksEmitter.prototype.compute = function() {
+      this.ob.update();
+      return this.rack.set("out", this.ob);
+    };
+    return SparksEmitter;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksAge = (function() {
+    __extends(SparksAge, ThreeNodes.NodeBase);
+    function SparksAge() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksAge.__super__.constructor.apply(this, arguments);
+    }
+    SparksAge.prototype.set_fields = function() {
+      SparksAge.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "easing": {
+            type: "Any",
+            val: TWEEN.Easing.Linear
+          }
+        },
+        outputs: {
+          "action": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.Age(this.rack.get("easing").get());
+    };
+    SparksAge.prototype.compute = function() {
+      this.ob._easing = this.rack.get("easing").get();
+      return this.rack.set("action", this.ob);
+    };
+    return SparksAge;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksAccelerate = (function() {
+    __extends(SparksAccelerate, ThreeNodes.NodeBase);
+    function SparksAccelerate() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksAccelerate.__super__.constructor.apply(this, arguments);
+    }
+    SparksAccelerate.prototype.set_fields = function() {
+      SparksAccelerate.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "vector": {
+            type: "Vector3",
+            val: new THREE.Vector3(0, 1, 0)
+          }
+        },
+        outputs: {
+          "action": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.Accelerate(this.rack.get("vector").get());
+    };
+    SparksAccelerate.prototype.compute = function() {
+      this.ob.acceleration = this.rack.get("vector").get();
+      return this.rack.set("action", this.ob);
+    };
+    return SparksAccelerate;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksAccelerateFactor = (function() {
+    __extends(SparksAccelerateFactor, ThreeNodes.NodeBase);
+    function SparksAccelerateFactor() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksAccelerateFactor.__super__.constructor.apply(this, arguments);
+    }
+    SparksAccelerateFactor.prototype.set_fields = function() {
+      SparksAccelerateFactor.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "factor": 2.0
+        },
+        outputs: {
+          "action": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.AccelerateFactor(this.rack.get("factor").get());
+    };
+    SparksAccelerateFactor.prototype.compute = function() {
+      this.ob.factor = this.rack.get("factor").get();
+      return this.rack.set("action", this.ob);
+    };
+    return SparksAccelerateFactor;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksAccelerateVelocity = (function() {
+    __extends(SparksAccelerateVelocity, ThreeNodes.NodeBase);
+    function SparksAccelerateVelocity() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksAccelerateVelocity.__super__.constructor.apply(this, arguments);
+    }
+    SparksAccelerateVelocity.prototype.set_fields = function() {
+      SparksAccelerateVelocity.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "factor": 2.0
+        },
+        outputs: {
+          "action": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.AccelerateVelocity(this.rack.get("factor").get());
+    };
+    SparksAccelerateVelocity.prototype.compute = function() {
+      this.ob.factor = this.rack.get("factor").get();
+      return this.rack.set("action", this.ob);
+    };
+    return SparksAccelerateVelocity;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksRandomDrift = (function() {
+    __extends(SparksRandomDrift, ThreeNodes.NodeBase);
+    function SparksRandomDrift() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksRandomDrift.__super__.constructor.apply(this, arguments);
+    }
+    SparksRandomDrift.prototype.set_fields = function() {
+      SparksRandomDrift.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "vector": {
+            type: "Vector3",
+            val: new THREE.Vector3(0, 1, 0)
+          }
+        },
+        outputs: {
+          "action": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.RandomDrift(this.rack.get("vector").get());
+    };
+    SparksRandomDrift.prototype.compute = function() {
+      this.ob.drift = this.rack.get("vector").get();
+      return this.rack.set("action", this.ob);
+    };
+    return SparksRandomDrift;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksLifetime = (function() {
+    __extends(SparksLifetime, ThreeNodes.NodeBase);
+    function SparksLifetime() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksLifetime.__super__.constructor.apply(this, arguments);
+    }
+    SparksLifetime.prototype.set_fields = function() {
+      SparksLifetime.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "min": 4,
+          "max": 7
+        },
+        outputs: {
+          "initializer": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.Lifetime(this.rack.get("min").get(), this.rack.get("max").get());
+    };
+    SparksLifetime.prototype.compute = function() {
+      this.ob._min = this.rack.get("min").get();
+      this.ob._min = this.rack.get("max").get();
+      return this.rack.set("initializer", this.ob);
+    };
+    return SparksLifetime;
   })();
   return ThreeNodes.nodes.types.Particle.RandomCloudGeometry = (function() {
     __extends(RandomCloudGeometry, ThreeNodes.NodeBase);
