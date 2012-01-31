@@ -147,7 +147,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.ob.start();
     };
     SparksEmitter.prototype.setTargetParticle = function(p) {
-      return this.pool.pool.get();
+      if (this.pool) {
+        return this.pool.pool.get();
+      }
     };
     SparksEmitter.prototype.compute = function() {
       var initializers;
@@ -454,6 +456,81 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.rack.set("zone", this.ob);
     };
     return SparksPointZone;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksLineZone = (function() {
+    __extends(SparksLineZone, ThreeNodes.NodeBase);
+    function SparksLineZone() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksLineZone.__super__.constructor.apply(this, arguments);
+    }
+    SparksLineZone.prototype.set_fields = function() {
+      SparksLineZone.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "start": {
+            type: "Vector3",
+            val: new THREE.Vector3()
+          },
+          "end": {
+            type: "Vector3",
+            val: new THREE.Vector3(100, 0, 0)
+          }
+        },
+        outputs: {
+          "zone": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.LineZone(this.rack.get("start").get());
+    };
+    SparksLineZone.prototype.compute = function() {
+      this.ob.start = this.rack.get("start").get();
+      this.ob.end = this.rack.get("end").get();
+      return this.rack.set("zone", this.ob);
+    };
+    return SparksLineZone;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksCubeZone = (function() {
+    __extends(SparksCubeZone, ThreeNodes.NodeBase);
+    function SparksCubeZone() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksCubeZone.__super__.constructor.apply(this, arguments);
+    }
+    SparksCubeZone.prototype.set_fields = function() {
+      SparksCubeZone.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "position": {
+            type: "Vector3",
+            val: new THREE.Vector3()
+          },
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        outputs: {
+          "zone": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.CubeZone(this.rack.get("position").get(), this.rack.get("x").get(), this.rack.get("y").get(), this.rack.get("z").get());
+    };
+    SparksCubeZone.prototype.compute = function() {
+      this.ob.position = this.rack.get("position").get();
+      this.ob.x = this.rack.get("x").get();
+      this.ob.y = this.rack.get("y").get();
+      this.ob.z = this.rack.get("z").get();
+      return this.rack.set("zone", this.ob);
+    };
+    return SparksCubeZone;
   })();
   ThreeNodes.nodes.types.Particle.SparksSteadyCounter = (function() {
     __extends(SparksSteadyCounter, ThreeNodes.NodeBase);

@@ -87,10 +87,12 @@ define [
           "out": {type: "Any", val: @ob}
       @pool = @rack.get("pool").get()
       @ob = new SPARKS.Emitter(@rack.get("counter").get())
+      #@ob._velocityVerlet = true
       @ob.start()
     
     setTargetParticle: (p) =>
-      return @pool.pool.get()
+      if @pool
+        return @pool.pool.get()
     
     compute: =>
       if @rack.get("pool").get() != false
@@ -251,6 +253,44 @@ define [
       @ob = new SPARKS.PointZone(@rack.get("pos").get())
     compute: =>
       @ob.pos = @rack.get("pos").get()
+      @rack.set("zone", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksLineZone extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "start": {type: "Vector3", val: new THREE.Vector3()}
+          "end": {type: "Vector3", val: new THREE.Vector3(100, 0, 0)}
+        outputs:
+          "zone": {type: "Any", val: @ob}
+      @ob = new SPARKS.LineZone(@rack.get("start").get())
+    compute: =>
+      @ob.start = @rack.get("start").get()
+      @ob.end = @rack.get("end").get()
+      @rack.set("zone", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksCubeZone extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "position": {type: "Vector3", val: new THREE.Vector3()}
+          "x": 0
+          "y": 0
+          "z": 0
+        outputs:
+          "zone": {type: "Any", val: @ob}
+      @ob = new SPARKS.CubeZone(@rack.get("position").get(), @rack.get("x").get(), @rack.get("y").get(), @rack.get("z").get())
+    compute: =>
+      @ob.position = @rack.get("position").get()
+      @ob.x = @rack.get("x").get()
+      @ob.y = @rack.get("y").get()
+      @ob.z = @rack.get("z").get()
       @rack.set("zone", @ob)
   
   class ThreeNodes.nodes.types.Particle.SparksSteadyCounter extends ThreeNodes.NodeBase
