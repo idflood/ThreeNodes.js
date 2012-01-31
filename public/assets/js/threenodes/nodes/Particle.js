@@ -31,6 +31,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
       this.ob = new THREE.ParticleSystem(this.rack.get('geometry').get(), this.rack.get('material').get());
+      this.ob.dynamic = true;
       this.geometry_cache = false;
       this.material_cache = false;
       return this.compute();
@@ -104,18 +105,26 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
   ThreeNodes.nodes.types.Particle.SparksEmitter = (function() {
     __extends(SparksEmitter, ThreeNodes.NodeBase);
     function SparksEmitter() {
+      this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
+      this.setTargetParticle = __bind(this.setTargetParticle, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksEmitter.__super__.constructor.apply(this, arguments);
     }
     SparksEmitter.prototype.set_fields = function() {
       SparksEmitter.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
+      this.geom = new THREE.Geometry();
+      this.target_initializer = new SPARKS.Target(null, this.setTargetParticle);
       this.rack.addFields({
         inputs: {
           "counter": {
             type: "Any",
-            val: new SPARKS.SteadyCounter(10)
+            val: new SPARKS.SteadyCounter(50)
+          },
+          "pool": {
+            type: "Any",
+            val: false
           },
           "initializers": {
             type: "Any",
@@ -133,11 +142,40 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      return this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
+      this.pool = this.rack.get("pool").get();
+      this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
+      return this.ob.start();
+    };
+    SparksEmitter.prototype.setTargetParticle = function(p) {
+      return this.pool.pool.get();
     };
     SparksEmitter.prototype.compute = function() {
-      this.ob.update();
-      return this.rack.set("out", this.ob);
+      var initializers;
+      if (this.rack.get("pool").get() !== false) {
+        if (this.pool !== this.rack.get("pool").get()) {
+          this.pool = this.rack.get("pool").get();
+          this.pool.init_pool(this.geom);
+          this.ob.addCallback("created", this.pool.on_particle_created);
+          this.ob.addCallback("dead", this.pool.on_particle_dead);
+          console.log("pool particle setup...");
+        }
+      }
+      initializers = this.rack.get("initializers").val;
+      initializers.push(this.target_initializer);
+      this.ob._initializers = initializers;
+      this.ob._actions = this.rack.get("actions").val;
+      this.ob._counter = this.rack.get("counter").get();
+      if (this.pool !== false && this.ob.isRunning() === false) {
+        this.ob.start();
+        console.log("particles running!");
+      }
+      return this.rack.set("out", this.geom);
+    };
+    SparksEmitter.prototype.remove = function() {
+      SparksEmitter.__super__.remove.apply(this, arguments);
+      if (this.ob) {
+        return this.ob.stop();
+      }
     };
     return SparksEmitter;
   })();
@@ -155,7 +193,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         inputs: {
           "easing": {
             type: "Any",
-            val: TWEEN.Easing.Linear
+            val: TWEEN.Easing.Linear.EaseNone
           }
         },
         outputs: {
@@ -168,10 +206,35 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return this.ob = new SPARKS.Age(this.rack.get("easing").get());
     };
     SparksAge.prototype.compute = function() {
-      this.ob._easing = this.rack.get("easing").get();
+      this.ob._easing = this.rack.get("easing").val;
       return this.rack.set("action", this.ob);
     };
     return SparksAge;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksMove = (function() {
+    __extends(SparksMove, ThreeNodes.NodeBase);
+    function SparksMove() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksMove.__super__.constructor.apply(this, arguments);
+    }
+    SparksMove.prototype.set_fields = function() {
+      SparksMove.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        outputs: {
+          "action": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.Move();
+    };
+    SparksMove.prototype.compute = function() {
+      return this.rack.set("action", this.ob);
+    };
+    return SparksMove;
   })();
   ThreeNodes.nodes.types.Particle.SparksAccelerate = (function() {
     __extends(SparksAccelerate, ThreeNodes.NodeBase);
@@ -326,10 +389,106 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksLifetime;
   })();
+  ThreeNodes.nodes.types.Particle.SparksPosition = (function() {
+    __extends(SparksPosition, ThreeNodes.NodeBase);
+    function SparksPosition() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksPosition.__super__.constructor.apply(this, arguments);
+    }
+    SparksPosition.prototype.set_fields = function() {
+      SparksPosition.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "zone": {
+            type: "Any",
+            val: new SPARKS.PointZone(new THREE.Vector3(0, 0, 0))
+          }
+        },
+        outputs: {
+          "initializer": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.Position(this.rack.get("zone").get());
+    };
+    SparksPosition.prototype.compute = function() {
+      this.ob.zone = this.rack.get("zone").get();
+      return this.rack.set("initializer", this.ob);
+    };
+    return SparksPosition;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksPointZone = (function() {
+    __extends(SparksPointZone, ThreeNodes.NodeBase);
+    function SparksPointZone() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksPointZone.__super__.constructor.apply(this, arguments);
+    }
+    SparksPointZone.prototype.set_fields = function() {
+      SparksPointZone.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "pos": {
+            type: "Vector3",
+            val: new THREE.Vector3()
+          }
+        },
+        outputs: {
+          "zone": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.PointZone(this.rack.get("pos").get());
+    };
+    SparksPointZone.prototype.compute = function() {
+      this.ob.pos = this.rack.get("pos").get();
+      return this.rack.set("zone", this.ob);
+    };
+    return SparksPointZone;
+  })();
+  ThreeNodes.nodes.types.Particle.SparksSteadyCounter = (function() {
+    __extends(SparksSteadyCounter, ThreeNodes.NodeBase);
+    function SparksSteadyCounter() {
+      this.compute = __bind(this.compute, this);
+      this.set_fields = __bind(this.set_fields, this);
+      SparksSteadyCounter.__super__.constructor.apply(this, arguments);
+    }
+    SparksSteadyCounter.prototype.set_fields = function() {
+      SparksSteadyCounter.__super__.set_fields.apply(this, arguments);
+      this.auto_evaluate = true;
+      this.rack.addFields({
+        inputs: {
+          "rate": 100
+        },
+        outputs: {
+          "counter": {
+            type: "Any",
+            val: this.ob
+          }
+        }
+      });
+      return this.ob = new SPARKS.SteadyCounter(this.rack.get("rate").get());
+    };
+    SparksSteadyCounter.prototype.compute = function() {
+      this.ob.pos = this.rack.get("rate").get();
+      return this.rack.set("counter", this.ob);
+    };
+    return SparksSteadyCounter;
+  })();
   ThreeNodes.nodes.types.Particle.ParticlePool = (function() {
     __extends(ParticlePool, ThreeNodes.NodeBase);
     function ParticlePool() {
       this.compute = __bind(this.compute, this);
+      this.on_particle_dead = __bind(this.on_particle_dead, this);
+      this.on_particle_updated = __bind(this.on_particle_updated, this);
+      this.on_particle_created = __bind(this.on_particle_created, this);
       this.init_pool = __bind(this.init_pool, this);
       this.set_fields = __bind(this.set_fields, this);
       ParticlePool.__super__.constructor.apply(this, arguments);
@@ -337,27 +496,22 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     ParticlePool.prototype.set_fields = function() {
       ParticlePool.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
-      this.ob = new THREE.Geometry();
-      this.rack.addFields({
+      this.geom = false;
+      return this.rack.addFields({
         inputs: {
-          "maxParticles": 10000,
-          "emitter": {
-            type: "Any",
-            val: false
-          }
+          "maxParticles": 10000
         },
         outputs: {
-          "geometry": {
+          "pool": {
             type: "Any",
-            val: this.ob
+            val: this
           }
         }
       });
-      this.emitter = this.rack.get("emitter").get();
-      return this.init_pool();
     };
-    ParticlePool.prototype.init_pool = function() {
+    ParticlePool.prototype.init_pool = function(geom) {
       var i, new_pos, pos, _ref, _results;
+      this.geom = geom;
       this.pool = {
         pools: [],
         get: function() {
@@ -376,36 +530,40 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       _results = [];
       for (i = 0, _ref = this.rack.get("maxParticles").get() - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
         pos = new_pos();
-        this.ob.vertices.push(pos);
+        geom.vertices.push(pos);
         _results.push(this.pool.add(pos));
       }
       return _results;
     };
     ParticlePool.prototype.on_particle_created = function(particle) {
       var target;
+      if (this.geom === false) {
+        return false;
+      }
       target = particle.target;
-      return this.ob.vertices[target].position = particle.position;
+      if (target) {
+        return particle.target.position = particle.position;
+      }
+    };
+    ParticlePool.prototype.on_particle_updated = function(particle) {
+      return true;
     };
     ParticlePool.prototype.on_particle_dead = function(particle) {
       var target;
+      if (this.geom === false) {
+        return false;
+      }
       target = particle.target;
       if (target) {
-        this.ob.vertices[target].position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+        particle.target.position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
         return this.pool.add(particle.target);
       }
     };
     ParticlePool.prototype.compute = function() {
-      if (this.emitter !== this.rack.get("emitter").get()) {
-        this.emitter = this.rack.get("emitter").get();
-        if (this.emitter !== false) {
-          this.emitter.addCallback("created", this.on_particle_created);
-          this.emitter.addCallback("dead", this.on_particle_dead);
-          this.emitter.start();
-        }
+      if (this.geom !== false) {
+        this.geom.__dirtyVertices = true;
       }
-      if (this.emitter !== false) {
-        return this.rack.set("geometry", this.ob);
-      }
+      return this.rack.set("pool", this);
     };
     return ParticlePool;
   })();

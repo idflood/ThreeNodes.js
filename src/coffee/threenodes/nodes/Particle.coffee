@@ -20,6 +20,7 @@ define [
           "material": {type: "Any", val: new THREE.ParticleBasicMaterial()}
           "sortParticles": false
       @ob = new THREE.ParticleSystem(@rack.get('geometry').get(), @rack.get('material').get())
+      @ob.dynamic = true
       @geometry_cache = false
       @material_cache = false
       @compute()
@@ -74,18 +75,48 @@ define [
       super
       @auto_evaluate = true
       
+      @geom = new THREE.Geometry()
+      @target_initializer = new SPARKS.Target( null, @setTargetParticle )
       @rack.addFields
         inputs:
-          "counter": {type: "Any", val: new SPARKS.SteadyCounter(10)}
+          "counter": {type: "Any", val: new SPARKS.SteadyCounter(50)}
+          "pool": {type: "Any", val: false}
           "initializers": {type: "Any", val: []}
           "actions": {type: "Any", val: []}
         outputs:
           "out": {type: "Any", val: @ob}
+      @pool = @rack.get("pool").get()
       @ob = new SPARKS.Emitter(@rack.get("counter").get())
+      @ob.start()
+    
+    setTargetParticle: (p) =>
+      return @pool.pool.get()
+    
     compute: =>
-      @ob.update()
+      if @rack.get("pool").get() != false
+        if @pool != @rack.get("pool").get()
+          @pool = @rack.get("pool").get()
+          @pool.init_pool(@geom)
+          @ob.addCallback "created", @pool.on_particle_created
+          #@ob.addCallback "updated", @pool.on_particle_updated
+          @ob.addCallback "dead", @pool.on_particle_dead
+          console.log "pool particle setup..."
       
-      @rack.set("out", @ob)
+      initializers = @rack.get("initializers").val
+      initializers.push(@target_initializer)
+      
+      @ob._initializers = initializers
+      @ob._actions = @rack.get("actions").val
+      @ob._counter = @rack.get("counter").get()
+      if @pool != false && @ob.isRunning() == false
+        @ob.start()
+        console.log "particles running!"
+      @rack.set("out", @geom)
+    
+    remove: =>
+      super
+      if @ob
+        @ob.stop()
   
   class ThreeNodes.nodes.types.Particle.SparksAge extends ThreeNodes.NodeBase
     set_fields: =>
@@ -94,12 +125,23 @@ define [
       
       @rack.addFields
         inputs:
-          "easing": {type: "Any", val: TWEEN.Easing.Linear}
+          "easing": {type: "Any", val: TWEEN.Easing.Linear.EaseNone}
         outputs:
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.Age(@rack.get("easing").get())
     compute: =>
-      @ob._easing = @rack.get("easing").get()
+      @ob._easing = @rack.get("easing").val
+      @rack.set("action", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksMove extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      @rack.addFields
+        outputs:
+          "action": {type: "Any", val: @ob}
+      @ob = new SPARKS.Move()
+    compute: =>
       @rack.set("action", @ob)
   
   class ThreeNodes.nodes.types.Particle.SparksAccelerate extends ThreeNodes.NodeBase
@@ -179,22 +221,64 @@ define [
       @ob._min = @rack.get("max").get()
       @rack.set("initializer", @ob)
   
+  class ThreeNodes.nodes.types.Particle.SparksPosition extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "zone": {type: "Any", val: new SPARKS.PointZone( new THREE.Vector3(0,0,0) )}
+        outputs:
+          "initializer": {type: "Any", val: @ob}
+      @ob = new SPARKS.Position(@rack.get("zone").get())
+    compute: =>
+      @ob.zone = @rack.get("zone").get()
+      @rack.set("initializer", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksPointZone extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "pos": {type: "Vector3", val: new THREE.Vector3()}
+        outputs:
+          "zone": {type: "Any", val: @ob}
+      @ob = new SPARKS.PointZone(@rack.get("pos").get())
+    compute: =>
+      @ob.pos = @rack.get("pos").get()
+      @rack.set("zone", @ob)
+  
+  class ThreeNodes.nodes.types.Particle.SparksSteadyCounter extends ThreeNodes.NodeBase
+    set_fields: =>
+      super
+      @auto_evaluate = true
+      
+      @rack.addFields
+        inputs:
+          "rate": 100
+        outputs:
+          "counter": {type: "Any", val: @ob}
+      @ob = new SPARKS.SteadyCounter(@rack.get("rate").get())
+    compute: =>
+      @ob.pos = @rack.get("rate").get()
+      @rack.set("counter", @ob)
+  
   class ThreeNodes.nodes.types.Particle.ParticlePool extends ThreeNodes.NodeBase
     set_fields: =>
       super
       @auto_evaluate = true
-      @ob = new THREE.Geometry()
+      @geom = false
       @rack.addFields
         inputs:
           "maxParticles": 10000
-          "emitter":  {type: "Any", val: false}
         outputs:
-          "geometry": {type: "Any", val: @ob}
-      @emitter = @rack.get("emitter").get()
-      @init_pool()
+          "pool": {type: "Any", val: this}
     
-    
-    init_pool: =>
+    init_pool: (geom) =>
+      @geom = geom
       @pool =
         pools: []
         get: () ->
@@ -208,30 +292,32 @@ define [
         new THREE.Vertex(new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY))
       for i in [0..@rack.get("maxParticles").get() - 1]
         pos = new_pos()
-        @ob.vertices.push(pos)
+        geom.vertices.push(pos)
         @pool.add(pos)
-    
-    on_particle_created: (particle) ->
+      
+    on_particle_created: (particle) =>
+      if @geom == false
+        return false
       target = particle.target
-      @ob.vertices[target].position = particle.position
+      
+      if target
+        particle.target.position = particle.position
     
-    on_particle_dead: (particle) ->
+    on_particle_updated: (particle) =>
+      return true
+    
+    on_particle_dead: (particle) =>
+      if @geom == false
+        return false
       target = particle.target
       if target
-        @ob.vertices[target].position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)
+        particle.target.position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)
         @pool.add(particle.target)
     
     compute: () =>
-      if @emitter != @rack.get("emitter").get()
-        @emitter = @rack.get("emitter").get()
-        # init callbacks and start new emitter
-        if @emitter != false
-          @emitter.addCallback "created", @on_particle_created
-          @emitter.addCallback "dead", @on_particle_dead
-          @emitter.start()
-      
-      if @emitter != false
-        @rack.set("geometry", @ob)
+      if @geom != false
+        @geom.__dirtyVertices = true
+      @rack.set("pool", this)
     
   class ThreeNodes.nodes.types.Particle.RandomCloudGeometry extends ThreeNodes.NodeBase
     set_fields: =>
