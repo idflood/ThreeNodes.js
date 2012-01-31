@@ -81,8 +81,8 @@ define [
         inputs:
           "counter": {type: "Any", val: new SPARKS.SteadyCounter(50)}
           "pool": {type: "Any", val: false}
-          "initializers": {type: "Any", val: []}
-          "actions": {type: "Any", val: []}
+          "initializers": {type: "Array", val: []}
+          "actions": {type: "Array", val: []}
         outputs:
           "out": {type: "Any", val: @ob}
       @pool = @rack.get("pool").get()
@@ -104,7 +104,8 @@ define [
           @ob.addCallback "dead", @pool.on_particle_dead
           console.log "pool particle setup..."
       
-      initializers = @rack.get("initializers").val
+      # works on a copy of the incoming array
+      initializers = @rack.get("initializers").val.slice(0)
       initializers.push(@target_initializer)
       
       @ob._initializers = initializers

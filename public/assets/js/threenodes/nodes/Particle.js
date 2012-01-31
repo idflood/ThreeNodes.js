@@ -127,11 +127,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             val: false
           },
           "initializers": {
-            type: "Any",
+            type: "Array",
             val: []
           },
           "actions": {
-            type: "Any",
+            type: "Array",
             val: []
           }
         },
@@ -162,7 +162,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           console.log("pool particle setup...");
         }
       }
-      initializers = this.rack.get("initializers").val;
+      initializers = this.rack.get("initializers").val.slice(0);
       initializers.push(this.target_initializer);
       this.ob._initializers = initializers;
       this.ob._actions = this.rack.get("actions").val;
