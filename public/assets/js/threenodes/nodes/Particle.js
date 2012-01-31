@@ -485,11 +485,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      return this.ob = new SPARKS.LineZone(this.rack.get("start").get());
+      return this.ob = new SPARKS.LineZone(this.rack.get("start").get(), this.rack.get("end").get());
     };
     SparksLineZone.prototype.compute = function() {
-      this.ob.start = this.rack.get("start").get();
-      this.ob.end = this.rack.get("end").get();
+      if (this.ob.start !== this.rack.get("start").get() ||  this.ob.end !== this.rack.get("end").get()) {
+        this.ob.start = this.rack.get("start").get();
+        this.ob.end = this.rack.get("end").get();
+        this.ob._length = this.ob.end.clone().subSelf(this.ob.start);
+      }
       return this.rack.set("zone", this.ob);
     };
     return SparksLineZone;

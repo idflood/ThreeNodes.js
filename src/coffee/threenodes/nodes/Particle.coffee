@@ -266,10 +266,12 @@ define [
           "end": {type: "Vector3", val: new THREE.Vector3(100, 0, 0)}
         outputs:
           "zone": {type: "Any", val: @ob}
-      @ob = new SPARKS.LineZone(@rack.get("start").get())
+      @ob = new SPARKS.LineZone(@rack.get("start").get(), @rack.get("end").get())
     compute: =>
-      @ob.start = @rack.get("start").get()
-      @ob.end = @rack.get("end").get()
+      if this.ob.start != this.rack.get("start").get() || this.ob.end != this.rack.get("end").get()
+        @ob.start = @rack.get("start").get()
+        @ob.end = @rack.get("end").get()
+        @ob._length = @ob.end.clone().subSelf( @ob.start )
       @rack.set("zone", @ob)
   
   class ThreeNodes.nodes.types.Particle.SparksCubeZone extends ThreeNodes.NodeBase
