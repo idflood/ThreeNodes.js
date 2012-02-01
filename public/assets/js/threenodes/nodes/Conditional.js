@@ -40,9 +40,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var cond, res;
       cond = this.rack.get("condition").get();
       if (cond === false) {
-        res = this.rack.get("val1").get();
+        res = this.rack.get("val1").val;
       } else {
-        res = this.rack.get("val2").get();
+        res = this.rack.get("val2").val;
       }
       return this.rack.set("out", res);
     };

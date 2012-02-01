@@ -23,9 +23,9 @@ define [
     compute: =>
       cond = @rack.get("condition").get()
       if cond == false
-        res = @rack.get("val1").get()
+        res = @rack.get("val1").val
       else
-        res = @rack.get("val2").get()
+        res = @rack.get("val2").val
       @rack.set("out", res)
   
   class ThreeNodes.nodes.types.Conditional.And extends ThreeNodes.NodeBase
