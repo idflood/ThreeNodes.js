@@ -88,7 +88,7 @@ define [
       @pool = @rack.get("pool").get()
       @ob = new SPARKS.Emitter(@rack.get("counter").get())
       #@ob._velocityVerlet = true
-      @ob.start()
+      #@ob.start()
     
     setTargetParticle: (p) =>
       if @pool
@@ -97,6 +97,12 @@ define [
     compute: =>
       if @rack.get("pool").get() != false
         if @pool != @rack.get("pool").get()
+          @ob.removeCallback "created"
+          @ob.removeCallback "dead"
+          @ob.stop()
+          @ob = new SPARKS.Emitter(@rack.get("counter").get())
+          @geom = new THREE.Geometry()
+          
           @pool = @rack.get("pool").get()
           @pool.init_pool(@geom)
           @ob.addCallback "created", @pool.on_particle_created
@@ -113,7 +119,7 @@ define [
       @ob._counter = @rack.get("counter").get()
       if @pool != false && @ob.isRunning() == false
         @ob.start()
-        console.log "particles running!"
+      
       @rack.set("out", @geom)
     
     remove: =>
@@ -335,6 +341,7 @@ define [
           
       new_pos = () ->
         new THREE.Vertex(new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY))
+      
       for i in [0..@rack.get("maxParticles").get() - 1]
         pos = new_pos()
         geom.vertices.push(pos)

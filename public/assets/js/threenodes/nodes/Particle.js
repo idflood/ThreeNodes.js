@@ -143,8 +143,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
       this.pool = this.rack.get("pool").get();
-      this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
-      return this.ob.start();
+      return this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
     };
     SparksEmitter.prototype.setTargetParticle = function(p) {
       if (this.pool) {
@@ -155,6 +154,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var initializers;
       if (this.rack.get("pool").get() !== false) {
         if (this.pool !== this.rack.get("pool").get()) {
+          this.ob.removeCallback("created");
+          this.ob.removeCallback("dead");
+          this.ob.stop();
+          this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
+          this.geom = new THREE.Geometry();
           this.pool = this.rack.get("pool").get();
           this.pool.init_pool(this.geom);
           this.ob.addCallback("created", this.pool.on_particle_created);
@@ -169,7 +173,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob._counter = this.rack.get("counter").get();
       if (this.pool !== false && this.ob.isRunning() === false) {
         this.ob.start();
-        console.log("particles running!");
       }
       return this.rack.set("out", this.geom);
     };
