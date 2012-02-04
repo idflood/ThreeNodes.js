@@ -179,6 +179,11 @@ define [
           $(this).blur()
       f_input
   
+    create_sidebar_field_title: (name = @name) =>
+      $cont = $("#tab-attribute")
+      $cont.append("<h3>#{name}</h3>")
+      return $cont
+    
     create_subval_textinput: (subval) =>
       $target = @create_sidebar_container(subval)
       f_in = @create_textfield($target, "side-field-txt-input-#{subval}-#{@fid}")
@@ -307,6 +312,7 @@ define [
       return null
     
     render_sidebar: =>
+      @create_sidebar_field_title()
       @create_subval_textinput("x")
       @create_subval_textinput("y")
       true
@@ -319,6 +325,7 @@ define [
       return null
     
     render_sidebar: =>
+      @create_sidebar_field_title()
       @create_subval_textinput("x")
       @create_subval_textinput("y")
       @create_subval_textinput("z")
@@ -332,6 +339,7 @@ define [
       return null
     
     render_sidebar: =>
+      @create_sidebar_field_title()
       @create_subval_textinput("x")
       @create_subval_textinput("y")
       @create_subval_textinput("z")

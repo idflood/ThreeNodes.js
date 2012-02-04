@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.possible_values = possible_values != null ? possible_values : false;
       this.fid = fid != null ? fid : ThreeNodes.Utils.get_uid();
       this.create_subval_textinput = __bind(this.create_subval_textinput, this);
+      this.create_sidebar_field_title = __bind(this.create_sidebar_field_title, this);
       this.link_textfield_to_subval = __bind(this.link_textfield_to_subval, this);
       this.link_textfield_to_val = __bind(this.link_textfield_to_val, this);
       this.create_textfield = __bind(this.create_textfield, this);
@@ -249,6 +250,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       });
       return f_input;
     };
+    NodeField.prototype.create_sidebar_field_title = function(name) {
+      var $cont;
+      if (name == null) {
+        name = this.name;
+      }
+      $cont = $("#tab-attribute");
+      $cont.append("<h3>" + name + "</h3>");
+      return $cont;
+    };
     NodeField.prototype.create_subval_textinput = function(subval) {
       var $target, f_in;
       $target = this.create_sidebar_container(subval);
@@ -471,6 +481,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return null;
     };
     Vector2.prototype.render_sidebar = function() {
+      this.create_sidebar_field_title();
       this.create_subval_textinput("x");
       this.create_subval_textinput("y");
       return true;
@@ -493,6 +504,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return null;
     };
     Vector3.prototype.render_sidebar = function() {
+      this.create_sidebar_field_title();
       this.create_subval_textinput("x");
       this.create_subval_textinput("y");
       this.create_subval_textinput("z");
@@ -516,6 +528,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return null;
     };
     Vector4.prototype.render_sidebar = function() {
+      this.create_sidebar_field_title();
       this.create_subval_textinput("x");
       this.create_subval_textinput("y");
       this.create_subval_textinput("z");
