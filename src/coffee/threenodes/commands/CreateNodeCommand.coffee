@@ -5,7 +5,7 @@ define [
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.CreateNodeCommand
-    execute: (nodename, nodetype, dx = 0, dy = 0) ->
+    execute: (nodename, dx = 0, dy = 0) ->
       injector = @context.injector
       ng = injector.get("NodeGraph")
-      ng.create_node(nodename, nodetype, dx, dy)
+      ng.create_node(nodename, dx, dy)

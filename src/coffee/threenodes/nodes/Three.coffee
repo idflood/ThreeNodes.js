@@ -9,7 +9,10 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Three.Object3D extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Object3D extends ThreeNodes.NodeBase
+    @node_name = 'Object3D'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -61,7 +64,10 @@ define [
       
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.Scene extends ThreeNodes.nodes.types.Three.Object3D
+  class ThreeNodes.nodes.Scene extends ThreeNodes.nodes.Object3D
+    @node_name = 'Scene'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @ob = new THREE.Scene()
@@ -107,7 +113,7 @@ define [
       @apply_children()
       @rack.set("out", @ob)
   
-  class Object3DwithMeshAndMaterial extends ThreeNodes.nodes.types.Three.Object3D
+  class Object3DwithMeshAndMaterial extends ThreeNodes.nodes.Object3D
     set_fields: =>
       super
       @material_cache = false
@@ -140,7 +146,10 @@ define [
         res = @rack.get('material').val.id
       res
   
-  class ThreeNodes.nodes.types.Three.Mesh extends Object3DwithMeshAndMaterial
+  class ThreeNodes.nodes.ThreeMesh extends Object3DwithMeshAndMaterial
+    @node_name = 'Mesh'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @rack.addFields
@@ -186,7 +195,10 @@ define [
       @material_cache = @get_material_cache()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.Line extends Object3DwithMeshAndMaterial
+  class ThreeNodes.nodes.ThreeLine extends Object3DwithMeshAndMaterial
+    @node_name = 'Line'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @rack.addFields
@@ -237,7 +249,10 @@ define [
       @material_cache = @get_material_cache()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.Camera extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Camera extends ThreeNodes.NodeBase
+    @node_name = 'Camera'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @ob = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
@@ -258,7 +273,10 @@ define [
       @ob.lookAt(@rack.get("target").get())
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.Texture extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Texture extends ThreeNodes.NodeBase
+    @node_name = 'Texture'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @ob = false
@@ -281,7 +299,10 @@ define [
           
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.Fog extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Fog extends ThreeNodes.NodeBase
+    @node_name = 'Fog'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @ob = false
@@ -299,7 +320,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.FogExp2 extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.FogExp2 extends ThreeNodes.NodeBase
+    @node_name = 'FogExp2'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @ob = false
@@ -316,7 +340,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Three.WebGLRenderer extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.WebGLRenderer extends ThreeNodes.NodeBase
+    @node_name = 'WebGLRenderer'
+    @group_name = 'Three'
+    
     set_fields: =>
       super
       @auto_evaluate = true

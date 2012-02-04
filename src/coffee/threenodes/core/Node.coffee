@@ -19,6 +19,8 @@ define [
     left: 0
   
   class ThreeNodes.NodeBase
+    @node_name = ''
+    @group_name = ''
     constructor: (@x = 0, @y = 0, @inXML = false, @inJSON = false) ->
       @auto_evaluate = false
       @delays_output = false

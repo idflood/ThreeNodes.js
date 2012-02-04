@@ -9,7 +9,10 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Lights.PointLight extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.PointLight extends ThreeNodes.NodeBase
+    @node_name = 'PointLight'
+    @group_name = 'Lights'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -28,7 +31,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Lights.SpotLight extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SpotLight extends ThreeNodes.NodeBase
+    @node_name = 'SpotLight'
+    @group_name = 'Lights'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -51,7 +57,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Lights.DirectionalLight extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.DirectionalLight extends ThreeNodes.NodeBase
+    @node_name = 'DirectionalLight'
+    @group_name = 'Lights'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -70,7 +79,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Lights.AmbientLight extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.AmbientLight extends ThreeNodes.NodeBase
+    @node_name = 'AmbientLight'
+    @group_name = 'Lights'
+    
     set_fields: =>
       super
       @auto_evaluate = true

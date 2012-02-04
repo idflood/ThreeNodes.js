@@ -99,13 +99,24 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
       });
     };
     AppSidebar.prototype.init_sidebar_tab_new_node = function() {
-      var $container, node, nt, self;
+      var $container, group, group_name, node, nodes_by_group, result, self, _i, _len, _ref;
       self = this;
       $container = $("#tab-new");
-      for (nt in ThreeNodes.nodes.types) {
-        $container.append("<h3>" + nt + "</h3><ul id='nodetype-" + nt + "'></ul>");
-        for (node in ThreeNodes.nodes.types[nt]) {
-          $("#nodetype-" + nt, $container).append("<li><a class='button' rel='" + nt + "' href='#'>" + (node.toString()) + "</a></li>");
+      result = [];
+      nodes_by_group = {};
+      for (node in ThreeNodes.nodes) {
+        group_name = ThreeNodes.nodes[node].group_name.replace(/\./g, "-");
+        if (!nodes_by_group[group_name]) {
+          nodes_by_group[group_name] = [];
+        }
+        nodes_by_group[group_name].push(node);
+      }
+      for (group in nodes_by_group) {
+        $container.append("<h3>" + group + "</h3><ul id='nodetype-" + group + "'></ul>");
+        _ref = nodes_by_group[group];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          $("#nodetype-" + group, $container).append("<li><a class='button' rel='" + node + "' href='#'>" + ThreeNodes.nodes[node].node_name + "</a></li>");
         }
       }
       $("a.button", $container).draggable({
@@ -121,12 +132,11 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
         activeClass: "ui-state-active",
         hoverClass: "ui-state-hover",
         drop: function(event, ui) {
-          var dx, dy, nodename, nodetype;
+          var dx, dy, nodename;
           nodename = ui.draggable.attr("rel");
-          nodetype = jQuery.trim(ui.draggable.html());
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10;
           dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop();
-          self.context.commandMap.execute("CreateNodeCommand", nodename, nodetype, dx, dy);
+          self.context.commandMap.execute("CreateNodeCommand", nodename, dx, dy);
           return $("#sidebar").show();
         }
       });

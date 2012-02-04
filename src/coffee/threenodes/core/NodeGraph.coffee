@@ -20,23 +20,18 @@ define [
     constructor: () ->
       @nodes = []
       @nodes_by_nid = {}
+      @fields_by_fid = {}
       @node_connections = []
       @types = false
     
-    create_node: (component, type, x, y, inXML = false, inJSON = false) =>
-      n = new ThreeNodes.nodes.types[component][type](x, y, inXML, inJSON)
+    create_node: (nodename, x, y, inXML = false, inJSON = false) =>
+      if !ThreeNodes.nodes[nodename]
+        console.error("Node type doesn't exists: " + nodename)
+      n = new ThreeNodes.nodes[nodename](x, y, inXML, inJSON)
       @context.injector.applyContext(n)
       @nodes.push(n)
       @nodes_by_nid[n.nid] = n
       n
-    
-    get_component_by_type: (type) =>
-      if @types == false
-        @types = {}
-        for comp of ThreeNodes.nodes.types
-          for typ of ThreeNodes.nodes.types[comp]
-            @types[typ.toString()] = comp
-      @types[type]
     
     render: () =>
       invalidNodes = {}

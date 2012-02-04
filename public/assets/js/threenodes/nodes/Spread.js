@@ -7,13 +7,15 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Spread.RandomSpread = (function() {
+  "use strict";  ThreeNodes.nodes.RandomSpread = (function() {
     __extends(RandomSpread, ThreeNodes.NodeBase);
     function RandomSpread() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       RandomSpread.__super__.constructor.apply(this, arguments);
     }
+    RandomSpread.node_name = 'RandomSpread';
+    RandomSpread.group_name = 'Spread';
     RandomSpread.prototype.set_fields = function() {
       RandomSpread.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -54,13 +56,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return RandomSpread;
   })();
-  return ThreeNodes.nodes.types.Spread.LinearSpread = (function() {
+  return ThreeNodes.nodes.LinearSpread = (function() {
     __extends(LinearSpread, ThreeNodes.NodeBase);
     function LinearSpread() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       LinearSpread.__super__.constructor.apply(this, arguments);
     }
+    LinearSpread.node_name = 'LinearSpread';
+    LinearSpread.group_name = 'Spread';
     LinearSpread.prototype.set_fields = function() {
       LinearSpread.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;

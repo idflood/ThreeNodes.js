@@ -7,13 +7,15 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Lights.PointLight = (function() {
+  "use strict";  ThreeNodes.nodes.PointLight = (function() {
     __extends(PointLight, ThreeNodes.NodeBase);
     function PointLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       PointLight.__super__.constructor.apply(this, arguments);
     }
+    PointLight.node_name = 'PointLight';
+    PointLight.group_name = 'Lights';
     PointLight.prototype.set_fields = function() {
       PointLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -45,13 +47,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return PointLight;
   })();
-  ThreeNodes.nodes.types.Lights.SpotLight = (function() {
+  ThreeNodes.nodes.SpotLight = (function() {
     __extends(SpotLight, ThreeNodes.NodeBase);
     function SpotLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SpotLight.__super__.constructor.apply(this, arguments);
     }
+    SpotLight.node_name = 'SpotLight';
+    SpotLight.group_name = 'Lights';
     SpotLight.prototype.set_fields = function() {
       SpotLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -91,13 +95,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SpotLight;
   })();
-  ThreeNodes.nodes.types.Lights.DirectionalLight = (function() {
+  ThreeNodes.nodes.DirectionalLight = (function() {
     __extends(DirectionalLight, ThreeNodes.NodeBase);
     function DirectionalLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       DirectionalLight.__super__.constructor.apply(this, arguments);
     }
+    DirectionalLight.node_name = 'DirectionalLight';
+    DirectionalLight.group_name = 'Lights';
     DirectionalLight.prototype.set_fields = function() {
       DirectionalLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -129,13 +135,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return DirectionalLight;
   })();
-  return ThreeNodes.nodes.types.Lights.AmbientLight = (function() {
+  return ThreeNodes.nodes.AmbientLight = (function() {
     __extends(AmbientLight, ThreeNodes.NodeBase);
     function AmbientLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       AmbientLight.__super__.constructor.apply(this, arguments);
     }
+    AmbientLight.node_name = 'AmbientLight';
+    AmbientLight.group_name = 'Lights';
     AmbientLight.prototype.set_fields = function() {
       AmbientLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;

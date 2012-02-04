@@ -93,14 +93,13 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       return res;
     };
     FileHandler.prototype.load_from_json_data = function(txt) {
-      var component, connection, delay, loaded_data, n, node, nodegraph, _i, _j, _len, _len2, _ref, _ref2;
+      var connection, delay, loaded_data, n, node, nodegraph, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
       loaded_data = JSON.parse(txt);
       _ref = loaded_data.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        component = nodegraph.get_component_by_type(node.type);
-        n = nodegraph.create_node(component, node.type, node.x, node.y, false, node);
+        n = nodegraph.create_node(node.type, node.x, node.y, false, node);
       }
       _ref2 = loaded_data.connections;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
@@ -120,14 +119,13 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       nodegraph = this.context.injector.get("NodeGraph");
       loaded_data = $(txt);
       $("node", loaded_data).each(function() {
-        var $this, component, n, nid, type, x, y;
+        var $this, n, nid, type, x, y;
         $this = $(this);
         x = parseInt($this.attr("x"));
         y = parseInt($this.attr("y"));
         nid = parseInt($this.attr("nid"));
         type = $this.attr("type");
-        component = nodegraph.get_component_by_type(type);
-        return n = nodegraph.create_node(component, type, x, y, $this);
+        return n = nodegraph.create_node(type, x, y, $this);
       });
       $("connection", loaded_data).each(function() {
         var $this, c, cid, from, to;

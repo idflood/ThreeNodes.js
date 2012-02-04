@@ -82,8 +82,7 @@ define [
       nodegraph = @context.injector.get("NodeGraph")
       loaded_data = JSON.parse(txt)
       for node in loaded_data.nodes
-        component = nodegraph.get_component_by_type(node.type)
-        n = nodegraph.create_node(component, node.type, node.x, node.y, false, node)
+        n = nodegraph.create_node(node.type, node.x, node.y, false, node)
       
       for connection in loaded_data.connections
         nodegraph.createConnectionFromObject(connection)
@@ -102,8 +101,7 @@ define [
         y = parseInt $this.attr("y")
         nid = parseInt $this.attr("nid")
         type = $this.attr("type")
-        component = nodegraph.get_component_by_type(type)
-        n = nodegraph.create_node(component, type, x, y, $this)
+        n = nodegraph.create_node(type, x, y, $this)
       
       $("connection", loaded_data).each () ->
         $this = $(this)

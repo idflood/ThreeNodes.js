@@ -9,8 +9,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng = app.nodegraph;
         filehandler = app.injector.get("FileHandler");
         app.commandMap.execute("ClearWorkspaceCommand");
-        n1 = ng.create_node("Base", "Number", 363, 113);
-        n2 = ng.create_node("Base", "Number", 123, 456);
+        n1 = ng.create_node("Number", 363, 113);
+        n2 = ng.create_node("Number", 123, 456);
         c1 = new ThreeNodes.NodeConnection(n1.v_out, n2.v_in);
         app.injector.applyContext(c1);
         n1.v_in.set(4);
@@ -33,8 +33,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         equals(_c1.from, c1.from_field.name, "Connection1.from_field saved");
         equals(_c1.to, c1.to_field.name, "Connection1.to_field saved");
         app.commandMap.execute("ClearWorkspaceCommand");
-        n1 = ng.create_node("Three", "Scene");
-        n2 = ng.create_node("Three", "WebGLRenderer");
+        n1 = ng.create_node("Scene");
+        n2 = ng.create_node("WebGLRenderer");
         c1 = new ThreeNodes.NodeConnection(n1.rack.get("out", true), n2.rack.get("scene"));
         app.injector.applyContext(c1);
         ng.render();
@@ -43,9 +43,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         equals(parsed_data1.nodes.length, 2, "Saved 2 nodes");
         equals(parsed_data1.connections.length, 1, "Saved one connection");
         app.commandMap.execute("ClearWorkspaceCommand");
-        n1 = ng.create_node("Three", "Scene");
-        n2 = ng.create_node("Utils", "Merge");
-        n3 = ng.create_node("Three", "Mesh");
+        n1 = ng.create_node("Scene");
+        n2 = ng.create_node("Merge");
+        n3 = ng.create_node("ThreeMesh");
         c1 = new ThreeNodes.NodeConnection(n2.rack.get("out", true), n1.rack.get("children"));
         c2 = new ThreeNodes.NodeConnection(n3.rack.get("out", true), n2.rack.get("in0"));
         app.injector.applyContext(c1);

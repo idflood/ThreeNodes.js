@@ -201,6 +201,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
         f.is_output = true;
       }
       this.registerField(f);
+      this.context.injector.applyContext(f);
       return f;
     };
     NodeFieldRack.prototype.addFields = function(fields_array) {

@@ -15,8 +15,8 @@ define [
         app.commandMap.execute "ClearWorkspaceCommand"
         
         # test with two number nodes connected
-        n1 = ng.create_node("Base", "Number", 363, 113)
-        n2 = ng.create_node("Base", "Number", 123, 456)
+        n1 = ng.create_node("Number", 363, 113)
+        n2 = ng.create_node("Number", 123, 456)
         c1 = new ThreeNodes.NodeConnection(n1.v_out, n2.v_in)
         app.injector.applyContext(c1)
         n1.v_in.set 4
@@ -44,8 +44,8 @@ define [
         
         # save a scene connected to webglrenderer
         app.commandMap.execute "ClearWorkspaceCommand"
-        n1 = ng.create_node("Three", "Scene")
-        n2 = ng.create_node("Three", "WebGLRenderer")
+        n1 = ng.create_node("Scene")
+        n2 = ng.create_node("WebGLRenderer")
         c1 = new ThreeNodes.NodeConnection(n1.rack.get("out", true), n2.rack.get("scene"))
         app.injector.applyContext(c1)
         ng.render()
@@ -58,9 +58,9 @@ define [
         # test for possible circular reference in json
         # appear when saving an object inside an array, the mesh in the merge array for this example
         app.commandMap.execute "ClearWorkspaceCommand"
-        n1 = ng.create_node("Three", "Scene")
-        n2 = ng.create_node("Utils", "Merge")
-        n3 = ng.create_node("Three", "Mesh")
+        n1 = ng.create_node("Scene")
+        n2 = ng.create_node("Merge")
+        n3 = ng.create_node("ThreeMesh")
         c1 = new ThreeNodes.NodeConnection(n2.rack.get("out", true), n1.rack.get("children"))
         c2 = new ThreeNodes.NodeConnection(n3.rack.get("out", true), n2.rack.get("in0"))
         app.injector.applyContext(c1)

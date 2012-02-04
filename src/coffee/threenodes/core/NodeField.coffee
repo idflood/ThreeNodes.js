@@ -19,7 +19,12 @@ define [
       @changed = true
       @connections = []
       @default_value = null
-      ThreeNodes.nodes.fields[@fid] = this
+      #ThreeNodes.nodes.fields[@fid] = this
+      
+    
+    onRegister: () ->
+      ng = @context.injector.get("NodeGraph")
+      ng.fields_by_fid[@fid] = this
       @on_value_changed(@val)
     
     set: (v) =>

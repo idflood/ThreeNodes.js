@@ -7,13 +7,15 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Conditional.IfElse = (function() {
+  "use strict";  ThreeNodes.nodes.IfElse = (function() {
     __extends(IfElse, ThreeNodes.NodeBase);
     function IfElse() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       IfElse.__super__.constructor.apply(this, arguments);
     }
+    IfElse.node_name = 'IfElse';
+    IfElse.group_name = 'Conditional';
     IfElse.prototype.set_fields = function() {
       IfElse.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -48,13 +50,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return IfElse;
   })();
-  ThreeNodes.nodes.types.Conditional.And = (function() {
+  ThreeNodes.nodes.And = (function() {
     __extends(And, ThreeNodes.NodeBase);
     function And() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       And.__super__.constructor.apply(this, arguments);
     }
+    And.node_name = 'And';
+    And.group_name = 'Conditional';
     And.prototype.set_fields = function() {
       And.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -74,13 +78,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return And;
   })();
-  ThreeNodes.nodes.types.Conditional.Or = (function() {
+  ThreeNodes.nodes.Or = (function() {
     __extends(Or, ThreeNodes.NodeBase);
     function Or() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Or.__super__.constructor.apply(this, arguments);
     }
+    Or.node_name = 'Or';
+    Or.group_name = 'Conditional';
     Or.prototype.set_fields = function() {
       Or.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -100,13 +106,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Or;
   })();
-  ThreeNodes.nodes.types.Conditional.Equal = (function() {
+  ThreeNodes.nodes.Equal = (function() {
     __extends(Equal, ThreeNodes.NodeBase);
     function Equal() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Equal.__super__.constructor.apply(this, arguments);
     }
+    Equal.node_name = 'Equal';
+    Equal.group_name = 'Conditional';
     Equal.prototype.set_fields = function() {
       Equal.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -132,13 +140,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Equal;
   })();
-  ThreeNodes.nodes.types.Conditional.Smaller = (function() {
+  ThreeNodes.nodes.Smaller = (function() {
     __extends(Smaller, ThreeNodes.NodeBase);
     function Smaller() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Smaller.__super__.constructor.apply(this, arguments);
     }
+    Smaller.node_name = 'Smaller';
+    Smaller.group_name = 'Conditional';
     Smaller.prototype.set_fields = function() {
       Smaller.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -164,13 +174,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Smaller;
   })();
-  return ThreeNodes.nodes.types.Conditional.Greater = (function() {
+  return ThreeNodes.nodes.Greater = (function() {
     __extends(Greater, ThreeNodes.NodeBase);
     function Greater() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Greater.__super__.constructor.apply(this, arguments);
     }
+    Greater.node_name = 'Greater';
+    Greater.group_name = 'Conditional';
     Greater.prototype.set_fields = function() {
       Greater.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({

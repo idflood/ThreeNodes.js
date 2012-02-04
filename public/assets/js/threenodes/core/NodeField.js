@@ -45,9 +45,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.changed = true;
       this.connections = [];
       this.default_value = null;
-      ThreeNodes.nodes.fields[this.fid] = this;
-      this.on_value_changed(this.val);
     }
+    NodeField.prototype.onRegister = function() {
+      var ng;
+      ng = this.context.injector.get("NodeGraph");
+      ng.fields_by_fid[this.fid] = this;
+      return this.on_value_changed(this.val);
+    };
     NodeField.prototype.set = function(v) {
       var connection, hook, new_val, tmp_val, _i, _len, _ref;
       this.changed = true;

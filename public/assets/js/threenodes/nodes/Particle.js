@@ -7,14 +7,16 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils', "order!libs/Tween", "order!libs/Sparks"], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Particle.ParticleSystem = (function() {
-    __extends(ParticleSystem, ThreeNodes.nodes.types.Three.Object3D);
+  "use strict";  ThreeNodes.nodes.ParticleSystem = (function() {
+    __extends(ParticleSystem, ThreeNodes.nodes.Object3D);
     function ParticleSystem() {
       this.compute = __bind(this.compute, this);
       this.rebuild_geometry = __bind(this.rebuild_geometry, this);
       this.set_fields = __bind(this.set_fields, this);
       ParticleSystem.__super__.constructor.apply(this, arguments);
     }
+    ParticleSystem.node_name = 'ParticleSystem';
+    ParticleSystem.group_name = 'Particle';
     ParticleSystem.prototype.set_fields = function() {
       ParticleSystem.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
@@ -66,12 +68,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return ParticleSystem;
   })();
-  ThreeNodes.nodes.types.Particle.ParticleBasicMaterial = (function() {
+  ThreeNodes.nodes.ParticleBasicMaterial = (function() {
     __extends(ParticleBasicMaterial, ThreeNodes.NodeMaterialBase);
     function ParticleBasicMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       ParticleBasicMaterial.__super__.constructor.apply(this, arguments);
     }
+    ParticleBasicMaterial.node_name = 'ParticleBasicMaterial';
+    ParticleBasicMaterial.group_name = 'Materials';
     ParticleBasicMaterial.prototype.set_fields = function() {
       ParticleBasicMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -102,7 +106,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return ParticleBasicMaterial;
   })();
-  ThreeNodes.nodes.types.Particle.SparksEmitter = (function() {
+  ThreeNodes.nodes.SparksEmitter = (function() {
     __extends(SparksEmitter, ThreeNodes.NodeBase);
     function SparksEmitter() {
       this.remove = __bind(this.remove, this);
@@ -111,6 +115,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       SparksEmitter.__super__.constructor.apply(this, arguments);
     }
+    SparksEmitter.node_name = 'Emitter';
+    SparksEmitter.group_name = 'Particle.sparks';
     SparksEmitter.prototype.set_fields = function() {
       SparksEmitter.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -186,13 +192,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksEmitter;
   })();
-  ThreeNodes.nodes.types.Particle.SparksAge = (function() {
+  ThreeNodes.nodes.SparksAge = (function() {
     __extends(SparksAge, ThreeNodes.NodeBase);
     function SparksAge() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAge.__super__.constructor.apply(this, arguments);
     }
+    SparksAge.node_name = 'Age';
+    SparksAge.group_name = 'Particle.sparks.actions';
     SparksAge.prototype.set_fields = function() {
       SparksAge.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -218,13 +226,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksAge;
   })();
-  ThreeNodes.nodes.types.Particle.SparksMove = (function() {
+  ThreeNodes.nodes.SparksMove = (function() {
     __extends(SparksMove, ThreeNodes.NodeBase);
     function SparksMove() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksMove.__super__.constructor.apply(this, arguments);
     }
+    SparksMove.node_name = 'Move';
+    SparksMove.group_name = 'Particle.sparks.actions';
     SparksMove.prototype.set_fields = function() {
       SparksMove.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -243,13 +253,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksMove;
   })();
-  ThreeNodes.nodes.types.Particle.SparksAccelerate = (function() {
+  ThreeNodes.nodes.SparksAccelerate = (function() {
     __extends(SparksAccelerate, ThreeNodes.NodeBase);
     function SparksAccelerate() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerate.__super__.constructor.apply(this, arguments);
     }
+    SparksAccelerate.node_name = 'Accelerate';
+    SparksAccelerate.group_name = 'Particle.sparks.actions';
     SparksAccelerate.prototype.set_fields = function() {
       SparksAccelerate.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -275,13 +287,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksAccelerate;
   })();
-  ThreeNodes.nodes.types.Particle.SparksAccelerateFactor = (function() {
+  ThreeNodes.nodes.SparksAccelerateFactor = (function() {
     __extends(SparksAccelerateFactor, ThreeNodes.NodeBase);
     function SparksAccelerateFactor() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerateFactor.__super__.constructor.apply(this, arguments);
     }
+    SparksAccelerateFactor.node_name = 'AccelerateFactor';
+    SparksAccelerateFactor.group_name = 'Particle.sparks.actions';
     SparksAccelerateFactor.prototype.set_fields = function() {
       SparksAccelerateFactor.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -304,13 +318,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksAccelerateFactor;
   })();
-  ThreeNodes.nodes.types.Particle.SparksAccelerateVelocity = (function() {
+  ThreeNodes.nodes.SparksAccelerateVelocity = (function() {
     __extends(SparksAccelerateVelocity, ThreeNodes.NodeBase);
     function SparksAccelerateVelocity() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerateVelocity.__super__.constructor.apply(this, arguments);
     }
+    SparksAccelerateVelocity.node_name = 'AccelerateVelocity';
+    SparksAccelerateVelocity.group_name = 'Particle.sparks.actions';
     SparksAccelerateVelocity.prototype.set_fields = function() {
       SparksAccelerateVelocity.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -333,13 +349,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksAccelerateVelocity;
   })();
-  ThreeNodes.nodes.types.Particle.SparksRandomDrift = (function() {
+  ThreeNodes.nodes.SparksRandomDrift = (function() {
     __extends(SparksRandomDrift, ThreeNodes.NodeBase);
     function SparksRandomDrift() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksRandomDrift.__super__.constructor.apply(this, arguments);
     }
+    SparksRandomDrift.node_name = 'RandomDrift';
+    SparksRandomDrift.group_name = 'Particle.sparks.actions';
     SparksRandomDrift.prototype.set_fields = function() {
       SparksRandomDrift.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -365,13 +383,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksRandomDrift;
   })();
-  ThreeNodes.nodes.types.Particle.SparksLifetime = (function() {
+  ThreeNodes.nodes.SparksLifetime = (function() {
     __extends(SparksLifetime, ThreeNodes.NodeBase);
     function SparksLifetime() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksLifetime.__super__.constructor.apply(this, arguments);
     }
+    SparksLifetime.node_name = 'Lifetime';
+    SparksLifetime.group_name = 'Particle.sparks.initializers';
     SparksLifetime.prototype.set_fields = function() {
       SparksLifetime.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -396,13 +416,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksLifetime;
   })();
-  ThreeNodes.nodes.types.Particle.SparksPosition = (function() {
+  ThreeNodes.nodes.SparksPosition = (function() {
     __extends(SparksPosition, ThreeNodes.NodeBase);
     function SparksPosition() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksPosition.__super__.constructor.apply(this, arguments);
     }
+    SparksPosition.node_name = 'Position';
+    SparksPosition.group_name = 'Particle.sparks.initializers';
     SparksPosition.prototype.set_fields = function() {
       SparksPosition.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -428,13 +450,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksPosition;
   })();
-  ThreeNodes.nodes.types.Particle.SparksPointZone = (function() {
+  ThreeNodes.nodes.SparksPointZone = (function() {
     __extends(SparksPointZone, ThreeNodes.NodeBase);
     function SparksPointZone() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksPointZone.__super__.constructor.apply(this, arguments);
     }
+    SparksPointZone.node_name = 'PointZone';
+    SparksPointZone.group_name = 'Particle.sparks.zone';
     SparksPointZone.prototype.set_fields = function() {
       SparksPointZone.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -460,13 +484,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksPointZone;
   })();
-  ThreeNodes.nodes.types.Particle.SparksLineZone = (function() {
+  ThreeNodes.nodes.SparksLineZone = (function() {
     __extends(SparksLineZone, ThreeNodes.NodeBase);
     function SparksLineZone() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksLineZone.__super__.constructor.apply(this, arguments);
     }
+    SparksLineZone.node_name = 'LineZone';
+    SparksLineZone.group_name = 'Particle.sparks.zone';
     SparksLineZone.prototype.set_fields = function() {
       SparksLineZone.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -500,13 +526,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksLineZone;
   })();
-  ThreeNodes.nodes.types.Particle.SparksCubeZone = (function() {
+  ThreeNodes.nodes.SparksCubeZone = (function() {
     __extends(SparksCubeZone, ThreeNodes.NodeBase);
     function SparksCubeZone() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksCubeZone.__super__.constructor.apply(this, arguments);
     }
+    SparksCubeZone.node_name = 'CubeZone';
+    SparksCubeZone.group_name = 'Particle.sparks.zone';
     SparksCubeZone.prototype.set_fields = function() {
       SparksCubeZone.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -538,13 +566,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksCubeZone;
   })();
-  ThreeNodes.nodes.types.Particle.SparksSteadyCounter = (function() {
+  ThreeNodes.nodes.SparksSteadyCounter = (function() {
     __extends(SparksSteadyCounter, ThreeNodes.NodeBase);
     function SparksSteadyCounter() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksSteadyCounter.__super__.constructor.apply(this, arguments);
     }
+    SparksSteadyCounter.node_name = 'SteadyCounter';
+    SparksSteadyCounter.group_name = 'Particle.sparks';
     SparksSteadyCounter.prototype.set_fields = function() {
       SparksSteadyCounter.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -567,7 +597,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SparksSteadyCounter;
   })();
-  ThreeNodes.nodes.types.Particle.ParticlePool = (function() {
+  ThreeNodes.nodes.ParticlePool = (function() {
     __extends(ParticlePool, ThreeNodes.NodeBase);
     function ParticlePool() {
       this.compute = __bind(this.compute, this);
@@ -578,6 +608,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       ParticlePool.__super__.constructor.apply(this, arguments);
     }
+    ParticlePool.node_name = 'ParticlePool';
+    ParticlePool.group_name = 'Particle.sparks';
     ParticlePool.prototype.set_fields = function() {
       ParticlePool.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -652,7 +684,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return ParticlePool;
   })();
-  return ThreeNodes.nodes.types.Particle.RandomCloudGeometry = (function() {
+  return ThreeNodes.nodes.RandomCloudGeometry = (function() {
     __extends(RandomCloudGeometry, ThreeNodes.NodeBase);
     function RandomCloudGeometry() {
       this.compute = __bind(this.compute, this);
@@ -663,6 +695,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       RandomCloudGeometry.__super__.constructor.apply(this, arguments);
     }
+    RandomCloudGeometry.node_name = 'RandomCloudGeometry';
+    RandomCloudGeometry.group_name = 'Particle';
     RandomCloudGeometry.prototype.set_fields = function() {
       RandomCloudGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;

@@ -7,19 +7,21 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/colorpicker/js/colorpicker", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Base.Number = (function() {
+  "use strict";  ThreeNodes.nodes.Number = (function() {
     __extends(Number, ThreeNodes.NodeNumberSimple);
     function Number() {
       this.set_fields = __bind(this.set_fields, this);
       Number.__super__.constructor.apply(this, arguments);
     }
+    Number.node_name = 'Number';
+    Number.group_name = 'Base';
     Number.prototype.set_fields = function() {
       Number.__super__.set_fields.apply(this, arguments);
       return this.rack.add_center_textfield(this.v_in);
     };
     return Number;
   })();
-  ThreeNodes.nodes.types.Base.Boolean = (function() {
+  ThreeNodes.nodes.Boolean = (function() {
     __extends(Boolean, ThreeNodes.NodeBase);
     function Boolean() {
       this.compute = __bind(this.compute, this);
@@ -27,6 +29,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.init = __bind(this.init, this);
       Boolean.__super__.constructor.apply(this, arguments);
     }
+    Boolean.node_name = 'Boolean';
+    Boolean.group_name = 'Base';
     Boolean.prototype.init = function() {
       Boolean.__super__.init.apply(this, arguments);
       return this.value = true;
@@ -49,7 +53,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Boolean;
   })();
-  ThreeNodes.nodes.types.Base.String = (function() {
+  ThreeNodes.nodes.String = (function() {
     __extends(String, ThreeNodes.NodeBase);
     function String() {
       this.compute = __bind(this.compute, this);
@@ -57,6 +61,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.init = __bind(this.init, this);
       String.__super__.constructor.apply(this, arguments);
     }
+    String.node_name = 'String';
+    String.group_name = 'Base';
     String.prototype.init = function() {
       String.__super__.init.apply(this, arguments);
       return this.value = "";
@@ -80,13 +86,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return String;
   })();
-  ThreeNodes.nodes.types.Base.Vector2 = (function() {
+  ThreeNodes.nodes.Vector2 = (function() {
     __extends(Vector2, ThreeNodes.NodeBase);
     function Vector2() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Vector2.__super__.constructor.apply(this, arguments);
     }
+    Vector2.node_name = 'Vector2';
+    Vector2.group_name = 'Base';
     Vector2.prototype.set_fields = function() {
       Vector2.__super__.set_fields.apply(this, arguments);
       this.vec = new THREE.Vector2(0, 0);
@@ -122,13 +130,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Vector2;
   })();
-  ThreeNodes.nodes.types.Base.Vector3 = (function() {
+  ThreeNodes.nodes.Vector3 = (function() {
     __extends(Vector3, ThreeNodes.NodeBase);
     function Vector3() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Vector3.__super__.constructor.apply(this, arguments);
     }
+    Vector3.node_name = 'Vector3';
+    Vector3.group_name = 'Base';
     Vector3.prototype.set_fields = function() {
       Vector3.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -168,7 +178,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Vector3;
   })();
-  return ThreeNodes.nodes.types.Base.Color = (function() {
+  return ThreeNodes.nodes.Color = (function() {
     __extends(Color, ThreeNodes.NodeBase);
     function Color() {
       this.compute = __bind(this.compute, this);
@@ -176,6 +186,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.init_preview = __bind(this.init_preview, this);
       Color.__super__.constructor.apply(this, arguments);
     }
+    Color.node_name = 'Color';
+    Color.group_name = 'Base';
     Color.prototype.init_preview = function() {
       var col, self;
       $(".center", this.main_view).append("<div class='color_preview'></div>");

@@ -66,12 +66,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return NodeMaterialBase;
   })();
-  ThreeNodes.nodes.types.Materials.MeshBasicMaterial = (function() {
+  ThreeNodes.nodes.MeshBasicMaterial = (function() {
     __extends(MeshBasicMaterial, ThreeNodes.NodeMaterialBase);
     function MeshBasicMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       MeshBasicMaterial.__super__.constructor.apply(this, arguments);
     }
+    MeshBasicMaterial.node_name = 'MeshBasic';
+    MeshBasicMaterial.group_name = 'Materials';
     MeshBasicMaterial.prototype.set_fields = function() {
       MeshBasicMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -106,12 +108,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return MeshBasicMaterial;
   })();
-  ThreeNodes.nodes.types.Materials.LineBasicMaterial = (function() {
+  ThreeNodes.nodes.LineBasicMaterial = (function() {
     __extends(LineBasicMaterial, ThreeNodes.NodeMaterialBase);
     function LineBasicMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       LineBasicMaterial.__super__.constructor.apply(this, arguments);
     }
+    LineBasicMaterial.node_name = 'LineBasic';
+    LineBasicMaterial.group_name = 'Materials';
     LineBasicMaterial.prototype.set_fields = function() {
       LineBasicMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -136,12 +140,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return LineBasicMaterial;
   })();
-  ThreeNodes.nodes.types.Materials.MeshLambertMaterial = (function() {
+  ThreeNodes.nodes.MeshLambertMaterial = (function() {
     __extends(MeshLambertMaterial, ThreeNodes.NodeMaterialBase);
     function MeshLambertMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       MeshLambertMaterial.__super__.constructor.apply(this, arguments);
     }
+    MeshLambertMaterial.node_name = 'MeshLambert';
+    MeshLambertMaterial.group_name = 'Materials';
     MeshLambertMaterial.prototype.set_fields = function() {
       MeshLambertMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -178,12 +184,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return MeshLambertMaterial;
   })();
-  return ThreeNodes.nodes.types.Materials.MeshPhongMaterial = (function() {
+  return ThreeNodes.nodes.MeshPhongMaterial = (function() {
     __extends(MeshPhongMaterial, ThreeNodes.NodeMaterialBase);
     function MeshPhongMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       MeshPhongMaterial.__super__.constructor.apply(this, arguments);
     }
+    MeshPhongMaterial.node_name = 'MeshPhong';
+    MeshPhongMaterial.group_name = 'Materials';
     MeshPhongMaterial.prototype.set_fields = function() {
       MeshPhongMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];

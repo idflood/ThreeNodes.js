@@ -14,6 +14,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     left: 0
   };
   ThreeNodes.NodeBase = (function() {
+    NodeBase.node_name = '';
+    NodeBase.group_name = '';
     function NodeBase(x, y, inXML, inJSON) {
       this.x = x != null ? x : 0;
       this.y = y != null ? y : 0;

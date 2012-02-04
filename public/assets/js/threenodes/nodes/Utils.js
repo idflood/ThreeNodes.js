@@ -7,13 +7,15 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Utils.Random = (function() {
+  "use strict";  ThreeNodes.nodes.Random = (function() {
     __extends(Random, ThreeNodes.NodeBase);
     function Random() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Random.__super__.constructor.apply(this, arguments);
     }
+    Random.node_name = 'Random';
+    Random.group_name = 'Utils';
     Random.prototype.set_fields = function() {
       Random.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -34,13 +36,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Random;
   })();
-  ThreeNodes.nodes.types.Utils.LFO = (function() {
+  ThreeNodes.nodes.LFO = (function() {
     __extends(LFO, ThreeNodes.NodeBase);
     function LFO() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       LFO.__super__.constructor.apply(this, arguments);
     }
+    LFO.node_name = 'LFO';
+    LFO.group_name = 'Utils';
     LFO.prototype.set_fields = function() {
       LFO.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -124,13 +128,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return LFO;
   })();
-  ThreeNodes.nodes.types.Utils.Merge = (function() {
+  ThreeNodes.nodes.Merge = (function() {
     __extends(Merge, ThreeNodes.NodeBase);
     function Merge() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Merge.__super__.constructor.apply(this, arguments);
     }
+    Merge.node_name = 'Merge';
+    Merge.group_name = 'Utils';
     Merge.prototype.set_fields = function() {
       Merge.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -188,13 +194,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Merge;
   })();
-  ThreeNodes.nodes.types.Utils.Get = (function() {
+  ThreeNodes.nodes.Get = (function() {
     __extends(Get, ThreeNodes.NodeBase);
     function Get() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Get.__super__.constructor.apply(this, arguments);
     }
+    Get.node_name = 'Get';
+    Get.group_name = 'Utils';
     Get.prototype.set_fields = function() {
       Get.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -228,7 +236,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Get;
   })();
-  ThreeNodes.nodes.types.Utils.Mp3Input = (function() {
+  ThreeNodes.nodes.Mp3Input = (function() {
     __extends(Mp3Input, ThreeNodes.NodeBase);
     function Mp3Input() {
       this.compute = __bind(this.compute, this);
@@ -243,6 +251,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.is_chrome = __bind(this.is_chrome, this);
       Mp3Input.__super__.constructor.apply(this, arguments);
     }
+    Mp3Input.node_name = 'Mp3Input';
+    Mp3Input.group_name = 'Utils';
     Mp3Input.prototype.is_chrome = function() {
       return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
     };
@@ -395,13 +405,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Mp3Input;
   })();
-  ThreeNodes.nodes.types.Utils.SoundInput = (function() {
+  ThreeNodes.nodes.SoundInput = (function() {
     __extends(SoundInput, ThreeNodes.NodeBase);
     function SoundInput() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SoundInput.__super__.constructor.apply(this, arguments);
     }
+    SoundInput.node_name = 'SoundInput';
+    SoundInput.group_name = 'Utils';
     SoundInput.prototype.set_fields = function() {
       SoundInput.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -424,13 +436,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SoundInput;
   })();
-  ThreeNodes.nodes.types.Utils.Mouse = (function() {
+  ThreeNodes.nodes.Mouse = (function() {
     __extends(Mouse, ThreeNodes.NodeBase);
     function Mouse() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Mouse.__super__.constructor.apply(this, arguments);
     }
+    Mouse.node_name = 'Mouse';
+    Mouse.group_name = 'Utils';
     Mouse.prototype.set_fields = function() {
       Mouse.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -452,7 +466,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Mouse;
   })();
-  ThreeNodes.nodes.types.Utils.Timer = (function() {
+  ThreeNodes.nodes.Timer = (function() {
     __extends(Timer, ThreeNodes.NodeBase);
     function Timer() {
       this.compute = __bind(this.compute, this);
@@ -460,6 +474,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       Timer.__super__.constructor.apply(this, arguments);
     }
+    Timer.node_name = 'Timer';
+    Timer.group_name = 'Utils';
     Timer.prototype.set_fields = function() {
       Timer.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -499,13 +515,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Timer;
   })();
-  return ThreeNodes.nodes.types.Utils.Font = (function() {
+  return ThreeNodes.nodes.Font = (function() {
     __extends(Font, ThreeNodes.NodeBase);
     function Font() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Font.__super__.constructor.apply(this, arguments);
     }
+    Font.node_name = 'Font';
+    Font.group_name = 'Utils';
     Font.prototype.set_fields = function() {
       var dir, i;
       Font.__super__.set_fields.apply(this, arguments);

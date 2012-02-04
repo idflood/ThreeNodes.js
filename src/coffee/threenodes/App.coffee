@@ -4,20 +4,7 @@ ThreeNodes = {}
 # this makes the soundinput node not working
 ThreeNodes.websocket_enabled = false
 
-ThreeNodes.nodes =
-  fields: {}
-  types:
-    Base: {}
-    Math: {}
-    Utils: {}
-    Conditional: {}
-    Spread: {}
-    Geometry: {}
-    Three: {}
-    Materials: {}
-    Lights: {}
-    PostProcessing: {}
-    Particle: {}
+ThreeNodes.nodes = {}
 
 ThreeNodes.sound_nodes = []
 

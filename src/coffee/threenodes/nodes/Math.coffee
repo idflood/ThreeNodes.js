@@ -9,27 +9,45 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Math.Sin extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathSin extends ThreeNodes.NodeNumberSimple
+    @node_name = 'Sin'
+    @group_name = 'Math'
+    
     process_val: (num, i) =>
       Math.sin(num)
   
-  class ThreeNodes.nodes.types.Math.Cos extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathCos extends ThreeNodes.NodeNumberSimple
+    @node_name = 'Cos'
+    @group_name = 'Math'
+    
     process_val: (num, i) =>
       Math.cos(num)
   
-  class ThreeNodes.nodes.types.Math.Tan extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathTan extends ThreeNodes.NodeNumberSimple
+    @node_name = 'Tan'
+    @group_name = 'Math'
+    
     process_val: (num, i) =>
       Math.tan(num)
   
-  class ThreeNodes.nodes.types.Math.Round extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathRound extends ThreeNodes.NodeNumberSimple
+    @node_name = 'Round'
+    @group_name = 'Math'
+    
     process_val: (num, i) =>
       Math.round(num)
   
-  class ThreeNodes.nodes.types.Math.Ceil extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathCeil extends ThreeNodes.NodeNumberSimple
+    @node_name = 'Ceil'
+    @group_name = 'Math'
+    
     process_val: (num, i) =>
       Math.ceil(num)
   
-  class ThreeNodes.nodes.types.Math.Floor extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathFloor extends ThreeNodes.NodeNumberSimple
+    @node_name = 'Floor'
+    @group_name = 'Math'
+    
     process_val: (num, i) =>
       Math.floor(num)
   
@@ -76,28 +94,40 @@ define [
       @v_out.set res
       true
   
-  class ThreeNodes.nodes.types.Math.Mod extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMod extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Mod'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @v_factor = @rack.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
       num % numb
   
-  class ThreeNodes.nodes.types.Math.Add extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathAdd extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Add'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @v_factor = @rack.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
       num + numb
   
-  class ThreeNodes.nodes.types.Math.Subtract extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathSubtract extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Subtract'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @v_factor = @rack.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
       num - numb
   
-  class ThreeNodes.nodes.types.Math.Mult extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMult extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Mult'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @v_factor = @rack.addField("factor", {type: "Float", val: 2})
@@ -106,14 +136,20 @@ define [
       num * numb
     
                 
-  class ThreeNodes.nodes.types.Math.Divide extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathDivide extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Divide'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @v_factor = @rack.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
       num / numb
   
-  class ThreeNodes.nodes.types.Math.Min extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMin extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Min'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @v_factor = @rack.addField("in2", {type: "Float", val: 0})
@@ -121,7 +157,10 @@ define [
     process_val: (num, numb, i) =>
       Math.min(num, numb)
   
-  class ThreeNodes.nodes.types.Math.Max extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMax extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Max'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @v_factor = @rack.addField("in2", {type: "Float", val: 0})
@@ -129,7 +168,10 @@ define [
     process_val: (num, numb, i) =>
       Math.max(num, numb)
       
-  class ThreeNodes.nodes.types.Math.Attenuation extends ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathAttenuation extends ThreeNodes.NodeNumberParam1
+    @node_name = 'Attenuation'
+    @group_name = 'Math'
+    
     set_fields: =>
       super
       @def_val = @rack.addField("default", 0)

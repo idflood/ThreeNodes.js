@@ -9,7 +9,10 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Utils.Random extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Random extends ThreeNodes.NodeBase
+    @node_name = 'Random'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -26,7 +29,10 @@ define [
       @rack.set("out", @value)
   
   # based on http://www.cycling74.com/forums/topic.php?id=7821
-  class ThreeNodes.nodes.types.Utils.LFO extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.LFO extends ThreeNodes.NodeBase
+    @node_name = 'LFO'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -102,7 +108,10 @@ define [
       
       @rack.set("out", lfout)
   
-  class ThreeNodes.nodes.types.Utils.Merge extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Merge extends ThreeNodes.NodeBase
+    @node_name = 'Merge'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -131,7 +140,10 @@ define [
             @value[@value.length] = subval
       @rack.set("out", @value)
   
-  class ThreeNodes.nodes.types.Utils.Get extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Get extends ThreeNodes.NodeBase
+    @node_name = 'Get'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @rack.addFields
@@ -151,7 +163,10 @@ define [
       if @value != old
         @rack.set("out", @value)
   
-  class ThreeNodes.nodes.types.Utils.Mp3Input extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Mp3Input extends ThreeNodes.NodeBase
+    @node_name = 'Mp3Input'
+    @group_name = 'Utils'
+    
     is_chrome: => navigator.userAgent.toLowerCase().indexOf('chrome') > -1
     
     set_fields: =>
@@ -284,7 +299,10 @@ define [
         @rack.set("high", @getAverageLevel(length3rd * 2, length - 1))
       return true
   
-  class ThreeNodes.nodes.types.Utils.SoundInput extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SoundInput extends ThreeNodes.NodeBase
+    @node_name = 'SoundInput'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -302,7 +320,10 @@ define [
       @rack.set("medium", ThreeNodes.flash_sound_value.snare)
       @rack.set("high", ThreeNodes.flash_sound_value.hat)
   
-  class ThreeNodes.nodes.types.Utils.Mouse extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Mouse extends ThreeNodes.NodeBase
+    @node_name = 'Mouse'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -317,7 +338,10 @@ define [
       @rack.set("x", ThreeNodes.mouseX)
       @rack.set("y", ThreeNodes.mouseY)
   
-  class ThreeNodes.nodes.types.Utils.Timer extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Timer extends ThreeNodes.NodeBase
+    @node_name = 'Timer'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -349,7 +373,10 @@ define [
       @old = now
       @rack.set("out", @counter)
   
-  class ThreeNodes.nodes.types.Utils.Font extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Font extends ThreeNodes.NodeBase
+    @node_name = 'Font'
+    @group_name = 'Utils'
+    
     set_fields: =>
       super
       @auto_evaluate = true

@@ -11,7 +11,10 @@ define [
   "order!libs/Sparks",
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Particle.ParticleSystem extends ThreeNodes.nodes.types.Three.Object3D
+  class ThreeNodes.nodes.ParticleSystem extends ThreeNodes.nodes.Object3D
+    @node_name = 'ParticleSystem'
+    @group_name = 'Particle'
+    
     set_fields: =>
       super
       @rack.addFields
@@ -53,7 +56,10 @@ define [
       
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Particle.ParticleBasicMaterial extends ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.ParticleBasicMaterial extends ThreeNodes.NodeMaterialBase
+    @node_name = 'ParticleBasicMaterial'
+    @group_name = 'Materials'
+    
     set_fields: =>
       super
       @ob = []
@@ -70,7 +76,10 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
 
-  class ThreeNodes.nodes.types.Particle.SparksEmitter extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksEmitter extends ThreeNodes.NodeBase
+    @node_name = 'Emitter'
+    @group_name = 'Particle.sparks'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -129,7 +138,10 @@ define [
         @ob.removeCallback "dead"
         @ob.stop()
   
-  class ThreeNodes.nodes.types.Particle.SparksAge extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksAge extends ThreeNodes.NodeBase
+    @node_name = 'Age'
+    @group_name = 'Particle.sparks.actions'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -144,7 +156,10 @@ define [
       @ob._easing = @rack.get("easing").val
       @rack.set("action", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksMove extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksMove extends ThreeNodes.NodeBase
+    @node_name = 'Move'
+    @group_name = 'Particle.sparks.actions'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -155,7 +170,10 @@ define [
     compute: =>
       @rack.set("action", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksAccelerate extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksAccelerate extends ThreeNodes.NodeBase
+    @node_name = 'Accelerate'
+    @group_name = 'Particle.sparks.actions'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -170,7 +188,10 @@ define [
       @ob.acceleration = @rack.get("vector").get()
       @rack.set("action", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksAccelerateFactor extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksAccelerateFactor extends ThreeNodes.NodeBase
+    @node_name = 'AccelerateFactor'
+    @group_name = 'Particle.sparks.actions'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -185,7 +206,10 @@ define [
       @ob.factor = @rack.get("factor").get()
       @rack.set("action", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksAccelerateVelocity extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksAccelerateVelocity extends ThreeNodes.NodeBase
+    @node_name = 'AccelerateVelocity'
+    @group_name = 'Particle.sparks.actions'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -200,7 +224,10 @@ define [
       @ob.factor = @rack.get("factor").get()
       @rack.set("action", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksRandomDrift extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksRandomDrift extends ThreeNodes.NodeBase
+    @node_name = 'RandomDrift'
+    @group_name = 'Particle.sparks.actions'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -215,7 +242,10 @@ define [
       @ob.drift = @rack.get("vector").get()
       @rack.set("action", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksLifetime extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksLifetime extends ThreeNodes.NodeBase
+    @node_name = 'Lifetime'
+    @group_name = 'Particle.sparks.initializers'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -232,7 +262,10 @@ define [
       @ob._min = @rack.get("max").get()
       @rack.set("initializer", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksPosition extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksPosition extends ThreeNodes.NodeBase
+    @node_name = 'Position'
+    @group_name = 'Particle.sparks.initializers'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -247,7 +280,10 @@ define [
       @ob.zone = @rack.get("zone").get()
       @rack.set("initializer", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksPointZone extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksPointZone extends ThreeNodes.NodeBase
+    @node_name = 'PointZone'
+    @group_name = 'Particle.sparks.zone'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -262,7 +298,10 @@ define [
       @ob.pos = @rack.get("pos").get()
       @rack.set("zone", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksLineZone extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksLineZone extends ThreeNodes.NodeBase
+    @node_name = 'LineZone'
+    @group_name = 'Particle.sparks.zone'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -281,7 +320,10 @@ define [
         @ob._length = @ob.end.clone().subSelf( @ob.start )
       @rack.set("zone", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksCubeZone extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksCubeZone extends ThreeNodes.NodeBase
+    @node_name = 'CubeZone'
+    @group_name = 'Particle.sparks.zone'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -302,7 +344,10 @@ define [
       @ob.z = @rack.get("z").get()
       @rack.set("zone", @ob)
   
-  class ThreeNodes.nodes.types.Particle.SparksSteadyCounter extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SparksSteadyCounter extends ThreeNodes.NodeBase
+    @node_name = 'SteadyCounter'
+    @group_name = 'Particle.sparks'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -317,7 +362,10 @@ define [
       @ob.pos = @rack.get("rate").get()
       @rack.set("counter", @ob)
   
-  class ThreeNodes.nodes.types.Particle.ParticlePool extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.ParticlePool extends ThreeNodes.NodeBase
+    @node_name = 'ParticlePool'
+    @group_name = 'Particle.sparks'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -371,7 +419,10 @@ define [
         @geom.__dirtyVertices = true
       @rack.set("pool", this)
     
-  class ThreeNodes.nodes.types.Particle.RandomCloudGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.RandomCloudGeometry extends ThreeNodes.NodeBase
+    @node_name = 'RandomCloudGeometry'
+    @group_name = 'Particle'
+    
     set_fields: =>
       super
       @auto_evaluate = true

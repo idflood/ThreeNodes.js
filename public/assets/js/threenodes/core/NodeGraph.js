@@ -6,13 +6,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       this.renderAllConnections = __bind(this.renderAllConnections, this);
       this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
       this.render = __bind(this.render, this);
-      this.get_component_by_type = __bind(this.get_component_by_type, this);
       this.create_node = __bind(this.create_node, this);      this.nodes = [];
       this.nodes_by_nid = {};
+      this.fields_by_fid = {};
       this.node_connections = [];
       this.types = false;
     }
-    NodeGraph.prototype.create_node = function(component, type, x, y, inXML, inJSON) {
+    NodeGraph.prototype.create_node = function(nodename, x, y, inXML, inJSON) {
       var n;
       if (inXML == null) {
         inXML = false;
@@ -20,23 +20,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       if (inJSON == null) {
         inJSON = false;
       }
-      n = new ThreeNodes.nodes.types[component][type](x, y, inXML, inJSON);
+      if (!ThreeNodes.nodes[nodename]) {
+        console.error("Node type doesn't exists: " + nodename);
+      }
+      n = new ThreeNodes.nodes[nodename](x, y, inXML, inJSON);
       this.context.injector.applyContext(n);
       this.nodes.push(n);
       this.nodes_by_nid[n.nid] = n;
       return n;
-    };
-    NodeGraph.prototype.get_component_by_type = function(type) {
-      var comp, typ;
-      if (this.types === false) {
-        this.types = {};
-        for (comp in ThreeNodes.nodes.types) {
-          for (typ in ThreeNodes.nodes.types[comp]) {
-            this.types[typ.toString()] = comp;
-          }
-        }
-      }
-      return this.types[type];
     };
     NodeGraph.prototype.render = function() {
       var evaluateSubGraph, invalidNodes, nid, node, terminalNodes, _i, _len, _ref;

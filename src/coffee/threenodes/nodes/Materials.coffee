@@ -53,7 +53,10 @@ define [
       @last_slice_count = numItems
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Materials.MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
+    @node_name = 'MeshBasic'
+    @group_name = 'Materials'
+    
     set_fields: =>
       super
       @ob = []
@@ -74,7 +77,10 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
   
-  class ThreeNodes.nodes.types.Materials.LineBasicMaterial extends ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.LineBasicMaterial extends ThreeNodes.NodeMaterialBase
+    @node_name = 'LineBasic'
+    @group_name = 'Materials'
+    
     set_fields: =>
       super
       @ob = []
@@ -88,7 +94,10 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
   
-  class ThreeNodes.nodes.types.Materials.MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
+    @node_name = 'MeshLambert'
+    @group_name = 'Materials'
+    
     set_fields: =>
       super
       @ob = []
@@ -108,7 +117,10 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
   
-  class ThreeNodes.nodes.types.Materials.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
+    @node_name = 'MeshPhong'
+    @group_name = 'Materials'
+    
     set_fields: =>
       super
       @ob = []

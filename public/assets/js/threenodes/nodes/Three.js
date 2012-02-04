@@ -9,7 +9,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   "use strict";
   var Object3DwithMeshAndMaterial;
-  ThreeNodes.nodes.types.Three.Object3D = (function() {
+  ThreeNodes.nodes.Object3D = (function() {
     __extends(Object3D, ThreeNodes.NodeBase);
     function Object3D() {
       this.compute = __bind(this.compute, this);
@@ -17,6 +17,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       Object3D.__super__.constructor.apply(this, arguments);
     }
+    Object3D.node_name = 'Object3D';
+    Object3D.group_name = 'Three';
     Object3D.prototype.set_fields = function() {
       Object3D.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -91,14 +93,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Object3D;
   })();
-  ThreeNodes.nodes.types.Three.Scene = (function() {
-    __extends(Scene, ThreeNodes.nodes.types.Three.Object3D);
+  ThreeNodes.nodes.Scene = (function() {
+    __extends(Scene, ThreeNodes.nodes.Object3D);
     function Scene() {
       this.compute = __bind(this.compute, this);
       this.apply_children = __bind(this.apply_children, this);
       this.set_fields = __bind(this.set_fields, this);
       Scene.__super__.constructor.apply(this, arguments);
     }
+    Scene.node_name = 'Scene';
+    Scene.group_name = 'Three';
     Scene.prototype.set_fields = function() {
       var current_scene;
       Scene.__super__.set_fields.apply(this, arguments);
@@ -149,7 +153,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     return Scene;
   })();
   Object3DwithMeshAndMaterial = (function() {
-    __extends(Object3DwithMeshAndMaterial, ThreeNodes.nodes.types.Three.Object3D);
+    __extends(Object3DwithMeshAndMaterial, ThreeNodes.nodes.Object3D);
     function Object3DwithMeshAndMaterial() {
       this.get_material_cache = __bind(this.get_material_cache, this);
       this.get_geometry_cache = __bind(this.get_geometry_cache, this);
@@ -203,15 +207,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Object3DwithMeshAndMaterial;
   })();
-  ThreeNodes.nodes.types.Three.Mesh = (function() {
-    __extends(Mesh, Object3DwithMeshAndMaterial);
-    function Mesh() {
+  ThreeNodes.nodes.ThreeMesh = (function() {
+    __extends(ThreeMesh, Object3DwithMeshAndMaterial);
+    function ThreeMesh() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
-      Mesh.__super__.constructor.apply(this, arguments);
+      ThreeMesh.__super__.constructor.apply(this, arguments);
     }
-    Mesh.prototype.set_fields = function() {
-      Mesh.__super__.set_fields.apply(this, arguments);
+    ThreeMesh.node_name = 'Mesh';
+    ThreeMesh.group_name = 'Three';
+    ThreeMesh.prototype.set_fields = function() {
+      ThreeMesh.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
         inputs: {
           "geometry": {
@@ -231,7 +237,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.last_slice_count = 1;
       return this.compute();
     };
-    Mesh.prototype.compute = function() {
+    ThreeMesh.prototype.compute = function() {
       var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
       needs_rebuild = false;
       numItems = this.rack.getMaxInputSliceCount();
@@ -265,17 +271,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.material_cache = this.get_material_cache();
       return this.rack.set("out", this.ob);
     };
-    return Mesh;
+    return ThreeMesh;
   })();
-  ThreeNodes.nodes.types.Three.Line = (function() {
-    __extends(Line, Object3DwithMeshAndMaterial);
-    function Line() {
+  ThreeNodes.nodes.ThreeLine = (function() {
+    __extends(ThreeLine, Object3DwithMeshAndMaterial);
+    function ThreeLine() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
-      Line.__super__.constructor.apply(this, arguments);
+      ThreeLine.__super__.constructor.apply(this, arguments);
     }
-    Line.prototype.set_fields = function() {
-      Line.__super__.set_fields.apply(this, arguments);
+    ThreeLine.node_name = 'Line';
+    ThreeLine.group_name = 'Three';
+    ThreeLine.prototype.set_fields = function() {
+      ThreeLine.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
         inputs: {
           "geometry": {
@@ -302,7 +310,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.last_slice_count = 1;
       return this.compute();
     };
-    Line.prototype.compute = function() {
+    ThreeLine.prototype.compute = function() {
       var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
       needs_rebuild = false;
       numItems = this.rack.getMaxInputSliceCount();
@@ -336,15 +344,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.material_cache = this.get_material_cache();
       return this.rack.set("out", this.ob);
     };
-    return Line;
+    return ThreeLine;
   })();
-  ThreeNodes.nodes.types.Three.Camera = (function() {
+  ThreeNodes.nodes.Camera = (function() {
     __extends(Camera, ThreeNodes.NodeBase);
     function Camera() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Camera.__super__.constructor.apply(this, arguments);
     }
+    Camera.node_name = 'Camera';
+    Camera.group_name = 'Three';
     Camera.prototype.set_fields = function() {
       Camera.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
@@ -379,13 +389,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Camera;
   })();
-  ThreeNodes.nodes.types.Three.Texture = (function() {
+  ThreeNodes.nodes.Texture = (function() {
     __extends(Texture, ThreeNodes.NodeBase);
     function Texture() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Texture.__super__.constructor.apply(this, arguments);
     }
+    Texture.node_name = 'Texture';
+    Texture.group_name = 'Three';
     Texture.prototype.set_fields = function() {
       Texture.__super__.set_fields.apply(this, arguments);
       this.ob = false;
@@ -420,13 +432,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Texture;
   })();
-  ThreeNodes.nodes.types.Three.Fog = (function() {
+  ThreeNodes.nodes.Fog = (function() {
     __extends(Fog, ThreeNodes.NodeBase);
     function Fog() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Fog.__super__.constructor.apply(this, arguments);
     }
+    Fog.node_name = 'Fog';
+    Fog.group_name = 'Three';
     Fog.prototype.set_fields = function() {
       Fog.__super__.set_fields.apply(this, arguments);
       this.ob = false;
@@ -456,13 +470,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return Fog;
   })();
-  ThreeNodes.nodes.types.Three.FogExp2 = (function() {
+  ThreeNodes.nodes.FogExp2 = (function() {
     __extends(FogExp2, ThreeNodes.NodeBase);
     function FogExp2() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       FogExp2.__super__.constructor.apply(this, arguments);
     }
+    FogExp2.node_name = 'FogExp2';
+    FogExp2.group_name = 'Three';
     FogExp2.prototype.set_fields = function() {
       FogExp2.__super__.set_fields.apply(this, arguments);
       this.ob = false;
@@ -491,7 +507,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return FogExp2;
   })();
-  return ThreeNodes.nodes.types.Three.WebGLRenderer = (function() {
+  return ThreeNodes.nodes.WebGLRenderer = (function() {
     __extends(WebGLRenderer, ThreeNodes.NodeBase);
     function WebGLRenderer() {
       this.remove = __bind(this.remove, this);
@@ -503,6 +519,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       WebGLRenderer.__super__.constructor.apply(this, arguments);
     }
+    WebGLRenderer.node_name = 'WebGLRenderer';
+    WebGLRenderer.group_name = 'Three';
     WebGLRenderer.prototype.set_fields = function() {
       var self;
       WebGLRenderer.__super__.set_fields.apply(this, arguments);

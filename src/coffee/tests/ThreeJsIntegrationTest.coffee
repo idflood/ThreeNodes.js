@@ -13,9 +13,9 @@ define [
         ng = app.nodegraph
         injector = app.injector
         app.commandMap.execute "ClearWorkspaceCommand"
-        n1 = ng.create_node("Three", "Scene")
-        n2 = ng.create_node("Utils", "Merge")
-        n3 = ng.create_node("Three", "Mesh")
+        n1 = ng.create_node("Scene")
+        n2 = ng.create_node("Merge")
+        n3 = ng.create_node("ThreeMesh")
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n2.rack.get("out", true), n1.rack.get("children"))
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n3.rack.get("out", true), n2.rack.get("in0"))
         ng.render()
@@ -26,7 +26,7 @@ define [
         equals n1.ob.children.length, 0, "The mesh has been removed from the scene children"
         
         # recreate the connection and add one extra mesh
-        n4 = ng.create_node("Three", "Mesh")
+        n4 = ng.create_node("ThreeMesh")
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n3.rack.get("out", true), n2.rack.get("in0"))
         c3 = injector.instanciate(ThreeNodes.NodeConnection, n4.rack.get("out", true), n2.rack.get("in1"))
         ng.render()
@@ -38,7 +38,7 @@ define [
         equals n1.ob.children.length, 0, "The Three.scene has 0 child"
         
         # mesh default material and color
-        meshNode = ng.create_node("Three", "Mesh")
+        meshNode = ng.create_node("ThreeMesh")
         mesh = meshNode.ob
         ng.render()
         equals mesh[0].material.constructor, THREE.MeshBasicMaterial, "Mesh default material is a MeshBasicMaterial"
@@ -47,7 +47,7 @@ define [
         equals mesh[0].material.color.b, 0, "Mesh default material is red (3/3)"
         
         # webgl
-        n5 = ng.create_node("Three", "WebGLRenderer")
+        n5 = ng.create_node("WebGLRenderer")
         c4 = injector.instanciate(ThreeNodes.NodeConnection, n1.rack.get("out", true), n5.rack.get("scene"))
         
         ng.render()
@@ -59,11 +59,11 @@ define [
         injector = app.injector
         app.commandMap.execute "ClearWorkspaceCommand"
         
-        n1 = ng.create_node("Three", "Scene")
-        n2 = ng.create_node("Utils", "Merge")
-        node_object3d = ng.create_node("Three", "Object3D")
-        node_camera = ng.create_node("Three", "Camera")
-        node_webgl = ng.create_node("Three", "WebGLRenderer")
+        n1 = ng.create_node("Scene")
+        n2 = ng.create_node("Merge")
+        node_object3d = ng.create_node("Object3D")
+        node_camera = ng.create_node("Camera")
+        node_webgl = ng.create_node("WebGLRenderer")
         
         # scene -> webglrenderer.scene
         injector.instanciate(ThreeNodes.NodeConnection, n1.rack.get("out", true), node_webgl.rack.get("scene"))

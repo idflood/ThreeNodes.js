@@ -7,7 +7,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   return child;
 };
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Geometry.PlaneGeometry = (function() {
+  "use strict";  ThreeNodes.nodes.PlaneGeometry = (function() {
     __extends(PlaneGeometry, ThreeNodes.NodeBase);
     function PlaneGeometry() {
       this.compute = __bind(this.compute, this);
@@ -15,6 +15,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       PlaneGeometry.__super__.constructor.apply(this, arguments);
     }
+    PlaneGeometry.node_name = 'Plane';
+    PlaneGeometry.group_name = 'Geometry';
     PlaneGeometry.prototype.set_fields = function() {
       PlaneGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -49,7 +51,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return PlaneGeometry;
   })();
-  ThreeNodes.nodes.types.Geometry.CubeGeometry = (function() {
+  ThreeNodes.nodes.CubeGeometry = (function() {
     __extends(CubeGeometry, ThreeNodes.NodeBase);
     function CubeGeometry() {
       this.compute = __bind(this.compute, this);
@@ -57,6 +59,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       CubeGeometry.__super__.constructor.apply(this, arguments);
     }
+    CubeGeometry.node_name = 'Cube';
+    CubeGeometry.group_name = 'Geometry';
     CubeGeometry.prototype.set_fields = function() {
       CubeGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -94,7 +98,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return CubeGeometry;
   })();
-  ThreeNodes.nodes.types.Geometry.SphereGeometry = (function() {
+  ThreeNodes.nodes.SphereGeometry = (function() {
     __extends(SphereGeometry, ThreeNodes.NodeBase);
     function SphereGeometry() {
       this.compute = __bind(this.compute, this);
@@ -102,6 +106,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       SphereGeometry.__super__.constructor.apply(this, arguments);
     }
+    SphereGeometry.node_name = 'Sphere';
+    SphereGeometry.group_name = 'Geometry';
     SphereGeometry.prototype.set_fields = function() {
       SphereGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -136,7 +142,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return SphereGeometry;
   })();
-  ThreeNodes.nodes.types.Geometry.CylinderGeometry = (function() {
+  ThreeNodes.nodes.CylinderGeometry = (function() {
     __extends(CylinderGeometry, ThreeNodes.NodeBase);
     function CylinderGeometry() {
       this.compute = __bind(this.compute, this);
@@ -144,6 +150,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       CylinderGeometry.__super__.constructor.apply(this, arguments);
     }
+    CylinderGeometry.node_name = 'Cylinder';
+    CylinderGeometry.group_name = 'Geometry';
     CylinderGeometry.prototype.set_fields = function() {
       CylinderGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -181,7 +189,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return CylinderGeometry;
   })();
-  ThreeNodes.nodes.types.Geometry.TorusGeometry = (function() {
+  ThreeNodes.nodes.TorusGeometry = (function() {
     __extends(TorusGeometry, ThreeNodes.NodeBase);
     function TorusGeometry() {
       this.compute = __bind(this.compute, this);
@@ -189,6 +197,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       TorusGeometry.__super__.constructor.apply(this, arguments);
     }
+    TorusGeometry.node_name = 'Torus';
+    TorusGeometry.group_name = 'Geometry';
     TorusGeometry.prototype.set_fields = function() {
       TorusGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -225,7 +235,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return TorusGeometry;
   })();
-  ThreeNodes.nodes.types.Geometry.TorusKnotGeometry = (function() {
+  ThreeNodes.nodes.TorusKnotGeometry = (function() {
     __extends(TorusKnotGeometry, ThreeNodes.NodeBase);
     function TorusKnotGeometry() {
       this.compute = __bind(this.compute, this);
@@ -233,6 +243,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       TorusKnotGeometry.__super__.constructor.apply(this, arguments);
     }
+    TorusKnotGeometry.node_name = 'TorusKnot';
+    TorusKnotGeometry.group_name = 'Geometry';
     TorusKnotGeometry.prototype.set_fields = function() {
       TorusKnotGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -271,7 +283,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return TorusKnotGeometry;
   })();
-  ThreeNodes.nodes.types.Geometry.OctahedronGeometry = (function() {
+  ThreeNodes.nodes.OctahedronGeometry = (function() {
     __extends(OctahedronGeometry, ThreeNodes.NodeBase);
     function OctahedronGeometry() {
       this.compute = __bind(this.compute, this);
@@ -279,6 +291,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       OctahedronGeometry.__super__.constructor.apply(this, arguments);
     }
+    OctahedronGeometry.node_name = 'Octahedron';
+    OctahedronGeometry.group_name = 'Geometry';
     OctahedronGeometry.prototype.set_fields = function() {
       OctahedronGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -312,7 +326,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     return OctahedronGeometry;
   })();
-  return ThreeNodes.nodes.types.Geometry.TextGeometry = (function() {
+  return ThreeNodes.nodes.TextGeometry = (function() {
     __extends(TextGeometry, ThreeNodes.NodeBase);
     function TextGeometry() {
       this.compute = __bind(this.compute, this);
@@ -320,6 +334,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       TextGeometry.__super__.constructor.apply(this, arguments);
     }
+    TextGeometry.node_name = 'Text';
+    TextGeometry.group_name = 'Geometry';
     TextGeometry.prototype.set_fields = function() {
       TextGeometry.__super__.set_fields.apply(this, arguments);
       this.ob = false;

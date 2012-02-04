@@ -131,6 +131,7 @@ define [
         f.is_output = true
       
       @registerField(f)
+      @context.injector.applyContext(f)
       f
       
     addFields: (fields_array) =>

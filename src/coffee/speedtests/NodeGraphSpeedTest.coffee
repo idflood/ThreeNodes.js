@@ -12,10 +12,10 @@ define [
       filehandler = app.injector.get "FileHandler"
       app.commandMap.execute "ClearWorkspaceCommand"
       
-      n1 = ng.create_node("Base", "Number")
-      n2 = ng.create_node("Base", "Vector3")
-      rnd = ng.create_node("Utils", "Random")
-      node_mult = ng.create_node("Math", "Mult")
+      n1 = ng.create_node("Number")
+      n2 = ng.create_node("Vector3")
+      rnd = ng.create_node("Random")
+      node_mult = ng.create_node("MathMult")
       
       #n1.v_in.set 2
       node_mult.rack.get("factor").set(3)

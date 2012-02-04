@@ -9,7 +9,10 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Geometry.PlaneGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.PlaneGeometry extends ThreeNodes.NodeBase
+    @node_name = 'Plane'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -34,7 +37,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Geometry.CubeGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.CubeGeometry extends ThreeNodes.NodeBase
+    @node_name = 'Cube'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -62,7 +68,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Geometry.SphereGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SphereGeometry extends ThreeNodes.NodeBase
+    @node_name = 'Sphere'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -87,7 +96,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Geometry.CylinderGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.CylinderGeometry extends ThreeNodes.NodeBase
+    @node_name = 'Cylinder'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -123,7 +135,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Geometry.TorusGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.TorusGeometry extends ThreeNodes.NodeBase
+    @node_name = 'Torus'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -156,7 +171,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Geometry.TorusKnotGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.TorusKnotGeometry extends ThreeNodes.NodeBase
+    @node_name = 'TorusKnot'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -191,7 +209,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Geometry.OctahedronGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.OctahedronGeometry extends ThreeNodes.NodeBase
+    @node_name = 'Octahedron'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -215,7 +236,10 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.Geometry.TextGeometry extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.TextGeometry extends ThreeNodes.NodeBase
+    @node_name = 'Text'
+    @group_name = 'Geometry'
+    
     set_fields: =>
       super
       @ob = false

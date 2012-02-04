@@ -10,12 +10,18 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Base.Number extends ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.Number extends ThreeNodes.NodeNumberSimple
+    @node_name = 'Number'
+    @group_name = 'Base'
+    
     set_fields: =>
       super
       @rack.add_center_textfield(@v_in)
   
-  class ThreeNodes.nodes.types.Base.Boolean extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Boolean extends ThreeNodes.NodeBase
+    @node_name = 'Boolean'
+    @group_name = 'Base'
+    
     init: =>
       super
       @value = true
@@ -30,7 +36,10 @@ define [
     compute: =>
       @rack.set("out", @rack.get("bool").get())
   
-  class ThreeNodes.nodes.types.Base.String extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.String extends ThreeNodes.NodeBase
+    @node_name = 'String'
+    @group_name = 'Base'
+    
     init: =>
       super
       @value = ""
@@ -47,7 +56,10 @@ define [
     compute: =>
       @rack.set("out", @rack.get("string").get())
   
-  class ThreeNodes.nodes.types.Base.Vector2 extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Vector2 extends ThreeNodes.NodeBase
+    @node_name = 'Vector2'
+    @group_name = 'Base'
+    
     set_fields: =>
       super
       @vec = new THREE.Vector2(0, 0)
@@ -75,7 +87,10 @@ define [
       @rack.set("x", resx)
       @rack.set("y", resy)
   
-  class ThreeNodes.nodes.types.Base.Vector3 extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Vector3 extends ThreeNodes.NodeBase
+    @node_name = 'Vector3'
+    @group_name = 'Base'
+    
     set_fields: =>
       super
       @rack.addFields
@@ -107,7 +122,10 @@ define [
       @rack.set("y", resy)
       @rack.set("z", resz)
   
-  class ThreeNodes.nodes.types.Base.Color extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Color extends ThreeNodes.NodeBase
+    @node_name = 'Color'
+    @group_name = 'Base'
+    
     init_preview: () =>
       $(".center", @main_view).append("<div class='color_preview'></div>")
       col = @rack.get("rgb", true).get(0)

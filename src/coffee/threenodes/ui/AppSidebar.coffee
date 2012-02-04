@@ -65,10 +65,23 @@ define [
     init_sidebar_tab_new_node: () =>
       self = this
       $container = $("#tab-new")
-      for nt of ThreeNodes.nodes.types
-        $container.append("<h3>#{nt}</h3><ul id='nodetype-#{nt}'></ul>")
-        for node of ThreeNodes.nodes.types[nt]
-          $("#nodetype-#{nt}", $container).append("<li><a class='button' rel='#{nt}' href='#'>#{ node.toString() }</a></li>")
+      result = []
+      nodes_by_group = {}
+      for node of ThreeNodes.nodes
+        group_name = (ThreeNodes.nodes[node].group_name).replace(/\./g, "-")
+        if !nodes_by_group[group_name]
+          nodes_by_group[group_name] = []
+        nodes_by_group[group_name].push(node)
+      
+      for group of nodes_by_group
+        $container.append("<h3>#{group}</h3><ul id='nodetype-#{group}'></ul>")
+        for node in nodes_by_group[group]
+          $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.nodes[node].node_name }</a></li>")
+      
+      #for nt of ThreeNodes.nodes.types
+      #  $container.append("<h3>#{nt}</h3><ul id='nodetype-#{nt}'></ul>")
+      #  for node of ThreeNodes.nodes.types[nt]
+      #    $("#nodetype-#{nt}", $container).append("<li><a class='button' rel='#{nt}.#{node.toString()}' href='#'>#{ node.toString() }</a></li>")
       
       $("a.button", $container).draggable
         revert: "valid"
@@ -83,10 +96,8 @@ define [
         activeClass: "ui-state-active"
         hoverClass: "ui-state-hover"
         drop: (event, ui) ->
-          #nodegraph.create_node(ui.draggable.attr("rel"), jQuery.trim(ui.draggable.html()), ui.position.left + $("#container-wrapper").scrollLeft() - 10, ui.position.top - 10 + $("#container-wrapper").scrollTop())
           nodename = ui.draggable.attr("rel")
-          nodetype = jQuery.trim(ui.draggable.html())
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10
           dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop()
-          self.context.commandMap.execute("CreateNodeCommand", nodename, nodetype, dx, dy)
+          self.context.commandMap.execute("CreateNodeCommand", nodename, dx, dy)
           $("#sidebar").show()

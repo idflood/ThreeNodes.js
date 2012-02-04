@@ -13,8 +13,8 @@ define [
         app.commandMap.execute "ClearWorkspaceCommand"
         injector = app.injector
         ng = app.nodegraph
-        n1 = ng.create_node("Base", "Number")
-        n2 = ng.create_node("Base", "Number")
+        n1 = ng.create_node("Number")
+        n2 = ng.create_node("Number")
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.v_in)
         
         equals ng.node_connections.length, 1, "There is one connection"
@@ -36,7 +36,7 @@ define [
         ng.render()
         equals n2.v_out.get(), 0.8, "Node2 value didn't change if there is no connection"
         
-        n3 = ng.create_node("Base", "Number")
+        n3 = ng.create_node("Number")
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.v_in)
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.v_in)
         n1.v_in.set 0.7
@@ -45,7 +45,7 @@ define [
         equals n3.v_out.get(), 0.7, "Multiple output connection propagated 2/2"
         
         # try to connect two outputs to one input (only the last one should be valid, the first removed)
-        n4 = ng.create_node("Base", "Number")
+        n4 = ng.create_node("Number")
         c3 = injector.instanciate(ThreeNodes.NodeConnection, n4.v_out, n3.v_in)
         n4.v_in.set 14
         ng.render()
@@ -57,8 +57,8 @@ define [
         injector = app.injector
         ng = app.nodegraph
         
-        n1 = ng.create_node("Base", "Number")
-        n2 = ng.create_node("Three", "Mesh")
+        n1 = ng.create_node("Number")
+        n2 = ng.create_node("ThreeMesh")
         ng.render()
         
         old_val = n2.rack.get("geometry").get()
@@ -81,8 +81,8 @@ define [
         injector = app.injector
         ng = app.nodegraph
         
-        n1 = ng.create_node("Base", "Number")
-        n3 = ng.create_node("Three", "Scene")
+        n1 = ng.create_node("Number")
+        n3 = ng.create_node("Scene")
         equals $.type(n3.ob.children), "array", "Scene.children is by default an empty array"
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.rack.get("children"))
         # the ng.render throw an error if the children attribute is not valid
@@ -96,8 +96,8 @@ define [
         injector = app.injector
         ng = app.nodegraph
         
-        n1 = ng.create_node("Base", "Number")
-        n2 = ng.create_node("Base", "Number")
+        n1 = ng.create_node("Number")
+        n2 = ng.create_node("Number")
         # connect node in reverse order (from input to output)
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_in, n1.v_out)
         n1.v_in.set 4
@@ -110,8 +110,8 @@ define [
         injector = app.injector
         ng = app.nodegraph
         
-        n1 = ng.create_node("Base", "Number")
-        n2 = ng.create_node("Base", "Number")
+        n1 = ng.create_node("Number")
+        n2 = ng.create_node("Number")
         # connect an input to another input
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_in, n2.v_in)
         # the connection should not be created
@@ -124,7 +124,7 @@ define [
         injector = app.injector
         ng = app.nodegraph
         
-        n1 = ng.create_node("Base", "Number")
+        n1 = ng.create_node("Number")
         # connect an input to another input
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n1.v_in)
         # the connection should not be created
@@ -138,10 +138,10 @@ define [
         injector = app.injector
         ng = app.nodegraph
         
-        n1 = ng.create_node("Base", "Number")
-        n2 = ng.create_node("Base", "Number")
-        node_mult = ng.create_node("Math", "Mult")
-        node_merge = ng.create_node("Utils", "Merge")
+        n1 = ng.create_node("Number")
+        n2 = ng.create_node("Number")
+        node_mult = ng.create_node("MathMult")
+        node_merge = ng.create_node("Merge")
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"))
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"))
         c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_mult.v_factor)
@@ -159,10 +159,10 @@ define [
         
         # verify Vector3 support spreads
         app.commandMap.execute "ClearWorkspaceCommand"
-        n1 = ng.create_node("Base", "Number")
-        n2 = ng.create_node("Base", "Number")
-        node_vec = ng.create_node("Base", "Vector3")
-        node_merge = ng.create_node("Utils", "Merge")
+        n1 = ng.create_node("Number")
+        n2 = ng.create_node("Number")
+        node_vec = ng.create_node("Vector3")
+        node_merge = ng.create_node("Merge")
         c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"))
         c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"))
         c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_vec.rack.get("y"))
@@ -177,10 +177,10 @@ define [
         console.log node_vec.rack.get("xyz", true)
         # mesh should duplicate itself
         app.commandMap.execute "ClearWorkspaceCommand"
-        meshNode = ng.create_node("Three", "Mesh")
-        node_merge = ng.create_node("Utils", "Merge", 0, 0)
-        nvec1 = ng.create_node("Base", "Vector3", 0, 0)
-        nvec2 = ng.create_node("Base", "Vector3", 0, 0)
+        meshNode = ng.create_node("ThreeMesh")
+        node_merge = ng.create_node("Merge", 0, 0)
+        nvec1 = ng.create_node("Vector3", 0, 0)
+        nvec2 = ng.create_node("Vector3", 0, 0)
         c1 = injector.instanciate(ThreeNodes.NodeConnection, nvec1.rack.get("xyz", true), node_merge.rack.get("in0"))
         c2 = injector.instanciate(ThreeNodes.NodeConnection, nvec2.rack.get("xyz", true), node_merge.rack.get("in1"))
         c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), meshNode.rack.get("position"))

@@ -9,7 +9,10 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.PostProcessing.BloomPass extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.BloomPass extends ThreeNodes.NodeBase
+    @node_name = 'Bloom'
+    @group_name = 'PostProcessing'
+    
     set_fields: =>
       super
       @ob = new THREE.BloomPass(1.6)
@@ -36,7 +39,10 @@ define [
       @ob.screenUniforms[ "opacity" ].value = @rack.get("strength").get()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.PostProcessing.DotScreenPass extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.DotScreenPass extends ThreeNodes.NodeBase
+    @node_name = 'DotScreen'
+    @group_name = 'PostProcessing'
+    
     set_fields: =>
       super
       @ob = new THREE.DotScreenPass(new THREE.Vector2( 0.5, 0.5 ))
@@ -61,7 +67,10 @@ define [
         @ob = new THREE.DotScreenPass(@rack.get("center").get(), @rack.get('angle').get(), @rack.get('scale').get())
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.PostProcessing.FilmPass extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.FilmPass extends ThreeNodes.NodeBase
+    @node_name = 'Film'
+    @group_name = 'PostProcessing'
+    
     set_fields: =>
       super
       @ob = new THREE.FilmPass( 0.5, 0.125, 2048, false )
@@ -89,7 +98,10 @@ define [
       @ob.uniforms.sCount.value = @rack.get("scanlinesCount").get()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.PostProcessing.VignettePass extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.VignettePass extends ThreeNodes.NodeBase
+    @node_name = 'Vignette'
+    @group_name = 'PostProcessing'
+    
     set_fields: =>
       super
       shader = THREE.ShaderExtras[ "vignette" ]
@@ -106,7 +118,10 @@ define [
       @ob.uniforms[ "darkness" ].value = @rack.get("darkness").get()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.PostProcessing.HorizontalBlurPass extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.HorizontalBlurPass extends ThreeNodes.NodeBase
+    @node_name = 'HorizontalBlur'
+    @group_name = 'PostProcessing'
+    
     set_fields: =>
       super
       shader = THREE.ShaderExtras[ "horizontalBlur" ]
@@ -121,7 +136,10 @@ define [
       @ob.uniforms[ "h" ].value = @rack.get("delta").get()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.PostProcessing.VerticalBlurPass extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.VerticalBlurPass extends ThreeNodes.NodeBase
+    @node_name = 'VerticalBlur'
+    @group_name = 'PostProcessing'
+    
     set_fields: =>
       super
       shader = THREE.ShaderExtras[ "verticalBlur" ]
@@ -136,7 +154,10 @@ define [
       @ob.uniforms[ "v" ].value = @rack.get("delta").get()
       @rack.set("out", @ob)
   
-  class ThreeNodes.nodes.types.PostProcessing.BleachPass extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.BleachPass extends ThreeNodes.NodeBase
+    @node_name = 'Bleach'
+    @group_name = 'PostProcessing'
+    
     set_fields: =>
       super
       shader = THREE.ShaderExtras[ "bleachbypass" ]

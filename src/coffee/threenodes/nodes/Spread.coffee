@@ -9,7 +9,10 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  class ThreeNodes.nodes.types.Spread.RandomSpread extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.RandomSpread extends ThreeNodes.NodeBase
+    @node_name = 'RandomSpread'
+    @group_name = 'Spread'
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -44,7 +47,10 @@ define [
           @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
       @rack.set("out", @value)
   
-  class ThreeNodes.nodes.types.Spread.LinearSpread extends ThreeNodes.NodeBase
+  class ThreeNodes.nodes.LinearSpread extends ThreeNodes.NodeBase
+    @node_name = 'LinearSpread'
+    @group_name = 'Spread'
+    
     set_fields: =>
       super
       @auto_evaluate = true

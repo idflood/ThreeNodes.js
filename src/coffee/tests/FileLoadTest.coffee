@@ -15,8 +15,8 @@ define [
         app.commandMap.execute "ClearWorkspaceCommand"
         
         # test with two number nodes connected
-        n1 = ng.create_node("Base", "Number", 363, 113)
-        n2 = ng.create_node("Base", "Number")
+        n1 = ng.create_node("Number", 363, 113)
+        n2 = ng.create_node("Number")
         c1 = new ThreeNodes.NodeConnection(n1.v_out, n2.v_in)
         app.injector.applyContext(c1)
         n1.v_in.set 4
@@ -36,9 +36,9 @@ define [
         
         app.commandMap.execute "ClearWorkspaceCommand"
         # test with a vector3 object instead of only float
-        n1 = ng.create_node("Base", "Vector3")
-        n2 = ng.create_node("Base", "Number")
-        n3 = ng.create_node("Base", "Number")
+        n1 = ng.create_node("Vector3")
+        n2 = ng.create_node("Number")
+        n3 = ng.create_node("Number")
         c1 = new ThreeNodes.NodeConnection(n1.rack.get("x", true), n2.v_in)
         c2 = new ThreeNodes.NodeConnection(n1.rack.get("y", true), n3.v_in)
         app.injector.applyContext(c1)
@@ -59,9 +59,9 @@ define [
         
         # possible issue with mesh (mesh.geometry undefined)
         app.commandMap.execute "ClearWorkspaceCommand"
-        n1 = ng.create_node("Three", "Scene")
-        n2 = ng.create_node("Utils", "Merge")
-        n3 = ng.create_node("Three", "Mesh")
+        n1 = ng.create_node("Scene")
+        n2 = ng.create_node("Merge")
+        n3 = ng.create_node("ThreeMesh")
         c1 = new ThreeNodes.NodeConnection(n2.rack.get("out", true), n1.rack.get("children"))
         c2 = new ThreeNodes.NodeConnection(n3.rack.get("out", true), n2.rack.get("in0"))
         app.injector.applyContext(c1)
