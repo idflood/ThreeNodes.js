@@ -9,18 +9,30 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
-  ThreeNodes.NodeView = Backbone.View.extend
+  
+  class ThreeNodes.NodeView extends Backbone.View
     initialize: () ->
       return true
     
     onRegister: () ->
-      $(@el).css
-        left: @options.x
-        top: @options.y
       @make_draggable()
       @init_el_click()
       @init_title_click()
       @make_selectable()
+    
+    initialize: () =>
+      @model.bind 'change', @render
+      @render
+      @
+    
+    render:  () =>
+      $el = $(@el)
+      $el.css
+        left: parseInt @model.get("x")
+        top: parseInt @model.get("y")
+      $(".head span", $el).html(@model.get("name"))
+      $(".head span", $el).show()
+      @
     
     init_context_menu: () ->
       $(".field", this.el).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
@@ -33,8 +45,7 @@ define [
     
     compute_node_position: () ->
       pos = $(@el).position()
-      this.options.x = pos.left
-      this.options.y = pos.top
+      @model.setPosition(pos.left, pos.top)
     
     init_el_click: () ->
       self = this
@@ -62,8 +73,8 @@ define [
         $input.val(prev)
         
         apply_input_result = () ->
-          $(".head span", self.el).html($input.val()).show()
-          self.options.name = $input.val()
+          #self.options.name = $input.val()
+          self.model.setName($input.val())
           $input.remove()
         
         $input.blur (e) ->

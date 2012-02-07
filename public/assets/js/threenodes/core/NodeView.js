@@ -1,20 +1,45 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+  function ctor() { this.constructor = child; }
+  ctor.prototype = parent.prototype;
+  child.prototype = new ctor;
+  child.__super__ = parent.prototype;
+  return child;
+};
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.NodeView = Backbone.View.extend({
-    initialize: function() {
+  "use strict";  ThreeNodes.NodeView = (function() {
+    __extends(NodeView, Backbone.View);
+    function NodeView() {
+      this.render = __bind(this.render, this);
+      this.initialize = __bind(this.initialize, this);
+      NodeView.__super__.constructor.apply(this, arguments);
+    }
+    NodeView.prototype.initialize = function() {
       return true;
-    },
-    onRegister: function() {
-      $(this.el).css({
-        left: this.options.x,
-        top: this.options.y
-      });
+    };
+    NodeView.prototype.onRegister = function() {
       this.make_draggable();
       this.init_el_click();
       this.init_title_click();
       return this.make_selectable();
-    },
-    init_context_menu: function() {
+    };
+    NodeView.prototype.initialize = function() {
+      this.model.bind('change', this.render);
+      this.render;
+      return this;
+    };
+    NodeView.prototype.render = function() {
+      var $el;
+      $el = $(this.el);
+      $el.css({
+        left: parseInt(this.model.get("x")),
+        top: parseInt(this.model.get("y"))
+      });
+      $(".head span", $el).html(this.model.get("name"));
+      $(".head span", $el).show();
+      return this;
+    };
+    NodeView.prototype.init_context_menu = function() {
       return $(".field", this.el).contextMenu({
         menu: "field-context-menu"
       }, function(action, el, pos) {
@@ -24,17 +49,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return field.remove_connections();
         }
       });
-    },
-    render_connections: function() {
+    };
+    NodeView.prototype.render_connections = function() {
       return this.options.rack.render_connections();
-    },
-    compute_node_position: function() {
+    };
+    NodeView.prototype.compute_node_position = function() {
       var pos;
       pos = $(this.el).position();
-      this.options.x = pos.left;
-      return this.options.y = pos.top;
-    },
-    init_el_click: function() {
+      return this.model.setPosition(pos.left, pos.top);
+    };
+    NodeView.prototype.init_el_click = function() {
       var self;
       self = this;
       return $(this.el).click(function(e) {
@@ -54,8 +78,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         selectable._mouseStop(null);
         return self.options.rack.render_sidebar();
       });
-    },
-    init_title_click: function() {
+    };
+    NodeView.prototype.init_title_click = function() {
       var self;
       self = this;
       return $(".head span", this.el).dblclick(function(e) {
@@ -66,8 +90,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         $input = $(".head input", self.el);
         $input.val(prev);
         apply_input_result = function() {
-          $(".head span", self.el).html($input.val()).show();
-          self.options.name = $input.val();
+          self.model.setName($input.val());
           return $input.remove();
         };
         $input.blur(function(e) {
@@ -82,8 +105,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         });
       });
-    },
-    make_draggable: function() {
+    };
+    NodeView.prototype.make_draggable = function() {
       var self;
       self = this;
       return $(this.el).draggable({
@@ -127,8 +150,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.render_connections();
         }
       });
-    },
-    make_selectable: function() {
+    };
+    NodeView.prototype.make_selectable = function() {
       var self;
       self = this;
       return $("#container").selectable({
@@ -146,7 +169,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.options.apptimeline.timeline.selectAnims(nodes);
         }, this)
       });
-    }
-  });
+    };
+    return NodeView;
+  })();
   return ThreeNodes.NodeView;
 });

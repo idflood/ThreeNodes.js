@@ -9,6 +9,7 @@ define [
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/core/NodeConnection',
   'order!threenodes/core/NodeView',
+  'order!threenodes/models/NodeModel',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
@@ -28,29 +29,24 @@ define [
       @anim_obj = {}
       @is_animated = false
       @view = false
-      
-      if @inXML
-        @nid = parseInt @inXML.attr("nid")
-        ThreeNodes.uid = @nid
-      else if @inJSON
-        @nid = @inJSON.nid
-        ThreeNodes.uid = @nid
-      else
-        @nid = ThreeNodes.Utils.get_uid()
-    
-    onRegister: () ->
       @out_connections = []
       @value = false
       @main_view = false
+    
+    onRegister: () ->
+      @model = new ThreeNodes.NodeModel
+        xml: @inXML
+        json: @inJSON
+        name: @typename()
+        x: @x
+        y: @y
+        
+      if @inXML == false && @inJSON == false
+        @model.setNID(ThreeNodes.Utils.get_uid())
       
       @container = $("#container")
-      @name = @typename()
       @apptimeline = @context.injector.get "AppTimeline"
-      
       @rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this, @inXML)
-      
-      if @inJSON && @inJSON.name && @inJSON.name != false
-        @name = @inJSON.name
       
       # init view
       #if @context.player_mode == false
@@ -62,7 +58,7 @@ define [
       # init animation for current fields
       @anim = @createAnimContainer()
       
-      # set fields values from saved data
+      # load saved data
       if @inXML
         @rack.fromXML(@inXML)
       else if @inJSON
@@ -71,13 +67,14 @@ define [
         # load animation
         if @inJSON.anim != false
           @loadAnimation()
-      
+            
       if @view != false
         # add field context menu after they have been created
         @view.init_context_menu()
       
       @onTimelineRebuild()
-      return true
+      @view.render()
+      @
     
     typename: => String(@constructor.name)
     
@@ -87,9 +84,7 @@ define [
       @container.append(@main_view)
       @view = new ThreeNodes.NodeView
         el: @main_view
-        x: @x
-        y: @y
-        name: @name
+        model: @model
         rack: @rack
         apptimeline: @apptimeline
         
@@ -200,12 +195,12 @@ define [
     
     toJSON: () =>
       res =
-        nid: @nid
-        name: @view.options.name
+        nid: @model.get('nid')
+        name: @model.get('name')
         type: @typename()
         anim: @getAnimationData()
-        x: @view.options.x
-        y: @view.options.y
+        x: @model.get('x')
+        y: @model.get('y')
         fields: @rack.toJSON()
       res
     
@@ -216,15 +211,15 @@ define [
     toCode: () =>
       ng = @context.injector.get("NodeGraph")
       component = ng.get_component_by_type(@typename())
-      res = "\n// node: #{@view.options.name}\n"
-      res += "var node_#{@nid}_data = {\n"
-      res += "\t" + "nid: #{@nid},\n"
-      res += "\t" + "name: '#{@view.options.name}',\n"
+      res = "\n// node: #{@model.get('name')}\n"
+      res += "var node_#{@model.get('nid')}_data = {\n"
+      res += "\t" + "nid: #{@model.get('nid')},\n"
+      res += "\t" + "name: '#{@model.get('name')}',\n"
       res += "\t" + "type: '#{@typename()}',\n"
       res += "\t" + "fields: #{@rack.toCode()},\n"
       res += "\t" + "anim: #{@getAnimationDataToCode()}\n"
       res += "};\n"
-      res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", #{@view.options.x}, #{@view.options.y}, false, node_#{@nid}_data);\n"
+      res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", #{@model.get('x')}, #{@model.get('y')}, false, node_#{@model.get('nid')}_data);\n"
       return res
     
     apply_fields_to_val: (afields, target, exceptions = [], index) =>

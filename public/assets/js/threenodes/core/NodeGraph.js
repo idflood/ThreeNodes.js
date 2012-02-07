@@ -26,7 +26,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       n = new ThreeNodes.nodes[nodename](x, y, inXML, inJSON);
       this.context.injector.applyContext(n);
       this.nodes.push(n);
-      this.nodes_by_nid[n.nid] = n;
+      this.nodes_by_nid[n.model.get("nid")] = n;
       return n;
     };
     NodeGraph.prototype.render = function() {
@@ -37,16 +37,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         if (node.has_out_connection() === false || node.auto_evaluate || node.delays_output) {
-          terminalNodes[node.nid] = node;
+          terminalNodes[node.model.get("nid")] = node;
         }
-        invalidNodes[node.nid] = node;
+        invalidNodes[node.model.get("nid")] = node;
       }
       evaluateSubGraph = function(node) {
         var upnode, upstreamNodes, _j, _len2;
         upstreamNodes = node.getUpstreamNodes();
         for (_j = 0, _len2 = upstreamNodes.length; _j < _len2; _j++) {
           upnode = upstreamNodes[_j];
-          if (invalidNodes[upnode.nid] && !upnode.delays_output) {
+          if (invalidNodes[upnode.model.get("nid")] && !upnode.delays_output) {
             evaluateSubGraph(upnode);
           }
         }
@@ -55,7 +55,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
           node.dirty = false;
           node.rack.setFieldInputUnchanged();
         }
-        delete invalidNodes[node.nid];
+        delete invalidNodes[node.model.get("nid")];
         return true;
       };
       for (nid in terminalNodes) {
@@ -94,8 +94,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       if (ind !== -1) {
         this.nodes.splice(ind, 1);
       }
-      if (this.nodes_by_nid[n.nid]) {
-        return delete this.nodes_by_nid[n.nid];
+      if (this.nodes_by_nid[n.model.get("nid")]) {
+        return delete this.nodes_by_nid[n.model.get("nid")];
       }
     };
     NodeGraph.prototype.removeConnection = function(c) {

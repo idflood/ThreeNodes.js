@@ -30,7 +30,7 @@ define [
       n = new ThreeNodes.nodes[nodename](x, y, inXML, inJSON)
       @context.injector.applyContext(n)
       @nodes.push(n)
-      @nodes_by_nid[n.nid] = n
+      @nodes_by_nid[n.model.get("nid")] = n
       n
     
     render: () =>
@@ -39,20 +39,20 @@ define [
       
       for node in @nodes
         if node.has_out_connection() == false || node.auto_evaluate || node.delays_output
-          terminalNodes[node.nid] = node
-        invalidNodes[node.nid] = node
+          terminalNodes[node.model.get("nid")] = node
+        invalidNodes[node.model.get("nid")] = node
       
       evaluateSubGraph = (node) ->
         upstreamNodes = node.getUpstreamNodes()
         for upnode in upstreamNodes
-          if invalidNodes[upnode.nid] && !upnode.delays_output
+          if invalidNodes[upnode.model.get("nid")] && !upnode.delays_output
             evaluateSubGraph(upnode)
         if node.dirty || node.auto_evaluate
           node.update()
           node.dirty = false
           node.rack.setFieldInputUnchanged()
         
-        delete invalidNodes[node.nid]
+        delete invalidNodes[node.model.get("nid")]
         true
       
       for nid of terminalNodes
@@ -82,8 +82,8 @@ define [
       ind = @nodes.indexOf(n)
       if ind != -1
         @nodes.splice(ind, 1)
-      if @nodes_by_nid[n.nid]
-        delete @nodes_by_nid[n.nid]
+      if @nodes_by_nid[n.model.get("nid")]
+        delete @nodes_by_nid[n.model.get("nid")]
     
     removeConnection: (c) ->
       ind = @node_connections.indexOf(c)

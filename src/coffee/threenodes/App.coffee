@@ -107,7 +107,5 @@ define [
     reset_global_variables: () ->
       ThreeNodes.uid = 0
       @nodegraph.node_connections = []
-      @nodegraph.nodes = []
-      ThreeNodes.nodes.fields = {}
-    
+      
       ThreeNodes.webgl_materials_node = []

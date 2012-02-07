@@ -38,7 +38,7 @@ define [
         return false
       
       # never connect in/out from the same node
-      if @from_field.node.nid == @to_field.node.nid
+      if @from_field.node.model.get('nid') == @to_field.node.model.get('nid')
         return false
       
       @switch_fields_if_needed()
@@ -75,9 +75,9 @@ define [
     toJSON: () ->
       res =
         id: @cid
-        from_node: @from_field.node.nid
+        from_node: @from_field.node.model.get("nid")
         from: @from_field.name
-        to_node: @to_field.node.nid
+        to_node: @to_field.node.model.get("nid")
         to: @to_field.name
       res
     
@@ -87,8 +87,8 @@ define [
     toCode: () ->
       res = "var connection_#{@cid}_data = {\n"
       res += "\t" + "id: #{@cid},\n"
-      res += "\t" + "from_node: #{@from_field.node.nid}, from: '#{@from_field.name}',\n"
-      res += "\t" + "to_node: #{@to_field.node.nid}, to: '#{@to_field.name}'\n"
+      res += "\t" + "from_node: #{@from_field.node.model.get("nid")}, from: '#{@from_field.name}',\n"
+      res += "\t" + "to_node: #{@to_field.node.model.get("nid")}, to: '#{@to_field.name}'\n"
       res += "};\n"
       res += "var connection_#{@cid} = nodegraph.createConnectionFromObject(connection_#{@cid}_data);\n"
       res
@@ -99,10 +99,10 @@ define [
       o1.top += diff
       o1.left += diff
       if o1.left == diff && o1.top == diff
-        o1 = $("#nid-#{field.node.nid}").offset()
-        o1.top += $("#nid-#{field.node.nid}").outerHeight() / 2 + 3
+        o1 = $("#nid-#{field.node.model.get('nid')}").offset()
+        o1.top += $("#nid-#{field.node.model.get('nid')}").outerHeight() / 2 + 3
         if field.is_output == true
-          o1.left += $("#nid-#{field.node.nid}").outerWidth() - 2
+          o1.left += $("#nid-#{field.node.model.get('nid')}").outerWidth() - 2
       o1
     
     remove: ->

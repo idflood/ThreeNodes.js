@@ -32,7 +32,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       if (this.from_field.is_output === this.to_field.is_output) {
         return false;
       }
-      if (this.from_field.node.nid === this.to_field.node.nid) {
+      if (this.from_field.node.model.get('nid') === this.to_field.node.model.get('nid')) {
         return false;
       }
       this.switch_fields_if_needed();
@@ -69,9 +69,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       var res;
       res = {
         id: this.cid,
-        from_node: this.from_field.node.nid,
+        from_node: this.from_field.node.model.get("nid"),
         from: this.from_field.name,
-        to_node: this.to_field.node.nid,
+        to_node: this.to_field.node.model.get("nid"),
         to: this.to_field.name
       };
       return res;
@@ -83,8 +83,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       var res;
       res = "var connection_" + this.cid + "_data = {\n";
       res += "\t" + ("id: " + this.cid + ",\n");
-      res += "\t" + ("from_node: " + this.from_field.node.nid + ", from: '" + this.from_field.name + "',\n");
-      res += "\t" + ("to_node: " + this.to_field.node.nid + ", to: '" + this.to_field.name + "'\n");
+      res += "\t" + ("from_node: " + (this.from_field.node.model.get("nid")) + ", from: '" + this.from_field.name + "',\n");
+      res += "\t" + ("to_node: " + (this.to_field.node.model.get("nid")) + ", to: '" + this.to_field.name + "'\n");
       res += "};\n";
       res += "var connection_" + this.cid + " = nodegraph.createConnectionFromObject(connection_" + this.cid + "_data);\n";
       return res;
@@ -96,10 +96,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       o1.top += diff;
       o1.left += diff;
       if (o1.left === diff && o1.top === diff) {
-        o1 = $("#nid-" + field.node.nid).offset();
-        o1.top += $("#nid-" + field.node.nid).outerHeight() / 2 + 3;
+        o1 = $("#nid-" + (field.node.model.get('nid'))).offset();
+        o1.top += $("#nid-" + (field.node.model.get('nid'))).outerHeight() / 2 + 3;
         if (field.is_output === true) {
-          o1.left += $("#nid-" + field.node.nid).outerWidth() - 2;
+          o1.left += $("#nid-" + (field.node.model.get('nid'))).outerWidth() - 2;
         }
       }
       return o1;

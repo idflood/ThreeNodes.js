@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeConnection', 'order!threenodes/core/NodeView', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeConnection', 'order!threenodes/core/NodeView', 'order!threenodes/models/NodeModel', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   "use strict";  ThreeNodes.field_click_1 = false;
   ThreeNodes.selected_nodes = $([]);
   ThreeNodes.nodes_offset = {
@@ -54,27 +54,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.anim_obj = {};
       this.is_animated = false;
       this.view = false;
-      if (this.inXML) {
-        this.nid = parseInt(this.inXML.attr("nid"));
-        ThreeNodes.uid = this.nid;
-      } else if (this.inJSON) {
-        this.nid = this.inJSON.nid;
-        ThreeNodes.uid = this.nid;
-      } else {
-        this.nid = ThreeNodes.Utils.get_uid();
-      }
-    }
-    NodeBase.prototype.onRegister = function() {
       this.out_connections = [];
       this.value = false;
       this.main_view = false;
+    }
+    NodeBase.prototype.onRegister = function() {
+      this.model = new ThreeNodes.NodeModel({
+        xml: this.inXML,
+        json: this.inJSON,
+        name: this.typename(),
+        x: this.x,
+        y: this.y
+      });
+      if (this.inXML === false && this.inJSON === false) {
+        this.model.setNID(ThreeNodes.Utils.get_uid());
+      }
       this.container = $("#container");
-      this.name = this.typename();
       this.apptimeline = this.context.injector.get("AppTimeline");
       this.rack = this.context.injector.instanciate(ThreeNodes.NodeFieldRack, this, this.inXML);
-      if (this.inJSON && this.inJSON.name && this.inJSON.name !== false) {
-        this.name = this.inJSON.name;
-      }
       this.init_main_view();
       this.set_fields();
       this.anim = this.createAnimContainer();
@@ -90,7 +87,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.view.init_context_menu();
       }
       this.onTimelineRebuild();
-      return true;
+      this.view.render();
+      return this;
     };
     NodeBase.prototype.typename = function() {
       return String(this.constructor.name);
@@ -101,9 +99,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.container.append(this.main_view);
       this.view = new ThreeNodes.NodeView({
         el: this.main_view,
-        x: this.x,
-        y: this.y,
-        name: this.name,
+        model: this.model,
         rack: this.rack,
         apptimeline: this.apptimeline
       });
@@ -261,12 +257,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.toJSON = function() {
       var res;
       res = {
-        nid: this.nid,
-        name: this.view.options.name,
+        nid: this.model.get('nid'),
+        name: this.model.get('name'),
         type: this.typename(),
         anim: this.getAnimationData(),
-        x: this.view.options.x,
-        y: this.view.options.y,
+        x: this.model.get('x'),
+        y: this.model.get('y'),
         fields: this.rack.toJSON()
       };
       return res;
@@ -280,15 +276,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var component, ng, res;
       ng = this.context.injector.get("NodeGraph");
       component = ng.get_component_by_type(this.typename());
-      res = "\n// node: " + this.view.options.name + "\n";
-      res += "var node_" + this.nid + "_data = {\n";
-      res += "\t" + ("nid: " + this.nid + ",\n");
-      res += "\t" + ("name: '" + this.view.options.name + "',\n");
+      res = "\n// node: " + (this.model.get('name')) + "\n";
+      res += "var node_" + (this.model.get('nid')) + "_data = {\n";
+      res += "\t" + ("nid: " + (this.model.get('nid')) + ",\n");
+      res += "\t" + ("name: '" + (this.model.get('name')) + "',\n");
       res += "\t" + ("type: '" + (this.typename()) + "',\n");
       res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
       res += "\t" + ("anim: " + (this.getAnimationDataToCode()) + "\n");
       res += "};\n";
-      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + this.view.options.x + ", " + this.view.options.y + ", false, node_" + this.nid + "_data);\n";
+      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + (this.model.get('x')) + ", " + (this.model.get('y')) + ", false, node_" + (this.model.get('nid')) + "_data);\n";
       return res;
     };
     NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions, index) {

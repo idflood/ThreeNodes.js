@@ -19,8 +19,6 @@ define [
       @changed = true
       @connections = []
       @default_value = null
-      #ThreeNodes.nodes.fields[@fid] = this
-      
     
     onRegister: () ->
       ng = @context.injector.get("NodeGraph")

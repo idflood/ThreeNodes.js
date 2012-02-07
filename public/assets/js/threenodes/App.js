@@ -69,8 +69,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
     App.prototype.reset_global_variables = function() {
       ThreeNodes.uid = 0;
       this.nodegraph.node_connections = [];
-      this.nodegraph.nodes = [];
-      ThreeNodes.nodes.fields = {};
       return ThreeNodes.webgl_materials_node = [];
     };
     return App;
