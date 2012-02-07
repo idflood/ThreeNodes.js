@@ -18,9 +18,7 @@ define [
         @fromXML(xml)
       else if json
         @fromJSON(json)
-      else
-        
-    
+      
     setNID: (nid) =>
       @set
         "nid": nid
@@ -40,7 +38,7 @@ define [
     fromJSON: (data) =>
       @set
         "nid": data.nid
-        "name": data.name
+        "name": if data.name then data.name else @get("name")
         "x": data.x
         "y": data.y
       ThreeNodes.uid = @get("nid")

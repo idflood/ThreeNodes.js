@@ -32,8 +32,6 @@ define(['Underscore', 'Backbone'], function(_, Backbone) {
         return this.fromXML(xml);
       } else if (json) {
         return this.fromJSON(json);
-      } else {
-
       }
     };
     NodeModel.prototype.setNID = function(nid) {
@@ -58,7 +56,7 @@ define(['Underscore', 'Backbone'], function(_, Backbone) {
     NodeModel.prototype.fromJSON = function(data) {
       this.set({
         "nid": data.nid,
-        "name": data.name,
+        "name": data.name ? data.name : this.get("name"),
         "x": data.x,
         "y": data.y
       });
