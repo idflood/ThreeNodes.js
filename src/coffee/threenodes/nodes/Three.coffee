@@ -39,7 +39,7 @@ define [
       return childs
     
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
+      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['children'])
       childs_in = @get_children_array()
       
       # no connections mean no children
@@ -109,7 +109,7 @@ define [
             @ob.add(child)
   
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
+      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['children', 'lights'])
       @apply_children()
       @rack.set("out", @ob)
   
@@ -185,7 +185,7 @@ define [
           @ob[i] = item
           
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+        @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
         ThreeNodes.rebuild_all_shaders()
@@ -239,7 +239,7 @@ define [
           @ob[i] = item
           
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+        @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
         ThreeNodes.rebuild_all_shaders()
@@ -269,7 +269,7 @@ define [
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['target'])
+      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['target'])
       @ob.lookAt(@rack.get("target").get())
       @rack.set("out", @ob)
   
@@ -317,7 +317,7 @@ define [
     compute: =>
       if @ob == false
         @ob = new THREE.Fog(0xffffff, 1, 1000)
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.FogExp2 extends ThreeNodes.NodeBase
@@ -337,7 +337,7 @@ define [
     compute: =>
       if @ob == false
         @ob = new THREE.FogExp2(0xffffff, 0.00025)
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
       @rack.set("out", @ob)
   
   class ThreeNodes.nodes.WebGLRenderer extends ThreeNodes.NodeBase
@@ -474,7 +474,7 @@ define [
       
       @apply_size()
       @apply_bg_color()
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
+      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
       ThreeNodes.Webgl.current_camera = @rack.get("camera").get()
       ThreeNodes.Webgl.current_scene = @rack.get("scene").get()
       

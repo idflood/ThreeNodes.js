@@ -11,9 +11,7 @@ define [
       y: 0
       name: "nodename"
     
-    initialize: () =>
-      xml = @get("xml")
-      json = @get("json")
+    load: (xml, json) =>
       if xml
         @fromXML(xml)
       else if json

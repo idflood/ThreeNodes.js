@@ -21,7 +21,9 @@ define [
         n1.v_in.set 2
         node_mult.rack.get("factor").set(3)
         
-        injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_mult.v_in)
+        ng.connections.create
+          from_field: n1.v_out
+          to_field: node_mult.v_in
         
         ng.render()
         
@@ -32,7 +34,9 @@ define [
         n2.rack.get("x").set(1)
         n2.rack.get("y").set(2)
         n2.rack.get("z").set(3)
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n2_out, node_mult.v_in)
+        c1 = ng.connections.create
+          from_field: n2_out
+          to_field: node_mult.v_in
         
         ng.render()
         equals $.type(node_mult.v_out.val[0]), "object", "Mult node output an object"

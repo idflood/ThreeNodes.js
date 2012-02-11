@@ -54,7 +54,7 @@ define [
       res = 
         uid: ThreeNodes.uid
         nodes: jQuery.map(nodegraph.nodes, (n, i) -> n.toJSON())
-        connections: jQuery.map(nodegraph.node_connections, (c, i) -> c.toJSON())
+        connections: jQuery.map(nodegraph.connections.models, (c, i) -> c.toJSON())
       JSON.stringify(res)
     
     get_local_xml: () =>

@@ -62,7 +62,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         nodes: jQuery.map(nodegraph.nodes, function(n, i) {
           return n.toJSON();
         }),
-        connections: jQuery.map(nodegraph.node_connections, function(c, i) {
+        connections: jQuery.map(nodegraph.connections.models, function(c, i) {
           return c.toJSON();
         })
       };

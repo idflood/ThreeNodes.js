@@ -1,183 +1,77 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', 'order!threenodes/core/NodeFieldRackView'], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', 'order!threenodes/core/NodeFieldRackView', 'order!threenodes/collections/NodeFieldsCollection'], function($, _, Backbone) {
   "use strict";  return ThreeNodes.NodeFieldRack = (function() {
     function NodeFieldRack(node) {
       this.node = node;
       this.add_center_textfield = __bind(this.add_center_textfield, this);
       this.render_sidebar = __bind(this.render_sidebar, this);
-      this.registerField = __bind(this.registerField, this);
       this.addFields = __bind(this.addFields, this);
       this.addField = __bind(this.addField, this);
-      this.fromXML = __bind(this.fromXML, this);
-      this.fromJSON = __bind(this.fromJSON, this);
       this.toXML = __bind(this.toXML, this);
       this.toCode = __bind(this.toCode, this);
       this.toJSON = __bind(this.toJSON, this);
+      this.load = __bind(this.load, this);
       this.remove_all_connections = __bind(this.remove_all_connections, this);
       this.render_connections = __bind(this.render_connections, this);
       this.setFieldInputUnchanged = __bind(this.setFieldInputUnchanged, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
       this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
       this.getMaxInputSliceCount = __bind(this.getMaxInputSliceCount, this);
-      this.node_fields = {};
-      this.node_fields.inputs = {};
-      this.node_fields.outputs = {};
-      this.node_fields_by_name = {};
-      this.node_fields_by_name.inputs = {};
-      this.node_fields_by_name.outputs = {};
+      this.set = __bind(this.set, this);
+      this.get = __bind(this.get, this);
       this.view = false;
     }
     NodeFieldRack.prototype.onRegister = function() {
-      this.view = this.context.injector.instanciate(ThreeNodes.NodeFieldRackView, {
-        node: this.node
+      this.collection = new ThreeNodes.NodeFieldsCollection([], {
+        node: this.node,
+        xml: this.node.inXML,
+        json: this.node.inJSON
       });
-      return true;
+      this.view = new ThreeNodes.NodeFieldRackView({
+        node: this.node,
+        collection: this.collection
+      });
+      this.context.injector.applyContext(this.view);
+      return this;
     };
     NodeFieldRack.prototype.get = function(key, is_out) {
       if (is_out == null) {
         is_out = false;
       }
-      if (is_out === true) {
-        return this.node_fields_by_name.outputs[key];
-      } else {
-        return this.node_fields_by_name.inputs[key];
-      }
+      return this.collection.getField(key, is_out);
     };
     NodeFieldRack.prototype.set = function(key, value) {
-      return this.node_fields_by_name.outputs[key].set(value);
+      return this.collection.setField(key, value);
     };
     NodeFieldRack.prototype.getMaxInputSliceCount = function() {
-      var f, fid, res;
-      res = 1;
-      for (fid in this.node_fields.inputs) {
-        f = this.node_fields.inputs[fid];
-        if (f.val && $.type(f.val) === "array") {
-          if (f.val.length > res) {
-            res = f.val.length;
-          }
-        }
-      }
-      return res - 1;
+      return this.collection.getMaxInputSliceCount();
     };
     NodeFieldRack.prototype.getUpstreamNodes = function() {
-      var c, f, fid, res, _i, _len, _ref;
-      res = [];
-      for (fid in this.node_fields.inputs) {
-        f = this.node_fields.inputs[fid];
-        _ref = f.connections;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          c = _ref[_i];
-          res[res.length] = c.from_field.node;
-        }
-      }
-      return res;
+      return this.collection.getUpstreamNodes();
     };
     NodeFieldRack.prototype.getDownstreamNodes = function() {
-      var c, f, fid, res, _i, _j, _len, _len2, _ref, _ref2;
-      res = [];
-      _ref = this.node_fields.outputs;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        fid = _ref[_i];
-        f = this.node_fields.inputs[fid];
-        _ref2 = f.connections;
-        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-          c = _ref2[_j];
-          res[res.length] = c.to_field.node;
-        }
-      }
-      return res;
+      return this.collection.getDownstreamNodes();
     };
     NodeFieldRack.prototype.setFieldInputUnchanged = function() {
-      var f, fid, _i, _len, _ref, _results;
-      _ref = this.node_fields.inputs;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        fid = _ref[_i];
-        f = this.node_fields.inputs[fid];
-        _results.push(f.changed = false);
-      }
-      return _results;
+      return this.collection.setFieldInputUnchanged();
     };
     NodeFieldRack.prototype.render_connections = function() {
-      var f;
-      for (f in this.node_fields.inputs) {
-        this.node_fields.inputs[f].render_connections();
-      }
-      for (f in this.node_fields.outputs) {
-        this.node_fields.outputs[f].render_connections();
-      }
-      return true;
+      return this.collection.renderConnections();
     };
     NodeFieldRack.prototype.remove_all_connections = function() {
-      var f, _results;
-      for (f in this.node_fields.inputs) {
-        this.node_fields.inputs[f].remove_connections();
-      }
-      _results = [];
-      for (f in this.node_fields.outputs) {
-        _results.push(this.node_fields.outputs[f].remove_connections());
-      }
-      return _results;
+      return this.collection.removeAllConnections();
+    };
+    NodeFieldRack.prototype.load = function(xml, json) {
+      return this.collection.load(xml, json);
     };
     NodeFieldRack.prototype.toJSON = function() {
-      var res;
-      res = {
-        "in": jQuery.map(this.node_fields.inputs, function(f, i) {
-          return f.toJSON();
-        }),
-        out: jQuery.map(this.node_fields.outputs, function(f, i) {
-          return f.toJSON();
-        })
-      };
-      return res;
+      return this.collection.toJSON();
     };
     NodeFieldRack.prototype.toCode = function() {
-      var field, res;
-      res = "{'in': [\n";
-      for (field in this.node_fields.inputs) {
-        res += this.node_fields.inputs[field].toCode();
-      }
-      res += "\t]}";
-      return res;
+      return this.collection.toCode();
     };
     NodeFieldRack.prototype.toXML = function() {
-      var f, res;
-      res = "\t\t<in>\n";
-      for (f in this.node_fields.inputs) {
-        res += this.node_fields.inputs[f].toXML();
-      }
-      res += "\t\t</in>\n";
-      res += "\t\t<out>\n";
-      for (f in this.node_fields.outputs) {
-        res += this.node_fields.outputs[f].toXML();
-      }
-      res += "\t\t</out>\n";
-      return res;
-    };
-    NodeFieldRack.prototype.fromJSON = function(data) {
-      var f, node_field, _i, _len, _ref;
-      _ref = data.fields["in"];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        f = _ref[_i];
-        node_field = this.node_fields_by_name.inputs[f.name];
-        if (node_field && f.val) {
-          node_field.set(f.val);
-        }
-      }
-      return true;
-    };
-    NodeFieldRack.prototype.fromXML = function(data) {
-      var self;
-      self = this;
-      $("in field", data).each(function() {
-        var f, field_val;
-        f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
-        field_val = $(this).attr("val");
-        if (f && field_val !== "[object Object]") {
-          return f.set(field_val);
-        }
-      });
-      return true;
+      return this.collection.toXML();
     };
     NodeFieldRack.prototype.addField = function(name, value, direction) {
       var f;
@@ -200,7 +94,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       if (direction !== "inputs") {
         f.is_output = true;
       }
-      this.registerField(f);
+      this.collection.registerField(f);
       this.context.injector.applyContext(f);
       return f;
     };
@@ -212,53 +106,19 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
           this.addField(fname, value, dir);
         }
       }
-      return true;
-    };
-    NodeFieldRack.prototype.registerField = function(field) {
-      field.node = this.node;
-      if (field.is_output === false) {
-        this.node_fields.inputs["fid-" + field.fid] = field;
-        this.node_fields_by_name.inputs[field.name] = field;
-        $(".inputs", this.node.main_view).append(field.render_button());
-      } else {
-        this.node_fields.outputs["fid-" + field.fid] = field;
-        this.node_fields_by_name.outputs[field.name] = field;
-        $(".outputs", this.node.main_view).append(field.render_button());
-      }
-      if (this.view !== false) {
-        this.view.add_field_listener($("#fid-" + field.fid));
-      }
-      return field;
+      return this;
     };
     NodeFieldRack.prototype.render_sidebar = function() {
-      var $target, f;
-      $target = $("#tab-attribute");
-      $target.html("");
-      for (f in this.node_fields.inputs) {
-        this.node_fields.inputs[f].render_sidebar();
+      if (this.view) {
+        this.view.renderSidebar();
       }
-      return true;
+      return this;
     };
     NodeFieldRack.prototype.add_center_textfield = function(field) {
-      var f_in;
-      $(".options .center", this.node.main_view).append("<div><input type='text' id='f-txt-input-" + field.fid + "' /></div>");
-      f_in = $("#f-txt-input-" + field.fid);
-      field.on_value_update_hooks.update_center_textfield = function(v) {
-        if (v !== null) {
-          return f_in.val(v.toString());
-        }
-      };
-      f_in.val(field.get());
-      if (field.is_output === true) {
-        return f_in.attr("disabled", "disabled");
-      } else {
-        return f_in.keypress(function(e) {
-          if (e.which === 13) {
-            field.set($(this).val());
-            return $(this).blur();
-          }
-        });
+      if (this.view) {
+        this.view.addCenterTextfield(field);
       }
+      return this;
     };
     NodeFieldRack.prototype.create_field_from_default_type = function(fname, default_value) {
       var ftype;

@@ -6,9 +6,21 @@ define [
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/utils/Utils',
-], ($, _, Backbone, _view_node_template) ->
+], ($, _, Backbone) ->
   "use strict"
-  ThreeNodes.NodeFieldRackView = Backbone.View.extend
+  
+  class ThreeNodes.NodeFieldRackView extends Backbone.View
+    initialize: () ->
+      @collection.bind "field:registered", (model, el) =>
+        @add_field_listener(el)
+    
+    renderSidebar: () =>
+      $target = $("#tab-attribute")
+      $target.html("");
+      for f of @collection.node_fields.inputs
+        @collection.node_fields.inputs[f].render_sidebar()
+      true
+    
     add_field_listener: ($field) ->
       self = this
       field = $field.data("object")
@@ -62,4 +74,21 @@ define [
           self.context.injector.instanciate(ThreeNodes.NodeConnection, field, field2)
       
       return this
-  return ThreeNodes.NodeFieldRackView
+    
+    addCenterTextfield: (field) =>
+      $(".options .center", @options.node.main_view).append("<div><input type='text' id='f-txt-input-#{field.fid}' /></div>")
+      f_in = $("#f-txt-input-#{field.fid}")
+      field.on_value_update_hooks.update_center_textfield = (v) ->
+        if v != null
+          f_in.val(v.toString())
+          #f_in.val(v.toString().substring(0, 10))
+      f_in.val(field.get())
+      if field.is_output == true
+        f_in.attr("disabled", "disabled")
+      else
+        f_in.keypress (e) ->
+          if e.which == 13
+            field.set($(this).val())
+            $(this).blur()
+      @
+    

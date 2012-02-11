@@ -6,6 +6,7 @@ define [
   "text!templates/node_field_output.tmpl.html",
   'order!threenodes/utils/Utils',
   "order!libs/signals.min",
+  'order!threenodes/models/NodeFieldModel',
 ], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
   "use strict"
   class ThreeNodes.NodeField
@@ -119,19 +120,20 @@ define [
     add_connection: (c) =>
       if @connections.indexOf(c) == -1
         @connections.push c
-      if @is_output == true
-        @node.add_out_connection(c, this)
-      @node.disable_property_anim(this)
+        if @is_output == true
+          @node.add_out_connection(c, this)
+        @node.disable_property_anim(this)
       c
     
     unregister_connection: (c) =>
       @node.remove_connection(c)
+      
       ind = @connections.indexOf(c)
       if ind != -1
         @connections.splice(ind, 1)
       if @connections.length == 0
         @node.enable_property_anim(this)
-      
+        
     # remove all connections
     remove_connections: () =>
       @connections[0].remove() while @connections.length > 0

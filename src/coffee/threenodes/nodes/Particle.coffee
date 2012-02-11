@@ -49,7 +49,7 @@ define [
         @geometry_cache = @rack.get('geometry').get().id
         @material_cache = @rack.get('material').get().id
       
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
+      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
       
       if needs_rebuild == true
         ThreeNodes.rebuild_all_shaders()

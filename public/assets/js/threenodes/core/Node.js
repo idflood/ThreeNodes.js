@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeConnection', 'order!threenodes/core/NodeView', 'order!threenodes/models/NodeModel', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeView', 'order!threenodes/models/NodeModel', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   "use strict";  ThreeNodes.field_click_1 = false;
   ThreeNodes.selected_nodes = $([]);
   ThreeNodes.nodes_offset = {
@@ -60,8 +60,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     }
     NodeBase.prototype.onRegister = function() {
       this.model = new ThreeNodes.NodeModel({
-        xml: this.inXML,
-        json: this.inJSON,
         name: this.typename(),
         x: this.x,
         y: this.y
@@ -69,19 +67,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.inXML === false && this.inJSON === false) {
         this.model.setNID(ThreeNodes.Utils.get_uid());
       }
+      this.model.load(this.inXML, this.inJSON);
       this.container = $("#container");
       this.apptimeline = this.context.injector.get("AppTimeline");
       this.rack = this.context.injector.instanciate(ThreeNodes.NodeFieldRack, this, this.inXML);
       this.init_main_view();
       this.set_fields();
+      this.rack.load(this.inXML, this.inJSON);
       this.anim = this.createAnimContainer();
-      if (this.inXML) {
-        this.rack.fromXML(this.inXML);
-      } else if (this.inJSON) {
-        this.rack.fromJSON(this.inJSON);
-        if (this.inJSON.anim !== false) {
-          this.loadAnimation();
-        }
+      if (this.inJSON && this.inJSON.anim !== false) {
+        this.loadAnimation();
       }
       if (this.view !== false) {
         this.view.init_context_menu();
@@ -353,9 +348,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     NodeBase.prototype.createAnimContainer = function() {
       var f, field, res;
-      res = anim("nid-" + this.nid, this.rack.node_fields_by_name.inputs);
-      for (f in this.rack.node_fields_by_name.inputs) {
-        field = this.rack.node_fields_by_name.inputs[f];
+      res = anim("nid-" + this.nid, this.rack.collection.node_fields_by_name.inputs);
+      for (f in this.rack.collection.node_fields_by_name.inputs) {
+        field = this.rack.collection.node_fields_by_name.inputs[f];
         if (field.is_animation_property() === false) {
           this.disable_property_anim(field);
         }

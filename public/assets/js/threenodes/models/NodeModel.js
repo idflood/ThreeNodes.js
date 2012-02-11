@@ -15,7 +15,7 @@ define(['Underscore', 'Backbone'], function(_, Backbone) {
       this.setPosition = __bind(this.setPosition, this);
       this.setName = __bind(this.setName, this);
       this.setNID = __bind(this.setNID, this);
-      this.initialize = __bind(this.initialize, this);
+      this.load = __bind(this.load, this);
       NodeModel.__super__.constructor.apply(this, arguments);
     }
     NodeModel.prototype["default"] = {
@@ -24,10 +24,7 @@ define(['Underscore', 'Backbone'], function(_, Backbone) {
       y: 0,
       name: "nodename"
     };
-    NodeModel.prototype.initialize = function() {
-      var json, xml;
-      xml = this.get("xml");
-      json = this.get("json");
+    NodeModel.prototype.load = function(xml, json) {
       if (xml) {
         return this.fromXML(xml);
       } else if (json) {

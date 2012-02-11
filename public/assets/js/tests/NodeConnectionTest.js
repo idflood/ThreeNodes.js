@@ -11,8 +11,11 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("Number");
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.v_in);
-        equals(ng.node_connections.length, 1, "There is one connection");
+        c1 = ng.connections.create({
+          from_field: n1.v_out,
+          to_field: n2.v_in
+        });
+        equals(ng.connections.length, 1, "There is one connection");
         equals(n1.v_out.connections.length, 1, "The output field has one connection");
         n1.v_in.set(0.5);
         ng.render();
@@ -22,6 +25,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng.render();
         equals(n2.v_out.get(), 0.8, "Node value propagated from node1 to node2 (2/2)");
         c1.remove();
+        console.log(n1.v_out.connections);
         equals(ng.node_connections.length, 0, "A specific connection has been removed");
         equals(n1.v_out.connections.length, 0, "Node 1 has no output conection");
         equals(n2.v_in.connections.length, 0, "Node 2 has no input conection");
@@ -29,14 +33,23 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng.render();
         equals(n2.v_out.get(), 0.8, "Node2 value didn't change if there is no connection");
         n3 = ng.create_node("Number");
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.v_in);
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.v_in);
+        c1 = ng.connections.add({
+          from_field: n1.v_out,
+          to_field: n2.v_in
+        });
+        c2 = ng.connections.add({
+          from_field: n1.v_out,
+          to_field: n3.v_in
+        });
         n1.v_in.set(0.7);
         ng.render();
         equals(n2.v_out.get(), 0.7, "Multiple output connection propagated 1/2");
         equals(n3.v_out.get(), 0.7, "Multiple output connection propagated 2/2");
         n4 = ng.create_node("Number");
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, n4.v_out, n3.v_in);
+        c3 = ng.connections.add({
+          from_field: n4.v_out,
+          to_field: n3.v_in
+        });
         n4.v_in.set(14);
         ng.render();
         equals(n3.v_in.connections.length, 1, "Input only have one connection");
@@ -51,12 +64,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         n2 = ng.create_node("ThreeMesh");
         ng.render();
         old_val = n2.rack.get("geometry").get();
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("geometry"));
+        c1 = ng.connections.create({
+          from_field: n1.v_out,
+          to_field: n2.rack.get("geometry")
+        });
         ng.render();
         equals(n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed");
         c1.remove();
         old_val = n2.rack.get("material").get();
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("material"));
+        c1 = ng.connections.create({
+          from_field: n1.v_out,
+          to_field: n2.rack.get("material")
+        });
         ng.render();
         return equals(n2.rack.get("material").get().id, old_val.id, "Material field value should not change if wrong type is passed");
       });
@@ -68,7 +87,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         n1 = ng.create_node("Number");
         n3 = ng.create_node("Scene");
         equals($.type(n3.ob.children), "array", "Scene.children is by default an empty array");
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.rack.get("children"));
+        c2 = ng.connections.create({
+          from_field: n1.v_out,
+          to_field: n3.rack.get("children")
+        });
         ng.render();
         equals($.type(n3.ob.children), "array", "Scene.children is still an array after connecting a number to it");
         return equals(n3.ob.children.length, 0, "Scene.children array is still empty");
@@ -80,7 +102,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("Number");
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_in, n1.v_out);
+        c1 = ng.connections.create({
+          from_field: n2.v_in,
+          to_field: n1.v_out
+        });
         n1.v_in.set(4);
         ng.render();
         return equals(n2.v_out.get(), 4, "Connection is created with good input/output order and the value has been propagated");
@@ -92,7 +117,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("Number");
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_in, n2.v_in);
+        c1 = ng.connections.create({
+          from_field: n1.v_in,
+          to_field: n2.v_out
+        });
         ng.render();
         return equals(ng.node_connections.length, 0, "The connection has not been created since it is wrong");
       });
@@ -102,7 +130,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n1.v_in);
+        c1 = ng.connections.create({
+          from_field: n1.v_out,
+          to_field: n1.v_in
+        });
         ng.render();
         return equals(ng.node_connections.length, 0, "The connection has not been created since it is wrong");
       });
@@ -115,9 +146,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         n2 = ng.create_node("Number");
         node_mult = ng.create_node("MathMult");
         node_merge = ng.create_node("Merge");
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"));
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"));
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_mult.v_factor);
+        c1 = ng.connections.create({
+          from_field: n1.v_out,
+          to_field: node_merge.rack.get("in0")
+        });
+        c2 = ng.connections.create({
+          from_field: n2.v_out,
+          to_field: node_merge.rack.get("in1")
+        });
+        c3 = ng.connections.create({
+          from_field: node_merge.rack.get("out", true),
+          to_field: node_mult.v_factor
+        });
         n1.v_in.set(1);
         n2.v_in.set(2);
         node_mult.v_in.set(3);
@@ -133,9 +173,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         n2 = ng.create_node("Number");
         node_vec = ng.create_node("Vector3");
         node_merge = ng.create_node("Merge");
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"));
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"));
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_vec.rack.get("y"));
+        c1 = ng.connections.create({
+          from_field: n1.v_out,
+          to_field: node_merge.rack.get("in0")
+        });
+        c2 = ng.connections.create({
+          from_field: n2.v_out,
+          to_field: node_merge.rack.get("in1")
+        });
+        c3 = ng.connections.create({
+          from_field: node_merge.rack.get("out", true),
+          to_field: node_vec.rack.get("y")
+        });
         n1.v_in.set(5);
         n2.v_in.set(7);
         ng.render();
@@ -149,9 +198,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         node_merge = ng.create_node("Merge", 0, 0);
         nvec1 = ng.create_node("Vector3", 0, 0);
         nvec2 = ng.create_node("Vector3", 0, 0);
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, nvec1.rack.get("xyz", true), node_merge.rack.get("in0"));
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, nvec2.rack.get("xyz", true), node_merge.rack.get("in1"));
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), meshNode.rack.get("position"));
+        c1 = ng.connections.create({
+          from_field: nvec1.rack.get("xyz", true),
+          to_field: node_merge.rack.get("in0")
+        });
+        c2 = ng.connections.create({
+          from_field: nvec2.rack.get("xyz", true),
+          to_field: node_merge.rack.get("in1")
+        });
+        c3 = ng.connections.create({
+          from_field: node_merge.rack.get("out", true),
+          to_field: meshNode.rack.get("position")
+        });
         ng.render();
         equals(meshNode.ob.length, 2, "Meshnode has 2 mesh since it has 2 positions");
         equals(node_merge.rack.get("out", true).val.length, 2, "Merge node output 2 values");

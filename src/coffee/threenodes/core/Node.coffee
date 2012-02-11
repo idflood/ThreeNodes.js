@@ -7,7 +7,6 @@ define [
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/core/NodeFieldRack',
-  'order!threenodes/core/NodeConnection',
   'order!threenodes/core/NodeView',
   'order!threenodes/models/NodeModel',
   'order!threenodes/utils/Utils',
@@ -35,14 +34,14 @@ define [
     
     onRegister: () ->
       @model = new ThreeNodes.NodeModel
-        xml: @inXML
-        json: @inJSON
         name: @typename()
         x: @x
         y: @y
         
       if @inXML == false && @inJSON == false
         @model.setNID(ThreeNodes.Utils.get_uid())
+      
+      @model.load(@inXML, @inJSON)
       
       @container = $("#container")
       @apptimeline = @context.injector.get "AppTimeline"
@@ -55,18 +54,16 @@ define [
       # init fields
       @set_fields()
       
+      # load saved data after the fields have been set
+      @rack.load(@inXML, @inJSON)
+      
       # init animation for current fields
       @anim = @createAnimContainer()
       
       # load saved data
-      if @inXML
-        @rack.fromXML(@inXML)
-      else if @inJSON
-        @rack.fromJSON(@inJSON)
-        
+      if @inJSON && @inJSON.anim != false
         # load animation
-        if @inJSON.anim != false
-          @loadAnimation()
+        @loadAnimation()
             
       if @view != false
         # add field context menu after they have been created
@@ -268,10 +265,10 @@ define [
         @anim.enableProperty(field.name)
     
     createAnimContainer: () =>
-      res = anim("nid-" + @nid, @rack.node_fields_by_name.inputs)
+      res = anim("nid-" + @nid, @rack.collection.node_fields_by_name.inputs)
       # enable track animation only for number/boolean
-      for f of @rack.node_fields_by_name.inputs
-        field = @rack.node_fields_by_name.inputs[f]
+      for f of @rack.collection.node_fields_by_name.inputs
+        field = @rack.collection.node_fields_by_name.inputs[f]
         if field.is_animation_property() == false
           @disable_property_anim(field)
       return res

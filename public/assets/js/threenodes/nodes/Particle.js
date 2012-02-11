@@ -60,7 +60,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.geometry_cache = this.rack.get('geometry').get().id;
         this.material_cache = this.rack.get('material').get().id;
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
+      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
       if (needs_rebuild === true) {
         ThreeNodes.rebuild_all_shaders();
       }

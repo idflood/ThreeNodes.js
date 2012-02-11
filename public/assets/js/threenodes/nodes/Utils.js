@@ -179,8 +179,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var f, k, old, subval;
       old = this.rack.get("out", true).get();
       this.value = [];
-      for (f in this.rack.node_fields.inputs) {
-        k = this.rack.node_fields.inputs[f];
+      for (f in this.rack.collection.node_fields.inputs) {
+        k = this.rack.collection.node_fields.inputs[f];
         if (k.val !== null && k.connections.length > 0) {
           subval = k.val;
           if (jQuery.type(subval) === "array") {
@@ -583,11 +583,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       this.reverseFontMap = {};
       this.reverseWeightMap = {};
-      for (i in this.rack.node_fields_by_name.inputs.weight.possible_values) {
-        this.reverseWeightMap[this.rack.node_fields_by_name.inputs.weight.possible_values[i]] = i;
+      for (i in this.rack.collection.node_fields_by_name.inputs.weight.possible_values) {
+        this.reverseWeightMap[this.rack.collection.node_fields_by_name.inputs.weight.possible_values[i]] = i;
       }
-      for (i in this.rack.node_fields_by_name.inputs.font.possible_values) {
-        this.reverseFontMap[this.rack.node_fields_by_name.inputs.font.possible_values[i]] = i;
+      for (i in this.rack.collection.node_fields_by_name.inputs.font.possible_values) {
+        this.reverseFontMap[this.rack.collection.node_fields_by_name.inputs.font.possible_values[i]] = i;
       }
       this.fontcache = -1;
       return this.weightcache = -1;

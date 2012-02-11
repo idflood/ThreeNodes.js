@@ -58,7 +58,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], [], i);
+        this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob[i], [], i);
       }
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
       this.last_slice_count = numItems;

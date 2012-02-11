@@ -129,8 +129,8 @@ define [
     compute: =>
       old = @rack.get("out", true).get()
       @value = []
-      for f of @rack.node_fields.inputs
-        k = @rack.node_fields.inputs[f]
+      for f of @rack.collection.node_fields.inputs
+        k = @rack.collection.node_fields.inputs[f]
         if k.val != null && k.connections.length > 0
           subval = k.val
           # if subvalue is an array append it to the result
@@ -421,11 +421,11 @@ define [
       @reverseFontMap = {}
       @reverseWeightMap = {}
       
-      for i of @rack.node_fields_by_name.inputs.weight.possible_values
-        @reverseWeightMap[@rack.node_fields_by_name.inputs.weight.possible_values[i]] = i
+      for i of @rack.collection.node_fields_by_name.inputs.weight.possible_values
+        @reverseWeightMap[@rack.collection.node_fields_by_name.inputs.weight.possible_values[i]] = i
       
-      for i of @rack.node_fields_by_name.inputs.font.possible_values
-        @reverseFontMap[@rack.node_fields_by_name.inputs.font.possible_values[i]] = i
+      for i of @rack.collection.node_fields_by_name.inputs.font.possible_values
+        @reverseFontMap[@rack.collection.node_fields_by_name.inputs.font.possible_values[i]] = i
       
       @fontcache = -1
       @weightcache = -1

@@ -1,6 +1,34 @@
-define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.NodeFieldRackView = Backbone.View.extend({
-    add_field_listener: function($field) {
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+  function ctor() { this.constructor = child; }
+  ctor.prototype = parent.prototype;
+  child.prototype = new ctor;
+  child.__super__ = parent.prototype;
+  return child;
+};
+define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone) {
+  "use strict";  return ThreeNodes.NodeFieldRackView = (function() {
+    __extends(NodeFieldRackView, Backbone.View);
+    function NodeFieldRackView() {
+      this.addCenterTextfield = __bind(this.addCenterTextfield, this);
+      this.renderSidebar = __bind(this.renderSidebar, this);
+      NodeFieldRackView.__super__.constructor.apply(this, arguments);
+    }
+    NodeFieldRackView.prototype.initialize = function() {
+      return this.collection.bind("field:registered", __bind(function(model, el) {
+        return this.add_field_listener(el);
+      }, this));
+    };
+    NodeFieldRackView.prototype.renderSidebar = function() {
+      var $target, f;
+      $target = $("#tab-attribute");
+      $target.html("");
+      for (f in this.collection.node_fields.inputs) {
+        this.collection.node_fields.inputs[f].render_sidebar();
+      }
+      return true;
+    };
+    NodeFieldRackView.prototype.add_field_listener = function($field) {
       var accept_class, field, get_path, highlight_possible_targets, self;
       self = this;
       field = $field.data("object");
@@ -70,7 +98,29 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
         }
       });
       return this;
-    }
-  });
-  return ThreeNodes.NodeFieldRackView;
+    };
+    NodeFieldRackView.prototype.addCenterTextfield = function(field) {
+      var f_in;
+      $(".options .center", this.options.node.main_view).append("<div><input type='text' id='f-txt-input-" + field.fid + "' /></div>");
+      f_in = $("#f-txt-input-" + field.fid);
+      field.on_value_update_hooks.update_center_textfield = function(v) {
+        if (v !== null) {
+          return f_in.val(v.toString());
+        }
+      };
+      f_in.val(field.get());
+      if (field.is_output === true) {
+        f_in.attr("disabled", "disabled");
+      } else {
+        f_in.keypress(function(e) {
+          if (e.which === 13) {
+            field.set($(this).val());
+            return $(this).blur();
+          }
+        });
+      }
+      return this;
+    };
+    return NodeFieldRackView;
+  })();
 });

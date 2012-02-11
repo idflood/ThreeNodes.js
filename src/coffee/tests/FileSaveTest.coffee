@@ -17,8 +17,9 @@ define [
         # test with two number nodes connected
         n1 = ng.create_node("Number", 363, 113)
         n2 = ng.create_node("Number", 123, 456)
-        c1 = new ThreeNodes.NodeConnection(n1.v_out, n2.v_in)
-        app.injector.applyContext(c1)
+        c1 = ng.connections.create
+          from_field: n1.v_out
+          to_field: n2.v_in
         n1.v_in.set 4
         ng.render()
         
@@ -38,7 +39,7 @@ define [
         equals _n2.y, n2.model.get('y'), "Node1.x saved"
         
         _c1 = parsed_data1.connections[0]
-        equals _c1.id, c1.cid, "Connection1.cid saved"
+        equals _c1.id, c1.get("cid"), "Connection1.cid saved"
         equals _c1.from, c1.from_field.name, "Connection1.from_field saved"
         equals _c1.to, c1.to_field.name, "Connection1.to_field saved"
         
@@ -46,8 +47,9 @@ define [
         app.commandMap.execute "ClearWorkspaceCommand"
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("WebGLRenderer")
-        c1 = new ThreeNodes.NodeConnection(n1.rack.get("out", true), n2.rack.get("scene"))
-        app.injector.applyContext(c1)
+        c1 = ng.connections.create
+          from_field: n1.rack.get("out", true)
+          to_field: n2.rack.get("scene")
         ng.render()
         
         json_string = filehandler.get_local_json()
@@ -61,10 +63,12 @@ define [
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")
         n3 = ng.create_node("ThreeMesh")
-        c1 = new ThreeNodes.NodeConnection(n2.rack.get("out", true), n1.rack.get("children"))
-        c2 = new ThreeNodes.NodeConnection(n3.rack.get("out", true), n2.rack.get("in0"))
-        app.injector.applyContext(c1)
-        app.injector.applyContext(c2)
+        c1 = ng.connections.create
+          from_field: n2.rack.get("out", true)
+          to_field: n1.rack.get("children")
+        c2 = ng.connections.create
+          from_field: n3.rack.get("out", true)
+          to_field: n2.rack.get("in0")
         ng.render()
         
         json_string = filehandler.get_local_json()

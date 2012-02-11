@@ -67,7 +67,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
     Object3D.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
+      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['children']);
       childs_in = this.get_children_array();
       if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
@@ -146,7 +146,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return _results;
     };
     Scene.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
+      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['children', 'lights']);
       this.apply_children();
       return this.rack.set("out", this.ob);
     };
@@ -261,7 +261,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
+        this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
       if (needs_rebuild === true) {
         ThreeNodes.rebuild_all_shaders();
@@ -334,7 +334,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
+        this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
       if (needs_rebuild === true) {
         ThreeNodes.rebuild_all_shaders();
@@ -383,7 +383,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
     };
     Camera.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['target']);
+      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['target']);
       this.ob.lookAt(this.rack.get("target").get());
       return this.rack.set("out", this.ob);
     };
@@ -465,7 +465,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.ob === false) {
         this.ob = new THREE.Fog(0xffffff, 1, 1000);
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
       return this.rack.set("out", this.ob);
     };
     return Fog;
@@ -502,7 +502,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.ob === false) {
         this.ob = new THREE.FogExp2(0xffffff, 0.00025);
       }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
       return this.rack.set("out", this.ob);
     };
     return FogExp2;
@@ -679,7 +679,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       this.apply_size();
       this.apply_bg_color();
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
+      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
       ThreeNodes.Webgl.current_camera = this.rack.get("camera").get();
       ThreeNodes.Webgl.current_scene = this.rack.get("scene").get();
       this.rack.get("camera").get().aspect = this.width / this.height;

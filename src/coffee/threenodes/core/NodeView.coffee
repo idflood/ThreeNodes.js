@@ -11,16 +11,13 @@ define [
   "use strict"
   
   class ThreeNodes.NodeView extends Backbone.View
-    initialize: () ->
-      return true
-    
     onRegister: () ->
       @make_draggable()
       @init_el_click()
       @init_title_click()
       @make_selectable()
     
-    initialize: () =>
+    initialize: () ->
       @model.bind 'change', @render
       @render
       @

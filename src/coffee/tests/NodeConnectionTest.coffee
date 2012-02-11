@@ -15,9 +15,11 @@ define [
         ng = app.nodegraph
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.v_in)
+        c1 = ng.connections.create
+          from_field: n1.v_out
+          to_field: n2.v_in
         
-        equals ng.node_connections.length, 1, "There is one connection"
+        equals ng.connections.length, 1, "There is one connection"
         equals n1.v_out.connections.length, 1, "The output field has one connection"
         n1.v_in.set 0.5
         ng.render()
@@ -28,6 +30,7 @@ define [
         equals n2.v_out.get(), 0.8, "Node value propagated from node1 to node2 (2/2)"
         
         c1.remove()
+        console.log n1.v_out.connections
         equals ng.node_connections.length, 0, "A specific connection has been removed"
         equals n1.v_out.connections.length, 0, "Node 1 has no output conection"
         equals n2.v_in.connections.length, 0, "Node 2 has no input conection"
@@ -37,8 +40,12 @@ define [
         equals n2.v_out.get(), 0.8, "Node2 value didn't change if there is no connection"
         
         n3 = ng.create_node("Number")
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.v_in)
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.v_in)
+        c1 = ng.connections.add
+          from_field: n1.v_out
+          to_field: n2.v_in
+        c2 = ng.connections.add
+          from_field: n1.v_out
+          to_field: n3.v_in
         n1.v_in.set 0.7
         ng.render()
         equals n2.v_out.get(), 0.7, "Multiple output connection propagated 1/2"
@@ -46,7 +53,9 @@ define [
         
         # try to connect two outputs to one input (only the last one should be valid, the first removed)
         n4 = ng.create_node("Number")
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, n4.v_out, n3.v_in)
+        c3 = ng.connections.add
+          from_field: n4.v_out
+          to_field: n3.v_in
         n4.v_in.set 14
         ng.render()
         equals n3.v_in.connections.length, 1, "Input only have one connection"
@@ -63,7 +72,9 @@ define [
         
         old_val = n2.rack.get("geometry").get()
         # can't really connect a number to a geometry field, should not change his value
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("geometry"))
+        c1 = ng.connections.create
+          from_field: n1.v_out
+          to_field: n2.rack.get("geometry")
         ng.render()
                 
         equals n2.rack.get("geometry").get().id, old_val.id, "Geometry field value should not change if wrong type is passed"
@@ -71,7 +82,9 @@ define [
         # same with mesh.material
         c1.remove()
         old_val = n2.rack.get("material").get()
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n2.rack.get("material"))
+        c1 = ng.connections.create
+          from_field: n1.v_out
+          to_field: n2.rack.get("material")
         ng.render()
         
         equals n2.rack.get("material").get().id, old_val.id, "Material field value should not change if wrong type is passed"
@@ -84,7 +97,9 @@ define [
         n1 = ng.create_node("Number")
         n3 = ng.create_node("Scene")
         equals $.type(n3.ob.children), "array", "Scene.children is by default an empty array"
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n3.rack.get("children"))
+        c2 = ng.connections.create
+          from_field: n1.v_out
+          to_field: n3.rack.get("children")
         # the ng.render throw an error if the children attribute is not valid
         ng.render()
         
@@ -99,7 +114,9 @@ define [
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
         # connect node in reverse order (from input to output)
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_in, n1.v_out)
+        c1 = ng.connections.create
+          from_field: n2.v_in
+          to_field: n1.v_out
         n1.v_in.set 4
         ng.render()
         
@@ -113,7 +130,9 @@ define [
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
         # connect an input to another input
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_in, n2.v_in)
+        c1 = ng.connections.create
+          from_field: n1.v_in
+          to_field: n2.v_out
         # the connection should not be created
         ng.render()
         
@@ -126,7 +145,9 @@ define [
         
         n1 = ng.create_node("Number")
         # connect an input to another input
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, n1.v_in)
+        c1 = ng.connections.create
+          from_field: n1.v_out
+          to_field: n1.v_in
         # the connection should not be created
         ng.render()
         
@@ -142,9 +163,15 @@ define [
         n2 = ng.create_node("Number")
         node_mult = ng.create_node("MathMult")
         node_merge = ng.create_node("Merge")
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"))
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"))
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_mult.v_factor)
+        c1 = ng.connections.create
+          from_field: n1.v_out
+          to_field: node_merge.rack.get("in0")
+        c2 = ng.connections.create
+          from_field: n2.v_out
+          to_field: node_merge.rack.get("in1")
+        c3 = ng.connections.create
+          from_field: node_merge.rack.get("out", true)
+          to_field: node_mult.v_factor
         n1.v_in.set 1
         n2.v_in.set 2
         node_mult.v_in.set 3
@@ -163,9 +190,15 @@ define [
         n2 = ng.create_node("Number")
         node_vec = ng.create_node("Vector3")
         node_merge = ng.create_node("Merge")
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_merge.rack.get("in0"))
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n2.v_out, node_merge.rack.get("in1"))
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), node_vec.rack.get("y"))
+        c1 = ng.connections.create
+          from_field: n1.v_out
+          to_field: node_merge.rack.get("in0")
+        c2 = ng.connections.create
+          from_field: n2.v_out
+          to_field: node_merge.rack.get("in1")
+        c3 = ng.connections.create
+          from_field: node_merge.rack.get("out", true)
+          to_field: node_vec.rack.get("y")
         n1.v_in.set 5
         n2.v_in.set 7
         ng.render()
@@ -181,9 +214,15 @@ define [
         node_merge = ng.create_node("Merge", 0, 0)
         nvec1 = ng.create_node("Vector3", 0, 0)
         nvec2 = ng.create_node("Vector3", 0, 0)
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, nvec1.rack.get("xyz", true), node_merge.rack.get("in0"))
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, nvec2.rack.get("xyz", true), node_merge.rack.get("in1"))
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, node_merge.rack.get("out", true), meshNode.rack.get("position"))
+        c1 = ng.connections.create
+          from_field: nvec1.rack.get("xyz", true)
+          to_field: node_merge.rack.get("in0")
+        c2 = ng.connections.create
+          from_field: nvec2.rack.get("xyz", true)
+          to_field: node_merge.rack.get("in1")
+        c3 = ng.connections.create
+          from_field: node_merge.rack.get("out", true)
+          to_field: meshNode.rack.get("position")
         ng.render()
         
         equals meshNode.ob.length, 2, "Meshnode has 2 mesh since it has 2 positions"

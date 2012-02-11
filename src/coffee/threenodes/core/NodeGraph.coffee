@@ -14,6 +14,7 @@ define [
   'order!threenodes/nodes/Utils',
   'order!threenodes/nodes/Spread',
   'order!threenodes/nodes/Particle',
+  'order!threenodes/collections/ConnectionsCollection',
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.NodeGraph
@@ -22,6 +23,7 @@ define [
       @nodes_by_nid = {}
       @fields_by_fid = {}
       @node_connections = []
+      @connections = new ThreeNodes.ConnectionsCollection()
       @types = false
     
     create_node: (nodename, x, y, inXML = false, inJSON = false) =>
@@ -65,18 +67,17 @@ define [
     
     createConnectionFromObject: (connection) =>
       from_node = @get_node(connection.from_node.toString())
-      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
+      from = from_node.rack.collection.node_fields_by_name.outputs[connection.from.toString()]
       to_node = @get_node(connection.to_node.toString())
-      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
-      c = new ThreeNodes.NodeConnection(from, to, connection.id)
-      @context.injector.applyContext(c)
+      to = to_node.rack.collection.node_fields_by_name.inputs[connection.to.toString()]
+      c = @connections.create
+          from_field: from
+          to_field: to
+          cid: connection.id
       c
     
     renderAllConnections: () =>
-      console.log "render all connections"
-      for c in @node_connections
-        c.render()
-      return true
+      @connections.render()
     
     removeNode: (n) ->
       ind = @nodes.indexOf(n)
@@ -86,9 +87,7 @@ define [
         delete @nodes_by_nid[n.model.get("nid")]
     
     removeConnection: (c) ->
-      ind = @node_connections.indexOf(c)
-      if ind != -1
-        @node_connections.splice(ind, 1)
+      @connections.remove(c)
     
     get_node: (nid) =>
       @nodes_by_nid[nid]
@@ -100,7 +99,5 @@ define [
       true
     
     remove_all_connections: () ->
-      while @node_connections.length > 0
-        @node_connections[0].remove()
-      true
+      @connections.removeAll()
       

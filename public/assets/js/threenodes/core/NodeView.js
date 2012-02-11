@@ -11,12 +11,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     __extends(NodeView, Backbone.View);
     function NodeView() {
       this.render = __bind(this.render, this);
-      this.initialize = __bind(this.initialize, this);
       NodeView.__super__.constructor.apply(this, arguments);
     }
-    NodeView.prototype.initialize = function() {
-      return true;
-    };
     NodeView.prototype.onRegister = function() {
       this.make_draggable();
       this.init_el_click();
