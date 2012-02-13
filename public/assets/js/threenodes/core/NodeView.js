@@ -131,8 +131,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
               top: dx,
               left: dy
             });
-            el.data("object").view.render_connections();
-            return el.data("object").view.compute_node_position();
+            el.data("object").view.compute_node_position();
+            return el.data("object").view.render_connections();
           });
           return self.render_connections();
         },

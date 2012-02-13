@@ -47,7 +47,7 @@ define [
         #@context.commandMap.execute "AddConnectionCommand", this
     
     render: () =>
-      @trigger("render", this)
+      @trigger("render", this, this)
     
     validate_connection: () =>
       # make sure we have input and output

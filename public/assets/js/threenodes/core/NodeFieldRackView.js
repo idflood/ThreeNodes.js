@@ -91,10 +91,14 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
         activeClass: "ui-state-active",
         hoverClass: "ui-state-hover",
         drop: function(event, ui) {
-          var field2, origin;
+          var field2, ng, origin;
           origin = $(ui.draggable).parent();
           field2 = origin.data("object");
-          return self.context.injector.instanciate(ThreeNodes.NodeConnection, field, field2);
+          ng = self.context.injector.get("NodeGraph");
+          return ng.connections.create({
+            from_field: field,
+            to_field: field2
+          });
         }
       });
       return this;

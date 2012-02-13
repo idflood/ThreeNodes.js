@@ -11,7 +11,6 @@ define [
     
     initialize: () =>
       @.bind "connection:removed", (c) =>
-        console.log "ConnectionsCollection -> connection:removed"
         @remove(c)
     
     render: () =>
@@ -30,11 +29,3 @@ define [
     removeAll: () =>
       @remove(@models)
     
-    addOne: (connection) ->
-      view = new ThreeNodes.ConnectionView
-        model: connection
-      
-      @context.injector.applyContext(view)
-      # todo: append element to dom $(view.el).after($("#cont"))
-      
-      return connection

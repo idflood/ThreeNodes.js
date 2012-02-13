@@ -11,6 +11,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/Node', 'order
       this.fields_by_fid = {};
       this.node_connections = [];
       this.connections = new ThreeNodes.ConnectionsCollection();
+      this.connections.bind("add", function(connection) {
+        var view;
+        return view = new ThreeNodes.ConnectionView({
+          model: connection
+        });
+      });
       this.types = false;
     }
     NodeGraph.prototype.create_node = function(nodename, x, y, inXML, inJSON) {

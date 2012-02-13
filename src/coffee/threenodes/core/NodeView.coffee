@@ -107,8 +107,9 @@ define [
             el.css
               top: dx
               left: dy
-            el.data("object").view.render_connections()
             el.data("object").view.compute_node_position()
+            el.data("object").view.render_connections()
+            
           self.render_connections()
         stop: () ->
           ThreeNodes.selected_nodes.not(this).each () ->

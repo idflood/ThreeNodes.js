@@ -12,41 +12,36 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     function ConnectionView() {
       ConnectionView.__super__.constructor.apply(this, arguments);
     }
-    ConnectionView.prototype.onRegister = function() {
+    ConnectionView.prototype.initialize = function() {
+      this.container = $("#graph");
       if (this.model.is_valid) {
-        this.line = false;
+        this.line = ThreeNodes.svg.path().attr({
+          stroke: "#555",
+          fill: "none"
+        });
+        this.el = this.line.node;
         this.model.bind("render", __bind(function() {
           return this.render();
         }, this));
-        return this.render();
+        this.model.bind("destroy", __bind(function() {
+          return this.remove();
+        }, this));
+        this.render();
       }
-    };
-    ConnectionView.prototype.initialize = function() {
-      this.container = $("#graph");
-      this.model.bind('change', this.render);
-      this.render;
       return this;
     };
     ConnectionView.prototype.remove = function() {
       if (ThreeNodes.svg && this.line) {
         this.line.remove();
-        return this.line = false;
+        this.line = false;
       }
+      return true;
     };
     ConnectionView.prototype.render = function() {
-      var color;
-      if (ThreeNodes.svg) {
-        if (this.line && this.line.attrs) {
-          this.line.attr({
-            path: this.get_path()
-          });
-        } else {
-          color = "#555";
-          this.line = ThreeNodes.svg.path(this.get_path()).attr({
-            stroke: color,
-            fill: "none"
-          });
-        }
+      if (ThreeNodes.svg && this.line && this.line.attrs) {
+        this.line.attr({
+          path: this.get_path()
+        });
       }
       return this;
     };

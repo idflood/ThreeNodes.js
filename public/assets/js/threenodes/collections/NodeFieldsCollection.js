@@ -128,8 +128,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
     };
     NodeFieldsCollection.prototype.fromJSON = function(data) {
       var f, node_field, _i, _len, _ref;
-      console.log("loading data...");
-      console.log(data);
       _ref = data.fields["in"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];

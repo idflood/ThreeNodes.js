@@ -58,7 +58,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       }
     };
     ConnectionModel.prototype.render = function() {
-      return this.trigger("render", this);
+      return this.trigger("render", this, this);
     };
     ConnectionModel.prototype.validate_connection = function() {
       if (!this.from_field || !this.to_field) {

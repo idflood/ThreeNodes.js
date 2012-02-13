@@ -24,6 +24,9 @@ define [
       @fields_by_fid = {}
       @node_connections = []
       @connections = new ThreeNodes.ConnectionsCollection()
+      @connections.bind "add", (connection) ->
+        view = new ThreeNodes.ConnectionView
+          model: connection
       @types = false
     
     create_node: (nodename, x, y, inXML = false, inJSON = false) =>

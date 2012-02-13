@@ -19,4 +19,3 @@ define [
     setFID: (fid) =>
       @set("fid", fid)
     
-    

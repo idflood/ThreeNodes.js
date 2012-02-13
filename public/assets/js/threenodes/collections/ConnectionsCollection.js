@@ -19,7 +19,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/ConnectionModel', 'or
     ConnectionsCollection.prototype.model = ThreeNodes.ConnectionModel;
     ConnectionsCollection.prototype.initialize = function() {
       return this.bind("connection:removed", __bind(function(c) {
-        console.log("ConnectionsCollection -> connection:removed");
         return this.remove(c);
       }, this));
     };
@@ -41,14 +40,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/ConnectionModel', 'or
     };
     ConnectionsCollection.prototype.removeAll = function() {
       return this.remove(this.models);
-    };
-    ConnectionsCollection.prototype.addOne = function(connection) {
-      var view;
-      view = new ThreeNodes.ConnectionView({
-        model: connection
-      });
-      this.context.injector.applyContext(view);
-      return connection;
     };
     return ConnectionsCollection;
   })();

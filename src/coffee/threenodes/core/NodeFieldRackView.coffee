@@ -71,7 +71,10 @@ define [
         drop: (event, ui) ->
           origin = $(ui.draggable).parent()
           field2 = origin.data("object")
-          self.context.injector.instanciate(ThreeNodes.NodeConnection, field, field2)
+          ng = self.context.injector.get "NodeGraph"
+          ng.connections.create
+            from_field: field
+            to_field: field2
       
       return this
     

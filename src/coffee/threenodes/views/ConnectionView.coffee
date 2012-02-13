@@ -8,35 +8,32 @@ define [
   "use strict"
   
   class ThreeNodes.ConnectionView extends Backbone.View
-    onRegister: () ->
-      if @model.is_valid
-        @line = false
-        @model.bind "render", () =>
-          @render()
-        @render()
-      
     
     initialize: () ->
       @container = $("#graph")
-      @model.bind 'change', @render
-      @render
+      if @model.is_valid
+        @line = ThreeNodes.svg.path().attr
+          stroke: "#555"
+          fill: "none"
+        # set the dom element
+        @el = @line.node
+        @model.bind "render", () =>
+          @render()
+        @model.bind "destroy", () =>
+          @remove()
+        @render()
       @
     
     remove: ->
       if ThreeNodes.svg && @line
         @line.remove()
         @line = false
+      return true
     
     render: () ->
-      if ThreeNodes.svg
-        if @line && @line.attrs
-          @line.attr
-            path: @get_path()
-        else
-          color = "#555"
-          @line = ThreeNodes.svg.path(@get_path()).attr
-            stroke: color
-            fill: "none"
+      if ThreeNodes.svg && @line && @line.attrs
+        @line.attr
+          path: @get_path()
       @
     
     get_field_position: (field) ->
