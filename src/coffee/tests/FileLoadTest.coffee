@@ -79,4 +79,4 @@ define [
         filehandler.load_from_json_data(json_string2)
         ng.render()
         equals ng.nodes.length, 3, "The 3 nodes are created in the nodegraph"
-        equals ng.node_connections.length, 2, "2 connections has been created"
+        equals ng.connections.length, 2, "2 connections has been created"

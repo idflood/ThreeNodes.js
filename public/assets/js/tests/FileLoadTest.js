@@ -68,7 +68,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         filehandler.load_from_json_data(json_string2);
         ng.render();
         equals(ng.nodes.length, 3, "The 3 nodes are created in the nodegraph");
-        return equals(ng.node_connections.length, 2, "2 connections has been created");
+        return equals(ng.connections.length, 2, "2 connections has been created");
       });
     }
     return FileLoadTest;

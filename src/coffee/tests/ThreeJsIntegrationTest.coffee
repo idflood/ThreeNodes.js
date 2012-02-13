@@ -16,8 +16,12 @@ define [
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")
         n3 = ng.create_node("ThreeMesh")
-        c1 = injector.instanciate(ThreeNodes.NodeConnection, n2.rack.get("out", true), n1.rack.get("children"))
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n3.rack.get("out", true), n2.rack.get("in0"))
+        c1 = ng.connections.create
+          from_field: n2.rack.get("out", true)
+          to_field: n1.rack.get("children")
+        c2 = ng.connections.create
+          from_field: n3.rack.get("out", true)
+          to_field: n2.rack.get("in0")
         ng.render()
         
         equals n1.ob.children.length, 1, "The Three.scene has 1 child"
@@ -27,8 +31,12 @@ define [
         
         # recreate the connection and add one extra mesh
         n4 = ng.create_node("ThreeMesh")
-        c2 = injector.instanciate(ThreeNodes.NodeConnection, n3.rack.get("out", true), n2.rack.get("in0"))
-        c3 = injector.instanciate(ThreeNodes.NodeConnection, n4.rack.get("out", true), n2.rack.get("in1"))
+        c2 = ng.connections.create
+          from_field: n3.rack.get("out", true)
+          to_field: n2.rack.get("in0")
+        c3 = ng.connections.create
+          from_field: n4.rack.get("out", true)
+          to_field: n2.rack.get("in1")
         ng.render()
         
         equals n1.ob.children.length, 2, "The Three.scene has 2 childs"
@@ -48,7 +56,9 @@ define [
         
         # webgl
         n5 = ng.create_node("WebGLRenderer")
-        c4 = injector.instanciate(ThreeNodes.NodeConnection, n1.rack.get("out", true), n5.rack.get("scene"))
+        c4 = ng.connections.create
+          from_field: n1.rack.get("out", true)
+          to_field: n5.rack.get("scene")
         
         ng.render()
         equals ThreeNodes.Webgl.renderModel.scene.id, n5.rack.get("scene").get().id, "ThreeNodes.Webgl.renderModel.scene == scene connected to the renderer"
@@ -66,16 +76,25 @@ define [
         node_webgl = ng.create_node("WebGLRenderer")
         
         # scene -> webglrenderer.scene
-        injector.instanciate(ThreeNodes.NodeConnection, n1.rack.get("out", true), node_webgl.rack.get("scene"))
-        
+        ng.connections.create
+          from_field: n1.rack.get("out", true)
+          to_field: node_webgl.rack.get("scene")
         # merge -> scene.children
-        injector.instanciate(ThreeNodes.NodeConnection, n2.rack.get("out", true), n1.rack.get("children"))
+        ng.connections.create
+          from_field: n2.rack.get("out", true)
+          to_field: n1.rack.get("children")
         # camera -> object3d.children
-        injector.instanciate(ThreeNodes.NodeConnection, node_camera.rack.get("out", true), node_object3d.rack.get("children"))
+        ng.connections.create
+          from_field: node_camera.rack.get("out", true)
+          to_field: node_object3d.rack.get("children")
         # cammera -> scene.camera
-        injector.instanciate(ThreeNodes.NodeConnection, node_camera.rack.get("out", true), node_webgl.rack.get("camera"))
+        ng.connections.create
+          from_field: node_camera.rack.get("out", true)
+          to_field: node_webgl.rack.get("camera")
         # object3d -> merge
-        injector.instanciate(ThreeNodes.NodeConnection, node_object3d.rack.get("out", true), n2.rack.get("in0"))
+        ng.connections.create
+          from_field: node_object3d.rack.get("out", true)
+          to_field: n2.rack.get("in0")
 
         ng.render()
         equals node_object3d.ob.children.length, 1, "Object3D has one child"
