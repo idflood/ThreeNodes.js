@@ -35,7 +35,6 @@ define [
   'order!threenodes/utils/CommandMap',
   'order!threenodes/utils/FileHandler',
   'order!threenodes/commands/ClearWorkspaceCommand',
-  'order!threenodes/commands/AddConnectionCommand',
   'order!threenodes/commands/RemoveConnectionCommand',
   'order!threenodes/commands/CreateNodeCommand',
   'order!threenodes/commands/SaveFileCommand',
@@ -66,7 +65,6 @@ define [
       @commandMap = new ThreeNodes.CommandMap(this)
       
       @commandMap.register "ClearWorkspaceCommand", ThreeNodes.ClearWorkspaceCommand
-      @commandMap.register "AddConnectionCommand", ThreeNodes.AddConnectionCommand
       @commandMap.register "RemoveConnectionCommand", ThreeNodes.RemoveConnectionCommand
       @commandMap.register "CreateNodeCommand", ThreeNodes.CreateNodeCommand
       @commandMap.register "SaveFileCommand", ThreeNodes.SaveFileCommand

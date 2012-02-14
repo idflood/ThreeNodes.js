@@ -16,7 +16,7 @@ ThreeNodes.flash_sound_value = {
   snare: 0,
   hat: 0
 };
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/ui/AppTimeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/AddConnectionCommand', 'order!threenodes/commands/RemoveConnectionCommand', 'order!threenodes/commands/CreateNodeCommand', 'order!threenodes/commands/SaveFileCommand', 'order!threenodes/commands/LoadLocalFileCommand', 'order!threenodes/commands/RebuildShadersCommand', 'order!threenodes/commands/RemoveSelectedNodesCommand', 'order!threenodes/commands/SetDisplayModeCommand', 'order!threenodes/commands/InitUrlHandler', 'order!threenodes/commands/ExportCodeCommand', 'order!threenodes/commands/ExportImageCommand', 'order!threenodes/commands/OnUiResizeCommand', "order!libs/jquery.ba-bbq.min"], function($, _, Backbone, NodeGraph, AppUI) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', 'order!threenodes/ui/AppUI', 'order!threenodes/ui/AppTimeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/commands/ClearWorkspaceCommand', 'order!threenodes/commands/RemoveConnectionCommand', 'order!threenodes/commands/CreateNodeCommand', 'order!threenodes/commands/SaveFileCommand', 'order!threenodes/commands/LoadLocalFileCommand', 'order!threenodes/commands/RebuildShadersCommand', 'order!threenodes/commands/RemoveSelectedNodesCommand', 'order!threenodes/commands/SetDisplayModeCommand', 'order!threenodes/commands/InitUrlHandler', 'order!threenodes/commands/ExportCodeCommand', 'order!threenodes/commands/ExportImageCommand', 'order!threenodes/commands/OnUiResizeCommand', "order!libs/jquery.ba-bbq.min"], function($, _, Backbone, NodeGraph, AppUI) {
   "use strict";  return ThreeNodes.App = (function() {
     function App(testing_mode) {
       this.testing_mode = testing_mode != null ? testing_mode : false;
@@ -31,7 +31,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeGraph', '
       this.injector = new ThreeNodes.Injector(this);
       this.commandMap = new ThreeNodes.CommandMap(this);
       this.commandMap.register("ClearWorkspaceCommand", ThreeNodes.ClearWorkspaceCommand);
-      this.commandMap.register("AddConnectionCommand", ThreeNodes.AddConnectionCommand);
       this.commandMap.register("RemoveConnectionCommand", ThreeNodes.RemoveConnectionCommand);
       this.commandMap.register("CreateNodeCommand", ThreeNodes.CreateNodeCommand);
       this.commandMap.register("SaveFileCommand", ThreeNodes.SaveFileCommand);

@@ -17,12 +17,12 @@ define [
   'order!threenodes/collections/ConnectionsCollection',
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.NodeGraph
-    constructor: () ->
+  class ThreeNodes.NodeGraph extends Backbone.Collection
+    
+    initialize: (models, options) =>
       @nodes = []
       @nodes_by_nid = {}
       @fields_by_fid = {}
-      @node_connections = []
       @connections = new ThreeNodes.ConnectionsCollection()
       @connections.bind "add", (connection) ->
         view = new ThreeNodes.ConnectionView
@@ -64,9 +64,6 @@ define [
         if invalidNodes[nid]
           evaluateSubGraph(terminalNodes[nid])
       true
-    
-    addConnection: (c) ->
-      @node_connections[@node_connections.length] = c
     
     createConnectionFromObject: (connection) =>
       from_node = @get_node(connection.from_node.toString())
