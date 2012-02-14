@@ -12,9 +12,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
     function ConnectionModel() {
       this.setCID = __bind(this.setCID, this);
       this.switch_fields_if_needed = __bind(this.switch_fields_if_needed, this);
-      this.validate_connection = __bind(this.validate_connection, this);
+      this.validate = __bind(this.validate, this);
       this.render = __bind(this.render, this);
-      this.onRegister = __bind(this.onRegister, this);
       this.remove = __bind(this.remove, this);
       this.initialize = __bind(this.initialize, this);
       this.sync = __bind(this.sync, this);
@@ -32,10 +31,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
           "cid": ThreeNodes.Utils.get_uid()
         });
       }
-      this.from_field = this.options.from_field;
-      this.to_field = this.options.to_field;
-      this.is_valid = this.validate_connection();
-      if (this.is_valid) {
+      if (this.isValid()) {
         this.to_field.remove_connections();
         this.from_field.add_connection(this);
         this.to_field.add_connection(this);
@@ -48,38 +44,36 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       this.to_field.unregister_connection(this);
       this.to_field.node.dirty = true;
       this.to_field.changed = true;
-      this.trigger("connection:removed", this, this);
+      this.trigger("connection:removed", this);
       this.destroy();
       return false;
-    };
-    ConnectionModel.prototype.onRegister = function() {
-      if (this.is_valid) {
-        return this.trigger("connection:added", this, this);
-      }
     };
     ConnectionModel.prototype.render = function() {
       return this.trigger("render", this, this);
     };
-    ConnectionModel.prototype.validate_connection = function() {
+    ConnectionModel.prototype.validate = function(attrs, options) {
+      this.from_field = attrs.from_field;
+      this.to_field = attrs.to_field;
       if (!this.from_field || !this.to_field) {
-        return false;
+        return true;
       }
       if (this.from_field.is_output === this.to_field.is_output) {
-        return false;
+        return true;
       }
       if (this.from_field.node.model.get('nid') === this.to_field.node.model.get('nid')) {
-        return false;
+        return true;
       }
       this.switch_fields_if_needed();
-      return true;
+      return false;
     };
     ConnectionModel.prototype.switch_fields_if_needed = function() {
       var f_out;
       if (this.from_field.is_output === false) {
         f_out = this.to_field;
         this.to_field = this.from_field;
-        return this.from_field = f_out;
+        this.from_field = f_out;
       }
+      return this;
     };
     ConnectionModel.prototype.setCID = function(cid) {
       return this.set({

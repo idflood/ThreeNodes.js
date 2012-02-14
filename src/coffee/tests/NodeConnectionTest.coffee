@@ -30,8 +30,7 @@ define [
         equals n2.v_out.get(), 0.8, "Node value propagated from node1 to node2 (2/2)"
         
         c1.remove()
-        console.log n1.v_out.connections
-        equals ng.node_connections.length, 0, "A specific connection has been removed"
+        equals ng.connections.length, 0, "A specific connection has been removed"
         equals n1.v_out.connections.length, 0, "Node 1 has no output conection"
         equals n2.v_in.connections.length, 0, "Node 2 has no input conection"
         
@@ -126,17 +125,17 @@ define [
         app.commandMap.execute "ClearWorkspaceCommand"
         injector = app.injector
         ng = app.nodegraph
-        
+        console.log "create node...."
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
         # connect an input to another input
         c1 = ng.connections.create
           from_field: n1.v_in
-          to_field: n2.v_out
+          to_field: n2.v_in
         # the connection should not be created
         ng.render()
         
-        equals ng.node_connections.length, 0, "The connection has not been created since it is wrong"
+        equals ng.connections.length, 0, "The connection has not been created since it is wrong"
       
       test "Connection from and to the same node", () ->
         app.commandMap.execute "ClearWorkspaceCommand"
@@ -151,7 +150,7 @@ define [
         # the connection should not be created
         ng.render()
         
-        equals ng.node_connections.length, 0, "The connection has not been created since it is wrong"
+        equals ng.connections.length, 0, "The connection has not been created since it is wrong"
       
       test "Array connections", () ->
         # verify that the good amount of objects are created when having many inputs

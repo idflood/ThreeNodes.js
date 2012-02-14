@@ -27,6 +27,7 @@ define [
         app.commandMap.execute "ClearWorkspaceCommand"
         
         filehandler.load_from_json_data(json_string1)
+        
         ng.render()
         equals ng.nodes.length, 2, "The 2 nodes are created in the nodegraph"
         equals ng.connections.length, 1, "A connection has been created"

@@ -11,17 +11,16 @@ define [
     
     initialize: () ->
       @container = $("#graph")
-      if @model.is_valid
-        @line = ThreeNodes.svg.path().attr
-          stroke: "#555"
-          fill: "none"
-        # set the dom element
-        @el = @line.node
-        @model.bind "render", () =>
-          @render()
-        @model.bind "destroy", () =>
-          @remove()
+      @line = ThreeNodes.svg.path().attr
+        stroke: "#555"
+        fill: "none"
+      # set the dom element
+      @el = @line.node
+      @model.bind "render", () =>
         @render()
+      @model.bind "destroy", () =>
+        @remove()
+      @render()
       @
     
     remove: ->

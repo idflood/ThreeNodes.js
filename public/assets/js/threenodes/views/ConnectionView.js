@@ -14,20 +14,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     }
     ConnectionView.prototype.initialize = function() {
       this.container = $("#graph");
-      if (this.model.is_valid) {
-        this.line = ThreeNodes.svg.path().attr({
-          stroke: "#555",
-          fill: "none"
-        });
-        this.el = this.line.node;
-        this.model.bind("render", __bind(function() {
-          return this.render();
-        }, this));
-        this.model.bind("destroy", __bind(function() {
-          return this.remove();
-        }, this));
-        this.render();
-      }
+      this.line = ThreeNodes.svg.path().attr({
+        stroke: "#555",
+        fill: "none"
+      });
+      this.el = this.line.node;
+      this.model.bind("render", __bind(function() {
+        return this.render();
+      }, this));
+      this.model.bind("destroy", __bind(function() {
+        return this.remove();
+      }, this));
+      this.render();
       return this;
     };
     ConnectionView.prototype.remove = function() {

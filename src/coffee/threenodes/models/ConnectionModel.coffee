@@ -17,10 +17,7 @@ define [
       if @get("cid") == -1
         @set({"cid": ThreeNodes.Utils.get_uid()})
       
-      @from_field = @options.from_field
-      @to_field = @options.to_field
-      @is_valid = @validate_connection()
-      if @is_valid
+      if @isValid()
         # remove existing input connection since inputs only have one connection
         @to_field.remove_connections()
         # add the connection to each fields
@@ -36,41 +33,38 @@ define [
       @to_field.node.dirty = true
       @to_field.changed = true
       
-      @trigger("connection:removed", this, this)
-      #@context.commandMap.execute "RemoveConnectionCommand", this
+      @trigger "connection:removed", this
       @destroy()
       false
-    
-    onRegister: () =>
-      if @is_valid
-        @trigger("connection:added", this, this)
-        #@context.commandMap.execute "AddConnectionCommand", this
     
     render: () =>
       @trigger("render", this, this)
     
-    validate_connection: () =>
+    validate: (attrs, options) =>
+      @from_field = attrs.from_field
+      @to_field = attrs.to_field
+      
       # make sure we have input and output
       if !@from_field || !@to_field
-        return false
+        return true
       
       # never connect 2 outputs or 2 inputs
       if @from_field.is_output == @to_field.is_output
-        return false
+        return true
       
       # never connect in/out from the same node
       if @from_field.node.model.get('nid') == @to_field.node.model.get('nid')
-        return false
+        return true
       
       @switch_fields_if_needed()
-      
-      true
+      return false
     
     switch_fields_if_needed: () =>
       if @from_field.is_output == false
         f_out = @to_field
         @to_field = @from_field
         @from_field = f_out
+      @
     
     setCID: (cid) =>
       @set
