@@ -1,5 +1,5 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', 'order!threenodes/core/NodeFieldRackView', 'order!threenodes/collections/NodeFieldsCollection'], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', 'order!threenodes/views/NodeFieldRackView', 'order!threenodes/collections/NodeFieldsCollection'], function($, _, Backbone) {
   "use strict";  return ThreeNodes.NodeFieldRack = (function() {
     function NodeFieldRack(node) {
       this.node = node;

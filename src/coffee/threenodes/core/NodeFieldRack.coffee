@@ -3,7 +3,7 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/core/NodeField',
-  'order!threenodes/core/NodeFieldRackView',
+  'order!threenodes/views/NodeFieldRackView',
   'order!threenodes/collections/NodeFieldsCollection',
 ], ($, _, Backbone) ->
   "use strict"
