@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", 'order!threenodes/utils/Utils', "order!libs/signals.min", 'order!threenodes/models/NodeFieldModel'], function($, _, Backbone, _view_node_field_in, _view_node_field_out) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", 'order!threenodes/utils/Utils', 'order!threenodes/models/NodeFieldModel'], function($, _, Backbone, _view_node_field_in, _view_node_field_out) {
   "use strict";  ThreeNodes.NodeField = (function() {
     NodeField.connections = false;
     function NodeField(name, val, possible_values, fid) {
@@ -40,7 +40,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.set = __bind(this.set, this);
       self = this;
       this.on_value_update_hooks = {};
-      this.signal = new signals.Signal();
       this.node = false;
       this.is_output = false;
       this.changed = true;

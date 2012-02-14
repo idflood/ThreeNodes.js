@@ -5,7 +5,6 @@ define [
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
   'order!threenodes/utils/Utils',
-  "order!libs/signals.min",
   'order!threenodes/models/NodeFieldModel',
 ], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
   "use strict"
@@ -14,7 +13,6 @@ define [
     constructor: (@name, @val, @possible_values = false, @fid = ThreeNodes.Utils.get_uid()) ->
       self = this
       @on_value_update_hooks = {}
-      @signal = new signals.Signal()
       @node = false
       @is_output = false
       @changed = true
