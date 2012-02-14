@@ -7,7 +7,7 @@ define [
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/core/NodeFieldRack',
-  'order!threenodes/core/NodeView',
+  'order!threenodes/views/NodeView',
   'order!threenodes/models/NodeModel',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->

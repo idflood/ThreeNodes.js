@@ -27,7 +27,7 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  'order!threenodes/core/NodeGraph',
+  'order!threenodes/collections/NodeGraph',
   'order!threenodes/ui/AppUI',
   'order!threenodes/ui/AppTimeline',
   'order!threenodes/utils/AppWebsocket',

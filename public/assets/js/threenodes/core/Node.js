@@ -6,7 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   child.__super__ = parent.prototype;
   return child;
 };
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/core/NodeView', 'order!threenodes/models/NodeModel', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/views/NodeView', 'order!threenodes/models/NodeModel', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   "use strict";  ThreeNodes.field_click_1 = false;
   ThreeNodes.selected_nodes = $([]);
   ThreeNodes.nodes_offset = {
