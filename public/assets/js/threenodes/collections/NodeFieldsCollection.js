@@ -1,14 +1,12 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], function(_, Backbone) {
-  "use strict";  return ThreeNodes.NodeFieldsCollection = (function() {
-    __extends(NodeFieldsCollection, Backbone.Collection);
+  "use strict";  return ThreeNodes.NodeFieldsCollection = (function(_super) {
+
+    __extends(NodeFieldsCollection, _super);
+
     function NodeFieldsCollection() {
       this.removeAllConnections = __bind(this.removeAllConnections, this);
       this.renderConnections = __bind(this.renderConnections, this);
@@ -28,7 +26,9 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       this.initialize = __bind(this.initialize, this);
       NodeFieldsCollection.__super__.constructor.apply(this, arguments);
     }
+
     NodeFieldsCollection.prototype.model = ThreeNodes.NodeFieldModel;
+
     NodeFieldsCollection.prototype.initialize = function(models, options) {
       this.node = options.node;
       this.node_fields = {};
@@ -38,6 +38,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       this.node_fields_by_name.inputs = {};
       return this.node_fields_by_name.outputs = {};
     };
+
     NodeFieldsCollection.prototype.load = function(xml, json) {
       if (xml) {
         return this.fromXML(xml);
@@ -45,32 +46,32 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
         return this.fromJSON(json);
       }
     };
+
     NodeFieldsCollection.prototype.getField = function(key, is_out) {
-      if (is_out == null) {
-        is_out = false;
-      }
+      if (is_out == null) is_out = false;
       if (is_out === true) {
         return this.node_fields_by_name.outputs[key];
       } else {
         return this.node_fields_by_name.inputs[key];
       }
     };
+
     NodeFieldsCollection.prototype.setField = function(key, value) {
       return this.node_fields_by_name.outputs[key].set(value);
     };
+
     NodeFieldsCollection.prototype.getMaxInputSliceCount = function() {
       var f, fid, res;
       res = 1;
       for (fid in this.node_fields.inputs) {
         f = this.node_fields.inputs[fid];
         if (f.val && $.type(f.val) === "array") {
-          if (f.val.length > res) {
-            res = f.val.length;
-          }
+          if (f.val.length > res) res = f.val.length;
         }
       }
       return res - 1;
     };
+
     NodeFieldsCollection.prototype.getUpstreamNodes = function() {
       var c, f, fid, res, _i, _len, _ref;
       res = [];
@@ -84,6 +85,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       }
       return res;
     };
+
     NodeFieldsCollection.prototype.getDownstreamNodes = function() {
       var c, f, fid, res, _i, _j, _len, _len2, _ref, _ref2;
       res = [];
@@ -99,6 +101,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       }
       return res;
     };
+
     NodeFieldsCollection.prototype.setFieldInputUnchanged = function() {
       var f, fid, _i, _len, _ref, _results;
       _ref = this.node_fields.inputs;
@@ -110,6 +113,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       }
       return _results;
     };
+
     NodeFieldsCollection.prototype.registerField = function(field) {
       field.node = this.node;
       if (field.is_output === false) {
@@ -126,18 +130,18 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       }
       return field;
     };
+
     NodeFieldsCollection.prototype.fromJSON = function(data) {
       var f, node_field, _i, _len, _ref;
       _ref = data.fields["in"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
         node_field = this.node_fields_by_name.inputs[f.name];
-        if (node_field && f.val) {
-          node_field.set(f.val);
-        }
+        if (node_field && f.val) node_field.set(f.val);
       }
       return true;
     };
+
     NodeFieldsCollection.prototype.fromXML = function(data) {
       var self;
       self = this;
@@ -145,12 +149,11 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
         var f, field_val;
         f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
         field_val = $(this).attr("val");
-        if (f && field_val !== "[object Object]") {
-          return f.set(field_val);
-        }
+        if (f && field_val !== "[object Object]") return f.set(field_val);
       });
       return true;
     };
+
     NodeFieldsCollection.prototype.toJSON = function() {
       var res;
       res = {
@@ -163,6 +166,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       };
       return res;
     };
+
     NodeFieldsCollection.prototype.toCode = function() {
       var field, res;
       res = "{'in': [\n";
@@ -172,6 +176,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       res += "\t]}";
       return res;
     };
+
     NodeFieldsCollection.prototype.toXML = function() {
       var f, res;
       res = "\t\t<in>\n";
@@ -186,6 +191,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       res += "\t\t</out>\n";
       return res;
     };
+
     NodeFieldsCollection.prototype.renderConnections = function() {
       var f;
       for (f in this.node_fields.inputs) {
@@ -196,6 +202,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       }
       return true;
     };
+
     NodeFieldsCollection.prototype.removeAllConnections = function() {
       var f, _results;
       for (f in this.node_fields.inputs) {
@@ -207,6 +214,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       }
       return _results;
     };
+
     return NodeFieldsCollection;
-  })();
+
+  })(Backbone.Collection);
 });

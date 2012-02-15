@@ -1,6 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
   "use strict";  return ThreeNodes.ClearWorkspaceCommand = (function() {
+
     function ClearWorkspaceCommand() {}
+
     ClearWorkspaceCommand.prototype.execute = function() {
       var injector, ng, timeline;
       injector = this.context.injector;
@@ -15,6 +18,8 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       ThreeNodes.sound_nodes = [];
       return this.context.commandMap.execute("OnUiResizeCommand");
     };
+
     return ClearWorkspaceCommand;
+
   })();
 });

@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var NodeGraphTest;
   return NodeGraphTest = (function() {
+
     function NodeGraphTest(app) {
       module("NodeGraph");
       test("Nodegraph nodes", function() {
@@ -17,6 +19,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(ThreeNodes.uid, 0, "ThreeNodes.uid has been reset to 0");
       });
     }
+
     return NodeGraphTest;
+
   })();
 });

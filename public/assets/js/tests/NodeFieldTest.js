@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var NodeFieldTest;
   return NodeFieldTest = (function() {
+
     function NodeFieldTest(app) {
       module("NodeFields");
       test("Bool field", function() {
@@ -50,6 +52,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(nf.get().getHex(), new THREE.Color().setRGB(0.1, 0.2, 0.3).getHex(), "ColorField converted Vector3 value to Color");
       });
     }
+
     return NodeFieldTest;
+
   })();
 });

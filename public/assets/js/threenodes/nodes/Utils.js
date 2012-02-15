@@ -1,21 +1,22 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.Random = (function() {
-    __extends(Random, ThreeNodes.NodeBase);
+  "use strict";  ThreeNodes.nodes.Random = (function(_super) {
+
+    __extends(Random, _super);
+
     function Random() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Random.__super__.constructor.apply(this, arguments);
     }
+
     Random.node_name = 'Random';
+
     Random.group_name = 'Utils';
+
     Random.prototype.set_fields = function() {
       Random.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -30,21 +31,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.rack.add_center_textfield(this.rack.get("out", true));
     };
+
     Random.prototype.compute = function() {
       this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
       return this.rack.set("out", this.value);
     };
+
     return Random;
-  })();
-  ThreeNodes.nodes.LFO = (function() {
-    __extends(LFO, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.LFO = (function(_super) {
+
+    __extends(LFO, _super);
+
     function LFO() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       LFO.__super__.constructor.apply(this, arguments);
     }
+
     LFO.node_name = 'LFO';
+
     LFO.group_name = 'Utils';
+
     LFO.prototype.set_fields = function() {
       LFO.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -80,6 +89,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.rack.add_center_textfield(this.rack.get("out", true));
     };
+
     LFO.prototype.compute = function() {
       var duration, halfway, hi, lfoout, lfout, low, max, min, mode, range, src, srctmp, time;
       duration = this.rack.get("duration").get();
@@ -111,9 +121,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             hi = time >= duration / 2;
             return low * min + hi * max;
           case 4:
-            if (time >= duration - this.taskinterval) {
-              this.rndA = Math.random();
-            }
+            if (time >= duration - this.taskinterval) this.rndA = Math.random();
             return (this.rndA * range) + min;
           case 5:
             if (time < this.taskinterval) {
@@ -126,17 +134,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }).call(this);
       return this.rack.set("out", lfout);
     };
+
     return LFO;
-  })();
-  ThreeNodes.nodes.Merge = (function() {
-    __extends(Merge, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Merge = (function(_super) {
+
+    __extends(Merge, _super);
+
     function Merge() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Merge.__super__.constructor.apply(this, arguments);
     }
+
     Merge.node_name = 'Merge';
+
     Merge.group_name = 'Utils';
+
     Merge.prototype.set_fields = function() {
       Merge.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -175,6 +190,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     Merge.prototype.compute = function() {
       var f, k, old, subval;
       old = this.rack.get("out", true).get();
@@ -192,17 +208,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return this.rack.set("out", this.value);
     };
+
     return Merge;
-  })();
-  ThreeNodes.nodes.Get = (function() {
-    __extends(Get, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Get = (function(_super) {
+
+    __extends(Get, _super);
+
     function Get() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Get.__super__.constructor.apply(this, arguments);
     }
+
     Get.node_name = 'Get';
+
     Get.group_name = 'Utils';
+
     Get.prototype.set_fields = function() {
       Get.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -221,23 +244,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     Get.prototype.compute = function() {
       var arr, ind, old;
       old = this.rack.get("out", true).get();
       this.value = false;
       arr = this.rack.get("array").get();
       ind = parseInt(this.rack.get("index").get());
-      if ($.type(arr) === "array") {
-        this.value = arr[ind % arr.length];
-      }
-      if (this.value !== old) {
-        return this.rack.set("out", this.value);
-      }
+      if ($.type(arr) === "array") this.value = arr[ind % arr.length];
+      if (this.value !== old) return this.rack.set("out", this.value);
     };
+
     return Get;
-  })();
-  ThreeNodes.nodes.Mp3Input = (function() {
-    __extends(Mp3Input, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Mp3Input = (function(_super) {
+
+    __extends(Mp3Input, _super);
+
     function Mp3Input() {
       this.compute = __bind(this.compute, this);
       this.remove = __bind(this.remove, this);
@@ -251,11 +275,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.is_chrome = __bind(this.is_chrome, this);
       Mp3Input.__super__.constructor.apply(this, arguments);
     }
+
     Mp3Input.node_name = 'Mp3Input';
+
     Mp3Input.group_name = 'Utils';
+
     Mp3Input.prototype.is_chrome = function() {
       return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
     };
+
     Mp3Input.prototype.set_fields = function() {
       Mp3Input.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -280,12 +308,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.url_cache = this.rack.get("url").get();
       return ThreeNodes.sound_nodes.push(this);
     };
+
     Mp3Input.prototype.onRegister = function() {
       Mp3Input.__super__.onRegister.apply(this, arguments);
       if (this.rack.get("url").get() !== "") {
         return this.loadAudio(this.rack.get("url").get());
       }
     };
+
     Mp3Input.prototype.stopSound = function() {
       if (this.source) {
         this.source.noteOff(0.0);
@@ -293,6 +323,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return console.log("stop sound");
       }
     };
+
     Mp3Input.prototype.playSound = function(time) {
       if (this.source && this.audioContext && this.audioBuffer) {
         this.stopSound();
@@ -300,8 +331,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return this.source.noteGrainOn(0, time, this.audioBuffer.duration - time);
       }
     };
+
     Mp3Input.prototype.finishLoad = function() {
-      var delay;
+      var delay,
+        _this = this;
       this.source.buffer = this.audioBuffer;
       this.source.looping = true;
       this.onSoundLoad();
@@ -309,21 +342,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       delay = function(ms, func) {
         return setTimeout(func, ms);
       };
-      return delay(1000, __bind(function() {
+      return delay(1000, function() {
         Timeline.getGlobalInstance().stop();
         return Timeline.getGlobalInstance().play();
-      }, this));
+      });
     };
+
     Mp3Input.prototype.createSound = function() {
       var src;
       src = this.audioContext.createBufferSource();
-      if (this.audioBuffer) {
-        src.buffer = this.audioBuffer;
-      }
+      if (this.audioBuffer) src.buffer = this.audioBuffer;
       src.connect(this.analyser);
       this.analyser.connect(this.audioContext.destination);
       return src;
     };
+
     Mp3Input.prototype.loadAudio = function(url) {
       Timeline.getGlobalInstance().stop();
       this.analyser = this.audioContext.createAnalyser();
@@ -331,33 +364,31 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.source = this.createSound();
       return this.loadAudioBuffer(url);
     };
+
     Mp3Input.prototype.loadAudioBuffer = function(url) {
-      var request;
+      var request,
+        _this = this;
       request = new XMLHttpRequest();
       request.open("GET", url, true);
       request.responseType = "arraybuffer";
-      request.onload = __bind(function() {
-        this.audioBuffer = this.audioContext.createBuffer(request.response, false);
-        return this.finishLoad();
-      }, this);
+      request.onload = function() {
+        _this.audioBuffer = _this.audioContext.createBuffer(request.response, false);
+        return _this.finishLoad();
+      };
       request.send();
       return this;
     };
+
     Mp3Input.prototype.onSoundLoad = function() {
       this.freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
       return this.timeByteData = new Uint8Array(this.analyser.frequencyBinCount);
     };
+
     Mp3Input.prototype.getAverageLevel = function(start, max) {
       var i, length, sum;
-      if (start == null) {
-        start = 0;
-      }
-      if (max == null) {
-        max = 512;
-      }
-      if (!this.freqByteData) {
-        return 0;
-      }
+      if (start == null) start = 0;
+      if (max == null) max = 512;
+      if (!this.freqByteData) return 0;
       start = Math.floor(start);
       max = Math.floor(max);
       length = max - start;
@@ -367,6 +398,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return sum / length;
     };
+
     Mp3Input.prototype.remove = function() {
       Mp3Input.__super__.remove.apply(this, arguments);
       if (this.source) {
@@ -379,11 +411,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.audioContext = false;
       return this.source = false;
     };
+
     Mp3Input.prototype.compute = function() {
       var length, length3rd;
-      if (!this.is_chrome()) {
-        return;
-      }
+      if (!this.is_chrome()) return;
       if (this.url_cache !== this.rack.get("url").get()) {
         this.url_cache = this.rack.get("url").get();
         this.loadAudio(this.url_cache);
@@ -403,17 +434,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return true;
     };
+
     return Mp3Input;
-  })();
-  ThreeNodes.nodes.SoundInput = (function() {
-    __extends(SoundInput, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SoundInput = (function(_super) {
+
+    __extends(SoundInput, _super);
+
     function SoundInput() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SoundInput.__super__.constructor.apply(this, arguments);
     }
+
     SoundInput.node_name = 'SoundInput';
+
     SoundInput.group_name = 'Utils';
+
     SoundInput.prototype.set_fields = function() {
       SoundInput.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -429,22 +467,30 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     SoundInput.prototype.compute = function() {
       this.rack.set("low", ThreeNodes.flash_sound_value.kick);
       this.rack.set("medium", ThreeNodes.flash_sound_value.snare);
       return this.rack.set("high", ThreeNodes.flash_sound_value.hat);
     };
+
     return SoundInput;
-  })();
-  ThreeNodes.nodes.Mouse = (function() {
-    __extends(Mouse, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Mouse = (function(_super) {
+
+    __extends(Mouse, _super);
+
     function Mouse() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Mouse.__super__.constructor.apply(this, arguments);
     }
+
     Mouse.node_name = 'Mouse';
+
     Mouse.group_name = 'Utils';
+
     Mouse.prototype.set_fields = function() {
       Mouse.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -459,23 +505,31 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     Mouse.prototype.compute = function() {
       this.rack.set("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY));
       this.rack.set("x", ThreeNodes.mouseX);
       return this.rack.set("y", ThreeNodes.mouseY);
     };
+
     return Mouse;
-  })();
-  ThreeNodes.nodes.Timer = (function() {
-    __extends(Timer, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Timer = (function(_super) {
+
+    __extends(Timer, _super);
+
     function Timer() {
       this.compute = __bind(this.compute, this);
       this.get_time = __bind(this.get_time, this);
       this.set_fields = __bind(this.set_fields, this);
       Timer.__super__.constructor.apply(this, arguments);
     }
+
     Timer.node_name = 'Timer';
+
     Timer.group_name = 'Utils';
+
     Timer.prototype.set_fields = function() {
       Timer.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -493,37 +547,40 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.rack.add_center_textfield(this.rack.get("out", true));
     };
+
     Timer.prototype.get_time = function() {
       return new Date().getTime();
     };
+
     Timer.prototype.compute = function() {
       var diff, now, oldval;
       oldval = this.rack.get("out", true).get();
       now = this.get_time();
-      if (this.rack.get("pause").get() === false) {
-        this.counter += now - this.old;
-      }
-      if (this.rack.get("reset").get() === true) {
-        this.counter = 0;
-      }
+      if (this.rack.get("pause").get() === false) this.counter += now - this.old;
+      if (this.rack.get("reset").get() === true) this.counter = 0;
       diff = this.rack.get("max").get() - this.counter;
-      if (diff <= 0) {
-        this.counter = 0;
-      }
+      if (diff <= 0) this.counter = 0;
       this.old = now;
       return this.rack.set("out", this.counter);
     };
+
     return Timer;
-  })();
-  return ThreeNodes.nodes.Font = (function() {
-    __extends(Font, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  return ThreeNodes.nodes.Font = (function(_super) {
+
+    __extends(Font, _super);
+
     function Font() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Font.__super__.constructor.apply(this, arguments);
     }
+
     Font.node_name = 'Font';
+
     Font.group_name = 'Utils';
+
     Font.prototype.set_fields = function() {
       var dir, i;
       Font.__super__.set_fields.apply(this, arguments);
@@ -592,30 +649,30 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.fontcache = -1;
       return this.weightcache = -1;
     };
+
     Font.prototype.compute = function() {
-      var findex, font, weight, windex;
+      var findex, font, weight, windex,
+        _this = this;
       findex = parseInt(this.rack.get("font").get());
       windex = parseInt(this.rack.get("weight").get());
-      if (findex > 4 || findex < 0) {
-        findex = 0;
-      }
-      if (windex !== 0 || windex !== 1) {
-        windex = 0;
-      }
+      if (findex > 4 || findex < 0) findex = 0;
+      if (windex !== 0 || windex !== 1) windex = 0;
       font = this.reverseFontMap[findex];
       weight = this.reverseWeightMap[windex];
       if (findex !== this.fontcache ||  windex !== this.weightcache) {
-        require([this.files[font][weight]], __bind(function() {
-          return this.ob = {
+        require([this.files[font][weight]], function() {
+          return _this.ob = {
             font: font,
             weight: weight
           };
-        }, this));
+        });
       }
       this.fontcache = findex;
       this.weightcache = windex;
       return this.rack.set("out", this.ob);
     };
+
     return Font;
-  })();
+
+  })(ThreeNodes.NodeBase);
 });

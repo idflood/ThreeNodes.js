@@ -1,6 +1,8 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/json2"], function($, _, Backbone) {
   "use strict";  return ThreeNodes.FileHandler = (function() {
+
     function FileHandler() {
       this.load_local_file_input_changed = __bind(this.load_local_file_input_changed, this);
       this.load_from_xml_data = __bind(this.load_from_xml_data, this);
@@ -10,6 +12,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       this.export_code = __bind(this.export_code, this);
       this.save_local_file = __bind(this.save_local_file, this);
     }
+
     FileHandler.prototype.save_local_file = function() {
       var bb, fileSaver, result_string;
       bb = new BlobBuilder();
@@ -17,6 +20,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       bb.append(result_string);
       return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json");
     };
+
     FileHandler.prototype.export_code = function() {
       var bb, c, fileSaver, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
@@ -54,6 +58,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       bb.append(res);
       return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js");
     };
+
     FileHandler.prototype.get_local_json = function() {
       var nodegraph, res;
       nodegraph = this.context.injector.get("NodeGraph");
@@ -68,6 +73,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       };
       return JSON.stringify(res);
     };
+
     FileHandler.prototype.get_local_xml = function() {
       var c, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
@@ -92,6 +98,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       res += "</app>";
       return res;
     };
+
     FileHandler.prototype.load_from_json_data = function(txt) {
       var connection, delay, loaded_data, n, node, nodegraph, _i, _j, _len, _len2, _ref, _ref2;
       nodegraph = this.context.injector.get("NodeGraph");
@@ -114,6 +121,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         return nodegraph.renderAllConnections();
       });
     };
+
     FileHandler.prototype.load_from_xml_data = function(txt) {
       var loaded_data, nodegraph;
       nodegraph = this.context.injector.get("NodeGraph");
@@ -140,6 +148,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       });
       return ThreeNodes.uid = parseInt($("uid", loaded_data).attr("last"));
     };
+
     FileHandler.prototype.load_local_file_input_changed = function(e) {
       var file, nodegraph, reader, self;
       this.context.commandMap.execute("ClearWorkspaceCommand");
@@ -154,6 +163,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       };
       return reader.readAsText(file, "UTF-8");
     };
+
     return FileHandler;
+
   })();
 });

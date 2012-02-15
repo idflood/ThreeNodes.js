@@ -1,22 +1,23 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils', "order!libs/Tween", "order!libs/Sparks"], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.ParticleSystem = (function() {
-    __extends(ParticleSystem, ThreeNodes.nodes.Object3D);
+  "use strict";  ThreeNodes.nodes.ParticleSystem = (function(_super) {
+
+    __extends(ParticleSystem, _super);
+
     function ParticleSystem() {
       this.compute = __bind(this.compute, this);
       this.rebuild_geometry = __bind(this.rebuild_geometry, this);
       this.set_fields = __bind(this.set_fields, this);
       ParticleSystem.__super__.constructor.apply(this, arguments);
     }
+
     ParticleSystem.node_name = 'ParticleSystem';
+
     ParticleSystem.group_name = 'Particle';
+
     ParticleSystem.prototype.set_fields = function() {
       ParticleSystem.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
@@ -38,6 +39,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.material_cache = false;
       return this.compute();
     };
+
     ParticleSystem.prototype.rebuild_geometry = function() {
       var field, geom;
       field = this.rack.get('geometry');
@@ -49,6 +51,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
       }
     };
+
     ParticleSystem.prototype.compute = function() {
       var needs_rebuild;
       needs_rebuild = false;
@@ -61,21 +64,26 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.material_cache = this.rack.get('material').get().id;
       }
       this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
-      if (needs_rebuild === true) {
-        ThreeNodes.rebuild_all_shaders();
-      }
+      if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
       return this.rack.set("out", this.ob);
     };
+
     return ParticleSystem;
-  })();
-  ThreeNodes.nodes.ParticleBasicMaterial = (function() {
-    __extends(ParticleBasicMaterial, ThreeNodes.NodeMaterialBase);
+
+  })(ThreeNodes.nodes.Object3D);
+  ThreeNodes.nodes.ParticleBasicMaterial = (function(_super) {
+
+    __extends(ParticleBasicMaterial, _super);
+
     function ParticleBasicMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       ParticleBasicMaterial.__super__.constructor.apply(this, arguments);
     }
+
     ParticleBasicMaterial.node_name = 'ParticleBasicMaterial';
+
     ParticleBasicMaterial.group_name = 'Materials';
+
     ParticleBasicMaterial.prototype.set_fields = function() {
       ParticleBasicMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -104,10 +112,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
+
     return ParticleBasicMaterial;
-  })();
-  ThreeNodes.nodes.SparksEmitter = (function() {
-    __extends(SparksEmitter, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeMaterialBase);
+  ThreeNodes.nodes.SparksEmitter = (function(_super) {
+
+    __extends(SparksEmitter, _super);
+
     function SparksEmitter() {
       this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
@@ -115,8 +127,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       SparksEmitter.__super__.constructor.apply(this, arguments);
     }
+
     SparksEmitter.node_name = 'Emitter';
+
     SparksEmitter.group_name = 'Particle.sparks';
+
     SparksEmitter.prototype.set_fields = function() {
       SparksEmitter.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -151,11 +166,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.pool = this.rack.get("pool").get();
       return this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
     };
+
     SparksEmitter.prototype.setTargetParticle = function(p) {
-      if (this.pool) {
-        return this.pool.pool.get();
-      }
+      if (this.pool) return this.pool.pool.get();
     };
+
     SparksEmitter.prototype.compute = function() {
       var initializers;
       if (this.rack.get("pool").get() !== false) {
@@ -177,11 +192,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob._initializers = initializers;
       this.ob._actions = this.rack.get("actions").val;
       this.ob._counter = this.rack.get("counter").get();
-      if (this.pool !== false && this.ob.isRunning() === false) {
-        this.ob.start();
-      }
+      if (this.pool !== false && this.ob.isRunning() === false) this.ob.start();
       return this.rack.set("out", this.geom);
     };
+
     SparksEmitter.prototype.remove = function() {
       SparksEmitter.__super__.remove.apply(this, arguments);
       if (this.ob) {
@@ -190,17 +204,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return this.ob.stop();
       }
     };
+
     return SparksEmitter;
-  })();
-  ThreeNodes.nodes.SparksAge = (function() {
-    __extends(SparksAge, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksAge = (function(_super) {
+
+    __extends(SparksAge, _super);
+
     function SparksAge() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAge.__super__.constructor.apply(this, arguments);
     }
+
     SparksAge.node_name = 'Age';
+
     SparksAge.group_name = 'Particle.sparks.actions';
+
     SparksAge.prototype.set_fields = function() {
       SparksAge.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -220,21 +241,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.Age(this.rack.get("easing").get());
     };
+
     SparksAge.prototype.compute = function() {
       this.ob._easing = this.rack.get("easing").val;
       return this.rack.set("action", this.ob);
     };
+
     return SparksAge;
-  })();
-  ThreeNodes.nodes.SparksMove = (function() {
-    __extends(SparksMove, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksMove = (function(_super) {
+
+    __extends(SparksMove, _super);
+
     function SparksMove() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksMove.__super__.constructor.apply(this, arguments);
     }
+
     SparksMove.node_name = 'Move';
+
     SparksMove.group_name = 'Particle.sparks.actions';
+
     SparksMove.prototype.set_fields = function() {
       SparksMove.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -248,20 +277,28 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.Move();
     };
+
     SparksMove.prototype.compute = function() {
       return this.rack.set("action", this.ob);
     };
+
     return SparksMove;
-  })();
-  ThreeNodes.nodes.SparksAccelerate = (function() {
-    __extends(SparksAccelerate, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksAccelerate = (function(_super) {
+
+    __extends(SparksAccelerate, _super);
+
     function SparksAccelerate() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerate.__super__.constructor.apply(this, arguments);
     }
+
     SparksAccelerate.node_name = 'Accelerate';
+
     SparksAccelerate.group_name = 'Particle.sparks.actions';
+
     SparksAccelerate.prototype.set_fields = function() {
       SparksAccelerate.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -281,21 +318,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.Accelerate(this.rack.get("vector").get());
     };
+
     SparksAccelerate.prototype.compute = function() {
       this.ob.acceleration = this.rack.get("vector").get();
       return this.rack.set("action", this.ob);
     };
+
     return SparksAccelerate;
-  })();
-  ThreeNodes.nodes.SparksAccelerateFactor = (function() {
-    __extends(SparksAccelerateFactor, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksAccelerateFactor = (function(_super) {
+
+    __extends(SparksAccelerateFactor, _super);
+
     function SparksAccelerateFactor() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerateFactor.__super__.constructor.apply(this, arguments);
     }
+
     SparksAccelerateFactor.node_name = 'AccelerateFactor';
+
     SparksAccelerateFactor.group_name = 'Particle.sparks.actions';
+
     SparksAccelerateFactor.prototype.set_fields = function() {
       SparksAccelerateFactor.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -312,21 +357,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.AccelerateFactor(this.rack.get("factor").get());
     };
+
     SparksAccelerateFactor.prototype.compute = function() {
       this.ob.factor = this.rack.get("factor").get();
       return this.rack.set("action", this.ob);
     };
+
     return SparksAccelerateFactor;
-  })();
-  ThreeNodes.nodes.SparksAccelerateVelocity = (function() {
-    __extends(SparksAccelerateVelocity, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksAccelerateVelocity = (function(_super) {
+
+    __extends(SparksAccelerateVelocity, _super);
+
     function SparksAccelerateVelocity() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerateVelocity.__super__.constructor.apply(this, arguments);
     }
+
     SparksAccelerateVelocity.node_name = 'AccelerateVelocity';
+
     SparksAccelerateVelocity.group_name = 'Particle.sparks.actions';
+
     SparksAccelerateVelocity.prototype.set_fields = function() {
       SparksAccelerateVelocity.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -343,21 +396,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.AccelerateVelocity(this.rack.get("factor").get());
     };
+
     SparksAccelerateVelocity.prototype.compute = function() {
       this.ob.factor = this.rack.get("factor").get();
       return this.rack.set("action", this.ob);
     };
+
     return SparksAccelerateVelocity;
-  })();
-  ThreeNodes.nodes.SparksRandomDrift = (function() {
-    __extends(SparksRandomDrift, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksRandomDrift = (function(_super) {
+
+    __extends(SparksRandomDrift, _super);
+
     function SparksRandomDrift() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksRandomDrift.__super__.constructor.apply(this, arguments);
     }
+
     SparksRandomDrift.node_name = 'RandomDrift';
+
     SparksRandomDrift.group_name = 'Particle.sparks.actions';
+
     SparksRandomDrift.prototype.set_fields = function() {
       SparksRandomDrift.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -377,21 +438,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.RandomDrift(this.rack.get("vector").get());
     };
+
     SparksRandomDrift.prototype.compute = function() {
       this.ob.drift = this.rack.get("vector").get();
       return this.rack.set("action", this.ob);
     };
+
     return SparksRandomDrift;
-  })();
-  ThreeNodes.nodes.SparksLifetime = (function() {
-    __extends(SparksLifetime, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksLifetime = (function(_super) {
+
+    __extends(SparksLifetime, _super);
+
     function SparksLifetime() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksLifetime.__super__.constructor.apply(this, arguments);
     }
+
     SparksLifetime.node_name = 'Lifetime';
+
     SparksLifetime.group_name = 'Particle.sparks.initializers';
+
     SparksLifetime.prototype.set_fields = function() {
       SparksLifetime.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -409,22 +478,30 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.Lifetime(this.rack.get("min").get(), this.rack.get("max").get());
     };
+
     SparksLifetime.prototype.compute = function() {
       this.ob._min = this.rack.get("min").get();
       this.ob._min = this.rack.get("max").get();
       return this.rack.set("initializer", this.ob);
     };
+
     return SparksLifetime;
-  })();
-  ThreeNodes.nodes.SparksPosition = (function() {
-    __extends(SparksPosition, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksPosition = (function(_super) {
+
+    __extends(SparksPosition, _super);
+
     function SparksPosition() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksPosition.__super__.constructor.apply(this, arguments);
     }
+
     SparksPosition.node_name = 'Position';
+
     SparksPosition.group_name = 'Particle.sparks.initializers';
+
     SparksPosition.prototype.set_fields = function() {
       SparksPosition.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -444,21 +521,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.Position(this.rack.get("zone").get());
     };
+
     SparksPosition.prototype.compute = function() {
       this.ob.zone = this.rack.get("zone").get();
       return this.rack.set("initializer", this.ob);
     };
+
     return SparksPosition;
-  })();
-  ThreeNodes.nodes.SparksPointZone = (function() {
-    __extends(SparksPointZone, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksPointZone = (function(_super) {
+
+    __extends(SparksPointZone, _super);
+
     function SparksPointZone() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksPointZone.__super__.constructor.apply(this, arguments);
     }
+
     SparksPointZone.node_name = 'PointZone';
+
     SparksPointZone.group_name = 'Particle.sparks.zone';
+
     SparksPointZone.prototype.set_fields = function() {
       SparksPointZone.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -478,21 +563,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.PointZone(this.rack.get("pos").get());
     };
+
     SparksPointZone.prototype.compute = function() {
       this.ob.pos = this.rack.get("pos").get();
       return this.rack.set("zone", this.ob);
     };
+
     return SparksPointZone;
-  })();
-  ThreeNodes.nodes.SparksLineZone = (function() {
-    __extends(SparksLineZone, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksLineZone = (function(_super) {
+
+    __extends(SparksLineZone, _super);
+
     function SparksLineZone() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksLineZone.__super__.constructor.apply(this, arguments);
     }
+
     SparksLineZone.node_name = 'LineZone';
+
     SparksLineZone.group_name = 'Particle.sparks.zone';
+
     SparksLineZone.prototype.set_fields = function() {
       SparksLineZone.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -516,6 +609,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.LineZone(this.rack.get("start").get(), this.rack.get("end").get());
     };
+
     SparksLineZone.prototype.compute = function() {
       if (this.ob.start !== this.rack.get("start").get() ||  this.ob.end !== this.rack.get("end").get()) {
         this.ob.start = this.rack.get("start").get();
@@ -524,17 +618,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return this.rack.set("zone", this.ob);
     };
+
     return SparksLineZone;
-  })();
-  ThreeNodes.nodes.SparksCubeZone = (function() {
-    __extends(SparksCubeZone, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksCubeZone = (function(_super) {
+
+    __extends(SparksCubeZone, _super);
+
     function SparksCubeZone() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksCubeZone.__super__.constructor.apply(this, arguments);
     }
+
     SparksCubeZone.node_name = 'CubeZone';
+
     SparksCubeZone.group_name = 'Particle.sparks.zone';
+
     SparksCubeZone.prototype.set_fields = function() {
       SparksCubeZone.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -557,6 +658,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.CubeZone(this.rack.get("position").get(), this.rack.get("x").get(), this.rack.get("y").get(), this.rack.get("z").get());
     };
+
     SparksCubeZone.prototype.compute = function() {
       this.ob.position = this.rack.get("position").get();
       this.ob.x = this.rack.get("x").get();
@@ -564,17 +666,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob.z = this.rack.get("z").get();
       return this.rack.set("zone", this.ob);
     };
+
     return SparksCubeZone;
-  })();
-  ThreeNodes.nodes.SparksSteadyCounter = (function() {
-    __extends(SparksSteadyCounter, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SparksSteadyCounter = (function(_super) {
+
+    __extends(SparksSteadyCounter, _super);
+
     function SparksSteadyCounter() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksSteadyCounter.__super__.constructor.apply(this, arguments);
     }
+
     SparksSteadyCounter.node_name = 'SteadyCounter';
+
     SparksSteadyCounter.group_name = 'Particle.sparks';
+
     SparksSteadyCounter.prototype.set_fields = function() {
       SparksSteadyCounter.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -591,14 +700,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.ob = new SPARKS.SteadyCounter(this.rack.get("rate").get());
     };
+
     SparksSteadyCounter.prototype.compute = function() {
       this.ob.pos = this.rack.get("rate").get();
       return this.rack.set("counter", this.ob);
     };
+
     return SparksSteadyCounter;
-  })();
-  ThreeNodes.nodes.ParticlePool = (function() {
-    __extends(ParticlePool, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.ParticlePool = (function(_super) {
+
+    __extends(ParticlePool, _super);
+
     function ParticlePool() {
       this.compute = __bind(this.compute, this);
       this.on_particle_dead = __bind(this.on_particle_dead, this);
@@ -608,8 +722,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       ParticlePool.__super__.constructor.apply(this, arguments);
     }
+
     ParticlePool.node_name = 'ParticlePool';
+
     ParticlePool.group_name = 'Particle.sparks';
+
     ParticlePool.prototype.set_fields = function() {
       ParticlePool.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -626,15 +743,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     ParticlePool.prototype.init_pool = function(geom) {
       var i, new_pos, pos, _ref, _results;
       this.geom = geom;
       this.pool = {
         pools: [],
         get: function() {
-          if (this.pools.length > 0) {
-            return this.pools.pop();
-          }
+          if (this.pools.length > 0) return this.pools.pop();
           return null;
         },
         add: function(v) {
@@ -652,40 +768,40 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return _results;
     };
+
     ParticlePool.prototype.on_particle_created = function(particle) {
       var target;
-      if (this.geom === false) {
-        return false;
-      }
+      if (this.geom === false) return false;
       target = particle.target;
-      if (target) {
-        return particle.target.position = particle.position;
-      }
+      if (target) return particle.target.position = particle.position;
     };
+
     ParticlePool.prototype.on_particle_updated = function(particle) {
       return true;
     };
+
     ParticlePool.prototype.on_particle_dead = function(particle) {
       var target;
-      if (this.geom === false) {
-        return false;
-      }
+      if (this.geom === false) return false;
       target = particle.target;
       if (target) {
         particle.target.position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
         return this.pool.add(particle.target);
       }
     };
+
     ParticlePool.prototype.compute = function() {
-      if (this.geom !== false) {
-        this.geom.__dirtyVertices = true;
-      }
+      if (this.geom !== false) this.geom.__dirtyVertices = true;
       return this.rack.set("pool", this);
     };
+
     return ParticlePool;
-  })();
-  return ThreeNodes.nodes.RandomCloudGeometry = (function() {
-    __extends(RandomCloudGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  return ThreeNodes.nodes.RandomCloudGeometry = (function(_super) {
+
+    __extends(RandomCloudGeometry, _super);
+
     function RandomCloudGeometry() {
       this.compute = __bind(this.compute, this);
       this.generate = __bind(this.generate, this);
@@ -695,8 +811,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.set_fields = __bind(this.set_fields, this);
       RandomCloudGeometry.__super__.constructor.apply(this, arguments);
     }
+
     RandomCloudGeometry.node_name = 'RandomCloudGeometry';
+
     RandomCloudGeometry.group_name = 'Particle';
+
     RandomCloudGeometry.prototype.set_fields = function() {
       RandomCloudGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -724,9 +843,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.cache = this.get_cache_array();
       return this.generate();
     };
+
     RandomCloudGeometry.prototype.get_cache_array = function() {
       return [this.rack.get("radius").get(), this.rack.get("nbrParticles").get(), this.rack.get("linearVelocity").get()];
     };
+
     RandomCloudGeometry.prototype.limit_position = function(pos) {
       var margin, radius;
       radius = this.rack.get("radius").get();
@@ -738,6 +859,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return pos;
     };
+
     RandomCloudGeometry.prototype.move_particles = function() {
       var key, p, rndVelocity, _ref;
       rndVelocity = this.rack.get("rndVelocity").get();
@@ -754,6 +876,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob.__dirtyVertices = true;
       return true;
     };
+
     RandomCloudGeometry.prototype.generate = function() {
       var i, linearVelocity, rad, total, v, vector;
       this.ob = new THREE.Geometry();
@@ -768,6 +891,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return true;
     };
+
     RandomCloudGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
@@ -778,6 +902,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.cache = new_cache;
       return this.rack.set("out", this.ob);
     };
+
     return RandomCloudGeometry;
-  })();
+
+  })(ThreeNodes.NodeBase);
 });

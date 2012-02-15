@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var ThreeJsIntegrationTest;
   return ThreeJsIntegrationTest = (function() {
+
     function ThreeJsIntegrationTest(app) {
       module("ThreeJsIntegrationTest");
       test("Scene node children", function() {
@@ -90,6 +92,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(n1.ob.children.length, 1, "Scene has one child");
       });
     }
+
     return ThreeJsIntegrationTest;
+
   })();
 });

@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var MathTest;
   return MathTest = (function() {
+
     function MathTest(app) {
       module("Math nodes");
       test("Basic math", function() {
@@ -35,6 +37,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(node_mult.v_out.get().z, 9, "mult.z = 3 * 3 = 9");
       });
     }
+
     return MathTest;
+
   })();
 });

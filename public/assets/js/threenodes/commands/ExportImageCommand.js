@@ -1,6 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/canvas-toBlob.min"], function($, _, Backbone) {
   "use strict";  return ThreeNodes.ExportImageCommand = (function() {
+
     function ExportImageCommand() {}
+
     ExportImageCommand.prototype.execute = function(fname) {
       var canvas, on_write, renderer;
       renderer = ThreeNodes.Webgl.current_renderer;
@@ -10,6 +13,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       };
       return canvas.toBlob(on_write, "image/png");
     };
+
     return ExportImageCommand;
+
   })();
 });

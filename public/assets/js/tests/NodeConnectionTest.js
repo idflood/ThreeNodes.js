@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var NodeConnectionTest;
   return NodeConnectionTest = (function() {
+
     function NodeConnectionTest(app) {
       module("NodeConnection");
       test("Basic connection", function() {
@@ -219,6 +221,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(meshNode.ob.length, 1, "Meshnode has 1 mesh because a connection has been removed");
       });
     }
+
     return NodeConnectionTest;
+
   })();
 });

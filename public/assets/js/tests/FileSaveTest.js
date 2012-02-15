@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var FileSaveTest;
   return FileSaveTest = (function() {
+
     function FileSaveTest(app) {
       module("File");
       test("JSON save", function() {
@@ -64,6 +66,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(parsed_data1.nodes.length, 3, "Saved 3 nodes (cyclic value)");
       });
     }
+
     return FileSaveTest;
+
   })();
 });

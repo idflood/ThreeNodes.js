@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var FileLoadTest;
   return FileLoadTest = (function() {
+
     function FileLoadTest(app) {
       module("File");
       test("JSON loader", function() {
@@ -71,6 +73,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(ng.connections.length, 2, "2 connections has been created");
       });
     }
+
     return FileLoadTest;
+
   })();
 });

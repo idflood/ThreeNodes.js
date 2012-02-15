@@ -1,6 +1,8 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', 'order!threenodes/views/NodeFieldRackView', 'order!threenodes/collections/NodeFieldsCollection'], function($, _, Backbone) {
   "use strict";  return ThreeNodes.NodeFieldRack = (function() {
+
     function NodeFieldRack(node) {
       this.node = node;
       this.add_center_textfield = __bind(this.add_center_textfield, this);
@@ -21,6 +23,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       this.get = __bind(this.get, this);
       this.view = false;
     }
+
     NodeFieldRack.prototype.onRegister = function() {
       this.collection = new ThreeNodes.NodeFieldsCollection([], {
         node: this.node,
@@ -34,50 +37,59 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       this.context.injector.applyContext(this.view);
       return this;
     };
+
     NodeFieldRack.prototype.get = function(key, is_out) {
-      if (is_out == null) {
-        is_out = false;
-      }
+      if (is_out == null) is_out = false;
       return this.collection.getField(key, is_out);
     };
+
     NodeFieldRack.prototype.set = function(key, value) {
       return this.collection.setField(key, value);
     };
+
     NodeFieldRack.prototype.getMaxInputSliceCount = function() {
       return this.collection.getMaxInputSliceCount();
     };
+
     NodeFieldRack.prototype.getUpstreamNodes = function() {
       return this.collection.getUpstreamNodes();
     };
+
     NodeFieldRack.prototype.getDownstreamNodes = function() {
       return this.collection.getDownstreamNodes();
     };
+
     NodeFieldRack.prototype.setFieldInputUnchanged = function() {
       return this.collection.setFieldInputUnchanged();
     };
+
     NodeFieldRack.prototype.render_connections = function() {
       return this.collection.renderConnections();
     };
+
     NodeFieldRack.prototype.remove_all_connections = function() {
       return this.collection.removeAllConnections();
     };
+
     NodeFieldRack.prototype.load = function(xml, json) {
       return this.collection.load(xml, json);
     };
+
     NodeFieldRack.prototype.toJSON = function() {
       return this.collection.toJSON();
     };
+
     NodeFieldRack.prototype.toCode = function() {
       return this.collection.toCode();
     };
+
     NodeFieldRack.prototype.toXML = function() {
       return this.collection.toXML();
     };
+
     NodeFieldRack.prototype.addField = function(name, value, direction) {
       var f;
-      if (direction == null) {
-        direction = "inputs";
-      }
+      if (direction == null) direction = "inputs";
       f = false;
       if ($.type(value) === "object") {
         if (value.values) {
@@ -85,19 +97,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
         } else {
           f = new ThreeNodes.fields.types[value.type](name, value.val);
         }
-        if (value["default"] !== null) {
-          f.default_value = value["default"];
-        }
+        if (value["default"] !== null) f.default_value = value["default"];
       } else {
         f = this.create_field_from_default_type(name, value);
       }
-      if (direction !== "inputs") {
-        f.is_output = true;
-      }
+      if (direction !== "inputs") f.is_output = true;
       this.collection.registerField(f);
       this.context.injector.applyContext(f);
       return f;
     };
+
     NodeFieldRack.prototype.addFields = function(fields_array) {
       var dir, fname, value;
       for (dir in fields_array) {
@@ -108,18 +117,17 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       }
       return this;
     };
+
     NodeFieldRack.prototype.render_sidebar = function() {
-      if (this.view) {
-        this.view.renderSidebar();
-      }
+      if (this.view) this.view.renderSidebar();
       return this;
     };
+
     NodeFieldRack.prototype.add_center_textfield = function(field) {
-      if (this.view) {
-        this.view.addCenterTextfield(field);
-      }
+      if (this.view) this.view.addCenterTextfield(field);
       return this;
     };
+
     NodeFieldRack.prototype.create_field_from_default_type = function(fname, default_value) {
       var ftype;
       ftype = (function() {
@@ -134,6 +142,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/core/NodeField', '
       })();
       return new ThreeNodes.fields.types[ftype](fname, default_value);
     };
+
     return NodeFieldRack;
+
   })();
 });

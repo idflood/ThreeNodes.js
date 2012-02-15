@@ -1,21 +1,22 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.PointLight = (function() {
-    __extends(PointLight, ThreeNodes.NodeBase);
+  "use strict";  ThreeNodes.nodes.PointLight = (function(_super) {
+
+    __extends(PointLight, _super);
+
     function PointLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       PointLight.__super__.constructor.apply(this, arguments);
     }
+
     PointLight.node_name = 'PointLight';
+
     PointLight.group_name = 'Lights';
+
     PointLight.prototype.set_fields = function() {
       PointLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -41,21 +42,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     PointLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
       return this.rack.set("out", this.ob);
     };
+
     return PointLight;
-  })();
-  ThreeNodes.nodes.SpotLight = (function() {
-    __extends(SpotLight, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SpotLight = (function(_super) {
+
+    __extends(SpotLight, _super);
+
     function SpotLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       SpotLight.__super__.constructor.apply(this, arguments);
     }
+
     SpotLight.node_name = 'SpotLight';
+
     SpotLight.group_name = 'Lights';
+
     SpotLight.prototype.set_fields = function() {
       SpotLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -86,6 +95,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     SpotLight.prototype.compute = function() {
       if (this.rack.get("castShadow").get() !== this.ob.castShadow) {
         ThreeNodes.rebuild_all_shaders();
@@ -93,17 +103,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
       return this.rack.set("out", this.ob);
     };
+
     return SpotLight;
-  })();
-  ThreeNodes.nodes.DirectionalLight = (function() {
-    __extends(DirectionalLight, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.DirectionalLight = (function(_super) {
+
+    __extends(DirectionalLight, _super);
+
     function DirectionalLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       DirectionalLight.__super__.constructor.apply(this, arguments);
     }
+
     DirectionalLight.node_name = 'DirectionalLight';
+
     DirectionalLight.group_name = 'Lights';
+
     DirectionalLight.prototype.set_fields = function() {
       DirectionalLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -129,21 +146,29 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     DirectionalLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
       return this.rack.set("out", this.ob);
     };
+
     return DirectionalLight;
-  })();
-  return ThreeNodes.nodes.AmbientLight = (function() {
-    __extends(AmbientLight, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  return ThreeNodes.nodes.AmbientLight = (function(_super) {
+
+    __extends(AmbientLight, _super);
+
     function AmbientLight() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       AmbientLight.__super__.constructor.apply(this, arguments);
     }
+
     AmbientLight.node_name = 'AmbientLight';
+
     AmbientLight.group_name = 'Lights';
+
     AmbientLight.prototype.set_fields = function() {
       AmbientLight.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -167,10 +192,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     AmbientLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
       return this.rack.set("out", this.ob);
     };
+
     return AmbientLight;
-  })();
+
+  })(ThreeNodes.NodeBase);
 });

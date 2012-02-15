@@ -1,7 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($, _, Backbone) {
   "use strict";
   var NodeGraphSpeedTest;
   return NodeGraphSpeedTest = (function() {
+
     function NodeGraphSpeedTest(app) {
       var filehandler, injector, n1, n2, ng, node_mult, rnd;
       ng = app.nodegraph;
@@ -20,6 +22,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return ng.render();
       });
     }
+
     return NodeGraphSpeedTest;
+
   })();
 });

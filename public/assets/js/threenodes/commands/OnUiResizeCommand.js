@@ -1,6 +1,9 @@
+
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
   "use strict";  return ThreeNodes.OnUiResizeCommand = (function() {
+
     function OnUiResizeCommand() {}
+
     OnUiResizeCommand.prototype.execute = function() {
       var injector, ui;
       if (this.context.testing_mode === false) {
@@ -9,6 +12,8 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
         return ui.on_ui_window_resize();
       }
     };
+
     return OnUiResizeCommand;
+
   })();
 });

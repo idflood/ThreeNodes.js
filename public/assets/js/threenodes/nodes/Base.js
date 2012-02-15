@@ -1,40 +1,49 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/colorpicker/js/colorpicker", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.Number = (function() {
-    __extends(Number, ThreeNodes.NodeNumberSimple);
+  "use strict";  ThreeNodes.nodes.Number = (function(_super) {
+
+    __extends(Number, _super);
+
     function Number() {
       this.set_fields = __bind(this.set_fields, this);
       Number.__super__.constructor.apply(this, arguments);
     }
+
     Number.node_name = 'Number';
+
     Number.group_name = 'Base';
+
     Number.prototype.set_fields = function() {
       Number.__super__.set_fields.apply(this, arguments);
       return this.rack.add_center_textfield(this.v_in);
     };
+
     return Number;
-  })();
-  ThreeNodes.nodes.Boolean = (function() {
-    __extends(Boolean, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.nodes.Boolean = (function(_super) {
+
+    __extends(Boolean, _super);
+
     function Boolean() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       this.init = __bind(this.init, this);
       Boolean.__super__.constructor.apply(this, arguments);
     }
+
     Boolean.node_name = 'Boolean';
+
     Boolean.group_name = 'Base';
+
     Boolean.prototype.init = function() {
       Boolean.__super__.init.apply(this, arguments);
       return this.value = true;
     };
+
     Boolean.prototype.set_fields = function() {
       return this.rack.addFields({
         inputs: {
@@ -48,25 +57,34 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     Boolean.prototype.compute = function() {
       return this.rack.set("out", this.rack.get("bool").get());
     };
+
     return Boolean;
-  })();
-  ThreeNodes.nodes.String = (function() {
-    __extends(String, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.String = (function(_super) {
+
+    __extends(String, _super);
+
     function String() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       this.init = __bind(this.init, this);
       String.__super__.constructor.apply(this, arguments);
     }
+
     String.node_name = 'String';
+
     String.group_name = 'Base';
+
     String.prototype.init = function() {
       String.__super__.init.apply(this, arguments);
       return this.value = "";
     };
+
     String.prototype.set_fields = function() {
       this.rack.addFields({
         inputs: {
@@ -81,20 +99,28 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.rack.add_center_textfield(this.rack.get("string"));
     };
+
     String.prototype.compute = function() {
       return this.rack.set("out", this.rack.get("string").get());
     };
+
     return String;
-  })();
-  ThreeNodes.nodes.Vector2 = (function() {
-    __extends(Vector2, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Vector2 = (function(_super) {
+
+    __extends(Vector2, _super);
+
     function Vector2() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Vector2.__super__.constructor.apply(this, arguments);
     }
+
     Vector2.node_name = 'Vector2';
+
     Vector2.group_name = 'Base';
+
     Vector2.prototype.set_fields = function() {
       Vector2.__super__.set_fields.apply(this, arguments);
       this.vec = new THREE.Vector2(0, 0);
@@ -113,6 +139,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     Vector2.prototype.compute = function() {
       var i, numItems, res, resx, resy;
       res = [];
@@ -128,17 +155,24 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack.set("x", resx);
       return this.rack.set("y", resy);
     };
+
     return Vector2;
-  })();
-  ThreeNodes.nodes.Vector3 = (function() {
-    __extends(Vector3, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Vector3 = (function(_super) {
+
+    __extends(Vector3, _super);
+
     function Vector3() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       Vector3.__super__.constructor.apply(this, arguments);
     }
+
     Vector3.node_name = 'Vector3';
+
     Vector3.group_name = 'Base';
+
     Vector3.prototype.set_fields = function() {
       Vector3.__super__.set_fields.apply(this, arguments);
       return this.rack.addFields({
@@ -158,6 +192,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     Vector3.prototype.compute = function() {
       var i, numItems, res, resx, resy, resz;
       res = [];
@@ -176,18 +211,25 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack.set("y", resy);
       return this.rack.set("z", resz);
     };
+
     return Vector3;
-  })();
-  return ThreeNodes.nodes.Color = (function() {
-    __extends(Color, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  return ThreeNodes.nodes.Color = (function(_super) {
+
+    __extends(Color, _super);
+
     function Color() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
       this.init_preview = __bind(this.init_preview, this);
       Color.__super__.constructor.apply(this, arguments);
     }
+
     Color.node_name = 'Color';
+
     Color.group_name = 'Base';
+
     Color.prototype.init_preview = function() {
       var col, self;
       $(".center", this.main_view).append("<div class='color_preview'></div>");
@@ -211,6 +253,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         });
       };
     };
+
     Color.prototype.set_fields = function() {
       Color.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
@@ -231,6 +274,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.init_preview();
     };
+
     Color.prototype.compute = function() {
       var i, numItems, res, resb, resg, resr;
       res = [];
@@ -249,6 +293,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.rack.set("g", resg);
       return this.rack.set("b", resb);
     };
+
     return Color;
-  })();
+
+  })(ThreeNodes.NodeBase);
 });

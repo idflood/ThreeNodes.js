@@ -1,33 +1,33 @@
-var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-}, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  return ThreeNodes.ConnectionView = (function() {
-    __extends(ConnectionView, Backbone.View);
+  "use strict";  return ThreeNodes.ConnectionView = (function(_super) {
+
+    __extends(ConnectionView, _super);
+
     function ConnectionView() {
       ConnectionView.__super__.constructor.apply(this, arguments);
     }
+
     ConnectionView.prototype.initialize = function() {
+      var _this = this;
       this.container = $("#graph");
       this.line = ThreeNodes.svg.path().attr({
         stroke: "#555",
         fill: "none"
       });
       this.el = this.line.node;
-      this.model.bind("render", __bind(function() {
-        return this.render();
-      }, this));
-      this.model.bind("destroy", __bind(function() {
-        return this.remove();
-      }, this));
+      this.model.bind("render", function() {
+        return _this.render();
+      });
+      this.model.bind("destroy", function() {
+        return _this.remove();
+      });
       this.render();
       return this;
     };
+
     ConnectionView.prototype.remove = function() {
       if (ThreeNodes.svg && this.line) {
         this.line.remove();
@@ -35,6 +35,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       }
       return true;
     };
+
     ConnectionView.prototype.render = function() {
       if (ThreeNodes.svg && this.line && this.line.attrs) {
         this.line.attr({
@@ -43,6 +44,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       }
       return this;
     };
+
     ConnectionView.prototype.get_field_position = function(field) {
       var diff, o1;
       o1 = $("#fid-" + field.fid + " .inner-field span").offset();
@@ -58,6 +60,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       }
       return o1;
     };
+
     ConnectionView.prototype.get_path = function() {
       var container_y, diffx, diffy, f1, f2, min_diff, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
       container_y = parseFloat($("#container-wrapper").css("top"));
@@ -78,6 +81,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       y3 = y4;
       return ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
     };
+
     return ConnectionView;
-  })();
+
+  })(Backbone.View);
 });

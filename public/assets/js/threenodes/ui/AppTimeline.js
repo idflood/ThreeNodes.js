@@ -1,12 +1,16 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "order!libs/timeline.js/timeline-gui"], function($, _, Backbone) {
   "use strict";  return ThreeNodes.AppTimeline = (function() {
+
     function AppTimeline() {
       this.update = __bind(this.update, this);
       this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
     }
+
     AppTimeline.prototype.onRegister = function() {
-      var ng;
+      var ng,
+        _this = this;
       ng = this.context.injector.get("NodeGraph");
       localStorage["timeline.js.settings.canvasHeight"] = 46 + 120;
       this.timeline = new Timeline({
@@ -23,9 +27,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         colorTimeTicker: "#f00",
         colorTrackBottomLine: "#555",
         colorPropertyLabel: "#999",
-        onGuiSave: __bind(function() {
-          return this.context.commandMap.execute("OnUiResizeCommand");
-        }, this),
+        onGuiSave: function() {
+          return _this.context.commandMap.execute("OnUiResizeCommand");
+        },
         setPropertyValue: function(propertyAnim, t) {
           return propertyAnim.target[propertyAnim.propertyName].set(t);
         },
@@ -70,6 +74,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       this.timeline.loop(-1);
       return this.time = 0;
     };
+
     AppTimeline.prototype.update = function() {
       var dt, n;
       n = Date.now();
@@ -79,6 +84,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       }
       return this.time = n;
     };
+
     return AppTimeline;
+
   })();
 });

@@ -1,29 +1,30 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.NodeView = (function() {
-    __extends(NodeView, Backbone.View);
+  "use strict";  ThreeNodes.NodeView = (function(_super) {
+
+    __extends(NodeView, _super);
+
     function NodeView() {
       this.render = __bind(this.render, this);
       NodeView.__super__.constructor.apply(this, arguments);
     }
+
     NodeView.prototype.onRegister = function() {
       this.make_draggable();
       this.init_el_click();
       this.init_title_click();
       return this.make_selectable();
     };
+
     NodeView.prototype.initialize = function() {
       this.model.bind('change', this.render);
       this.render;
       return this;
     };
+
     NodeView.prototype.render = function() {
       var $el;
       $el = $(this.el);
@@ -35,6 +36,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       $(".head span", $el).show();
       return this;
     };
+
     NodeView.prototype.init_context_menu = function() {
       return $(".field", this.el).contextMenu({
         menu: "field-context-menu"
@@ -46,14 +48,17 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     NodeView.prototype.render_connections = function() {
       return this.options.rack.render_connections();
     };
+
     NodeView.prototype.compute_node_position = function() {
       var pos;
       pos = $(this.el).position();
       return this.model.setPosition(pos.left, pos.top);
     };
+
     NodeView.prototype.init_el_click = function() {
       var self;
       self = this;
@@ -75,6 +80,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return self.options.rack.render_sidebar();
       });
     };
+
     NodeView.prototype.init_title_click = function() {
       var self;
       self = this;
@@ -96,12 +102,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return apply_input_result();
         });
         return $input.keydown(function(e) {
-          if (e.keyCode === 13) {
-            return apply_input_result();
-          }
+          if (e.keyCode === 13) return apply_input_result();
         });
       });
     };
+
     NodeView.prototype.make_draggable = function() {
       var self;
       self = this;
@@ -147,12 +152,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
     NodeView.prototype.make_selectable = function() {
-      var self;
+      var self,
+        _this = this;
       self = this;
       return $("#container").selectable({
         filter: ".node",
-        stop: __bind(function(event, ui) {
+        stop: function(event, ui) {
           var $selected, nodes;
           $selected = $(".node.ui-selected");
           nodes = [];
@@ -163,10 +170,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             return nodes.push(ob.anim);
           });
           return self.options.apptimeline.timeline.selectAnims(nodes);
-        }, this)
+        }
       });
     };
+
     return NodeView;
-  })();
+
+  })(Backbone.View);
   return ThreeNodes.NodeView;
 });
