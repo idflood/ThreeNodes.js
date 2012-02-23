@@ -17,6 +17,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
           from_field: n1.v_out,
           to_field: n2.v_in
         });
+        console.log(c1);
         equals(ng.connections.length, 1, "There is one connection");
         equals(n1.v_out.connections.length, 1, "The output field has one connection");
         n1.v_in.setValue(0.5);
@@ -167,7 +168,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         console.log(n1.v_in);
         console.log(n1.v_out);
         console.log(n1.v_out.attributes.value);
-        console.log(n1.v_out.get("value"));
+        console.log(node_merge.rack.getField("out", true));
         equals(n1.v_out.get("value").length, 1, "Node number output one float value");
         equals(node_merge.rack.getField("out", true).get("value").length, 2, "Merge node output 2 values");
         equals(node_mult.v_factor.get("value").length, 2, "Mult node input factor has 2 values");

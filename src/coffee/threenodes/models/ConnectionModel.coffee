@@ -24,7 +24,7 @@ define [
         @from_field.add_connection(this)
         @to_field.add_connection(this)
         # dispatch the new value
-        @to_field.setValue(@from_field.get())
+        @to_field.setValue(@from_field.get("value"))
         @from_field.node.dirty = true
     
     remove: =>
@@ -49,7 +49,7 @@ define [
         return true
       
       # never connect 2 outputs or 2 inputs
-      if @from_field.is_output == @to_field.is_output
+      if @from_field.get("is_output") == @to_field.get("is_output")
         return true
       
       # never connect in/out from the same node
@@ -60,7 +60,7 @@ define [
       return false
     
     switch_fields_if_needed: () =>
-      if @from_field.is_output == false
+      if @from_field.get("is_output") == false
         f_out = @to_field
         @to_field = @from_field
         @from_field = f_out

@@ -9,10 +9,10 @@ define [
 ], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
   "use strict"
   class ThreeNodes.NodeField extends Backbone.Model
-    default:
+    defaults: () ->
       fid: -1
       name: "fieldname"
-      is_out: false
+      is_output: false
       value: 0
       default: null
     
@@ -23,7 +23,6 @@ define [
       self = this
       @on_value_update_hooks = {}
       @node = options.node
-      @is_output = false
       @changed = true
       @connections = []
       @default_value = null
@@ -63,7 +62,7 @@ define [
       
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
-      if @is_output == true
+      if @get("is_output") == true
         for connection in @connections
           connection.to_field.setValue(new_val)
       true
@@ -140,7 +139,7 @@ define [
     add_connection: (c) =>
       if @connections.indexOf(c) == -1
         @connections.push c
-        if @is_output == true
+        if @get("is_output") == true
           @node.add_out_connection(c, this)
         @node.disable_property_anim(this)
       c

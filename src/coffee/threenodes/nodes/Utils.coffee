@@ -131,8 +131,8 @@ define [
       @value = []
       for f of @rack.node_fields.inputs
         k = @rack.node_fields.inputs[f]
-        if k.val != null && k.connections.length > 0
-          subval = k.val
+        if k.get("value") != null && k.connections.length > 0
+          subval = k.get("value")
           # if subvalue is an array append it to the result
           if jQuery.type(subval) == "array"
             @value = @value.concat(subval)

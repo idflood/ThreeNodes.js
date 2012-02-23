@@ -196,8 +196,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.value = [];
       for (f in this.rack.node_fields.inputs) {
         k = this.rack.node_fields.inputs[f];
-        if (k.val !== null && k.connections.length > 0) {
-          subval = k.val;
+        if (k.get("value") !== null && k.connections.length > 0) {
+          subval = k.get("value");
           if (jQuery.type(subval) === "array") {
             this.value = this.value.concat(subval);
           } else {

@@ -36,7 +36,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
         this.to_field.remove_connections();
         this.from_field.add_connection(this);
         this.to_field.add_connection(this);
-        this.to_field.setValue(this.from_field.get());
+        this.to_field.setValue(this.from_field.get("value"));
         return this.from_field.node.dirty = true;
       }
     };
@@ -59,7 +59,9 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       this.from_field = attrs.from_field;
       this.to_field = attrs.to_field;
       if (!this.from_field || !this.to_field) return true;
-      if (this.from_field.is_output === this.to_field.is_output) return true;
+      if (this.from_field.get("is_output") === this.to_field.get("is_output")) {
+        return true;
+      }
       if (this.from_field.node.get('nid') === this.to_field.node.get('nid')) {
         return true;
       }
@@ -69,7 +71,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
 
     ConnectionModel.prototype.switch_fields_if_needed = function() {
       var f_out;
-      if (this.from_field.is_output === false) {
+      if (this.from_field.get("is_output") === false) {
         f_out = this.to_field;
         this.to_field = this.from_field;
         this.from_field = f_out;

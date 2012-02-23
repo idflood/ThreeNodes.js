@@ -37,12 +37,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       NodeField.__super__.constructor.apply(this, arguments);
     }
 
-    NodeField.prototype["default"] = {
-      fid: -1,
-      name: "fieldname",
-      is_out: false,
-      value: 0,
-      "default": null
+    NodeField.prototype.defaults = function() {
+      return {
+        fid: -1,
+        name: "fieldname",
+        is_output: false,
+        value: 0,
+        "default": null
+      };
     };
 
     NodeField.prototype.sync = function() {};
@@ -52,7 +54,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       self = this;
       this.on_value_update_hooks = {};
       this.node = options.node;
-      this.is_output = false;
       this.changed = true;
       this.connections = [];
       return this.default_value = null;
@@ -95,7 +96,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       for (hook in this.on_value_update_hooks) {
         this.on_value_update_hooks[hook](new_val);
       }
-      if (this.is_output === true) {
+      if (this.get("is_output") === true) {
         _ref = this.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           connection = _ref[_i];
@@ -201,7 +202,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.add_connection = function(c) {
       if (this.connections.indexOf(c) === -1) {
         this.connections.push(c);
-        if (this.is_output === true) this.node.add_out_connection(c, this);
+        if (this.get("is_output") === true) this.node.add_out_connection(c, this);
         this.node.disable_property_anim(this);
       }
       return c;

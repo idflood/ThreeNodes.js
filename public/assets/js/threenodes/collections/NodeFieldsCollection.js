@@ -118,7 +118,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/core/NodeField'], function(_
     NodeFieldsCollection.prototype.registerField = function(field) {
       var fid;
       field.node = this.node;
-      if (field.is_output === false) {
+      if (field.get("is_output") === false) {
         this.node_fields.inputs["fid-" + field.get("fid")] = field;
         this.node_fields_by_name.inputs[field.get("name")] = field;
         $(".inputs", this.node.main_view).append(field.render_button());
@@ -236,7 +236,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/core/NodeField'], function(_
         });
       }
       if (value["default"] !== null) f.default_value = value["default"];
-      if (direction !== "inputs") f.is_output = true;
+      if (direction !== "inputs") f.set("is_output", true);
       this.registerField(f);
       this.add(f);
       return f;

@@ -66,7 +66,7 @@ define [
     
     registerField: (field) =>
       field.node = @node
-      if field.is_output == false
+      if field.get("is_output") == false
         @node_fields.inputs["fid-" + field.get("fid")] = field
         @node_fields_by_name.inputs[field.get("name")] = field
         $(".inputs", @node.main_view).append(field.render_button())
@@ -155,7 +155,7 @@ define [
       if value.default != null
         f.default_value = value.default
       if direction != "inputs"
-        f.is_output = true
+        f.set("is_output", true)
       
       @registerField(f)
       #@context.injector.applyContext(f)
