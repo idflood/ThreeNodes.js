@@ -5,30 +5,45 @@ define [
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
   'order!threenodes/utils/Utils',
-  'order!threenodes/models/NodeFieldModel',
+  #'order!threenodes/models/NodeFieldModel',
 ], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
   "use strict"
-  class ThreeNodes.NodeField
-    @connections = false
-    constructor: (@name, @val, @possible_values = false, @fid = ThreeNodes.Utils.get_uid()) ->
+  class ThreeNodes.NodeField extends Backbone.Model
+    default:
+      fid: -1
+      name: "fieldname"
+      is_out: false
+      value: 0
+      default: null
+    
+    sync: () =>
+    
+    #constructor: (@name, @val, @possible_values = false, @fid = ThreeNodes.Utils.get_uid()) ->
+    initialize: (options) =>
       self = this
       @on_value_update_hooks = {}
-      @node = false
+      @node = options.node
       @is_output = false
       @changed = true
       @connections = []
       @default_value = null
+    
+    setFID: (fid) =>
+      @set("fid", fid)
     
     onRegister: () ->
       ng = @context.injector.get("NodeGraph")
       ng.fields_by_fid[@fid] = this
       @on_value_changed(@val)
     
-    set: (v) =>
+    setValue: (v) =>
       @changed = true
-      @node.dirty = true
+      if @node
+        @node.dirty = true
+      prev_val = @get("value")
       new_val = @on_value_changed(v)
       
+      # remove all null values from the array
       if $.type(new_val) == "array"
         tmp_val = _.filter new_val, (item) ->
           item != null
@@ -37,25 +52,28 @@ define [
         else
           new_val = null
       
+      # reset the value if it's null and it has a default
       if new_val == null
-        if @default_value != null && @default_value != undefined
-          @val = @default_value
-        new_val = @val
+        if @get("default") != null && @get("default") != undefined
+          prev_val = @get("default")
+        new_val = prev_val
       
-      @val = new_val
+      #@val = new_val
+      @set("value", new_val)
       
       for hook of @on_value_update_hooks
-        @on_value_update_hooks[hook](@val)
+        @on_value_update_hooks[hook](new_val)
       if @is_output == true
         for connection in @connections
-          connection.to_field.set(@val)
+          connection.to_field.setValue(new_val)
       true
   
-    get: (index = 0) =>
-      if $.type(@val) != "array"
-        return @val
+    getValue: (index = 0) =>
+      val = @get("value")
+      if $.type(val) != "array"
+        return val
       else
-        return @val[index % @val.length]
+        return val[index % val.length]
     
     isChanged: () =>
       res = @changed
@@ -66,9 +84,10 @@ define [
       @connections.length > 0
     
     getSliceCount: () =>
-      if jQuery.type(@val) != "array"
+      val = @get("value")
+      if jQuery.type(val) != "array"
         return 1
-      return @val.length
+      return val.length
     
     is_animation_property: () =>
       if this.constructor == ThreeNodes.fields.types.Float || this.constructor == ThreeNodes.fields.types.Bool
@@ -79,22 +98,25 @@ define [
       res =
         name: @name
       # help avoid cyclic value
-      val_type = jQuery.type(@get())
+      val = @get("value")
+      val_type = jQuery.type(val)
       if val_type != "object" && val_type != "array"
-        res.val = @get()
+        res.val = val
       res
     
     toCode: () =>
       res = ""
-      val_type = jQuery.type(@get())
+      val = @get("value")
+      val_type = jQuery.type(val)
       if val_type != "object" && val_type != "array"
-        res = "\t\t{name: '#{@name}', val: #{@get()}},\n"
+        res = "\t\t{name: '#{@name}', val: #{val}},\n"
       else
         res = "\t\t{name: '#{@name}'},\n"
       res
     
     toXML : () =>
-      "\t\t\t<field fid='#{@fid}' val='#{@get()}'/>\n"
+      val = @get("value")
+      "\t\t\t<field fid='#{@fid}' val='#{val}'/>\n"
   
     render_connections: () =>
       for connection in @connections
@@ -162,7 +184,7 @@ define [
       f_input.val(@get())
       f_input.keypress (e) ->
         if e.which == 13
-          self.set($(this).val())
+          self.setValue($(this).val())
           $(this).blur()
       f_input
     
@@ -170,10 +192,10 @@ define [
       self = this
       @on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
         f_input.val(v[subval])
-      f_input.val(@get()[subval])
+      f_input.val(@get("value")[subval])
       f_input.keypress (e) ->
         if e.which == 13
-          self.val[subval] = $(this).val()
+          self.attributes.value[subval] = $(this).val()
           $(this).blur()
       f_input
   
@@ -192,7 +214,8 @@ define [
       val
     
     on_value_changed : (val) =>
-      @val = @compute_value(val)
+      @set
+        value: @compute_value(val)
     
   class ThreeNodes.fields.types.Array extends ThreeNodes.NodeField
     compute_value : (val) =>
@@ -209,9 +232,10 @@ define [
         @on_value_changed([])
     
     on_value_changed : (val) =>
-      @val = @compute_value(val)
+      @set
+        value: @compute_value(val)
     
-    get: (index = 0) => @val
+    getValue: (index = 0) => @get("value")
     
   class ThreeNodes.fields.types.Bool extends ThreeNodes.NodeField
     render_sidebar: =>
@@ -221,17 +245,17 @@ define [
       $target.append("<div><input type='checkbox' id='#{id}'/></div>")
       f_in = $("#" + id)
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
-        if self.get() == true
+        if self.getValue() == true
           f_in.attr('checked', 'checked')
         else
           f_in.removeAttr('checked')
-      if @get() == true
+      if @getValue() == true
         f_in.attr('checked', 'checked')
       f_in.change (e) ->
         if $(this).is(':checked')
-          self.set(true)
+          self.setValue(true)
         else
-          self.set(false)
+          self.setValue(false)
       true
     
     compute_value : (val) =>
@@ -248,10 +272,10 @@ define [
       f_in = @create_textfield($target, "side-field-txt-input-#{@fid}")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_in.val(v.toString())
-      f_in.val(@get())
+      f_in.val(@getValue())
       f_in.keypress (e) ->
         if e.which == 13
-          self.set($(this).val())
+          self.setValue($(this).val())
           $(this).blur()
       true
     compute_value : (val) =>
@@ -274,7 +298,7 @@ define [
       input += "</select></div>"
       $target.append(input)
       $("select", $target).change (e) ->
-        self.set($(this).val())
+        self.setValue($(this).val())
       return true
     
     create_sidebar_input: ($target) =>

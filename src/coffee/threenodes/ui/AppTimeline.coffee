@@ -33,13 +33,13 @@ define [
         onGuiSave: () =>
           @context.commandMap.execute "OnUiResizeCommand"
         setPropertyValue: (propertyAnim, t) ->
-          propertyAnim.target[propertyAnim.propertyName].set(t)
+          propertyAnim.target[propertyAnim.propertyName].setValue(t)
         applyPropertyValue: (propertyAnim, t) ->
-          propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
+          propertyAnim.target[propertyAnim.propertyName].setValue(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
         getPropertyValue: (propertyAnim) ->
-          propertyAnim.target[propertyAnim.propertyName].get()
+          propertyAnim.target[propertyAnim.propertyName].getValue()
         onTrackRebuild: () ->
-          for node in ng.nodes
+          for node in ng.models
             node.onTimelineRebuild()
         onStop: () ->
           for node in ThreeNodes.sound_nodes

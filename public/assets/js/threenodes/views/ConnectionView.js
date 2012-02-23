@@ -48,14 +48,20 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     ConnectionView.prototype.get_field_position = function(field) {
       var diff, o1;
       o1 = $("#fid-" + field.fid + " .inner-field span").offset();
+      if (!o1) {
+        return {
+          left: 0,
+          top: 0
+        };
+      }
       diff = 3;
       o1.top += diff;
       o1.left += diff;
       if (o1.left === diff && o1.top === diff) {
-        o1 = $("#nid-" + (field.node.model.get('nid'))).offset();
-        o1.top += $("#nid-" + (field.node.model.get('nid'))).outerHeight() / 2 + 3;
+        o1 = $("#nid-" + (field.node.get('nid'))).offset();
+        o1.top += $("#nid-" + (field.node.get('nid'))).outerHeight() / 2 + 3;
         if (field.is_output === true) {
-          o1.left += $("#nid-" + (field.node.model.get('nid'))).outerWidth() - 2;
+          o1.left += $("#nid-" + (field.node.get('nid'))).outerWidth() - 2;
         }
       }
       return o1;

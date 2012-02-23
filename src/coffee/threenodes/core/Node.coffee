@@ -2,15 +2,16 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "text!templates/node.tmpl.html",
-  "order!libs/jquery.tmpl.min",
-  "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
-  'order!threenodes/core/NodeFieldRack',
-  'order!threenodes/views/NodeView',
-  'order!threenodes/models/NodeModel',
+  #"text!templates/node.tmpl.html",
+  #"order!libs/jquery.tmpl.min",
+  #"order!libs/jquery.contextMenu",
+  #"order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
+  #'order!threenodes/core/NodeFieldRack',
+  'order!threenodes/collections/NodeFieldsCollection',
+  #'order!threenodes/views/NodeView',
+  #'order!threenodes/models/NodeModel',
   'order!threenodes/utils/Utils',
-], ($, _, Backbone, _view_node_template) ->
+], ($, _, Backbone) ->
   "use strict"
   ThreeNodes.field_click_1 = false
   ThreeNodes.selected_nodes = $([])
@@ -18,10 +19,54 @@ define [
     top: 0
     left: 0
   
-  class ThreeNodes.NodeBase
+  class ThreeNodes.NodeBase extends Backbone.Model
     @node_name = ''
     @group_name = ''
-    constructor: (@x = 0, @y = 0, @inXML = false, @inJSON = false) ->
+            
+    default:
+      nid: 0
+      x: 0
+      y: 0
+      name: ""
+    
+    load: (xml, json) =>
+      if xml
+        @fromXML(xml)
+      else if json
+        @fromJSON(json)
+      
+    setNID: (nid) =>
+      @set
+        "nid": nid
+      @
+    
+    setName: (name) =>
+      @set
+        "name": name
+      @
+    
+    setPosition: (x, y) =>
+      @set
+        "x": x
+        "y": y
+      @
+    
+    fromJSON: (data) =>
+      @set
+        "nid": data.nid
+        "name": if data.name then data.name else @get("name")
+        "x": data.x
+        "y": data.y
+      ThreeNodes.uid = @get("nid")
+      @
+    
+    fromXML: (data) =>
+      @set
+        "nid": parseInt @inXML.attr("nid")
+      ThreeNodes.uid = @get("nid")
+      @
+    
+    initialize: (options) =>
       @auto_evaluate = false
       @delays_output = false
       @dirty = true
@@ -31,22 +76,23 @@ define [
       @out_connections = []
       @value = false
       @main_view = false
-    
-    onRegister: () ->
-      @model = new ThreeNodes.NodeModel
-        name: @typename()
-        x: @x
-        y: @y
+      @inXML = options.inXML
+      @inJSON = options.inJSON
+      @context = options.context
         
       if @inXML == false && @inJSON == false
-        @model.setNID(ThreeNodes.Utils.get_uid())
+        @setNID(ThreeNodes.Utils.get_uid())
+      @setName(@typename())
+      @load(@inXML, @inJSON)
       
-      @model.load(@inXML, @inJSON)
-      
-      @container = $("#container")
+      #@container = $("#container")
       @apptimeline = @context.injector.get "AppTimeline"
-      @rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this, @inXML)
+      #@rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this)
+      @rack = new ThreeNodes.NodeFieldsCollection [],
+        node: this
+        
       
+    post_init: () =>
       # init view
       #if @context.player_mode == false
       @init_main_view()
@@ -70,22 +116,15 @@ define [
         @view.init_context_menu()
       
       @onTimelineRebuild()
-      @view.render()
+      #@trigger("node:render")
       @
     
     typename: => String(@constructor.name)
     
     init_main_view: () =>
-      @main_view = $.tmpl(_view_node_template, this)
+      @main_view = $(@el)
       @main_view.data("object", this)
-      @container.append(@main_view)
-      @view = new ThreeNodes.NodeView
-        el: @main_view
-        model: @model
-        rack: @rack
-        apptimeline: @apptimeline
-        
-      @context.injector.applyContext @view
+      return this
     
     loadAnimation: () =>
       @anim = @createAnimContainer()
@@ -123,12 +162,12 @@ define [
     create_cache_object: (values) =>
       res = {}
       for v in values
-        res[v] = @rack.get(v).get()
+        res[v] = @rack.getField(v).getValue()
       res
     
     input_value_has_changed: (values, cache = @material_cache) =>
       for v in values
-        v2 = @rack.get(v).get()
+        v2 = @rack.getField(v).getValue()
         if v2 != cache[v]
           return true
       false
@@ -192,12 +231,12 @@ define [
     
     toJSON: () =>
       res =
-        nid: @model.get('nid')
-        name: @model.get('name')
+        nid: @get('nid')
+        name: @get('name')
         type: @typename()
         anim: @getAnimationData()
-        x: @model.get('x')
-        y: @model.get('y')
+        x: @get('x')
+        y: @get('y')
         fields: @rack.toJSON()
       res
     
@@ -208,22 +247,22 @@ define [
     toCode: () =>
       ng = @context.injector.get("NodeGraph")
       component = ng.get_component_by_type(@typename())
-      res = "\n// node: #{@model.get('name')}\n"
-      res += "var node_#{@model.get('nid')}_data = {\n"
-      res += "\t" + "nid: #{@model.get('nid')},\n"
-      res += "\t" + "name: '#{@model.get('name')}',\n"
+      res = "\n// node: #{@get('name')}\n"
+      res += "var node_#{@get('nid')}_data = {\n"
+      res += "\t" + "nid: #{@get('nid')},\n"
+      res += "\t" + "name: '#{@get('name')}',\n"
       res += "\t" + "type: '#{@typename()}',\n"
       res += "\t" + "fields: #{@rack.toCode()},\n"
       res += "\t" + "anim: #{@getAnimationDataToCode()}\n"
       res += "};\n"
-      res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", #{@model.get('x')}, #{@model.get('y')}, false, node_#{@model.get('nid')}_data);\n"
+      res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", #{@get('x')}, #{@get('y')}, false, node_#{@get('nid')}_data);\n"
       return res
     
     apply_fields_to_val: (afields, target, exceptions = [], index) =>
       for f of afields
         nf = afields[f]
-        if exceptions.indexOf(nf.name) == -1
-          target[nf.name] = @rack.get(nf.name).get(index)
+        if exceptions.indexOf(nf.get("name")) == -1
+          target[nf.get("name")] = @rack.getField(nf.get("name")).getValue(index)
     
     create_field_connection: (field) =>
       f = this
@@ -241,7 +280,7 @@ define [
     get_cached_array: (vals) =>
       res = []
       for v in vals
-        res[res.length] = @rack.get(v).get()
+        res[res.length] = @rack.getField(v).getValue()
       
     add_out_connection: (c, field) =>
       if @out_connections.indexOf(c) == -1
@@ -265,19 +304,15 @@ define [
         @anim.enableProperty(field.name)
     
     createAnimContainer: () =>
-      res = anim("nid-" + @nid, @rack.collection.node_fields_by_name.inputs)
+      res = anim("nid-" + @nid, @rack.node_fields_by_name.inputs)
       # enable track animation only for number/boolean
-      for f of @rack.collection.node_fields_by_name.inputs
-        field = @rack.collection.node_fields_by_name.inputs[f]
+      for f of @rack.node_fields_by_name.inputs
+        field = @rack.node_fields_by_name.inputs[f]
         if field.is_animation_property() == false
           @disable_property_anim(field)
       return res
   
   class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
-    init: =>
-      super
-      @value = 0
-      
     set_fields: =>
       @v_in = @rack.addField("in", {type: "Float", val: 0})
       @v_out = @rack.addField("out", {type: "Float", val: 0}, "outputs")
@@ -288,7 +323,7 @@ define [
       res = []
       numItems = @rack.getMaxInputSliceCount()
       for i in [0..numItems]
-        ref = @v_in.get(i)
+        ref = @v_in.getValue(i)
         switch $.type(ref)
           when "number" then res[i] = @process_val(ref, i)
           when "object"
@@ -302,6 +337,6 @@ define [
                 res[i].z = @process_val(ref.z, i)
         
       #if @v_out.get() != res
-      @v_out.set res
+      @v_out.setValue res
       true
 

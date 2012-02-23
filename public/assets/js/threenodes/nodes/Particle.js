@@ -48,7 +48,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         geom.cached = [];
         return geom.compute();
       } else {
-        return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
+        return this.rack.get('geometry').setValue(new THREE.CubeGeometry(200, 200, 200));
       }
     };
 
@@ -63,9 +63,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.geometry_cache = this.rack.get('geometry').get().id;
         this.material_cache = this.rack.get('material').get().id;
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
       if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return ParticleSystem;
@@ -193,7 +193,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob._actions = this.rack.get("actions").val;
       this.ob._counter = this.rack.get("counter").get();
       if (this.pool !== false && this.ob.isRunning() === false) this.ob.start();
-      return this.rack.set("out", this.geom);
+      return this.rack.setField("out", this.geom);
     };
 
     SparksEmitter.prototype.remove = function() {
@@ -244,7 +244,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksAge.prototype.compute = function() {
       this.ob._easing = this.rack.get("easing").val;
-      return this.rack.set("action", this.ob);
+      return this.rack.setField("action", this.ob);
     };
 
     return SparksAge;
@@ -279,7 +279,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     SparksMove.prototype.compute = function() {
-      return this.rack.set("action", this.ob);
+      return this.rack.setField("action", this.ob);
     };
 
     return SparksMove;
@@ -321,7 +321,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksAccelerate.prototype.compute = function() {
       this.ob.acceleration = this.rack.get("vector").get();
-      return this.rack.set("action", this.ob);
+      return this.rack.setField("action", this.ob);
     };
 
     return SparksAccelerate;
@@ -360,7 +360,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksAccelerateFactor.prototype.compute = function() {
       this.ob.factor = this.rack.get("factor").get();
-      return this.rack.set("action", this.ob);
+      return this.rack.setField("action", this.ob);
     };
 
     return SparksAccelerateFactor;
@@ -399,7 +399,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksAccelerateVelocity.prototype.compute = function() {
       this.ob.factor = this.rack.get("factor").get();
-      return this.rack.set("action", this.ob);
+      return this.rack.setField("action", this.ob);
     };
 
     return SparksAccelerateVelocity;
@@ -441,7 +441,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksRandomDrift.prototype.compute = function() {
       this.ob.drift = this.rack.get("vector").get();
-      return this.rack.set("action", this.ob);
+      return this.rack.setField("action", this.ob);
     };
 
     return SparksRandomDrift;
@@ -482,7 +482,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     SparksLifetime.prototype.compute = function() {
       this.ob._min = this.rack.get("min").get();
       this.ob._min = this.rack.get("max").get();
-      return this.rack.set("initializer", this.ob);
+      return this.rack.setField("initializer", this.ob);
     };
 
     return SparksLifetime;
@@ -524,7 +524,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksPosition.prototype.compute = function() {
       this.ob.zone = this.rack.get("zone").get();
-      return this.rack.set("initializer", this.ob);
+      return this.rack.setField("initializer", this.ob);
     };
 
     return SparksPosition;
@@ -566,7 +566,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksPointZone.prototype.compute = function() {
       this.ob.pos = this.rack.get("pos").get();
-      return this.rack.set("zone", this.ob);
+      return this.rack.setField("zone", this.ob);
     };
 
     return SparksPointZone;
@@ -616,7 +616,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob.end = this.rack.get("end").get();
         this.ob._length = this.ob.end.clone().subSelf(this.ob.start);
       }
-      return this.rack.set("zone", this.ob);
+      return this.rack.setField("zone", this.ob);
     };
 
     return SparksLineZone;
@@ -664,7 +664,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob.x = this.rack.get("x").get();
       this.ob.y = this.rack.get("y").get();
       this.ob.z = this.rack.get("z").get();
-      return this.rack.set("zone", this.ob);
+      return this.rack.setField("zone", this.ob);
     };
 
     return SparksCubeZone;
@@ -703,7 +703,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     SparksSteadyCounter.prototype.compute = function() {
       this.ob.pos = this.rack.get("rate").get();
-      return this.rack.set("counter", this.ob);
+      return this.rack.setField("counter", this.ob);
     };
 
     return SparksSteadyCounter;
@@ -792,7 +792,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     ParticlePool.prototype.compute = function() {
       if (this.geom !== false) this.geom.__dirtyVertices = true;
-      return this.rack.set("pool", this);
+      return this.rack.setField("pool", this);
     };
 
     return ParticlePool;
@@ -900,7 +900,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       this.move_particles();
       this.cache = new_cache;
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return RandomCloudGeometry;

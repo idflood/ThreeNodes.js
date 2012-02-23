@@ -69,8 +69,8 @@ define [
       res = []
       numItems = @rack.getMaxInputSliceCount()
       for i in [0..numItems]
-        ref = @v_in.get(i)
-        refb = @v_factor.get(i)
+        ref = @v_in.getValue(i)
+        refb = @v_factor.getValue(i)
         switch $.type(ref)
           when "number"
             switch $.type(refb)
@@ -91,7 +91,7 @@ define [
                   when "object" then res[i] = new THREE.Vector3(@process_val(ref.x, refb.x, i), @process_val(ref.y, refb.y, i), @process_val(ref.z, refb.z, i))
         
       #if @v_out.get() != res
-      @v_out.set res
+      @v_out.setValue res
       true
   
   class ThreeNodes.nodes.MathMod extends ThreeNodes.NodeNumberParam1
@@ -177,9 +177,9 @@ define [
       @def_val = @rack.addField("default", 0)
       @reset_val = @rack.addField("reset", false)
       @v_factor = @rack.addField("factor", 0.8)
-      @val = @def_val.get()
+      @val = @def_val.getValue()
     process_val: (num, numb, i) =>
-      if @reset_val.get(i) == true
-        @val = @def_val.get(i)
-      @val = @val + (@v_in.get(i) - @val) * @v_factor.get(i)
+      if @reset_val.getValue(i) == true
+        @val = @def_val.getValue(i)
+      @val = @val + (@v_in.getValue(i) - @val) * @v_factor.getValue(i)
       @val

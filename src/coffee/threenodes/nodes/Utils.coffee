@@ -22,11 +22,11 @@ define [
           "max" : 1
         outputs:
           "out" : 0
-      @rack.add_center_textfield(@rack.get("out", true))
+      @rack.add_center_textfield(@rack.getField("out", true))
   
     compute: =>
-      @value = @rack.get("min").get() + Math.random() * (@rack.get("max").get() - @rack.get("min").get())
-      @rack.set("out", @value)
+      @value = @rack.getField("min").getValue() + Math.random() * (@rack.getField("max").getValue() - @rack.getField("min").getValue())
+      @rack.setField("out", @value)
   
   # based on http://www.cycling74.com/forums/topic.php?id=7821
   class ThreeNodes.nodes.LFO extends ThreeNodes.NodeBase
@@ -106,14 +106,14 @@ define [
             @rndrange = @rndB - @rndA
           src * @rndrange + @rndA
       
-      @rack.set("out", lfout)
+      @rack.setField("out", lfout)
   
   class ThreeNodes.nodes.Merge extends ThreeNodes.NodeBase
     @node_name = 'Merge'
     @group_name = 'Utils'
     
     set_fields: =>
-      super
+      #super
       @auto_evaluate = true
       @rack.addFields
         inputs:
@@ -127,10 +127,10 @@ define [
           "out" : {type: "Array", val: []}
   
     compute: =>
-      old = @rack.get("out", true).get()
+      old = @rack.getField("out", true).get("value")
       @value = []
-      for f of @rack.collection.node_fields.inputs
-        k = @rack.collection.node_fields.inputs[f]
+      for f of @rack.node_fields.inputs
+        k = @rack.node_fields.inputs[f]
         if k.val != null && k.connections.length > 0
           subval = k.val
           # if subvalue is an array append it to the result
@@ -138,7 +138,7 @@ define [
             @value = @value.concat(subval)
           else
             @value[@value.length] = subval
-      @rack.set("out", @value)
+      @rack.setField("out", @value)
   
   class ThreeNodes.nodes.Get extends ThreeNodes.NodeBase
     @node_name = 'Get'
@@ -154,14 +154,14 @@ define [
           "out" : {type: "Any", val: null}
   
     compute: =>
-      old = @rack.get("out", true).get()
+      old = @rack.getField("out", true).getValue()
       @value = false
       arr = @rack.get("array").get()
-      ind = parseInt(@rack.get("index").get())
+      ind = parseInt(@rack.getField("index").getValue())
       if $.type(arr) == "array"
         @value = arr[ind % arr.length]
       if @value != old
-        @rack.set("out", @value)
+        @rack.setField("out", @value)
   
   class ThreeNodes.nodes.Mp3Input extends ThreeNodes.NodeBase
     @node_name = 'Mp3Input'
@@ -293,10 +293,10 @@ define [
         length = @freqByteData.length
         length3rd = length / 3
         
-        @rack.set("average", @getAverageLevel(0, length - 1))
-        @rack.set("low", @getAverageLevel(0, length3rd - 1))
-        @rack.set("medium", @getAverageLevel(length3rd, (length3rd * 2) - 1))
-        @rack.set("high", @getAverageLevel(length3rd * 2, length - 1))
+        @rack.setField("average", @getAverageLevel(0, length - 1))
+        @rack.setField("low", @getAverageLevel(0, length3rd - 1))
+        @rack.setField("medium", @getAverageLevel(length3rd, (length3rd * 2) - 1))
+        @rack.setField("high", @getAverageLevel(length3rd * 2, length - 1))
       return true
   
   class ThreeNodes.nodes.SoundInput extends ThreeNodes.NodeBase
@@ -316,9 +316,9 @@ define [
           "high" : 0
     compute: () =>
       #console.log flash_sound_value
-      @rack.set("low", ThreeNodes.flash_sound_value.kick)
-      @rack.set("medium", ThreeNodes.flash_sound_value.snare)
-      @rack.set("high", ThreeNodes.flash_sound_value.hat)
+      @rack.setField("low", ThreeNodes.flash_sound_value.kick)
+      @rack.setField("medium", ThreeNodes.flash_sound_value.snare)
+      @rack.setField("high", ThreeNodes.flash_sound_value.hat)
   
   class ThreeNodes.nodes.Mouse extends ThreeNodes.NodeBase
     @node_name = 'Mouse'
@@ -334,9 +334,9 @@ define [
           "y" : 0
       
     compute: =>
-      @rack.set("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY))
-      @rack.set("x", ThreeNodes.mouseX)
-      @rack.set("y", ThreeNodes.mouseY)
+      @rack.setField("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY))
+      @rack.setField("x", ThreeNodes.mouseX)
+      @rack.setField("y", ThreeNodes.mouseY)
   
   class ThreeNodes.nodes.Timer extends ThreeNodes.NodeBase
     @node_name = 'Timer'
@@ -371,7 +371,7 @@ define [
         #@counter = diff * -1
         @counter = 0
       @old = now
-      @rack.set("out", @counter)
+      @rack.setField("out", @counter)
   
   class ThreeNodes.nodes.Font extends ThreeNodes.NodeBase
     @node_name = 'Font'
@@ -421,11 +421,11 @@ define [
       @reverseFontMap = {}
       @reverseWeightMap = {}
       
-      for i of @rack.collection.node_fields_by_name.inputs.weight.possible_values
-        @reverseWeightMap[@rack.collection.node_fields_by_name.inputs.weight.possible_values[i]] = i
+      for i of @rack.node_fields_by_name.inputs.weight.possible_values
+        @reverseWeightMap[@rack.node_fields_by_name.inputs.weight.possible_values[i]] = i
       
-      for i of @rack.collection.node_fields_by_name.inputs.font.possible_values
-        @reverseFontMap[@rack.collection.node_fields_by_name.inputs.font.possible_values[i]] = i
+      for i of @rack.node_fields_by_name.inputs.font.possible_values
+        @reverseFontMap[@rack.node_fields_by_name.inputs.font.possible_values[i]] = i
       
       @fontcache = -1
       @weightcache = -1
@@ -449,4 +449,4 @@ define [
       
       @fontcache = findex
       @weightcache = windex
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)

@@ -47,11 +47,11 @@ define [
         for i in [0..numItems]
           @ob[i] = new @material_class()
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob[i], [], i)
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], [], i)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
       
       @last_slice_count = numItems
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'MeshBasic'

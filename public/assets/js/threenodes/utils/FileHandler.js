@@ -36,7 +36,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       res += "//\n";
       res += "// nodes\n";
       res += "//\n";
-      _ref = nodegraph.nodes;
+      _ref = nodegraph.models;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         res += node.toCode();
@@ -45,7 +45,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       res += "//\n";
       res += "// connections\n";
       res += "//\n\n";
-      _ref2 = nodegraph.node_connections;
+      _ref2 = nodegraph.connections.models;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         c = _ref2[_j];
         res += c.toCode();
@@ -64,7 +64,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       nodegraph = this.context.injector.get("NodeGraph");
       res = {
         uid: ThreeNodes.uid,
-        nodes: jQuery.map(nodegraph.nodes, function(n, i) {
+        nodes: jQuery.map(nodegraph.models, function(n, i) {
           return n.toJSON();
         }),
         connections: jQuery.map(nodegraph.connections.models, function(c, i) {
@@ -82,14 +82,14 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       res += "<app>\n";
       res += "\t<uid last='" + ThreeNodes.uid + "' />\n";
       res += "\t<nodes>\n";
-      _ref = nodegraph.nodes;
+      _ref = nodegraph.models;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         res += node.toXML();
       }
       res += "\t</nodes>\n";
       res += "\t<connections>\n";
-      _ref2 = nodegraph.node_connections;
+      _ref2 = nodegraph.connections.models;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         c = _ref2[_j];
         res += c.toXML();

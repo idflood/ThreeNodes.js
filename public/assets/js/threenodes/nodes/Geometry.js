@@ -49,8 +49,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
         this.ob = new THREE.PlaneGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return PlaneGeometry;
@@ -105,8 +105,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
         this.ob = new THREE.CubeGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get());
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return CubeGeometry;
@@ -158,8 +158,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob = new THREE.SphereGeometry(this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
         this.cached = new_cache;
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return SphereGeometry;
@@ -214,8 +214,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob = new THREE.CylinderGeometry(this.rack.get("radiusTop").get(), this.rack.get("radiusBottom").get(), this.rack.get("height").get(), this.rack.get("segmentsRadius").get(), this.rack.get("segmentsHeight").get(), this.rack.get("openEnded").get());
         this.cached = new_cache;
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return CylinderGeometry;
@@ -269,8 +269,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob = new THREE.TorusGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get());
         this.cached = new_cache;
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return TorusGeometry;
@@ -326,8 +326,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob = new THREE.TorusKnotGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("p").get(), this.rack.get("q").get(), this.rack.get("heightScale").get());
         this.cached = new_cache;
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return TorusKnotGeometry;
@@ -378,8 +378,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob = new THREE.OctahedronGeometry(this.rack.get("radius").get(), this.rack.get("detail").get());
         this.cached = new_cache;
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return OctahedronGeometry;
@@ -441,7 +441,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       };
       if (!has_font_attribute(font) ||  this.rack.get("text").get() === "") {
         this.ob = false;
-        this.rack.set("out", this.ob);
+        this.rack.setField("out", this.ob);
         return false;
       }
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
@@ -457,7 +457,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob.computeVertexNormals();
         this.cached = new_cache;
       }
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return TextGeometry;

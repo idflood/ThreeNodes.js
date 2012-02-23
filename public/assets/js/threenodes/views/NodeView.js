@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'order!threenodes/views/NodeFieldRackView', "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
   "use strict";  ThreeNodes.NodeView = (function(_super) {
 
     __extends(NodeView, _super);
@@ -12,16 +12,20 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       NodeView.__super__.constructor.apply(this, arguments);
     }
 
-    NodeView.prototype.onRegister = function() {
+    NodeView.template = _view_node_template;
+
+    NodeView.prototype.initialize = function() {
       this.make_draggable();
       this.init_el_click();
       this.init_title_click();
-      return this.make_selectable();
-    };
-
-    NodeView.prototype.initialize = function() {
+      this.make_selectable();
+      this.rack_view = new ThreeNodes.NodeFieldRackView({
+        node: this.model,
+        collection: this.model.rack
+      });
       this.model.bind('change', this.render);
-      this.render;
+      this.render();
+      this.model.post_init();
       return this;
     };
 
@@ -38,7 +42,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     NodeView.prototype.init_context_menu = function() {
-      return $(".field", this.el).contextMenu({
+      $(".field", this.el).contextMenu({
         menu: "field-context-menu"
       }, function(action, el, pos) {
         var field;
@@ -47,10 +51,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return field.remove_connections();
         }
       });
+      return this;
     };
 
     NodeView.prototype.render_connections = function() {
-      return this.options.rack.render_connections();
+      return this.model.rack.render_connections();
     };
 
     NodeView.prototype.compute_node_position = function() {
@@ -62,7 +67,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeView.prototype.init_el_click = function() {
       var self;
       self = this;
-      return $(this.el).click(function(e) {
+      $(this.el).click(function(e) {
         var selectable;
         if (e.metaKey === false) {
           $(".node").removeClass("ui-selected");
@@ -77,14 +82,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         selectable = $("#container").data("selectable");
         selectable.refresh();
         selectable._mouseStop(null);
-        return self.options.rack.render_sidebar();
+        return self.model.rack.render_sidebar();
       });
+      return this;
     };
 
     NodeView.prototype.init_title_click = function() {
       var self;
       self = this;
-      return $(".head span", this.el).dblclick(function(e) {
+      $(".head span", this.el).dblclick(function(e) {
         var $input, apply_input_result, prev;
         prev = $(this).html();
         $(".head", self.el).append("<input type='text' />");
@@ -105,12 +111,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           if (e.keyCode === 13) return apply_input_result();
         });
       });
+      return this;
     };
 
     NodeView.prototype.make_draggable = function() {
       var self;
       self = this;
-      return $(this.el).draggable({
+      $(this.el).draggable({
         start: function(ev, ui) {
           if ($(this).hasClass("ui-selected")) {
             ThreeNodes.selected_nodes = $(".ui-selected").each(function() {
@@ -151,13 +158,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return self.render_connections();
         }
       });
+      return this;
     };
 
     NodeView.prototype.make_selectable = function() {
       var self,
         _this = this;
       self = this;
-      return $("#container").selectable({
+      $("#container").selectable({
         filter: ".node",
         stop: function(event, ui) {
           var $selected, nodes;
@@ -169,9 +177,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             ob.anim.objectTrack.name = $(".head span", ob.main_view).html();
             return nodes.push(ob.anim);
           });
-          return self.options.apptimeline.timeline.selectAnims(nodes);
+          return self.model.apptimeline.timeline.selectAnims(nodes);
         }
       });
+      return this;
     };
 
     return NodeView;

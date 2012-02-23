@@ -14,7 +14,7 @@ define [
     @group_name = 'Three'
     
     set_fields: =>
-      super
+      #super
       @auto_evaluate = true
       @ob = new THREE.Object3D()
       @rack.addFields
@@ -33,17 +33,17 @@ define [
       @shadow_cache = @create_cache_object(@vars_shadow_options)
     
     get_children_array: =>
-      childs = @rack.get("children").val
+      childs = @rack.getField("children").get("value")
       if childs && $.type(childs) != "array"
         return [childs]
       return childs
     
     compute: =>
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['children'])
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
       childs_in = @get_children_array()
       
       # no connections mean no children
-      if @rack.get("children").connections.length == 0 && @ob.children.length != 0
+      if @rack.getField("children").connections.length == 0 && @ob.children.length != 0
         @ob.remove(@ob.children[0]) while @ob.children.length > 0
       
       # remove old childs
@@ -62,7 +62,7 @@ define [
           #console.log @ob
           @ob.add(child)
       
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.Scene extends ThreeNodes.nodes.Object3D
     @node_name = 'Scene'
@@ -76,7 +76,7 @@ define [
   
     apply_children: =>
       # no connections means no children
-      if @rack.get("children").connections.length == 0 && @ob.children.length != 0
+      if @rack.getField("children").connections.length == 0 && @ob.children.length != 0
         @ob.remove(@ob.children[0]) while @ob.children.length > 0
         return true
       
@@ -109,9 +109,9 @@ define [
             @ob.add(child)
   
     compute: =>
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['children', 'lights'])
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
       @apply_children()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class Object3DwithMeshAndMaterial extends ThreeNodes.nodes.Object3D
     set_fields: =>
@@ -120,30 +120,30 @@ define [
       @geometry_cache = false
       
     rebuild_geometry: =>
-      field = @rack.get('geometry')
+      field = @rack.getField('geometry')
       if field.connections.length > 0
         geom = field.connections[0].from_field.node
         geom.cached = []
         geom.compute()
       else
-        @rack.get('geometry').set(new THREE.CubeGeometry( 200, 200, 200 ))
+        @rack.getField('geometry').setValue(new THREE.CubeGeometry( 200, 200, 200 ))
       
     get_geometry_cache: =>
       res = ""
-      if jQuery.type(@rack.get('geometry').val) == "array"
-        for f in @rack.get('geometry').val
+      if jQuery.type(@rack.getField('geometry').get("value")) == "array"
+        for f in @rack.getField('geometry').get("value")
           res += f.id
       else
-        res = @rack.get('geometry').val.id
+        res = @rack.getField('geometry').get("value").id
       res
       
     get_material_cache: =>
       res = ""
-      if jQuery.type(@rack.get('material').val) == "array"
-        for f in @rack.get('material').val
+      if jQuery.type(@rack.getField('material').get("value")) == "array"
+        for f in @rack.getField('material').get("value")
           res += f.id
       else
-        res = @rack.get('material').val.id
+        res = @rack.getField('material').get("value").id
       res
   
   class ThreeNodes.nodes.ThreeMesh extends Object3DwithMeshAndMaterial
@@ -157,7 +157,7 @@ define [
           "geometry": {type: "Geometry", val: new THREE.CubeGeometry( 200, 200, 200 )}
           "material": {type: "Material", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
           "overdraw": false
-      @ob = [new THREE.Mesh(@rack.get('geometry').get(), @rack.get('material').get())]
+      @ob = [new THREE.Mesh(@rack.getField('geometry').getValue(), @rack.getField('material').getValue())]
       @last_slice_count = 1
       @compute()
       
@@ -181,11 +181,11 @@ define [
       if @geometry_cache != new_geometry_cache || @material_cache != new_material_cache || needs_rebuild
         @ob = []
         for i in [0..numItems]
-          item = new THREE.Mesh(@rack.get('geometry').get(i), @rack.get('material').get(i))
+          item = new THREE.Mesh(@rack.getField('geometry').getValue(i), @rack.getField('material').getValue(i))
           @ob[i] = item
           
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
         ThreeNodes.rebuild_all_shaders()
@@ -193,7 +193,7 @@ define [
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       @geometry_cache = @get_geometry_cache()
       @material_cache = @get_material_cache()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.ThreeLine extends Object3DwithMeshAndMaterial
     @node_name = 'Line'
@@ -211,7 +211,7 @@ define [
             values:
               "LineStrip": THREE.LineStrip
               "LinePieces": THREE.LinePieces
-      @ob = [new THREE.Line(@rack.get('geometry').get(), @rack.get('material').get())]
+      @ob = [new THREE.Line(@rack.getField('geometry').getValue(), @rack.getField('material').getValue())]
       @last_slice_count = 1
       @compute()
       
@@ -235,11 +235,11 @@ define [
       if @geometry_cache != new_geometry_cache || @material_cache != new_material_cache || needs_rebuild
         @ob = []
         for i in [0..numItems]
-          item = new THREE.Line(@rack.get('geometry').get(i), @rack.get('material').get(i))
+          item = new THREE.Line(@rack.getField('geometry').getValue(i), @rack.getField('material').getValue(i))
           @ob[i] = item
           
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
         ThreeNodes.rebuild_all_shaders()
@@ -247,7 +247,7 @@ define [
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       @geometry_cache = @get_geometry_cache()
       @material_cache = @get_material_cache()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.Camera extends ThreeNodes.NodeBase
     @node_name = 'Camera'
@@ -269,9 +269,9 @@ define [
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['target'])
-      @ob.lookAt(@rack.get("target").get())
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['target'])
+      @ob.lookAt(@rack.getField("target").getValue())
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.Texture extends ThreeNodes.NodeBase
     @node_name = 'Texture'
@@ -288,7 +288,7 @@ define [
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      current = @rack.get("image").get()
+      current = @rack.getField("image").getValue()
       if current && current != ""
         if @cached == false || ($.type(@cached) == "object" && @cached.constructor == THREE.Texture && @cached.image.attributes[0].nodeValue != current)
           #@ob = new THREE.Texture(current)
@@ -297,7 +297,7 @@ define [
           console.log @ob
           @cached = @ob
           
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.Fog extends ThreeNodes.NodeBase
     @node_name = 'Fog'
@@ -317,8 +317,8 @@ define [
     compute: =>
       if @ob == false
         @ob = new THREE.Fog(0xffffff, 1, 1000)
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.FogExp2 extends ThreeNodes.NodeBase
     @node_name = 'FogExp2'
@@ -337,8 +337,8 @@ define [
     compute: =>
       if @ob == false
         @ob = new THREE.FogExp2(0xffffff, 0.00025)
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.WebGLRenderer extends ThreeNodes.NodeBase
     @node_name = 'WebGLRenderer'
@@ -369,7 +369,7 @@ define [
           "shadowMapEnabled": false
           "shadowMapSoft": true
       
-      @rack.get("camera").val.position.z = 1000
+      @rack.getField("camera").attributes.value.position.z = 1000
       @win = false
       @apply_size()
       @old_bg = false
@@ -412,12 +412,12 @@ define [
       return this
     
     apply_bg_color: (force_refresh = false) ->
-      new_val = @rack.get('bg_color').get().getContextStyle()
+      new_val = @rack.getField('bg_color').getValue().getContextStyle()
       
       if @old_bg == new_val && force_refresh == false
         return false
       
-      @ob.setClearColor( @rack.get('bg_color').get(), 1 )
+      @ob.setClearColor( @rack.getField('bg_color').getValue(), 1 )
       @webgl_container.css
         background: new_val
       
@@ -428,8 +428,8 @@ define [
       @old_bg = new_val
     
     apply_size: (force_refresh = false) =>
-      w = @rack.get('width').get()
-      h = @rack.get('height').get()
+      w = @rack.getField('width').getValue()
+      h = @rack.getField('height').getValue()
       dw = w
       dh = h
       if @win == false && @context.player_mode == false
@@ -447,7 +447,7 @@ define [
     
     apply_post_fx: =>
       # work on a copy of the incoming array
-      fxs = @rack.get("postfx").get().slice(0)
+      fxs = @rack.getField("postfx").getValue().slice(0)
       # 1st pass = rendermodel, last pass = screen
       fxs.unshift ThreeNodes.Webgl.renderModel
       fxs.push ThreeNodes.Webgl.effectScreen
@@ -474,13 +474,13 @@ define [
       
       @apply_size()
       @apply_bg_color()
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
-      ThreeNodes.Webgl.current_camera = @rack.get("camera").get()
-      ThreeNodes.Webgl.current_scene = @rack.get("scene").get()
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
+      ThreeNodes.Webgl.current_camera = @rack.getField("camera").getValue()
+      ThreeNodes.Webgl.current_scene = @rack.getField("scene").getValue()
       
       #set the current aspect on the camera
-      @rack.get("camera").get().aspect = @width / @height
-      @rack.get("camera").get().updateProjectionMatrix()
+      @rack.getField("camera").getValue().aspect = @width / @height
+      @rack.getField("camera").getValue().updateProjectionMatrix()
       
       @apply_post_fx()
       @ob.clear()

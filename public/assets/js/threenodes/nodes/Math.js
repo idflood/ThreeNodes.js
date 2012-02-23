@@ -162,8 +162,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       res = [];
       numItems = this.rack.getMaxInputSliceCount();
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        ref = this.v_in.get(i);
-        refb = this.v_factor.get(i);
+        ref = this.v_in.getValue(i);
+        refb = this.v_factor.getValue(i);
         switch ($.type(ref)) {
           case "number":
             switch ($.type(refb)) {
@@ -202,7 +202,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             }
         }
       }
-      this.v_out.set(res);
+      this.v_out.setValue(res);
       return true;
     };
 
@@ -439,12 +439,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.def_val = this.rack.addField("default", 0);
       this.reset_val = this.rack.addField("reset", false);
       this.v_factor = this.rack.addField("factor", 0.8);
-      return this.val = this.def_val.get();
+      return this.val = this.def_val.getValue();
     };
 
     MathAttenuation.prototype.process_val = function(num, numb, i) {
-      if (this.reset_val.get(i) === true) this.val = this.def_val.get(i);
-      this.val = this.val + (this.v_in.get(i) - this.val) * this.v_factor.get(i);
+      if (this.reset_val.getValue(i) === true) this.val = this.def_val.getValue(i);
+      this.val = this.val + (this.v_in.getValue(i) - this.val) * this.v_factor.getValue(i);
       return this.val;
     };
 

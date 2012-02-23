@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
   "text!templates/node.tmpl.html",
+  'order!threenodes/views/NodeFieldRackView',
   "order!libs/jquery.tmpl.min",
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
@@ -11,18 +12,24 @@ define [
   "use strict"
   
   class ThreeNodes.NodeView extends Backbone.View
-    onRegister: () ->
+    @template = _view_node_template
+        
+    initialize: () ->
       @make_draggable()
       @init_el_click()
       @init_title_click()
       @make_selectable()
-    
-    initialize: () ->
+      
+      @rack_view = new ThreeNodes.NodeFieldRackView
+        node: @model
+        collection: @model.rack
+      
       @model.bind 'change', @render
-      @render
+      @render()
+      @model.post_init()
       @
     
-    render:  () =>
+    render: () =>
       $el = $(@el)
       $el.css
         left: parseInt @model.get("x")
@@ -36,9 +43,10 @@ define [
         if action == "remove_connection"
           field = $(el).data("object")
           field.remove_connections()
+      return @
     
     render_connections: () ->
-      @options.rack.render_connections()
+      @model.rack.render_connections()
     
     compute_node_position: () ->
       pos = $(@el).position()
@@ -58,7 +66,8 @@ define [
         selectable = $("#container").data("selectable")
         selectable.refresh()
         selectable._mouseStop(null)
-        self.options.rack.render_sidebar()
+        self.model.rack.render_sidebar()
+      return @
     
     init_title_click: () ->
       self = this
@@ -84,6 +93,7 @@ define [
           # on enter
           if e.keyCode == 13
             apply_input_result()
+      return @
     
     make_draggable: () ->
       self = this
@@ -117,7 +127,8 @@ define [
             el.view.render_connections()
           self.compute_node_position()
           self.render_connections()
-  
+      return @
+    
     make_selectable: () ->
       self = this
       $("#container").selectable
@@ -129,6 +140,8 @@ define [
             ob = $(this).data("object")
             ob.anim.objectTrack.name = $(".head span", ob.main_view).html()
             nodes.push(ob.anim)
-          self.options.apptimeline.timeline.selectAnims(nodes)
+          self.model.apptimeline.timeline.selectAnims(nodes)
+      return @
+  
   
   return ThreeNodes.NodeView

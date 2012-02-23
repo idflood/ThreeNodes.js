@@ -29,7 +29,7 @@ define [
       res += "// nodes\n"
       res += "//\n"
       
-      for node in nodegraph.nodes
+      for node in nodegraph.models
         res += node.toCode()
       
       res += "\n"
@@ -37,7 +37,7 @@ define [
       res += "// connections\n"
       res += "//\n\n"
       
-      for c in nodegraph.node_connections
+      for c in nodegraph.connections.models
         res += c.toCode()
         
       res += "\n\n"
@@ -53,7 +53,7 @@ define [
       nodegraph = @context.injector.get("NodeGraph")
       res = 
         uid: ThreeNodes.uid
-        nodes: jQuery.map(nodegraph.nodes, (n, i) -> n.toJSON())
+        nodes: jQuery.map(nodegraph.models, (n, i) -> n.toJSON())
         connections: jQuery.map(nodegraph.connections.models, (c, i) -> c.toJSON())
       JSON.stringify(res)
     
@@ -66,12 +66,12 @@ define [
       res += "\t<uid last='#{ThreeNodes.uid}' />\n"
     
       res += "\t<nodes>\n"
-      for node in nodegraph.nodes
+      for node in nodegraph.models
         res += node.toXML()
       res += "\t</nodes>\n"
       
       res += "\t<connections>\n"
-      for c in nodegraph.node_connections
+      for c in nodegraph.connections.models
         res += c.toXML()
       res += "\t</connections>\n"
       

@@ -44,8 +44,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     PointLight.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return PointLight;
@@ -100,8 +100,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.rack.get("castShadow").get() !== this.ob.castShadow) {
         ThreeNodes.rebuild_all_shaders();
       }
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return SpotLight;
@@ -148,8 +148,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     DirectionalLight.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return DirectionalLight;
@@ -194,8 +194,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     AmbientLight.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return AmbientLight;

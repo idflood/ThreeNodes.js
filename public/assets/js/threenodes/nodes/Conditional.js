@@ -48,7 +48,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       } else {
         res = this.rack.get("val2").val;
       }
-      return this.rack.set("out", res);
+      return this.rack.setField("out", res);
     };
 
     return IfElse;
@@ -84,7 +84,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     And.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get() !== false && this.rack.get("val2").get() !== false;
-      return this.rack.set("out", res);
+      return this.rack.setField("out", res);
     };
 
     return And;
@@ -120,7 +120,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Or.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get() !== false || this.rack.get("val2").get() !== false;
-      return this.rack.set("out", res);
+      return this.rack.setField("out", res);
     };
 
     return Or;
@@ -162,7 +162,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Equal.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get(0) === this.rack.get("val2").get(0);
-      return this.rack.set("out", res);
+      return this.rack.setField("out", res);
     };
 
     return Equal;
@@ -204,7 +204,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Smaller.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get(0) < this.rack.get("val2").get(0);
-      return this.rack.set("out", res);
+      return this.rack.setField("out", res);
     };
 
     return Smaller;
@@ -246,7 +246,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Greater.prototype.compute = function() {
       var res;
       res = this.rack.get("val1").get(0) > this.rack.get("val2").get(0);
-      return this.rack.set("out", res);
+      return this.rack.setField("out", res);
     };
 
     return Greater;

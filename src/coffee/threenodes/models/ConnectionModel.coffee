@@ -24,7 +24,7 @@ define [
         @from_field.add_connection(this)
         @to_field.add_connection(this)
         # dispatch the new value
-        @to_field.set(@from_field.get())
+        @to_field.setValue(@from_field.get())
         @from_field.node.dirty = true
     
     remove: =>
@@ -53,7 +53,7 @@ define [
         return true
       
       # never connect in/out from the same node
-      if @from_field.node.model.get('nid') == @to_field.node.model.get('nid')
+      if @from_field.node.get('nid') == @to_field.node.get('nid')
         return true
       
       @switch_fields_if_needed()
@@ -73,10 +73,10 @@ define [
     toJSON: () ->
       res =
         id: @get("cid")
-        from_node: @get("from_field").node.model.get("nid")
-        from: @get("from_field").name
-        to_node: @get("to_field").node.model.get("nid")
-        to: @get("to_field").name
+        from_node: @get("from_field").node.get("nid")
+        from: @get("from_field").get("name")
+        to_node: @get("to_field").node.get("nid")
+        to: @get("to_field").get("name")
       res
     
     toXML: () ->
@@ -85,8 +85,8 @@ define [
     toCode: () ->
       res = "var connection_#{@get('cid')}_data = {\n"
       res += "\t" + "id: #{@get('cid')},\n"
-      res += "\t" + "from_node: #{@get('from_field').node.model.get('nid')}, from: '#{@get('from_field').name}',\n"
-      res += "\t" + "to_node: #{@get('to_field').node.model.get('nid')}, to: '#{@get('to_field').name}'\n"
+      res += "\t" + "from_node: #{@get('from_field').node.get('nid')}, from: '#{@get('from_field').get('name')}',\n"
+      res += "\t" + "to_node: #{@get('to_field').node.get('nid')}, to: '#{@get('to_field').get('name')}'\n"
       res += "};\n"
       res += "var connection_#{@cid} = nodegraph.createConnectionFromObject(connection_#{@get('cid')}_data);\n"
       res

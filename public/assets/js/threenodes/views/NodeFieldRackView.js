@@ -15,6 +15,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
 
     NodeFieldRackView.prototype.initialize = function() {
       var _this = this;
+      this.collection.bind("add", function(model) {});
       return this.collection.bind("field:registered", function(model, el) {
         return _this.add_field_listener(el);
       });

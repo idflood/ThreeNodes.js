@@ -21,7 +21,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Object3D.group_name = 'Three';
 
     Object3D.prototype.set_fields = function() {
-      Object3D.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
       this.ob = new THREE.Object3D();
       this.rack.addFields({
@@ -61,16 +60,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     Object3D.prototype.get_children_array = function() {
       var childs;
-      childs = this.rack.get("children").val;
+      childs = this.rack.getField("children").get("value");
       if (childs && $.type(childs) !== "array") return [childs];
       return childs;
     };
 
     Object3D.prototype.compute = function() {
       var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['children']);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
       childs_in = this.get_children_array();
-      if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
+      if (this.rack.getField("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
           this.ob.remove(this.ob.children[0]);
         }
@@ -86,7 +85,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         ind = this.ob.children.indexOf(child);
         if (ind === -1) this.ob.add(child);
       }
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return Object3D;
@@ -120,7 +119,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     Scene.prototype.apply_children = function() {
       var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
-      if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
+      if (this.rack.getField("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
           this.ob.remove(this.ob.children[0]);
         }
@@ -167,9 +166,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     Scene.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['children', 'lights']);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
       this.apply_children();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return Scene;
@@ -195,27 +194,27 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     Object3DwithMeshAndMaterial.prototype.rebuild_geometry = function() {
       var field, geom;
-      field = this.rack.get('geometry');
+      field = this.rack.getField('geometry');
       if (field.connections.length > 0) {
         geom = field.connections[0].from_field.node;
         geom.cached = [];
         return geom.compute();
       } else {
-        return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
+        return this.rack.getField('geometry').setValue(new THREE.CubeGeometry(200, 200, 200));
       }
     };
 
     Object3DwithMeshAndMaterial.prototype.get_geometry_cache = function() {
       var f, res, _i, _len, _ref;
       res = "";
-      if (jQuery.type(this.rack.get('geometry').val) === "array") {
-        _ref = this.rack.get('geometry').val;
+      if (jQuery.type(this.rack.getField('geometry').get("value")) === "array") {
+        _ref = this.rack.getField('geometry').get("value");
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
           res += f.id;
         }
       } else {
-        res = this.rack.get('geometry').val.id;
+        res = this.rack.getField('geometry').get("value").id;
       }
       return res;
     };
@@ -223,14 +222,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Object3DwithMeshAndMaterial.prototype.get_material_cache = function() {
       var f, res, _i, _len, _ref;
       res = "";
-      if (jQuery.type(this.rack.get('material').val) === "array") {
-        _ref = this.rack.get('material').val;
+      if (jQuery.type(this.rack.getField('material').get("value")) === "array") {
+        _ref = this.rack.getField('material').get("value");
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
           res += f.id;
         }
       } else {
-        res = this.rack.get('material').val.id;
+        res = this.rack.getField('material').get("value").id;
       }
       return res;
     };
@@ -269,7 +268,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "overdraw": false
         }
       });
-      this.ob = [new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get())];
+      this.ob = [new THREE.Mesh(this.rack.getField('geometry').getValue(), this.rack.getField('material').getValue())];
       this.last_slice_count = 1;
       return this.compute();
     };
@@ -291,18 +290,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.geometry_cache !== new_geometry_cache || this.material_cache !== new_material_cache || needs_rebuild) {
         this.ob = [];
         for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-          item = new THREE.Mesh(this.rack.get('geometry').get(i), this.rack.get('material').get(i));
+          item = new THREE.Mesh(this.rack.getField('geometry').getValue(i), this.rack.getField('material').getValue(i));
           this.ob[i] = item;
         }
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
       if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return ThreeMesh;
@@ -346,7 +345,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      this.ob = [new THREE.Line(this.rack.get('geometry').get(), this.rack.get('material').get())];
+      this.ob = [new THREE.Line(this.rack.getField('geometry').getValue(), this.rack.getField('material').getValue())];
       this.last_slice_count = 1;
       return this.compute();
     };
@@ -368,18 +367,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.geometry_cache !== new_geometry_cache || this.material_cache !== new_material_cache || needs_rebuild) {
         this.ob = [];
         for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-          item = new THREE.Line(this.rack.get('geometry').get(i), this.rack.get('material').get(i));
+          item = new THREE.Line(this.rack.getField('geometry').getValue(i), this.rack.getField('material').getValue(i));
           this.ob[i] = item;
         }
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
       if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return ThreeLine;
@@ -428,9 +427,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     Camera.prototype.compute = function() {
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['target']);
-      this.ob.lookAt(this.rack.get("target").get());
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['target']);
+      this.ob.lookAt(this.rack.getField("target").getValue());
+      return this.rack.setField("out", this.ob);
     };
 
     return Camera;
@@ -472,7 +471,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     Texture.prototype.compute = function() {
       var current;
-      current = this.rack.get("image").get();
+      current = this.rack.getField("image").getValue();
       if (current && current !== "") {
         if (this.cached === false ||  ($.type(this.cached) === "object" && this.cached.constructor === THREE.Texture && this.cached.image.attributes[0].nodeValue !== current)) {
           this.ob = new THREE.ImageUtils.loadTexture(current);
@@ -481,7 +480,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           this.cached = this.ob;
         }
       }
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return Texture;
@@ -524,8 +523,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     Fog.prototype.compute = function() {
       if (this.ob === false) this.ob = new THREE.Fog(0xffffff, 1, 1000);
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return Fog;
@@ -567,8 +566,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     FogExp2.prototype.compute = function() {
       if (this.ob === false) this.ob = new THREE.FogExp2(0xffffff, 0.00025);
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return FogExp2;
@@ -633,7 +632,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "shadowMapSoft": true
         }
       });
-      this.rack.get("camera").val.position.z = 1000;
+      this.rack.getField("camera").attributes.value.position.z = 1000;
       this.win = false;
       this.apply_size();
       this.old_bg = false;
@@ -682,9 +681,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     WebGLRenderer.prototype.apply_bg_color = function(force_refresh) {
       var new_val;
       if (force_refresh == null) force_refresh = false;
-      new_val = this.rack.get('bg_color').get().getContextStyle();
+      new_val = this.rack.getField('bg_color').getValue().getContextStyle();
       if (this.old_bg === new_val && force_refresh === false) return false;
-      this.ob.setClearColor(this.rack.get('bg_color').get(), 1);
+      this.ob.setClearColor(this.rack.getField('bg_color').getValue(), 1);
       this.webgl_container.css({
         background: new_val
       });
@@ -699,8 +698,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     WebGLRenderer.prototype.apply_size = function(force_refresh) {
       var dh, dw, h, maxw, r, w;
       if (force_refresh == null) force_refresh = false;
-      w = this.rack.get('width').get();
-      h = this.rack.get('height').get();
+      w = this.rack.getField('width').getValue();
+      h = this.rack.getField('height').getValue();
       dw = w;
       dh = h;
       if (this.win === false && this.context.player_mode === false) {
@@ -719,7 +718,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     WebGLRenderer.prototype.apply_post_fx = function() {
       var fxs;
-      fxs = this.rack.get("postfx").get().slice(0);
+      fxs = this.rack.getField("postfx").getValue().slice(0);
       fxs.unshift(ThreeNodes.Webgl.renderModel);
       fxs.push(ThreeNodes.Webgl.effectScreen);
       return ThreeNodes.Webgl.composer.passes = fxs;
@@ -746,11 +745,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (!this.context.testing_mode) this.add_renderer_to_dom();
       this.apply_size();
       this.apply_bg_color();
-      this.apply_fields_to_val(this.rack.collection.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
-      ThreeNodes.Webgl.current_camera = this.rack.get("camera").get();
-      ThreeNodes.Webgl.current_scene = this.rack.get("scene").get();
-      this.rack.get("camera").get().aspect = this.width / this.height;
-      this.rack.get("camera").get().updateProjectionMatrix();
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
+      ThreeNodes.Webgl.current_camera = this.rack.getField("camera").getValue();
+      ThreeNodes.Webgl.current_scene = this.rack.getField("scene").getValue();
+      this.rack.getField("camera").getValue().aspect = this.width / this.height;
+      this.rack.getField("camera").getValue().updateProjectionMatrix();
       this.apply_post_fx();
       this.ob.clear();
       ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene;

@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/core/Node',
+  'order!threenodes/views/NodeView',
   'order!threenodes/nodes/Base',
   'order!threenodes/nodes/Conditional',
   'order!threenodes/nodes/Geometry',
@@ -20,7 +21,7 @@ define [
   class ThreeNodes.NodeGraph extends Backbone.Collection
     
     initialize: (models, options) =>
-      @nodes = []
+      #@nodes = []
       @nodes_by_nid = {}
       @fields_by_fid = {}
       @connections = new ThreeNodes.ConnectionsCollection()
@@ -28,36 +29,50 @@ define [
         view = new ThreeNodes.ConnectionView
           model: connection
       @types = false
+      @bind "add", (node) ->
+        template = ThreeNodes.NodeView.template
+        tmpl = _.template(template, node)
+        view = new ThreeNodes.NodeView
+          model: node
+          el: $(tmpl)
+        
+        $("#container").append(view.el)
     
     create_node: (nodename, x, y, inXML = false, inJSON = false) =>
       if !ThreeNodes.nodes[nodename]
         console.error("Node type doesn't exists: " + nodename)
-      n = new ThreeNodes.nodes[nodename](x, y, inXML, inJSON)
-      @context.injector.applyContext(n)
-      @nodes.push(n)
-      @nodes_by_nid[n.model.get("nid")] = n
+      n = new ThreeNodes.nodes[nodename]
+        x: x
+        y: y
+        context: @context
+        inXML: inXML
+        inJSON: inJSON
+      
+      n.load(inXML, inJSON)
+      @add(n)
+      @nodes_by_nid[n.get("nid")] = n
       n
     
     render: () =>
       invalidNodes = {}
       terminalNodes = {}
       
-      for node in @nodes
+      for node in @models
         if node.has_out_connection() == false || node.auto_evaluate || node.delays_output
-          terminalNodes[node.model.get("nid")] = node
-        invalidNodes[node.model.get("nid")] = node
+          terminalNodes[node.get("nid")] = node
+        invalidNodes[node.get("nid")] = node
       
       evaluateSubGraph = (node) ->
         upstreamNodes = node.getUpstreamNodes()
         for upnode in upstreamNodes
-          if invalidNodes[upnode.model.get("nid")] && !upnode.delays_output
+          if invalidNodes[upnode.get("nid")] && !upnode.delays_output
             evaluateSubGraph(upnode)
         if node.dirty || node.auto_evaluate
           node.update()
           node.dirty = false
           node.rack.setFieldInputUnchanged()
         
-        delete invalidNodes[node.model.get("nid")]
+        delete invalidNodes[node.get("nid")]
         true
       
       for nid of terminalNodes
@@ -67,9 +82,9 @@ define [
     
     createConnectionFromObject: (connection) =>
       from_node = @get_node(connection.from_node.toString())
-      from = from_node.rack.collection.node_fields_by_name.outputs[connection.from.toString()]
+      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
       to_node = @get_node(connection.to_node.toString())
-      to = to_node.rack.collection.node_fields_by_name.inputs[connection.to.toString()]
+      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
       c = @connections.create
           from_field: from
           to_field: to
@@ -80,11 +95,9 @@ define [
       @connections.render()
     
     removeNode: (n) ->
-      ind = @nodes.indexOf(n)
-      if ind != -1
-        @nodes.splice(ind, 1)
-      if @nodes_by_nid[n.model.get("nid")]
-        delete @nodes_by_nid[n.model.get("nid")]
+      @remove(n)
+      if @nodes_by_nid[n.get("nid")]
+        delete @nodes_by_nid[n.get("nid")]
     
     removeConnection: (c) ->
       @connections.remove(c)
@@ -94,8 +107,7 @@ define [
     
     remove_all_nodes: () ->
       $("#tab-attribute").html("")
-      while @nodes.length > 0
-        @nodes[0].remove()
+      @reset([])
       true
     
     remove_all_connections: () ->

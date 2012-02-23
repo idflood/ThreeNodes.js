@@ -37,7 +37,7 @@ define [
       if @value_has_changed(['kernelSize', 'sigma', 'resolution']) == true
         @ob = new THREE.BloomPass(@rack.get("strength").get(), @rack.get('kernelSize').get(), @rack.get('sigma').get(), @rack.get('resolution').get())
       @ob.screenUniforms[ "opacity" ].value = @rack.get("strength").get()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.DotScreenPass extends ThreeNodes.NodeBase
     @node_name = 'DotScreen'
@@ -65,7 +65,7 @@ define [
     compute: =>
       if @value_has_changed(['center', 'angle', 'scale']) == true
         @ob = new THREE.DotScreenPass(@rack.get("center").get(), @rack.get('angle').get(), @rack.get('scale').get())
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.FilmPass extends ThreeNodes.NodeBase
     @node_name = 'Film'
@@ -96,7 +96,7 @@ define [
       @ob.uniforms.nIntensity.value = @rack.get("noiseIntensity").get()
       @ob.uniforms.sIntensity.value = @rack.get("scanlinesIntensity").get()
       @ob.uniforms.sCount.value = @rack.get("scanlinesCount").get()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.VignettePass extends ThreeNodes.NodeBase
     @node_name = 'Vignette'
@@ -116,7 +116,7 @@ define [
     compute: =>
       @ob.uniforms[ "offset" ].value = @rack.get("offset").get()
       @ob.uniforms[ "darkness" ].value = @rack.get("darkness").get()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.HorizontalBlurPass extends ThreeNodes.NodeBase
     @node_name = 'HorizontalBlur'
@@ -134,7 +134,7 @@ define [
       
     compute: =>
       @ob.uniforms[ "h" ].value = @rack.get("delta").get()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.VerticalBlurPass extends ThreeNodes.NodeBase
     @node_name = 'VerticalBlur'
@@ -152,7 +152,7 @@ define [
       
     compute: =>
       @ob.uniforms[ "v" ].value = @rack.get("delta").get()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.BleachPass extends ThreeNodes.NodeBase
     @node_name = 'Bleach'
@@ -170,4 +170,4 @@ define [
       
     compute: =>
       @ob.uniforms[ "opacity" ].value = @rack.get("opacity").get()
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)

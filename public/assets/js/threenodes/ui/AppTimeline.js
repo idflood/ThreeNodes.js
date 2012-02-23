@@ -31,17 +31,17 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
           return _this.context.commandMap.execute("OnUiResizeCommand");
         },
         setPropertyValue: function(propertyAnim, t) {
-          return propertyAnim.target[propertyAnim.propertyName].set(t);
+          return propertyAnim.target[propertyAnim.propertyName].setValue(t);
         },
         applyPropertyValue: function(propertyAnim, t) {
-          return propertyAnim.target[propertyAnim.propertyName].set(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t);
+          return propertyAnim.target[propertyAnim.propertyName].setValue(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t);
         },
         getPropertyValue: function(propertyAnim) {
-          return propertyAnim.target[propertyAnim.propertyName].get();
+          return propertyAnim.target[propertyAnim.propertyName].getValue();
         },
         onTrackRebuild: function() {
           var node, _i, _len, _ref, _results;
-          _ref = ng.nodes;
+          _ref = ng.models;
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             node = _ref[_i];

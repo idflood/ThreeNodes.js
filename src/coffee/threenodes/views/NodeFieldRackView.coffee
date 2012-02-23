@@ -11,6 +11,9 @@ define [
   
   class ThreeNodes.NodeFieldRackView extends Backbone.View
     initialize: () ->
+      @collection.bind "add", (model) ->
+        #console.log "collection.add"
+        
       @collection.bind "field:registered", (model, el) =>
         @add_field_listener(el)
     

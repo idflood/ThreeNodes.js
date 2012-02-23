@@ -28,8 +28,8 @@ define [
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.SpotLight extends ThreeNodes.NodeBase
     @node_name = 'SpotLight'
@@ -54,8 +54,8 @@ define [
     compute: =>
       if @rack.get("castShadow").get() != @ob.castShadow
         ThreeNodes.rebuild_all_shaders()
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.DirectionalLight extends ThreeNodes.NodeBase
     @node_name = 'DirectionalLight'
@@ -76,8 +76,8 @@ define [
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.AmbientLight extends ThreeNodes.NodeBase
     @node_name = 'AmbientLight'
@@ -96,5 +96,5 @@ define [
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)

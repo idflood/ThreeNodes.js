@@ -54,7 +54,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           this.value[i] = this.rnd.getRandomNumber() * this.width - this.width / 2 + this.offset;
         }
       }
-      return this.rack.set("out", this.value);
+      return this.rack.setField("out", this.value);
     };
 
     return RandomSpread;
@@ -111,7 +111,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         res = this.offset - this.width / 2 + res;
         this.value[i] = res;
       }
-      return this.rack.set("out", this.value);
+      return this.rack.setField("out", this.value);
     };
 
     return LinearSpread;

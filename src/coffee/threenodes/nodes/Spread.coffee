@@ -45,7 +45,7 @@ define [
         @count = parseInt(@rack.get("count").val)
         for i in [0..@count - 1]
           @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
-      @rack.set("out", @value)
+      @rack.setField("out", @value)
   
   class ThreeNodes.nodes.LinearSpread extends ThreeNodes.NodeBase
     @node_name = 'LinearSpread'
@@ -84,5 +84,5 @@ define [
         res = ( i * stepSize + shift + @phase ) % @width
         res = @offset - @width / 2 + res
         @value[i] = res
-      @rack.set("out", @value)
+      @rack.setField("out", @value)
       

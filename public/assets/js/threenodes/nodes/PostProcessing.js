@@ -53,7 +53,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         this.ob = new THREE.BloomPass(this.rack.get("strength").get(), this.rack.get('kernelSize').get(), this.rack.get('sigma').get(), this.rack.get('resolution').get());
       }
       this.ob.screenUniforms["opacity"].value = this.rack.get("strength").get();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return BloomPass;
@@ -110,7 +110,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.value_has_changed(['center', 'angle', 'scale']) === true) {
         this.ob = new THREE.DotScreenPass(this.rack.get("center").get(), this.rack.get('angle').get(), this.rack.get('scale').get());
       }
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return DotScreenPass;
@@ -166,7 +166,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.ob.uniforms.nIntensity.value = this.rack.get("noiseIntensity").get();
       this.ob.uniforms.sIntensity.value = this.rack.get("scanlinesIntensity").get();
       this.ob.uniforms.sCount.value = this.rack.get("scanlinesCount").get();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return FilmPass;
@@ -208,7 +208,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     VignettePass.prototype.compute = function() {
       this.ob.uniforms["offset"].value = this.rack.get("offset").get();
       this.ob.uniforms["darkness"].value = this.rack.get("darkness").get();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return VignettePass;
@@ -248,7 +248,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     HorizontalBlurPass.prototype.compute = function() {
       this.ob.uniforms["h"].value = this.rack.get("delta").get();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return HorizontalBlurPass;
@@ -288,7 +288,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     VerticalBlurPass.prototype.compute = function() {
       this.ob.uniforms["v"].value = this.rack.get("delta").get();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return VerticalBlurPass;
@@ -328,7 +328,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     BleachPass.prototype.compute = function() {
       this.ob.uniforms["opacity"].value = this.rack.get("opacity").get();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return BleachPass;

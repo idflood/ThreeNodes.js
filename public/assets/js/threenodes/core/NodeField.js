@@ -2,17 +2,12 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", 'order!threenodes/utils/Utils', 'order!threenodes/models/NodeFieldModel'], function($, _, Backbone, _view_node_field_in, _view_node_field_out) {
-  "use strict";  ThreeNodes.NodeField = (function() {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmpl.html", "text!templates/node_field_output.tmpl.html", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_field_in, _view_node_field_out) {
+  "use strict";  ThreeNodes.NodeField = (function(_super) {
 
-    NodeField.connections = false;
+    __extends(NodeField, _super);
 
-    function NodeField(name, val, possible_values, fid) {
-      var self;
-      this.name = name;
-      this.val = val;
-      this.possible_values = possible_values != null ? possible_values : false;
-      this.fid = fid != null ? fid : ThreeNodes.Utils.get_uid();
+    function NodeField() {
       this.create_subval_textinput = __bind(this.create_subval_textinput, this);
       this.create_sidebar_field_title = __bind(this.create_sidebar_field_title, this);
       this.link_textfield_to_subval = __bind(this.link_textfield_to_subval, this);
@@ -34,16 +29,38 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.getSliceCount = __bind(this.getSliceCount, this);
       this.isConnected = __bind(this.isConnected, this);
       this.isChanged = __bind(this.isChanged, this);
-      this.get = __bind(this.get, this);
-      this.set = __bind(this.set, this);
+      this.getValue = __bind(this.getValue, this);
+      this.setValue = __bind(this.setValue, this);
+      this.setFID = __bind(this.setFID, this);
+      this.initialize = __bind(this.initialize, this);
+      this.sync = __bind(this.sync, this);
+      NodeField.__super__.constructor.apply(this, arguments);
+    }
+
+    NodeField.prototype["default"] = {
+      fid: -1,
+      name: "fieldname",
+      is_out: false,
+      value: 0,
+      "default": null
+    };
+
+    NodeField.prototype.sync = function() {};
+
+    NodeField.prototype.initialize = function(options) {
+      var self;
       self = this;
       this.on_value_update_hooks = {};
-      this.node = false;
+      this.node = options.node;
       this.is_output = false;
       this.changed = true;
       this.connections = [];
-      this.default_value = null;
-    }
+      return this.default_value = null;
+    };
+
+    NodeField.prototype.setFID = function(fid) {
+      return this.set("fid", fid);
+    };
 
     NodeField.prototype.onRegister = function() {
       var ng;
@@ -52,10 +69,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return this.on_value_changed(this.val);
     };
 
-    NodeField.prototype.set = function(v) {
-      var connection, hook, new_val, tmp_val, _i, _len, _ref;
+    NodeField.prototype.setValue = function(v) {
+      var connection, hook, new_val, prev_val, tmp_val, _i, _len, _ref;
       this.changed = true;
-      this.node.dirty = true;
+      if (this.node) this.node.dirty = true;
+      prev_val = this.get("value");
       new_val = this.on_value_changed(v);
       if ($.type(new_val) === "array") {
         tmp_val = _.filter(new_val, function(item) {
@@ -68,31 +86,33 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         }
       }
       if (new_val === null) {
-        if (this.default_value !== null && this.default_value !== void 0) {
-          this.val = this.default_value;
+        if (this.get("default") !== null && this.get("default") !== void 0) {
+          prev_val = this.get("default");
         }
-        new_val = this.val;
+        new_val = prev_val;
       }
-      this.val = new_val;
+      this.set("value", new_val);
       for (hook in this.on_value_update_hooks) {
-        this.on_value_update_hooks[hook](this.val);
+        this.on_value_update_hooks[hook](new_val);
       }
       if (this.is_output === true) {
         _ref = this.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           connection = _ref[_i];
-          connection.to_field.set(this.val);
+          connection.to_field.setValue(new_val);
         }
       }
       return true;
     };
 
-    NodeField.prototype.get = function(index) {
+    NodeField.prototype.getValue = function(index) {
+      var val;
       if (index == null) index = 0;
-      if ($.type(this.val) !== "array") {
-        return this.val;
+      val = this.get("value");
+      if ($.type(val) !== "array") {
+        return val;
       } else {
-        return this.val[index % this.val.length];
+        return val[index % val.length];
       }
     };
 
@@ -108,8 +128,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     NodeField.prototype.getSliceCount = function() {
-      if (jQuery.type(this.val) !== "array") return 1;
-      return this.val.length;
+      var val;
+      val = this.get("value");
+      if (jQuery.type(val) !== "array") return 1;
+      return val.length;
     };
 
     NodeField.prototype.is_animation_property = function() {
@@ -120,21 +142,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     NodeField.prototype.toJSON = function() {
-      var res, val_type;
+      var res, val, val_type;
       res = {
         name: this.name
       };
-      val_type = jQuery.type(this.get());
-      if (val_type !== "object" && val_type !== "array") res.val = this.get();
+      val = this.get("value");
+      val_type = jQuery.type(val);
+      if (val_type !== "object" && val_type !== "array") res.val = val;
       return res;
     };
 
     NodeField.prototype.toCode = function() {
-      var res, val_type;
+      var res, val, val_type;
       res = "";
-      val_type = jQuery.type(this.get());
+      val = this.get("value");
+      val_type = jQuery.type(val);
       if (val_type !== "object" && val_type !== "array") {
-        res = "\t\t{name: '" + this.name + "', val: " + (this.get()) + "},\n";
+        res = "\t\t{name: '" + this.name + "', val: " + val + "},\n";
       } else {
         res = "\t\t{name: '" + this.name + "'},\n";
       }
@@ -142,7 +166,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     NodeField.prototype.toXML = function() {
-      return "\t\t\t<field fid='" + this.fid + "' val='" + (this.get()) + "'/>\n";
+      var val;
+      val = this.get("value");
+      return "\t\t\t<field fid='" + this.fid + "' val='" + val + "'/>\n";
     };
 
     NodeField.prototype.render_connections = function() {
@@ -233,7 +259,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       f_input.val(this.get());
       f_input.keypress(function(e) {
         if (e.which === 13) {
-          self.set($(this).val());
+          self.setValue($(this).val());
           return $(this).blur();
         }
       });
@@ -246,10 +272,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.on_value_update_hooks["update_sidebar_textfield_" + subval] = function(v) {
         return f_input.val(v[subval]);
       };
-      f_input.val(this.get()[subval]);
+      f_input.val(this.get("value")[subval]);
       f_input.keypress(function(e) {
         if (e.which === 13) {
-          self.val[subval] = $(this).val();
+          self.attributes.value[subval] = $(this).val();
           return $(this).blur();
         }
       });
@@ -273,7 +299,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     return NodeField;
 
-  })();
+  })(Backbone.Model);
   ThreeNodes.fields.types.Any = (function(_super) {
 
     __extends(Any, _super);
@@ -289,7 +315,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     Any.prototype.on_value_changed = function(val) {
-      return this.val = this.compute_value(val);
+      return this.set({
+        value: this.compute_value(val)
+      });
     };
 
     return Any;
@@ -300,7 +328,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     __extends(Array, _super);
 
     function Array() {
-      this.get = __bind(this.get, this);
+      this.getValue = __bind(this.getValue, this);
       this.on_value_changed = __bind(this.on_value_changed, this);
       this.remove_connections = __bind(this.remove_connections, this);
       this.compute_value = __bind(this.compute_value, this);
@@ -322,12 +350,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     Array.prototype.on_value_changed = function(val) {
-      return this.val = this.compute_value(val);
+      return this.set({
+        value: this.compute_value(val)
+      });
     };
 
-    Array.prototype.get = function(index) {
+    Array.prototype.getValue = function(index) {
       if (index == null) index = 0;
-      return this.val;
+      return this.get("value");
     };
 
     return Array;
@@ -351,18 +381,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       $target.append("<div><input type='checkbox' id='" + id + "'/></div>");
       f_in = $("#" + id);
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
-        if (self.get() === true) {
+        if (self.getValue() === true) {
           return f_in.attr('checked', 'checked');
         } else {
           return f_in.removeAttr('checked');
         }
       };
-      if (this.get() === true) f_in.attr('checked', 'checked');
+      if (this.getValue() === true) f_in.attr('checked', 'checked');
       f_in.change(function(e) {
         if ($(this).is(':checked')) {
-          return self.set(true);
+          return self.setValue(true);
         } else {
-          return self.set(false);
+          return self.setValue(false);
         }
       });
       return true;
@@ -401,10 +431,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
         return f_in.val(v.toString());
       };
-      f_in.val(this.get());
+      f_in.val(this.getValue());
       f_in.keypress(function(e) {
         if (e.which === 13) {
-          self.set($(this).val());
+          self.setValue($(this).val());
           return $(this).blur();
         }
       });
@@ -453,7 +483,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       input += "</select></div>";
       $target.append(input);
       $("select", $target).change(function(e) {
-        return self.set($(this).val());
+        return self.setValue($(this).val());
       });
       return true;
     };

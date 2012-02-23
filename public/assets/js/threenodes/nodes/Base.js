@@ -59,7 +59,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     Boolean.prototype.compute = function() {
-      return this.rack.set("out", this.rack.get("bool").get());
+      return this.rack.setField("out", this.rack.getField("bool").get());
     };
 
     return Boolean;
@@ -97,11 +97,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      return this.rack.add_center_textfield(this.rack.get("string"));
+      return this.rack.add_center_textfield(this.rack.getField("string"));
     };
 
     String.prototype.compute = function() {
-      return this.rack.set("out", this.rack.get("string").get());
+      return this.rack.setField("out", this.rack.getField("string").get());
     };
 
     return String;
@@ -147,13 +147,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       resy = [];
       numItems = this.rack.getMaxInputSliceCount();
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        resx[i] = this.rack.get("x").get(i);
-        resy[i] = this.rack.get("y").get(i);
+        resx[i] = this.rack.getField("x").getValue(i);
+        resy[i] = this.rack.getField("y").getValue(i);
         res[i] = new THREE.Vector3(resx[i], resy[i]);
       }
-      this.rack.set("xy", res);
-      this.rack.set("x", resx);
-      return this.rack.set("y", resy);
+      this.rack.setField("xy", res);
+      this.rack.setField("x", resx);
+      return this.rack.setField("y", resy);
     };
 
     return Vector2;
@@ -201,15 +201,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       resz = [];
       numItems = this.rack.getMaxInputSliceCount();
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        resx[i] = this.rack.get("x").get(i);
-        resy[i] = this.rack.get("y").get(i);
-        resz[i] = this.rack.get("z").get(i);
+        resx[i] = this.rack.getField("x").getValue(i);
+        resy[i] = this.rack.getField("y").getValue(i);
+        resz[i] = this.rack.getField("z").getValue(i);
         res[i] = new THREE.Vector3(resx[i], resy[i], resz[i]);
       }
-      this.rack.set("xyz", res);
-      this.rack.set("x", resx);
-      this.rack.set("y", resy);
-      return this.rack.set("z", resz);
+      this.rack.setField("xyz", res);
+      this.rack.setField("x", resx);
+      this.rack.setField("y", resy);
+      return this.rack.setField("z", resz);
     };
 
     return Vector3;
@@ -233,7 +233,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Color.prototype.init_preview = function() {
       var col, self;
       $(".center", this.main_view).append("<div class='color_preview'></div>");
-      col = this.rack.get("rgb", true).get(0);
+      col = this.rack.getField("rgb", true).get(0);
       self = this;
       $(".color_preview", this.main_view).ColorPicker({
         color: {
@@ -242,12 +242,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           b: col.b * 255
         },
         onChange: function(hsb, hex, rgb) {
-          self.rack.get("r").set(rgb.r / 255);
-          self.rack.get("g").set(rgb.g / 255);
-          return self.rack.get("b").set(rgb.b / 255);
+          self.rack.getField("r").setValue(rgb.r / 255);
+          self.rack.getField("g").setValue(rgb.g / 255);
+          return self.rack.getField("b").setValue(rgb.b / 255);
         }
       });
-      return self.rack.get("rgb", true).on_value_update_hooks.set_bg_color_preview = function(v) {
+      return self.rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = function(v) {
         return $(".color_preview", self.main_view).css({
           background: v[0].getContextStyle()
         });
@@ -283,15 +283,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       resb = [];
       numItems = this.rack.getMaxInputSliceCount();
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        resr[i] = this.rack.get("r").get(i);
-        resg[i] = this.rack.get("g").get(i);
-        resb[i] = this.rack.get("b").get(i);
+        resr[i] = this.rack.getField("r").getValue(i);
+        resg[i] = this.rack.getField("g").getValue(i);
+        resb[i] = this.rack.getField("b").getValue(i);
         res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i]);
       }
-      this.rack.set("rgb", res);
-      this.rack.set("r", resr);
-      this.rack.set("g", resg);
-      return this.rack.set("b", resb);
+      this.rack.setField("rgb", res);
+      this.rack.setField("r", resr);
+      this.rack.setField("g", resg);
+      return this.rack.setField("b", resb);
     };
 
     return Color;

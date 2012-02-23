@@ -2,12 +2,16 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], function(_, Backbone) {
+define(['Underscore', 'Backbone', 'order!threenodes/core/NodeField'], function(_, Backbone) {
   "use strict";  return ThreeNodes.NodeFieldsCollection = (function(_super) {
 
     __extends(NodeFieldsCollection, _super);
 
     function NodeFieldsCollection() {
+      this.add_center_textfield = __bind(this.add_center_textfield, this);
+      this.render_sidebar = __bind(this.render_sidebar, this);
+      this.addFields = __bind(this.addFields, this);
+      this.addField = __bind(this.addField, this);
       this.removeAllConnections = __bind(this.removeAllConnections, this);
       this.renderConnections = __bind(this.renderConnections, this);
       this.toXML = __bind(this.toXML, this);
@@ -26,8 +30,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       this.initialize = __bind(this.initialize, this);
       NodeFieldsCollection.__super__.constructor.apply(this, arguments);
     }
-
-    NodeFieldsCollection.prototype.model = ThreeNodes.NodeFieldModel;
 
     NodeFieldsCollection.prototype.initialize = function(models, options) {
       this.node = options.node;
@@ -57,17 +59,16 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
     };
 
     NodeFieldsCollection.prototype.setField = function(key, value) {
-      return this.node_fields_by_name.outputs[key].set(value);
+      return this.node_fields_by_name.outputs[key].setValue(value);
     };
 
     NodeFieldsCollection.prototype.getMaxInputSliceCount = function() {
-      var f, fid, res;
+      var f, fid, res, val;
       res = 1;
       for (fid in this.node_fields.inputs) {
         f = this.node_fields.inputs[fid];
-        if (f.val && $.type(f.val) === "array") {
-          if (f.val.length > res) res = f.val.length;
-        }
+        val = f.attributes.value;
+        if (val && $.type(val) === "array") if (val.length > res) res = val.length;
       }
       return res - 1;
     };
@@ -115,19 +116,19 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
     };
 
     NodeFieldsCollection.prototype.registerField = function(field) {
+      var fid;
       field.node = this.node;
       if (field.is_output === false) {
-        this.node_fields.inputs["fid-" + field.fid] = field;
-        this.node_fields_by_name.inputs[field.name] = field;
+        this.node_fields.inputs["fid-" + field.get("fid")] = field;
+        this.node_fields_by_name.inputs[field.get("name")] = field;
         $(".inputs", this.node.main_view).append(field.render_button());
       } else {
-        this.node_fields.outputs["fid-" + field.fid] = field;
-        this.node_fields_by_name.outputs[field.name] = field;
+        this.node_fields.outputs["fid-" + field.get("fid")] = field;
+        this.node_fields_by_name.outputs[field.get("name")] = field;
         $(".outputs", this.node.main_view).append(field.render_button());
       }
-      if (this.view !== false) {
-        this.trigger("field:registered", this, $("#fid-" + field.fid));
-      }
+      fid = field.get("fid");
+      this.trigger("field:registered", this, $("#fid-" + fid));
       return field;
     };
 
@@ -137,7 +138,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
         node_field = this.node_fields_by_name.inputs[f.name];
-        if (node_field && f.val) node_field.set(f.val);
+        if (node_field && f.val) node_field.setValue(f.val);
       }
       return true;
     };
@@ -149,7 +150,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
         var f, field_val;
         f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
         field_val = $(this).attr("val");
-        if (f && field_val !== "[object Object]") return f.set(field_val);
+        if (f && field_val !== "[object Object]") return f.setValue(field_val);
       });
       return true;
     };
@@ -213,6 +214,70 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeFieldModel'], fun
         _results.push(this.node_fields.outputs[f].remove_connections());
       }
       return _results;
+    };
+
+    NodeFieldsCollection.prototype.addField = function(name, value, direction) {
+      var f;
+      if (direction == null) direction = "inputs";
+      f = false;
+      if ($.type(value) !== "object") value = this.getFieldValueObject(value);
+      if (value.values) {
+        f = new ThreeNodes.fields.types[value.type]({
+          name: name,
+          value: value.val,
+          possibilities: value.values,
+          node: this.node
+        });
+      } else {
+        f = new ThreeNodes.fields.types[value.type]({
+          name: name,
+          value: value.val,
+          node: this.node
+        });
+      }
+      if (value["default"] !== null) f.default_value = value["default"];
+      if (direction !== "inputs") f.is_output = true;
+      this.registerField(f);
+      this.add(f);
+      return f;
+    };
+
+    NodeFieldsCollection.prototype.addFields = function(fields_array) {
+      var dir, fname, value;
+      for (dir in fields_array) {
+        for (fname in fields_array[dir]) {
+          value = fields_array[dir][fname];
+          this.addField(fname, value, dir);
+        }
+      }
+      return this;
+    };
+
+    NodeFieldsCollection.prototype.render_sidebar = function() {
+      return this;
+    };
+
+    NodeFieldsCollection.prototype.add_center_textfield = function(field) {
+      return this;
+    };
+
+    NodeFieldsCollection.prototype.getFieldValueObject = function(default_value) {
+      var ftype, res;
+      ftype = (function() {
+        switch ($.type(default_value)) {
+          case "number":
+            return "Float";
+          case "boolean":
+            return "Bool";
+          default:
+            return "String";
+        }
+      })();
+      res = {
+        type: ftype,
+        val: default_value
+      };
+      return res;
     };
 
     return NodeFieldsCollection;

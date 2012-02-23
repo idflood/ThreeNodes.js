@@ -2,24 +2,18 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/views/NodeView', 'order!threenodes/models/NodeModel', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFieldsCollection', 'order!threenodes/utils/Utils'], function($, _, Backbone) {
   "use strict";  ThreeNodes.field_click_1 = false;
   ThreeNodes.selected_nodes = $([]);
   ThreeNodes.nodes_offset = {
     top: 0,
     left: 0
   };
-  ThreeNodes.NodeBase = (function() {
+  ThreeNodes.NodeBase = (function(_super) {
 
-    NodeBase.node_name = '';
+    __extends(NodeBase, _super);
 
-    NodeBase.group_name = '';
-
-    function NodeBase(x, y, inXML, inJSON) {
-      this.x = x != null ? x : 0;
-      this.y = y != null ? y : 0;
-      this.inXML = inXML != null ? inXML : false;
-      this.inJSON = inJSON != null ? inJSON : false;
+    function NodeBase() {
       this.createAnimContainer = __bind(this.createAnimContainer, this);
       this.enable_property_anim = __bind(this.enable_property_anim, this);
       this.disable_property_anim = __bind(this.disable_property_anim, this);
@@ -47,6 +41,78 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.loadAnimation = __bind(this.loadAnimation, this);
       this.init_main_view = __bind(this.init_main_view, this);
       this.typename = __bind(this.typename, this);
+      this.post_init = __bind(this.post_init, this);
+      this.initialize = __bind(this.initialize, this);
+      this.fromXML = __bind(this.fromXML, this);
+      this.fromJSON = __bind(this.fromJSON, this);
+      this.setPosition = __bind(this.setPosition, this);
+      this.setName = __bind(this.setName, this);
+      this.setNID = __bind(this.setNID, this);
+      this.load = __bind(this.load, this);
+      NodeBase.__super__.constructor.apply(this, arguments);
+    }
+
+    NodeBase.node_name = '';
+
+    NodeBase.group_name = '';
+
+    NodeBase.prototype["default"] = {
+      nid: 0,
+      x: 0,
+      y: 0,
+      name: ""
+    };
+
+    NodeBase.prototype.load = function(xml, json) {
+      if (xml) {
+        return this.fromXML(xml);
+      } else if (json) {
+        return this.fromJSON(json);
+      }
+    };
+
+    NodeBase.prototype.setNID = function(nid) {
+      this.set({
+        "nid": nid
+      });
+      return this;
+    };
+
+    NodeBase.prototype.setName = function(name) {
+      this.set({
+        "name": name
+      });
+      return this;
+    };
+
+    NodeBase.prototype.setPosition = function(x, y) {
+      this.set({
+        "x": x,
+        "y": y
+      });
+      return this;
+    };
+
+    NodeBase.prototype.fromJSON = function(data) {
+      this.set({
+        "nid": data.nid,
+        "name": data.name ? data.name : this.get("name"),
+        "x": data.x,
+        "y": data.y
+      });
+      ThreeNodes.uid = this.get("nid");
+      return this;
+    };
+
+    NodeBase.prototype.fromXML = function(data) {
+      this.set({
+        "nid": parseInt(this.inXML.attr("nid"))
+      });
+      ThreeNodes.uid = this.get("nid");
+      return this;
+    };
+
+    NodeBase.prototype.initialize = function(options) {
       this.auto_evaluate = false;
       this.delays_output = false;
       this.dirty = true;
@@ -56,21 +122,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.out_connections = [];
       this.value = false;
       this.main_view = false;
-    }
-
-    NodeBase.prototype.onRegister = function() {
-      this.model = new ThreeNodes.NodeModel({
-        name: this.typename(),
-        x: this.x,
-        y: this.y
-      });
+      this.inXML = options.inXML;
+      this.inJSON = options.inJSON;
+      this.context = options.context;
       if (this.inXML === false && this.inJSON === false) {
-        this.model.setNID(ThreeNodes.Utils.get_uid());
+        this.setNID(ThreeNodes.Utils.get_uid());
       }
-      this.model.load(this.inXML, this.inJSON);
-      this.container = $("#container");
+      this.setName(this.typename());
+      this.load(this.inXML, this.inJSON);
       this.apptimeline = this.context.injector.get("AppTimeline");
-      this.rack = this.context.injector.instanciate(ThreeNodes.NodeFieldRack, this, this.inXML);
+      return this.rack = new ThreeNodes.NodeFieldsCollection([], {
+        node: this
+      });
+    };
+
+    NodeBase.prototype.post_init = function() {
       this.init_main_view();
       this.set_fields();
       this.rack.load(this.inXML, this.inJSON);
@@ -78,7 +144,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.inJSON && this.inJSON.anim !== false) this.loadAnimation();
       if (this.view !== false) this.view.init_context_menu();
       this.onTimelineRebuild();
-      this.view.render();
       return this;
     };
 
@@ -87,16 +152,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     NodeBase.prototype.init_main_view = function() {
-      this.main_view = $.tmpl(_view_node_template, this);
+      this.main_view = $(this.el);
       this.main_view.data("object", this);
-      this.container.append(this.main_view);
-      this.view = new ThreeNodes.NodeView({
-        el: this.main_view,
-        model: this.model,
-        rack: this.rack,
-        apptimeline: this.apptimeline
-      });
-      return this.context.injector.applyContext(this.view);
+      return this;
     };
 
     NodeBase.prototype.loadAnimation = function() {
@@ -155,7 +213,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       res = {};
       for (_i = 0, _len = values.length; _i < _len; _i++) {
         v = values[_i];
-        res[v] = this.rack.get(v).get();
+        res[v] = this.rack.getField(v).getValue();
       }
       return res;
     };
@@ -165,7 +223,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (cache == null) cache = this.material_cache;
       for (_i = 0, _len = values.length; _i < _len; _i++) {
         v = values[_i];
-        v2 = this.rack.get(v).get();
+        v2 = this.rack.getField(v).getValue();
         if (v2 !== cache[v]) return true;
       }
       return false;
@@ -259,12 +317,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     NodeBase.prototype.toJSON = function() {
       var res;
       res = {
-        nid: this.model.get('nid'),
-        name: this.model.get('name'),
+        nid: this.get('nid'),
+        name: this.get('name'),
         type: this.typename(),
         anim: this.getAnimationData(),
-        x: this.model.get('x'),
-        y: this.model.get('y'),
+        x: this.get('x'),
+        y: this.get('y'),
         fields: this.rack.toJSON()
       };
       return res;
@@ -280,15 +338,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       var component, ng, res;
       ng = this.context.injector.get("NodeGraph");
       component = ng.get_component_by_type(this.typename());
-      res = "\n// node: " + (this.model.get('name')) + "\n";
-      res += "var node_" + (this.model.get('nid')) + "_data = {\n";
-      res += "\t" + ("nid: " + (this.model.get('nid')) + ",\n");
-      res += "\t" + ("name: '" + (this.model.get('name')) + "',\n");
+      res = "\n// node: " + (this.get('name')) + "\n";
+      res += "var node_" + (this.get('nid')) + "_data = {\n";
+      res += "\t" + ("nid: " + (this.get('nid')) + ",\n");
+      res += "\t" + ("name: '" + (this.get('name')) + "',\n");
       res += "\t" + ("type: '" + (this.typename()) + "',\n");
       res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
       res += "\t" + ("anim: " + (this.getAnimationDataToCode()) + "\n");
       res += "};\n";
-      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + (this.model.get('x')) + ", " + (this.model.get('y')) + ", false, node_" + (this.model.get('nid')) + "_data);\n";
+      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + (this.get('x')) + ", " + (this.get('y')) + ", false, node_" + (this.get('nid')) + "_data);\n";
       return res;
     };
 
@@ -298,8 +356,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       _results = [];
       for (f in afields) {
         nf = afields[f];
-        if (exceptions.indexOf(nf.name) === -1) {
-          _results.push(target[nf.name] = this.rack.get(nf.name).get(index));
+        if (exceptions.indexOf(nf.get("name")) === -1) {
+          _results.push(target[nf.get("name")] = this.rack.getField(nf.get("name")).getValue(index));
         } else {
           _results.push(void 0);
         }
@@ -329,7 +387,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       _results = [];
       for (_i = 0, _len = vals.length; _i < _len; _i++) {
         v = vals[_i];
-        _results.push(res[res.length] = this.rack.get(v).get());
+        _results.push(res[res.length] = this.rack.getField(v).getValue());
       }
       return _results;
     };
@@ -361,9 +419,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     NodeBase.prototype.createAnimContainer = function() {
       var f, field, res;
-      res = anim("nid-" + this.nid, this.rack.collection.node_fields_by_name.inputs);
-      for (f in this.rack.collection.node_fields_by_name.inputs) {
-        field = this.rack.collection.node_fields_by_name.inputs[f];
+      res = anim("nid-" + this.nid, this.rack.node_fields_by_name.inputs);
+      for (f in this.rack.node_fields_by_name.inputs) {
+        field = this.rack.node_fields_by_name.inputs[f];
         if (field.is_animation_property() === false) {
           this.disable_property_anim(field);
         }
@@ -373,7 +431,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     return NodeBase;
 
-  })();
+  })(Backbone.Model);
   return ThreeNodes.NodeNumberSimple = (function(_super) {
 
     __extends(NodeNumberSimple, _super);
@@ -382,14 +440,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.compute = __bind(this.compute, this);
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      this.init = __bind(this.init, this);
       NodeNumberSimple.__super__.constructor.apply(this, arguments);
     }
-
-    NodeNumberSimple.prototype.init = function() {
-      NodeNumberSimple.__super__.init.apply(this, arguments);
-      return this.value = 0;
-    };
 
     NodeNumberSimple.prototype.set_fields = function() {
       this.v_in = this.rack.addField("in", {
@@ -411,7 +463,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       res = [];
       numItems = this.rack.getMaxInputSliceCount();
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        ref = this.v_in.get(i);
+        ref = this.v_in.getValue(i);
         switch ($.type(ref)) {
           case "number":
             res[i] = this.process_val(ref, i);
@@ -429,7 +481,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             }
         }
       }
-      this.v_out.set(res);
+      this.v_out.setValue(res);
       return true;
     };
 

@@ -34,7 +34,7 @@ define [
           "out": {type: "Bool", val: @value}
     
     compute: =>
-      @rack.set("out", @rack.get("bool").get())
+      @rack.setField("out", @rack.getField("bool").get())
   
   class ThreeNodes.nodes.String extends ThreeNodes.NodeBase
     @node_name = 'String'
@@ -51,10 +51,10 @@ define [
         outputs:
           "out": {type: "Any", val: @value}
      
-      @rack.add_center_textfield(@rack.get("string"))
+      @rack.add_center_textfield(@rack.getField("string"))
     
     compute: =>
-      @rack.set("out", @rack.get("string").get())
+      @rack.setField("out", @rack.getField("string").get())
   
   class ThreeNodes.nodes.Vector2 extends ThreeNodes.NodeBase
     @node_name = 'Vector2'
@@ -79,13 +79,13 @@ define [
       numItems = @rack.getMaxInputSliceCount()
       
       for i in [0..numItems]
-        resx[i] = @rack.get("x").get(i)
-        resy[i] = @rack.get("y").get(i)
+        resx[i] = @rack.getField("x").getValue(i)
+        resy[i] = @rack.getField("y").getValue(i)
         res[i] = new THREE.Vector3(resx[i], resy[i])
       
-      @rack.set("xy", res)
-      @rack.set("x", resx)
-      @rack.set("y", resy)
+      @rack.setField("xy", res)
+      @rack.setField("x", resx)
+      @rack.setField("y", resy)
   
   class ThreeNodes.nodes.Vector3 extends ThreeNodes.NodeBase
     @node_name = 'Vector3'
@@ -112,15 +112,15 @@ define [
       numItems = @rack.getMaxInputSliceCount()
       
       for i in [0..numItems]
-        resx[i] = @rack.get("x").get(i)
-        resy[i] = @rack.get("y").get(i)
-        resz[i] = @rack.get("z").get(i)
+        resx[i] = @rack.getField("x").getValue(i)
+        resy[i] = @rack.getField("y").getValue(i)
+        resz[i] = @rack.getField("z").getValue(i)
         res[i] = new THREE.Vector3(resx[i], resy[i], resz[i])
       
-      @rack.set("xyz", res)
-      @rack.set("x", resx)
-      @rack.set("y", resy)
-      @rack.set("z", resz)
+      @rack.setField("xyz", res)
+      @rack.setField("x", resx)
+      @rack.setField("y", resy)
+      @rack.setField("z", resz)
   
   class ThreeNodes.nodes.Color extends ThreeNodes.NodeBase
     @node_name = 'Color'
@@ -128,16 +128,16 @@ define [
     
     init_preview: () =>
       $(".center", @main_view).append("<div class='color_preview'></div>")
-      col = @rack.get("rgb", true).get(0)
+      col = @rack.getField("rgb", true).get(0)
       self = this
       $(".color_preview", @main_view).ColorPicker
         color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
         onChange: (hsb, hex, rgb) ->
-          self.rack.get("r").set(rgb.r / 255)
-          self.rack.get("g").set(rgb.g / 255)
-          self.rack.get("b").set(rgb.b / 255)
+          self.rack.getField("r").setValue(rgb.r / 255)
+          self.rack.getField("g").setValue(rgb.g / 255)
+          self.rack.getField("b").setValue(rgb.b / 255)
       # on output value change set preview color
-      self.rack.get("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) ->
+      self.rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) ->
         $(".color_preview", self.main_view).css
           background: v[0].getContextStyle()
     
@@ -163,12 +163,12 @@ define [
       numItems = @rack.getMaxInputSliceCount()
       
       for i in [0..numItems]
-        resr[i] = @rack.get("r").get(i)
-        resg[i] = @rack.get("g").get(i)
-        resb[i] = @rack.get("b").get(i)
+        resr[i] = @rack.getField("r").getValue(i)
+        resg[i] = @rack.getField("g").getValue(i)
+        resb[i] = @rack.getField("b").getValue(i)
         res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i])
       
-      @rack.set("rgb", res)
-      @rack.set("r", resr)
-      @rack.set("g", resg)
-      @rack.set("b", resb)
+      @rack.setField("rgb", res)
+      @rack.setField("r", resr)
+      @rack.setField("g", resg)
+      @rack.setField("b", resb)

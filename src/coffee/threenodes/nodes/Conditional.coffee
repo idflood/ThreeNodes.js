@@ -29,7 +29,7 @@ define [
         res = @rack.get("val1").val
       else
         res = @rack.get("val2").val
-      @rack.set("out", res)
+      @rack.setField("out", res)
   
   class ThreeNodes.nodes.And extends ThreeNodes.NodeBase
     @node_name = 'And'
@@ -46,7 +46,7 @@ define [
   
     compute: =>
       res = @rack.get("val1").get() != false && @rack.get("val2").get() != false
-      @rack.set("out", res)
+      @rack.setField("out", res)
   
   class ThreeNodes.nodes.Or extends ThreeNodes.NodeBase
     @node_name = 'Or'
@@ -63,7 +63,7 @@ define [
   
     compute: =>
       res = @rack.get("val1").get() != false || @rack.get("val2").get() != false
-      @rack.set("out", res)
+      @rack.setField("out", res)
   
   class ThreeNodes.nodes.Equal extends ThreeNodes.NodeBase
     @node_name = 'Equal'
@@ -80,7 +80,7 @@ define [
   
     compute: =>
       res = @rack.get("val1").get(0) == @rack.get("val2").get(0)
-      @rack.set("out", res)
+      @rack.setField("out", res)
   
   class ThreeNodes.nodes.Smaller extends ThreeNodes.NodeBase
     @node_name = 'Smaller'
@@ -97,7 +97,7 @@ define [
   
     compute: =>
       res = @rack.get("val1").get(0) < @rack.get("val2").get(0)
-      @rack.set("out", res)
+      @rack.setField("out", res)
   
   class ThreeNodes.nodes.Greater extends ThreeNodes.NodeBase
     @node_name = 'Greater'
@@ -114,4 +114,4 @@ define [
   
     compute: =>
       res = @rack.get("val1").get(0) > @rack.get("val2").get(0)
-      @rack.set("out", res)
+      @rack.setField("out", res)

@@ -29,12 +29,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "out": 0
         }
       });
-      return this.rack.add_center_textfield(this.rack.get("out", true));
+      return this.rack.add_center_textfield(this.rack.getField("out", true));
     };
 
     Random.prototype.compute = function() {
-      this.value = this.rack.get("min").get() + Math.random() * (this.rack.get("max").get() - this.rack.get("min").get());
-      return this.rack.set("out", this.value);
+      this.value = this.rack.getField("min").getValue() + Math.random() * (this.rack.getField("max").getValue() - this.rack.getField("min").getValue());
+      return this.rack.setField("out", this.value);
     };
 
     return Random;
@@ -132,7 +132,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             return src * this.rndrange + this.rndA;
         }
       }).call(this);
-      return this.rack.set("out", lfout);
+      return this.rack.setField("out", lfout);
     };
 
     return LFO;
@@ -153,7 +153,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     Merge.group_name = 'Utils';
 
     Merge.prototype.set_fields = function() {
-      Merge.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
       return this.rack.addFields({
         inputs: {
@@ -193,10 +192,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     Merge.prototype.compute = function() {
       var f, k, old, subval;
-      old = this.rack.get("out", true).get();
+      old = this.rack.getField("out", true).get("value");
       this.value = [];
-      for (f in this.rack.collection.node_fields.inputs) {
-        k = this.rack.collection.node_fields.inputs[f];
+      for (f in this.rack.node_fields.inputs) {
+        k = this.rack.node_fields.inputs[f];
         if (k.val !== null && k.connections.length > 0) {
           subval = k.val;
           if (jQuery.type(subval) === "array") {
@@ -206,7 +205,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       }
-      return this.rack.set("out", this.value);
+      return this.rack.setField("out", this.value);
     };
 
     return Merge;
@@ -247,12 +246,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     Get.prototype.compute = function() {
       var arr, ind, old;
-      old = this.rack.get("out", true).get();
+      old = this.rack.getField("out", true).getValue();
       this.value = false;
       arr = this.rack.get("array").get();
-      ind = parseInt(this.rack.get("index").get());
+      ind = parseInt(this.rack.getField("index").getValue());
       if ($.type(arr) === "array") this.value = arr[ind % arr.length];
-      if (this.value !== old) return this.rack.set("out", this.value);
+      if (this.value !== old) return this.rack.setField("out", this.value);
     };
 
     return Get;
@@ -427,10 +426,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.freqByteData) {
         length = this.freqByteData.length;
         length3rd = length / 3;
-        this.rack.set("average", this.getAverageLevel(0, length - 1));
-        this.rack.set("low", this.getAverageLevel(0, length3rd - 1));
-        this.rack.set("medium", this.getAverageLevel(length3rd, (length3rd * 2) - 1));
-        this.rack.set("high", this.getAverageLevel(length3rd * 2, length - 1));
+        this.rack.setField("average", this.getAverageLevel(0, length - 1));
+        this.rack.setField("low", this.getAverageLevel(0, length3rd - 1));
+        this.rack.setField("medium", this.getAverageLevel(length3rd, (length3rd * 2) - 1));
+        this.rack.setField("high", this.getAverageLevel(length3rd * 2, length - 1));
       }
       return true;
     };
@@ -469,9 +468,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     SoundInput.prototype.compute = function() {
-      this.rack.set("low", ThreeNodes.flash_sound_value.kick);
-      this.rack.set("medium", ThreeNodes.flash_sound_value.snare);
-      return this.rack.set("high", ThreeNodes.flash_sound_value.hat);
+      this.rack.setField("low", ThreeNodes.flash_sound_value.kick);
+      this.rack.setField("medium", ThreeNodes.flash_sound_value.snare);
+      return this.rack.setField("high", ThreeNodes.flash_sound_value.hat);
     };
 
     return SoundInput;
@@ -507,9 +506,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     Mouse.prototype.compute = function() {
-      this.rack.set("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY));
-      this.rack.set("x", ThreeNodes.mouseX);
-      return this.rack.set("y", ThreeNodes.mouseY);
+      this.rack.setField("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY));
+      this.rack.setField("x", ThreeNodes.mouseX);
+      return this.rack.setField("y", ThreeNodes.mouseY);
     };
 
     return Mouse;
@@ -561,7 +560,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       diff = this.rack.get("max").get() - this.counter;
       if (diff <= 0) this.counter = 0;
       this.old = now;
-      return this.rack.set("out", this.counter);
+      return this.rack.setField("out", this.counter);
     };
 
     return Timer;
@@ -640,11 +639,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       this.reverseFontMap = {};
       this.reverseWeightMap = {};
-      for (i in this.rack.collection.node_fields_by_name.inputs.weight.possible_values) {
-        this.reverseWeightMap[this.rack.collection.node_fields_by_name.inputs.weight.possible_values[i]] = i;
+      for (i in this.rack.node_fields_by_name.inputs.weight.possible_values) {
+        this.reverseWeightMap[this.rack.node_fields_by_name.inputs.weight.possible_values[i]] = i;
       }
-      for (i in this.rack.collection.node_fields_by_name.inputs.font.possible_values) {
-        this.reverseFontMap[this.rack.collection.node_fields_by_name.inputs.font.possible_values[i]] = i;
+      for (i in this.rack.node_fields_by_name.inputs.font.possible_values) {
+        this.reverseFontMap[this.rack.node_fields_by_name.inputs.font.possible_values[i]] = i;
       }
       this.fontcache = -1;
       return this.weightcache = -1;
@@ -669,7 +668,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       this.fontcache = findex;
       this.weightcache = windex;
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
 
     return Font;

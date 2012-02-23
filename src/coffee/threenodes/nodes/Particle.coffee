@@ -35,7 +35,7 @@ define [
         geom.cached = []
         geom.compute()
       else
-        @rack.get('geometry').set(new THREE.CubeGeometry( 200, 200, 200 ))
+        @rack.get('geometry').setValue(new THREE.CubeGeometry( 200, 200, 200 ))
       
     compute: =>
       needs_rebuild = false
@@ -49,12 +49,12 @@ define [
         @geometry_cache = @rack.get('geometry').get().id
         @material_cache = @rack.get('material').get().id
       
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
       
       if needs_rebuild == true
         ThreeNodes.rebuild_all_shaders()
       
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.ParticleBasicMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'ParticleBasicMaterial'
@@ -129,7 +129,7 @@ define [
       if @pool != false && @ob.isRunning() == false
         @ob.start()
       
-      @rack.set("out", @geom)
+      @rack.setField("out", @geom)
     
     remove: =>
       super
@@ -154,7 +154,7 @@ define [
       @ob = new SPARKS.Age(@rack.get("easing").get())
     compute: =>
       @ob._easing = @rack.get("easing").val
-      @rack.set("action", @ob)
+      @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksMove extends ThreeNodes.NodeBase
     @node_name = 'Move'
@@ -168,7 +168,7 @@ define [
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.Move()
     compute: =>
-      @rack.set("action", @ob)
+      @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksAccelerate extends ThreeNodes.NodeBase
     @node_name = 'Accelerate'
@@ -186,7 +186,7 @@ define [
       @ob = new SPARKS.Accelerate(@rack.get("vector").get())
     compute: =>
       @ob.acceleration = @rack.get("vector").get()
-      @rack.set("action", @ob)
+      @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksAccelerateFactor extends ThreeNodes.NodeBase
     @node_name = 'AccelerateFactor'
@@ -204,7 +204,7 @@ define [
       @ob = new SPARKS.AccelerateFactor(@rack.get("factor").get())
     compute: =>
       @ob.factor = @rack.get("factor").get()
-      @rack.set("action", @ob)
+      @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksAccelerateVelocity extends ThreeNodes.NodeBase
     @node_name = 'AccelerateVelocity'
@@ -222,7 +222,7 @@ define [
       @ob = new SPARKS.AccelerateVelocity(@rack.get("factor").get())
     compute: =>
       @ob.factor = @rack.get("factor").get()
-      @rack.set("action", @ob)
+      @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksRandomDrift extends ThreeNodes.NodeBase
     @node_name = 'RandomDrift'
@@ -240,7 +240,7 @@ define [
       @ob = new SPARKS.RandomDrift(@rack.get("vector").get())
     compute: =>
       @ob.drift = @rack.get("vector").get()
-      @rack.set("action", @ob)
+      @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksLifetime extends ThreeNodes.NodeBase
     @node_name = 'Lifetime'
@@ -260,7 +260,7 @@ define [
     compute: =>
       @ob._min = @rack.get("min").get()
       @ob._min = @rack.get("max").get()
-      @rack.set("initializer", @ob)
+      @rack.setField("initializer", @ob)
   
   class ThreeNodes.nodes.SparksPosition extends ThreeNodes.NodeBase
     @node_name = 'Position'
@@ -278,7 +278,7 @@ define [
       @ob = new SPARKS.Position(@rack.get("zone").get())
     compute: =>
       @ob.zone = @rack.get("zone").get()
-      @rack.set("initializer", @ob)
+      @rack.setField("initializer", @ob)
   
   class ThreeNodes.nodes.SparksPointZone extends ThreeNodes.NodeBase
     @node_name = 'PointZone'
@@ -296,7 +296,7 @@ define [
       @ob = new SPARKS.PointZone(@rack.get("pos").get())
     compute: =>
       @ob.pos = @rack.get("pos").get()
-      @rack.set("zone", @ob)
+      @rack.setField("zone", @ob)
   
   class ThreeNodes.nodes.SparksLineZone extends ThreeNodes.NodeBase
     @node_name = 'LineZone'
@@ -318,7 +318,7 @@ define [
         @ob.start = @rack.get("start").get()
         @ob.end = @rack.get("end").get()
         @ob._length = @ob.end.clone().subSelf( @ob.start )
-      @rack.set("zone", @ob)
+      @rack.setField("zone", @ob)
   
   class ThreeNodes.nodes.SparksCubeZone extends ThreeNodes.NodeBase
     @node_name = 'CubeZone'
@@ -342,7 +342,7 @@ define [
       @ob.x = @rack.get("x").get()
       @ob.y = @rack.get("y").get()
       @ob.z = @rack.get("z").get()
-      @rack.set("zone", @ob)
+      @rack.setField("zone", @ob)
   
   class ThreeNodes.nodes.SparksSteadyCounter extends ThreeNodes.NodeBase
     @node_name = 'SteadyCounter'
@@ -360,7 +360,7 @@ define [
       @ob = new SPARKS.SteadyCounter(@rack.get("rate").get())
     compute: =>
       @ob.pos = @rack.get("rate").get()
-      @rack.set("counter", @ob)
+      @rack.setField("counter", @ob)
   
   class ThreeNodes.nodes.ParticlePool extends ThreeNodes.NodeBase
     @node_name = 'ParticlePool'
@@ -417,7 +417,7 @@ define [
     compute: () =>
       if @geom != false
         @geom.__dirtyVertices = true
-      @rack.set("pool", this)
+      @rack.setField("pool", this)
     
   class ThreeNodes.nodes.RandomCloudGeometry extends ThreeNodes.NodeBase
     @node_name = 'RandomCloudGeometry'
@@ -481,5 +481,5 @@ define [
         
       @move_particles()
       @cache = new_cache
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)
       

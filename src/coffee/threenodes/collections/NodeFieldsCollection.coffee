@@ -1,12 +1,12 @@
 define [
   'Underscore', 
   'Backbone',
-  'order!threenodes/models/NodeFieldModel',
+  'order!threenodes/core/NodeField',
 ], (_, Backbone) ->
   "use strict"
   
   class ThreeNodes.NodeFieldsCollection extends Backbone.Collection
-    model: ThreeNodes.NodeFieldModel
+    #model: ThreeNodes.NodeField
     
     initialize: (models, options) =>
       @node = options.node
@@ -30,15 +30,16 @@ define [
         @node_fields_by_name.inputs[key]
     
     setField: (key, value) =>
-      @node_fields_by_name.outputs[key].set value
+      @node_fields_by_name.outputs[key].setValue value
     
     getMaxInputSliceCount: () =>
       res = 1
       for fid of @node_fields.inputs
         f = @node_fields.inputs[fid]
-        if f.val && $.type(f.val) == "array"
-          if f.val.length > res
-            res = f.val.length
+        val = f.attributes.value;
+        if val && $.type(val) == "array"
+          if val.length > res
+            res = val.length
       # start with 0
       res - 1
     
@@ -66,17 +67,18 @@ define [
     registerField: (field) =>
       field.node = @node
       if field.is_output == false
-        @node_fields.inputs["fid-" + field.fid] = field
-        @node_fields_by_name.inputs[field.name] = field
+        @node_fields.inputs["fid-" + field.get("fid")] = field
+        @node_fields_by_name.inputs[field.get("name")] = field
         $(".inputs", @node.main_view).append(field.render_button())
       else
-        @node_fields.outputs["fid-" + field.fid] = field
-        @node_fields_by_name.outputs[field.name] = field
+        @node_fields.outputs["fid-" + field.get("fid")] = field
+        @node_fields_by_name.outputs[field.get("name")] = field
         $(".outputs", @node.main_view).append(field.render_button())
       
-      if @view != false
-        #@view.add_field_listener($("#fid-#{field.fid}"))
-        @trigger("field:registered", this, $("#fid-#{field.fid}"))
+      #if @view != false
+      #@view.add_field_listener($("#fid-#{field.fid}"))
+      fid = field.get("fid")
+      @trigger("field:registered", this, $("#fid-#{fid}"))
       
       field
     
@@ -84,7 +86,7 @@ define [
       for f in data.fields.in
         node_field = @node_fields_by_name.inputs[f.name]
         if node_field && f.val
-          node_field.set(f.val)
+          node_field.setValue(f.val)
       true
     
     fromXML: (data) =>
@@ -94,7 +96,7 @@ define [
         f = self.node_fields.inputs["fid-" + $(this).attr("fid")]
         field_val = $(this).attr("val")
         if f && field_val != "[object Object]"
-          f.set(field_val)
+          f.setValue(field_val)
       true
 
     toJSON: =>
@@ -134,3 +136,57 @@ define [
         @node_fields.inputs[f].remove_connections()
       for f of @node_fields.outputs
         @node_fields.outputs[f].remove_connections()
+    
+    addField: (name, value, direction = "inputs") =>
+      f = false
+      if $.type(value) != "object"
+        value = @getFieldValueObject(value)
+      if value.values
+        f = new ThreeNodes.fields.types[value.type]
+          name: name
+          value: value.val
+          possibilities: value.values
+          node: @node
+      else
+        f = new ThreeNodes.fields.types[value.type]
+          name: name
+          value: value.val
+          node: @node
+      if value.default != null
+        f.default_value = value.default
+      if direction != "inputs"
+        f.is_output = true
+      
+      @registerField(f)
+      #@context.injector.applyContext(f)
+      @add(f)
+      f
+      
+    addFields: (fields_array) =>
+      for dir of fields_array
+        # dir = inputs / outputs
+        for fname of fields_array[dir]
+          value = fields_array[dir][fname]
+          @addField(fname, value, dir)
+      @
+    
+    render_sidebar: () =>
+      #if @view
+      #  @view.renderSidebar()
+      @
+    
+    add_center_textfield: (field) =>
+      #if @view
+      #  @view.addCenterTextfield(field)
+      @
+            
+    getFieldValueObject: (default_value) ->
+      ftype = switch $.type(default_value)
+        when "number" then "Float"
+        when "boolean" then "Bool"
+        else "String"
+      #new ThreeNodes.fields.types[ftype](fname, default_value)
+      res =
+        type: ftype
+        val: default_value
+      return res

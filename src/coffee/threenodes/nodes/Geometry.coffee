@@ -34,8 +34,8 @@ define [
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.PlaneGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.CubeGeometry extends ThreeNodes.NodeBase
     @node_name = 'Cube'
@@ -65,8 +65,8 @@ define [
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.CubeGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get())
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.SphereGeometry extends ThreeNodes.NodeBase
     @node_name = 'Sphere'
@@ -93,8 +93,8 @@ define [
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.SphereGeometry(@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
         @cached = new_cache
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.CylinderGeometry extends ThreeNodes.NodeBase
     @node_name = 'Cylinder'
@@ -132,8 +132,8 @@ define [
           @rack.get("segmentsRadius").get(), @rack.get("segmentsHeight").get(), @rack.get("openEnded").get()
         )
         @cached = new_cache
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.TorusGeometry extends ThreeNodes.NodeBase
     @node_name = 'Torus'
@@ -168,8 +168,8 @@ define [
           @rack.get("segmentsT").get(), @rack.get("arc").get()
         )
         @cached = new_cache
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.TorusKnotGeometry extends ThreeNodes.NodeBase
     @node_name = 'TorusKnot'
@@ -206,8 +206,8 @@ define [
           @rack.get("segmentsT").get(), @rack.get("p").get(), @rack.get("q").get(), @rack.get("heightScale").get()
         )
         @cached = new_cache
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.OctahedronGeometry extends ThreeNodes.NodeBase
     @node_name = 'Octahedron'
@@ -233,8 +233,8 @@ define [
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.OctahedronGeometry(@rack.get("radius").get(), @rack.get("detail").get())
         @cached = new_cache
-      @apply_fields_to_val(@rack.collection.node_fields.inputs, @ob)
-      @rack.set("out", @ob)
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.TextGeometry extends ThreeNodes.NodeBase
     @node_name = 'Text'
@@ -272,7 +272,7 @@ define [
       
       if !has_font_attribute(font) || this.rack.get("text").get() == ""
         @ob = false
-        @rack.set("out", @ob)
+        @rack.setField("out", @ob)
         return false
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         console.log "building text #{font.font} / #{font.weight}"
@@ -287,4 +287,4 @@ define [
         
         @cached = new_cache
       
-      @rack.set("out", @ob)
+      @rack.setField("out", @ob)

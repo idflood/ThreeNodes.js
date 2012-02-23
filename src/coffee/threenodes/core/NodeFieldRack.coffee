@@ -3,7 +3,7 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/core/NodeField',
-  'order!threenodes/views/NodeFieldRackView',
+  #'order!threenodes/views/NodeFieldRackView',
   'order!threenodes/collections/NodeFieldsCollection',
 ], ($, _, Backbone) ->
   "use strict"
@@ -19,11 +19,11 @@ define [
         json: @node.inJSON
       
       #if @context.player_mode == false
-      @view = new ThreeNodes.NodeFieldRackView
-        node: @node
-        collection: @collection
-      
-      @context.injector.applyContext(@view)
+      #@view = new ThreeNodes.NodeFieldRackView
+      #  node: @node
+      #  collection: @collection
+      #
+      #@context.injector.applyContext(@view)
       @
   
     get: (key, is_out = false) => @collection.getField(key, is_out)
@@ -66,6 +66,7 @@ define [
       
       @collection.registerField(f)
       @context.injector.applyContext(f)
+      @collection.add(f)
       f
       
     addFields: (fields_array) =>
