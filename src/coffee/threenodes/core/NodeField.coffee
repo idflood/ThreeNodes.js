@@ -25,7 +25,8 @@ define [
       @node = options.node
       @changed = true
       @connections = []
-      @default_value = null
+      if @get("fid") == -1
+        @set("fid", ThreeNodes.Utils.get_uid())
     
     setFID: (fid) =>
       @set("fid", fid)
@@ -63,7 +64,10 @@ define [
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
       if @get("is_output") == true
+        console.log "setValue output"
         for connection in @connections
+          console.log "out"
+          console.log new_val
           connection.to_field.setValue(new_val)
       true
   
@@ -127,7 +131,7 @@ define [
     
     render_button: =>
       layout = _view_node_field_in
-      if @is_output
+      if @get("is_output")
         layout = _view_node_field_out
       el = $.tmpl(layout, this)
       el.data("object", this)

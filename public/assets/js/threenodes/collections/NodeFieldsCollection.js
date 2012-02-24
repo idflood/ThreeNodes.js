@@ -217,26 +217,19 @@ define(['Underscore', 'Backbone', 'order!threenodes/core/NodeField'], function(_
     };
 
     NodeFieldsCollection.prototype.addField = function(name, value, direction) {
-      var f;
+      var f, field_is_out;
       if (direction == null) direction = "inputs";
       f = false;
+      field_is_out = direction !== "inputs";
       if ($.type(value) !== "object") value = this.getFieldValueObject(value);
-      if (value.values) {
-        f = new ThreeNodes.fields.types[value.type]({
-          name: name,
-          value: value.val,
-          possibilities: value.values,
-          node: this.node
-        });
-      } else {
-        f = new ThreeNodes.fields.types[value.type]({
-          name: name,
-          value: value.val,
-          node: this.node
-        });
-      }
-      if (value["default"] !== null) f.default_value = value["default"];
-      if (direction !== "inputs") f.set("is_output", true);
+      f = new ThreeNodes.fields.types[value.type]({
+        name: name,
+        value: value.val,
+        possibilities: value.values,
+        node: this.node,
+        is_output: field_is_out,
+        "default": value["default"]
+      });
       this.registerField(f);
       this.add(f);
       return f;

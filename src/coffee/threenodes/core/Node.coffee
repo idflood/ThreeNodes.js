@@ -192,6 +192,8 @@ define [
     
     update: () =>
       # update node output values based on inputs
+      console.log "udpate node"
+      console.log @
       @compute()
     
     hasPropertyTrackAnim: () =>
@@ -335,8 +337,7 @@ define [
                 res[i].x = @process_val(ref.x, i)
                 res[i].y = @process_val(ref.y, i)
                 res[i].z = @process_val(ref.z, i)
-        
-      #if @v_out.get() != res
+      
       @v_out.setValue res
       true
 

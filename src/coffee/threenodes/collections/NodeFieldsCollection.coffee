@@ -6,8 +6,6 @@ define [
   "use strict"
   
   class ThreeNodes.NodeFieldsCollection extends Backbone.Collection
-    #model: ThreeNodes.NodeField
-    
     initialize: (models, options) =>
       @node = options.node
       @node_fields = {}
@@ -139,23 +137,16 @@ define [
     
     addField: (name, value, direction = "inputs") =>
       f = false
+      field_is_out = (direction != "inputs")
       if $.type(value) != "object"
         value = @getFieldValueObject(value)
-      if value.values
-        f = new ThreeNodes.fields.types[value.type]
-          name: name
-          value: value.val
-          possibilities: value.values
-          node: @node
-      else
-        f = new ThreeNodes.fields.types[value.type]
-          name: name
-          value: value.val
-          node: @node
-      if value.default != null
-        f.default_value = value.default
-      if direction != "inputs"
-        f.set("is_output", true)
+      f = new ThreeNodes.fields.types[value.type]
+        name: name
+        value: value.val
+        possibilities: value.values
+        node: @node
+        is_output: field_is_out
+        default: value.default
       
       @registerField(f)
       #@context.injector.applyContext(f)

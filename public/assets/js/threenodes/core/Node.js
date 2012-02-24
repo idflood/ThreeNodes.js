@@ -252,6 +252,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
     };
 
     NodeBase.prototype.update = function() {
+      console.log("udpate node");
+      console.log(this);
       return this.compute();
     };
 

@@ -56,7 +56,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.node = options.node;
       this.changed = true;
       this.connections = [];
-      return this.default_value = null;
+      if (this.get("fid") === -1) {
+        return this.set("fid", ThreeNodes.Utils.get_uid());
+      }
     };
 
     NodeField.prototype.setFID = function(fid) {
@@ -97,9 +99,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         this.on_value_update_hooks[hook](new_val);
       }
       if (this.get("is_output") === true) {
+        console.log("setValue output");
         _ref = this.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           connection = _ref[_i];
+          console.log("out");
+          console.log(new_val);
           connection.to_field.setValue(new_val);
         }
       }
@@ -189,7 +194,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.render_button = function() {
       var el, layout;
       layout = _view_node_field_in;
-      if (this.is_output) layout = _view_node_field_out;
+      if (this.get("is_output")) layout = _view_node_field_out;
       el = $.tmpl(layout, this);
       el.data("object", this);
       return el;

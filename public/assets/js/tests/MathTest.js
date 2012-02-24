@@ -16,11 +16,17 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         node_mult = ng.create_node("MathMult");
         n1.v_in.setValue(2);
         node_mult.rack.getField("factor").setValue(3);
-        ng.connections.create({
+        c1 = ng.connections.create({
           from_field: n1.v_out,
           to_field: node_mult.v_in
         });
         ng.render();
+        equals(ng.connections.length, 1, "There is one connection");
+        equals(n1.v_out.connections.length, 1, "The output field has one connection");
+        equals(n1.v_out.get("is_output"), true, "n1.v_out is output");
+        equals(n1.v_out.getValue(), 2, "first node output 2");
+        equals(node_mult.v_in.connections.length, 1, "The input field has one connection");
+        equals(node_mult.v_in.getValue(), 2, "The value propagated from n1 to node node_mult");
         equals(node_mult.v_out.getValue(), 6, "2 * 3 = 6");
         n2_out = n2.rack.getField("xyz", true);
         n2.rack.getField("x").setValue(1);
