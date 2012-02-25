@@ -44,6 +44,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
     ConnectionModel.prototype.remove = function() {
       this.from_field.unregister_connection(this);
       this.to_field.unregister_connection(this);
+      this.to_field.remove_connections();
       this.to_field.node.dirty = true;
       this.to_field.changed = true;
       this.trigger("connection:removed", this);

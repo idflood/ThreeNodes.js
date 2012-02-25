@@ -47,10 +47,13 @@ define [
       if $.type(new_val) == "array"
         tmp_val = _.filter new_val, (item) ->
           item != null
-        if tmp_val.length != 0
+        if this.constructor == ThreeNodes.fields.types.Array
           new_val = tmp_val
         else
-          new_val = null
+          if tmp_val.length != 0
+            new_val = tmp_val
+          else
+            new_val = null
       
       # reset the value if it's null and it has a default
       if new_val == null
@@ -58,9 +61,7 @@ define [
           prev_val = @get("default")
         new_val = prev_val
       
-      #@val = new_val
       @set("value", new_val)
-      
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
       if @get("is_output") == true
@@ -228,13 +229,11 @@ define [
     
     remove_connections: () =>
       super
-      if @is_output == false
-        @on_value_changed([])
+      if @get("is_output") == false
+        @setValue([])
     
     on_value_changed : (val) =>
       return @compute_value(val)
-      #@set
-      #  value: @compute_value(val)
     
     getValue: (index = 0) => @get("value")
     

@@ -82,10 +82,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         tmp_val = _.filter(new_val, function(item) {
           return item !== null;
         });
-        if (tmp_val.length !== 0) {
+        if (this.constructor === ThreeNodes.fields.types.Array) {
           new_val = tmp_val;
         } else {
-          new_val = null;
+          if (tmp_val.length !== 0) {
+            new_val = tmp_val;
+          } else {
+            new_val = null;
+          }
         }
       }
       if (new_val === null) {
@@ -347,7 +351,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     Array.prototype.remove_connections = function() {
       Array.__super__.remove_connections.apply(this, arguments);
-      if (this.is_output === false) return this.on_value_changed([]);
+      if (this.get("is_output") === false) return this.setValue([]);
     };
 
     Array.prototype.on_value_changed = function(val) {

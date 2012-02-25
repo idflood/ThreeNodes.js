@@ -30,6 +30,7 @@ define [
     remove: =>
       @from_field.unregister_connection(this)
       @to_field.unregister_connection(this)
+      @to_field.remove_connections()
       @to_field.node.dirty = true
       @to_field.changed = true
       
