@@ -11,6 +11,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     function Object3D() {
       this.compute = __bind(this.compute, this);
+      this.apply_children = __bind(this.apply_children, this);
       this.get_children_array = __bind(this.get_children_array, this);
       this.set_fields = __bind(this.set_fields, this);
       Object3D.__super__.constructor.apply(this, arguments);
@@ -65,26 +66,46 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       return childs;
     };
 
-    Object3D.prototype.compute = function() {
-      var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
-      childs_in = this.get_children_array();
+    Object3D.prototype.apply_children = function() {
+      var child, childs_in, ind, _i, _j, _len, _len2, _ref, _results;
       if (this.rack.getField("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
           this.ob.remove(this.ob.children[0]);
         }
+        return true;
       }
+      childs_in = this.get_children_array();
       _ref = this.ob.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child) this.ob.remove(child);
+        if (child && ind === -1) this.ob.remove(child);
       }
+      _results = [];
       for (_j = 0, _len2 = childs_in.length; _j < _len2; _j++) {
         child = childs_in[_j];
         ind = this.ob.children.indexOf(child);
-        if (ind === -1) this.ob.add(child);
+        if (child instanceof THREE.Light === true) {
+          if (ind === -1) {
+            this.ob.add(child);
+            _results.push(ThreeNodes.rebuild_all_shaders());
+          } else {
+            _results.push(void 0);
+          }
+        } else {
+          if (ind === -1) {
+            _results.push(this.ob.add(child));
+          } else {
+            _results.push(void 0);
+          }
+        }
       }
+      return _results;
+    };
+
+    Object3D.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
+      this.apply_children();
       return this.rack.setField("out", this.ob);
     };
 
@@ -97,7 +118,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
 
     function Scene() {
       this.compute = __bind(this.compute, this);
-      this.apply_children = __bind(this.apply_children, this);
       this.set_fields = __bind(this.set_fields, this);
       Scene.__super__.constructor.apply(this, arguments);
     }
@@ -115,54 +135,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         val: null
       });
       return current_scene = this.ob;
-    };
-
-    Scene.prototype.apply_children = function() {
-      var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
-      if (this.rack.getField("children").connections.length === 0 && this.ob.children.length !== 0) {
-        while (this.ob.children.length > 0) {
-          this.ob.remove(this.ob.children[0]);
-        }
-        return true;
-      }
-      childs_in = this.get_children_array();
-      _ref = this.ob.children;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
-        ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child instanceof THREE.Light === false) {
-          this.ob.remove(child);
-        }
-      }
-      _ref2 = this.ob.children;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        child = _ref2[_j];
-        ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child instanceof THREE.Light === true) {
-          this.ob.remove(child);
-        }
-      }
-      _results = [];
-      for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
-        child = childs_in[_k];
-        if (child instanceof THREE.Light === true) {
-          ind = this.ob.children.indexOf(child);
-          if (ind === -1) {
-            this.ob.add(child);
-            _results.push(ThreeNodes.rebuild_all_shaders());
-          } else {
-            _results.push(void 0);
-          }
-        } else {
-          ind = this.ob.children.indexOf(child);
-          if (ind === -1) {
-            _results.push(this.ob.add(child));
-          } else {
-            _results.push(void 0);
-          }
-        }
-      }
-      return _results;
     };
 
     Scene.prototype.compute = function() {

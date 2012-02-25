@@ -38,30 +38,35 @@ define [
         return [childs]
       return childs
     
-    compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
-      childs_in = @get_children_array()
-      
-      # no connections mean no children
+    apply_children: =>
+      # no connections means no children
       if @rack.getField("children").connections.length == 0 && @ob.children.length != 0
         @ob.remove(@ob.children[0]) while @ob.children.length > 0
+        return true
       
+      childs_in = @get_children_array()
       # remove old childs
       for child in @ob.children
         ind = childs_in.indexOf(child)
-        if child && ind == -1 && child
+        if child && ind == -1
           #console.log "object remove child"
-          #console.log @ob
           @ob.remove(child)
       
       #add new childs
       for child in childs_in
         ind = @ob.children.indexOf(child)
-        if ind == -1
-          #console.log "object add child"
-          #console.log @ob
-          @ob.add(child)
-      
+        if child instanceof THREE.Light == true
+          if ind == -1
+            @ob.add(child)
+            ThreeNodes.rebuild_all_shaders()
+        else
+          if ind == -1
+            #console.log "scene add child"
+            @ob.add(child)
+            
+    compute: =>
+      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
+      @apply_children()
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.Scene extends ThreeNodes.nodes.Object3D
@@ -73,41 +78,7 @@ define [
       @ob = new THREE.Scene()
       @v_fog = @rack.addField("fog", {type: 'Any', val: null})
       current_scene = @ob
-  
-    apply_children: =>
-      # no connections means no children
-      if @rack.getField("children").connections.length == 0 && @ob.children.length != 0
-        @ob.remove(@ob.children[0]) while @ob.children.length > 0
-        return true
-      
-      childs_in = @get_children_array()
-      # remove old childs
-      for child in @ob.children
-        ind = childs_in.indexOf(child)
-        if child && ind == -1 && child instanceof THREE.Light == false
-          #console.log "scene remove child"
-          #console.log @ob
-          @ob.remove(child)
-          
-      for child in @ob.children
-        ind = childs_in.indexOf(child)
-        if child && ind == -1 && child instanceof THREE.Light == true
-          @ob.remove(child)
-          
-      #add new childs
-      for child in childs_in
-        if child instanceof THREE.Light == true
-          ind = @ob.children.indexOf(child)
-          if ind == -1
-            @ob.add(child)
-            ThreeNodes.rebuild_all_shaders()
-        else
-          ind = @ob.children.indexOf(child)
-          if ind == -1
-            #console.log "scene add child"
-            #console.log @ob
-            @ob.add(child)
-  
+    
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
       @apply_children()

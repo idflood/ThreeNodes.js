@@ -64,10 +64,7 @@ define [
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
       if @get("is_output") == true
-        console.log "setValue output"
         for connection in @connections
-          console.log "out"
-          console.log new_val
           connection.to_field.setValue(new_val)
       true
   
@@ -99,7 +96,7 @@ define [
     
     toJSON : () =>
       res =
-        name: @name
+        name: @get("name")
       # help avoid cyclic value
       val = @get("value")
       val_type = jQuery.type(val)
@@ -112,14 +109,14 @@ define [
       val = @get("value")
       val_type = jQuery.type(val)
       if val_type != "object" && val_type != "array"
-        res = "\t\t{name: '#{@name}', val: #{val}},\n"
+        res = "\t\t{name: '#{@get('name')}', val: #{val}},\n"
       else
-        res = "\t\t{name: '#{@name}'},\n"
+        res = "\t\t{name: '#{@get('name')}'},\n"
       res
     
     toXML : () =>
       val = @get("value")
-      "\t\t\t<field fid='#{@fid}' val='#{val}'/>\n"
+      "\t\t\t<field fid='#{@get('fid')}' val='#{val}'/>\n"
   
     render_connections: () =>
       for connection in @connections
@@ -217,8 +214,8 @@ define [
       val
     
     on_value_changed : (val) =>
-      @set
-        value: @compute_value(val)
+      #@set("value", @compute_value(val))
+      return val
     
   class ThreeNodes.fields.types.Array extends ThreeNodes.NodeField
     compute_value : (val) =>
@@ -235,8 +232,9 @@ define [
         @on_value_changed([])
     
     on_value_changed : (val) =>
-      @set
-        value: @compute_value(val)
+      return @compute_value(val)
+      #@set
+      #  value: @compute_value(val)
     
     getValue: (index = 0) => @get("value")
     

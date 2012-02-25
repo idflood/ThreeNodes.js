@@ -99,12 +99,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         this.on_value_update_hooks[hook](new_val);
       }
       if (this.get("is_output") === true) {
-        console.log("setValue output");
         _ref = this.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           connection = _ref[_i];
-          console.log("out");
-          console.log(new_val);
           connection.to_field.setValue(new_val);
         }
       }
@@ -150,7 +147,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.toJSON = function() {
       var res, val, val_type;
       res = {
-        name: this.name
+        name: this.get("name")
       };
       val = this.get("value");
       val_type = jQuery.type(val);
@@ -164,9 +161,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       val = this.get("value");
       val_type = jQuery.type(val);
       if (val_type !== "object" && val_type !== "array") {
-        res = "\t\t{name: '" + this.name + "', val: " + val + "},\n";
+        res = "\t\t{name: '" + (this.get('name')) + "', val: " + val + "},\n";
       } else {
-        res = "\t\t{name: '" + this.name + "'},\n";
+        res = "\t\t{name: '" + (this.get('name')) + "'},\n";
       }
       return res;
     };
@@ -174,7 +171,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.toXML = function() {
       var val;
       val = this.get("value");
-      return "\t\t\t<field fid='" + this.fid + "' val='" + val + "'/>\n";
+      return "\t\t\t<field fid='" + (this.get('fid')) + "' val='" + val + "'/>\n";
     };
 
     NodeField.prototype.render_connections = function() {
@@ -321,9 +318,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     Any.prototype.on_value_changed = function(val) {
-      return this.set({
-        value: this.compute_value(val)
-      });
+      return val;
     };
 
     return Any;
@@ -356,9 +351,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     Array.prototype.on_value_changed = function(val) {
-      return this.set({
-        value: this.compute_value(val)
-      });
+      return this.compute_value(val);
     };
 
     Array.prototype.getValue = function(index) {

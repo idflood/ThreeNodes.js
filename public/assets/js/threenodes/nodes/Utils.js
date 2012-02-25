@@ -191,21 +191,20 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
     };
 
     Merge.prototype.compute = function() {
-      var f, k, old, subval;
-      old = this.rack.getField("out", true).get("value");
-      this.value = [];
+      var f, field, result, subval;
+      result = [];
       for (f in this.rack.node_fields.inputs) {
-        k = this.rack.node_fields.inputs[f];
-        if (k.get("value") !== null && k.connections.length > 0) {
-          subval = k.get("value");
+        field = this.rack.node_fields.inputs[f];
+        if (field.get("value") !== null && field.connections.length > 0) {
+          subval = field.get("value");
           if (jQuery.type(subval) === "array") {
-            this.value = this.value.concat(subval);
+            result = result.concat(subval);
           } else {
-            this.value[this.value.length] = subval;
+            result[result.length] = subval;
           }
         }
       }
-      return this.rack.setField("out", this.value);
+      return this.rack.setField("out", result);
     };
 
     return Merge;

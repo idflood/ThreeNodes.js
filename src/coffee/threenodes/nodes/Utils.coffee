@@ -127,18 +127,17 @@ define [
           "out" : {type: "Array", val: []}
   
     compute: =>
-      old = @rack.getField("out", true).get("value")
-      @value = []
+      result = []
       for f of @rack.node_fields.inputs
-        k = @rack.node_fields.inputs[f]
-        if k.get("value") != null && k.connections.length > 0
-          subval = k.get("value")
+        field = @rack.node_fields.inputs[f]
+        if field.get("value") != null && field.connections.length > 0
+          subval = field.get("value")
           # if subvalue is an array append it to the result
           if jQuery.type(subval) == "array"
-            @value = @value.concat(subval)
+            result = result.concat(subval)
           else
-            @value[@value.length] = subval
-      @rack.setField("out", @value)
+            result[result.length] = subval
+      @rack.setField("out", result)
   
   class ThreeNodes.nodes.Get extends ThreeNodes.NodeBase
     @node_name = 'Get'

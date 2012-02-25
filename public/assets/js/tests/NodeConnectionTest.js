@@ -166,7 +166,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         node_mult.v_in.setValue(3);
         ng.render();
         console.log(n1.v_in);
-        console.log(n1.v_out);
+        console.log(n1.v_out.get("value"));
         console.log(n1.v_out.attributes.value);
         console.log(node_merge.rack.getField("out", true));
         equals(n1.v_out.get("value").length, 1, "Node number output one float value");

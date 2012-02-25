@@ -192,8 +192,6 @@ define [
     
     update: () =>
       # update node output values based on inputs
-      console.log "udpate node"
-      console.log @
       @compute()
     
     hasPropertyTrackAnim: () =>

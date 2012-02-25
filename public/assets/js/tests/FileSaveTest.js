@@ -34,8 +34,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         equals(_n2.y, n2.get('y'), "Node1.x saved");
         _c1 = parsed_data1.connections[0];
         equals(_c1.id, c1.get("cid"), "Connection1.cid saved");
-        equals(_c1.from, c1.from_field.name, "Connection1.from_field saved");
-        equals(_c1.to, c1.to_field.name, "Connection1.to_field saved");
+        equals(_c1.from, c1.from_field.get("name"), "Connection1.from_field saved");
+        equals(_c1.to, c1.to_field.get("name"), "Connection1.to_field saved");
         app.commandMap.execute("ClearWorkspaceCommand");
         n1 = ng.create_node("Scene");
         n2 = ng.create_node("WebGLRenderer");
