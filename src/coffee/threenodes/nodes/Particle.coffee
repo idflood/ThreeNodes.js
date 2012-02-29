@@ -2,7 +2,7 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  'order!threenodes/core/NodeFieldRack',
+  'order!threenodes/models/Node',
   'order!threenodes/utils/Utils',
   "order!libs/Tween",
   "order!libs/Sparks",

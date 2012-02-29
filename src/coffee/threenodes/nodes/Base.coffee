@@ -2,8 +2,8 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
+  'order!threenodes/models/Node',
   "order!libs/colorpicker/js/colorpicker",
-  'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone) ->
   "use strict"

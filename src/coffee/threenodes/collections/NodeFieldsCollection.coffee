@@ -1,7 +1,7 @@
 define [
   'Underscore', 
   'Backbone',
-  'order!threenodes/core/NodeField',
+  'order!threenodes/models/NodeField',
 ], (_, Backbone) ->
   "use strict"
   
@@ -149,7 +149,6 @@ define [
         default: value.default
       
       @registerField(f)
-      #@context.injector.applyContext(f)
       @add(f)
       f
       
