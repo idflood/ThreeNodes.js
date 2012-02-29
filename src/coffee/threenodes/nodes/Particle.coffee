@@ -2,14 +2,11 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "text!templates/node.tmpl.html",
-  "order!libs/jquery.tmpl.min",
-  "order!libs/jquery.contextMenu",
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',
   "order!libs/Tween",
   "order!libs/Sparks",
-], ($, _, Backbone, _view_node_template) ->
+], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.nodes.ParticleSystem extends ThreeNodes.nodes.Object3D
     @node_name = 'ParticleSystem'

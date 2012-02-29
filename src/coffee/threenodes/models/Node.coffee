@@ -2,14 +2,7 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  #"text!templates/node.tmpl.html",
-  #"order!libs/jquery.tmpl.min",
-  #"order!libs/jquery.contextMenu",
-  #"order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
-  #'order!threenodes/core/NodeFieldRack',
   'order!threenodes/collections/NodeFieldsCollection',
-  #'order!threenodes/views/NodeView',
-  #'order!threenodes/models/NodeModel',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone) ->
   "use strict"
@@ -85,9 +78,7 @@ define [
       @setName(@typename())
       @load(@inXML, @inJSON)
       
-      #@container = $("#container")
       @apptimeline = @context.injector.get "AppTimeline"
-      #@rack = @context.injector.instanciate(ThreeNodes.NodeFieldRack, this)
       @rack = new ThreeNodes.NodeFieldsCollection [],
         node: this
         

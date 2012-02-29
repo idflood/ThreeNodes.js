@@ -5,7 +5,6 @@ define [
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
   'order!threenodes/utils/Utils',
-  #'order!threenodes/models/NodeFieldModel',
 ], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
   "use strict"
   class ThreeNodes.NodeField extends Backbone.Model
@@ -18,7 +17,6 @@ define [
     
     sync: () =>
     
-    #constructor: (@name, @val, @possible_values = false, @fid = ThreeNodes.Utils.get_uid()) ->
     initialize: (options) =>
       self = this
       @on_value_update_hooks = {}

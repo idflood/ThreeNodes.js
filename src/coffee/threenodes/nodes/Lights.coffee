@@ -2,12 +2,9 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "text!templates/node.tmpl.html",
-  "order!libs/jquery.tmpl.min",
-  "order!libs/jquery.contextMenu",
   'order!threenodes/core/NodeFieldRack',
   'order!threenodes/utils/Utils',
-], ($, _, Backbone, _view_node_template) ->
+], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.nodes.PointLight extends ThreeNodes.NodeBase
     @node_name = 'PointLight'

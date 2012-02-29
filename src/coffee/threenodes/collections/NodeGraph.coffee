@@ -2,7 +2,7 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  'order!threenodes/core/Node',
+  'order!threenodes/models/Node',
   'order!threenodes/views/NodeView',
   'order!threenodes/nodes/Base',
   'order!threenodes/nodes/Conditional',
@@ -21,7 +21,6 @@ define [
   class ThreeNodes.NodeGraph extends Backbone.Collection
     
     initialize: (models, options) =>
-      #@nodes = []
       @nodes_by_nid = {}
       @fields_by_fid = {}
       @connections = new ThreeNodes.ConnectionsCollection()
