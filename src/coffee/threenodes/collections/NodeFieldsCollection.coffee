@@ -73,8 +73,6 @@ define [
         @node_fields_by_name.outputs[field.get("name")] = field
         $(".outputs", @node.main_view).append(field.render_button())
       
-      #if @view != false
-      #@view.add_field_listener($("#fid-#{field.fid}"))
       fid = field.get("fid")
       @trigger("field:registered", this, $("#fid-#{fid}"))
       
@@ -161,13 +159,11 @@ define [
       @
     
     render_sidebar: () =>
-      #if @view
-      #  @view.renderSidebar()
+      @trigger("renderSidebar")
       @
     
     add_center_textfield: (field) =>
-      #if @view
-      #  @view.addCenterTextfield(field)
+      @trigger("addCenterTextfield", field)
       @
             
     getFieldValueObject: (default_value) ->
@@ -175,7 +171,6 @@ define [
         when "number" then "Float"
         when "boolean" then "Bool"
         else "String"
-      #new ThreeNodes.fields.types[ftype](fname, default_value)
       res =
         type: ftype
         val: default_value

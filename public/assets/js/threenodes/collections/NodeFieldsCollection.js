@@ -247,10 +247,12 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeField'], function
     };
 
     NodeFieldsCollection.prototype.render_sidebar = function() {
+      this.trigger("renderSidebar");
       return this;
     };
 
     NodeFieldsCollection.prototype.add_center_textfield = function(field) {
+      this.trigger("addCenterTextfield", field);
       return this;
     };
 

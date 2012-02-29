@@ -13,7 +13,10 @@ define [
     initialize: () ->
       @collection.bind "add", (model) ->
         #console.log "collection.add"
-        
+      @collection.bind "renderSidebar", () =>
+        @renderSidebar()
+      @collection.bind "addCenterTextfield", (field) =>
+        @addCenterTextfield(field)
       @collection.bind "field:registered", (model, el) =>
         @add_field_listener(el)
     

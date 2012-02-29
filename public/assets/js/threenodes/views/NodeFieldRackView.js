@@ -16,6 +16,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
     NodeFieldRackView.prototype.initialize = function() {
       var _this = this;
       this.collection.bind("add", function(model) {});
+      this.collection.bind("renderSidebar", function() {
+        return _this.renderSidebar();
+      });
+      this.collection.bind("addCenterTextfield", function(field) {
+        return _this.addCenterTextfield(field);
+      });
       return this.collection.bind("field:registered", function(model, el) {
         return _this.add_field_listener(el);
       });
