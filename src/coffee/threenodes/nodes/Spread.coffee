@@ -28,18 +28,18 @@ define [
         outputs:
           "out" : 0
       
-      @v_out = @rack.get("out", true)
+      @v_out = @rack.getField("out", true)
   
     compute: =>
       needs_rebuild = false
-      if @seed != @rack.get("seed").val || @count != parseInt(@rack.get("count").get(0)) || @width != @rack.get("width").val || @offset != @rack.get("offset").val
-        @seed = @rack.get("seed").val
+      if @seed != @rack.getField("seed").get("value") || @count != parseInt(@rack.getField("count").getValue(0)) || @width != @rack.getField("width").get("value") || @offset != @rack.getField("offset").get("value")
+        @seed = @rack.getField("seed").get("value")
         @rnd = new ThreeNodes.Utils.Rc4Random(@seed.toString())
         
         @value = []
-        @width = @rack.get("width").get(0)
-        @offset = @rack.get("offset").get(0)
-        @count = parseInt(@rack.get("count").val)
+        @width = @rack.getField("width").getValue(0)
+        @offset = @rack.getField("offset").getValue(0)
+        @count = parseInt(@rack.getField("count").get("value"))
         for i in [0..@count - 1]
           @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
       @rack.setField("out", @value)
@@ -65,14 +65,14 @@ define [
         outputs:
           "out" : 0
       
-      @v_out = @rack.get("out", true)
+      @v_out = @rack.getField("out", true)
   
     compute: =>
       needs_rebuild = false
-      @width = @rack.get("width").get(0)
-      @offset = @rack.get("offset").get(0)
-      @phase = @rack.get("phase").get(0)
-      @count = parseInt(@rack.get("count").val)
+      @width = @rack.getField("width").getValue(0)
+      @offset = @rack.getField("offset").getValue(0)
+      @phase = @rack.getField("phase").getValue(0)
+      @count = parseInt(@rack.getField("count").getValue())
       @value = []
       
       stepSize = @width / @count

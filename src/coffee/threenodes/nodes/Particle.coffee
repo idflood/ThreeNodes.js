@@ -19,32 +19,32 @@ define [
           "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
           "material": {type: "Any", val: new THREE.ParticleBasicMaterial()}
           "sortParticles": false
-      @ob = new THREE.ParticleSystem(@rack.get('geometry').get(), @rack.get('material').get())
+      @ob = new THREE.ParticleSystem(@rack.getField('geometry').getValue(), @rack.getField('material').getValue())
       @ob.dynamic = true
       @geometry_cache = false
       @material_cache = false
       @compute()
     
     rebuild_geometry: =>
-      field = @rack.get('geometry')
+      field = @rack.getField('geometry')
       if field.connections.length > 0
         geom = field.connections[0].from_field.node
         geom.cached = []
         geom.compute()
       else
-        @rack.get('geometry').setValue(new THREE.CubeGeometry( 200, 200, 200 ))
+        @rack.getField('geometry').setValue(new THREE.CubeGeometry( 200, 200, 200 ))
       
     compute: =>
       needs_rebuild = false
       
-      if @material_cache != @rack.get('material').get().id
+      if @material_cache != @rack.getField('material').getValue().id
         # let's trigger a geometry rebuild so we have the appropriate buffers set
         @rebuild_geometry()
       
-      if @geometry_cache != @rack.get('geometry').get().id || @material_cache != @rack.get('material').get().id || needs_rebuild
-        @ob = new THREE.ParticleSystem(@rack.get('geometry').get(), @rack.get('material').get())
-        @geometry_cache = @rack.get('geometry').get().id
-        @material_cache = @rack.get('material').get().id
+      if @geometry_cache != @rack.getField('geometry').getValue().id || @material_cache != @rack.getField('material').getValue().id || needs_rebuild
+        @ob = new THREE.ParticleSystem(@rack.getField('geometry').getValue(), @rack.getField('material').getValue())
+        @geometry_cache = @rack.getField('geometry').getValue().id
+        @material_cache = @rack.getField('material').getValue().id
       
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
       
@@ -91,8 +91,8 @@ define [
           "actions": {type: "Array", val: []}
         outputs:
           "out": {type: "Any", val: @ob}
-      @pool = @rack.get("pool").get()
-      @ob = new SPARKS.Emitter(@rack.get("counter").get())
+      @pool = @rack.getField("pool").getValue()
+      @ob = new SPARKS.Emitter(@rack.getField("counter").getValue())
       #@ob._velocityVerlet = true
       #@ob.start()
     
@@ -101,15 +101,15 @@ define [
         return @pool.pool.get()
     
     compute: =>
-      if @rack.get("pool").get() != false
-        if @pool != @rack.get("pool").get()
+      if @rack.getField("pool").getValue() != false
+        if @pool != @rack.getField("pool").getValue()
           @ob.removeCallback "created"
           @ob.removeCallback "dead"
           @ob.stop()
-          @ob = new SPARKS.Emitter(@rack.get("counter").get())
+          @ob = new SPARKS.Emitter(@rack.getField("counter").getValue())
           @geom = new THREE.Geometry()
           
-          @pool = @rack.get("pool").get()
+          @pool = @rack.getField("pool").getValue()
           @pool.init_pool(@geom)
           @ob.addCallback "created", @pool.on_particle_created
           #@ob.addCallback "updated", @pool.on_particle_updated
@@ -117,12 +117,12 @@ define [
           console.log "pool particle setup..."
       
       # works on a copy of the incoming array
-      initializers = @rack.get("initializers").val.slice(0)
+      initializers = @rack.getField("initializers").getValue().slice(0)
       initializers.push(@target_initializer)
       
       @ob._initializers = initializers
-      @ob._actions = @rack.get("actions").val
-      @ob._counter = @rack.get("counter").get()
+      @ob._actions = @rack.getField("actions").getValue()
+      @ob._counter = @rack.getField("counter").getValue()
       if @pool != false && @ob.isRunning() == false
         @ob.start()
       
@@ -148,9 +148,9 @@ define [
           "easing": {type: "Any", val: TWEEN.Easing.Linear.EaseNone}
         outputs:
           "action": {type: "Any", val: @ob}
-      @ob = new SPARKS.Age(@rack.get("easing").get())
+      @ob = new SPARKS.Age(@rack.getField("easing").getValue())
     compute: =>
-      @ob._easing = @rack.get("easing").val
+      @ob._easing = @rack.getField("easing").get("value")
       @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksMove extends ThreeNodes.NodeBase
@@ -180,9 +180,9 @@ define [
           "vector": {type: "Vector3", val: new THREE.Vector3(0, 1, 0)}
         outputs:
           "action": {type: "Any", val: @ob}
-      @ob = new SPARKS.Accelerate(@rack.get("vector").get())
+      @ob = new SPARKS.Accelerate(@rack.getField("vector").getValue())
     compute: =>
-      @ob.acceleration = @rack.get("vector").get()
+      @ob.acceleration = @rack.getField("vector").getValue()
       @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksAccelerateFactor extends ThreeNodes.NodeBase
@@ -198,9 +198,9 @@ define [
           "factor": 2.0
         outputs:
           "action": {type: "Any", val: @ob}
-      @ob = new SPARKS.AccelerateFactor(@rack.get("factor").get())
+      @ob = new SPARKS.AccelerateFactor(@rack.getField("factor").getValue())
     compute: =>
-      @ob.factor = @rack.get("factor").get()
+      @ob.factor = @rack.getField("factor").getValue()
       @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksAccelerateVelocity extends ThreeNodes.NodeBase
@@ -216,9 +216,9 @@ define [
           "factor": 2.0
         outputs:
           "action": {type: "Any", val: @ob}
-      @ob = new SPARKS.AccelerateVelocity(@rack.get("factor").get())
+      @ob = new SPARKS.AccelerateVelocity(@rack.getField("factor").getValue())
     compute: =>
-      @ob.factor = @rack.get("factor").get()
+      @ob.factor = @rack.getField("factor").getValue()
       @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksRandomDrift extends ThreeNodes.NodeBase
@@ -234,9 +234,9 @@ define [
           "vector": {type: "Vector3", val: new THREE.Vector3(0, 1, 0)}
         outputs:
           "action": {type: "Any", val: @ob}
-      @ob = new SPARKS.RandomDrift(@rack.get("vector").get())
+      @ob = new SPARKS.RandomDrift(@rack.getField("vector").getValue())
     compute: =>
-      @ob.drift = @rack.get("vector").get()
+      @ob.drift = @rack.getField("vector").getValue()
       @rack.setField("action", @ob)
   
   class ThreeNodes.nodes.SparksLifetime extends ThreeNodes.NodeBase
@@ -253,10 +253,10 @@ define [
           "max": 7
         outputs:
           "initializer": {type: "Any", val: @ob}
-      @ob = new SPARKS.Lifetime(@rack.get("min").get(), @rack.get("max").get())
+      @ob = new SPARKS.Lifetime(@rack.getField("min").getValue(), @rack.getField("max").getValue())
     compute: =>
-      @ob._min = @rack.get("min").get()
-      @ob._min = @rack.get("max").get()
+      @ob._min = @rack.getField("min").getValue()
+      @ob._min = @rack.getField("max").getValue()
       @rack.setField("initializer", @ob)
   
   class ThreeNodes.nodes.SparksPosition extends ThreeNodes.NodeBase
@@ -272,9 +272,9 @@ define [
           "zone": {type: "Any", val: new SPARKS.PointZone( new THREE.Vector3(0,0,0) )}
         outputs:
           "initializer": {type: "Any", val: @ob}
-      @ob = new SPARKS.Position(@rack.get("zone").get())
+      @ob = new SPARKS.Position(@rack.getField("zone").getValue())
     compute: =>
-      @ob.zone = @rack.get("zone").get()
+      @ob.zone = @rack.getField("zone").getValue()
       @rack.setField("initializer", @ob)
   
   class ThreeNodes.nodes.SparksPointZone extends ThreeNodes.NodeBase
@@ -290,9 +290,9 @@ define [
           "pos": {type: "Vector3", val: new THREE.Vector3()}
         outputs:
           "zone": {type: "Any", val: @ob}
-      @ob = new SPARKS.PointZone(@rack.get("pos").get())
+      @ob = new SPARKS.PointZone(@rack.getField("pos").getValue())
     compute: =>
-      @ob.pos = @rack.get("pos").get()
+      @ob.pos = @rack.getField("pos").getValue()
       @rack.setField("zone", @ob)
   
   class ThreeNodes.nodes.SparksLineZone extends ThreeNodes.NodeBase
@@ -309,11 +309,11 @@ define [
           "end": {type: "Vector3", val: new THREE.Vector3(100, 0, 0)}
         outputs:
           "zone": {type: "Any", val: @ob}
-      @ob = new SPARKS.LineZone(@rack.get("start").get(), @rack.get("end").get())
+      @ob = new SPARKS.LineZone(@rack.getField("start").getValue(), @rack.getField("end").getValue())
     compute: =>
-      if this.ob.start != this.rack.get("start").get() || this.ob.end != this.rack.get("end").get()
-        @ob.start = @rack.get("start").get()
-        @ob.end = @rack.get("end").get()
+      if this.ob.start != this.rack.get("start").getValue() || this.ob.end != this.rack.get("end").getValue()
+        @ob.start = @rack.getField("start").getValue()
+        @ob.end = @rack.getField("end").getValue()
         @ob._length = @ob.end.clone().subSelf( @ob.start )
       @rack.setField("zone", @ob)
   
@@ -333,12 +333,12 @@ define [
           "z": 0
         outputs:
           "zone": {type: "Any", val: @ob}
-      @ob = new SPARKS.CubeZone(@rack.get("position").get(), @rack.get("x").get(), @rack.get("y").get(), @rack.get("z").get())
+      @ob = new SPARKS.CubeZone(@rack.getField("position").getValue(), @rack.getField("x").getValue(), @rack.getField("y").getValue(), @rack.getField("z").getValue())
     compute: =>
-      @ob.position = @rack.get("position").get()
-      @ob.x = @rack.get("x").get()
-      @ob.y = @rack.get("y").get()
-      @ob.z = @rack.get("z").get()
+      @ob.position = @rack.getField("position").getValue()
+      @ob.x = @rack.getField("x").getValue()
+      @ob.y = @rack.getField("y").getValue()
+      @ob.z = @rack.getField("z").getValue()
       @rack.setField("zone", @ob)
   
   class ThreeNodes.nodes.SparksSteadyCounter extends ThreeNodes.NodeBase
@@ -354,9 +354,9 @@ define [
           "rate": 100
         outputs:
           "counter": {type: "Any", val: @ob}
-      @ob = new SPARKS.SteadyCounter(@rack.get("rate").get())
+      @ob = new SPARKS.SteadyCounter(@rack.getField("rate").getValue())
     compute: =>
-      @ob.pos = @rack.get("rate").get()
+      @ob.pos = @rack.getField("rate").getValue()
       @rack.setField("counter", @ob)
   
   class ThreeNodes.nodes.ParticlePool extends ThreeNodes.NodeBase
@@ -387,7 +387,7 @@ define [
       new_pos = () ->
         new THREE.Vertex(new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY))
       
-      for i in [0..@rack.get("maxParticles").get() - 1]
+      for i in [0..@rack.getField("maxParticles").getValue() - 1]
         pos = new_pos()
         geom.vertices.push(pos)
         @pool.add(pos)
@@ -436,10 +436,10 @@ define [
       @generate()
     
     get_cache_array: =>
-      [@rack.get("radius").get(), @rack.get("nbrParticles").get(), @rack.get("linearVelocity").get()]
+      [@rack.getField("radius").getValue(), @rack.getField("nbrParticles").getValue(), @rack.getField("linearVelocity").getValue()]
     
     limit_position: (pos) =>
-      radius = @rack.get("radius").get()
+      radius = @rack.getField("radius").getValue()
       margin = 5
       if pos < radius * -1
         pos = radius - margin
@@ -448,7 +448,7 @@ define [
       pos
     
     move_particles: =>
-      rndVelocity = @rack.get("rndVelocity").get()
+      rndVelocity = @rack.getField("rndVelocity").getValue()
       for key,p of @ob.vertices
         p.position.x += Math.random() * rndVelocity.x - rndVelocity.x * 0.5 + p.velocity.x
         p.position.y += Math.random() * rndVelocity.y - rndVelocity.y * 0.5 + p.velocity.y
@@ -461,9 +461,9 @@ define [
     
     generate: =>
       @ob = new THREE.Geometry()
-      rad = @rack.get("radius").get()
-      total = @rack.get("nbrParticles").get()
-      linearVelocity = @rack.get("linearVelocity").get()
+      rad = @rack.getField("radius").getValue()
+      total = @rack.getField("nbrParticles").getValue()
+      linearVelocity = @rack.getField("linearVelocity").getValue()
       for i in [0..total]
         vector = new THREE.Vector3( Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad )
         v = new THREE.Vertex( vector )

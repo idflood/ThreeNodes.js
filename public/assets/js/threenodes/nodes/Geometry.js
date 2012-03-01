@@ -40,14 +40,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     PlaneGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get()];
+      return [this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue()];
     };
 
     PlaneGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.PlaneGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
+        this.ob = new THREE.PlaneGeometry(this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.setField("out", this.ob);
@@ -96,14 +96,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     CubeGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get()];
+      return [this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("depth").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue(), this.rack.getField("segments_depth").getValue(), this.rack.getField("flip").getValue()];
     };
 
     CubeGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.CubeGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get());
+        this.ob = new THREE.CubeGeometry(this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("depth").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue(), this.rack.getField("segments_depth").getValue(), this.rack.getField("flip").getValue());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.setField("out", this.ob);
@@ -148,14 +148,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     SphereGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get()];
+      return [this.rack.getField("radius").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue()];
     };
 
     SphereGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.SphereGeometry(this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
+        this.ob = new THREE.SphereGeometry(this.rack.getField("radius").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -204,14 +204,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     CylinderGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radiusTop").get(), this.rack.get("radiusBottom").get(), this.rack.get("height").get(), this.rack.get("segmentsRadius").get(), this.rack.get("segmentsHeight").get(), this.rack.get("openEnded").get()];
+      return [this.rack.getField("radiusTop").getValue(), this.rack.getField("radiusBottom").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segmentsRadius").getValue(), this.rack.getField("segmentsHeight").getValue(), this.rack.getField("openEnded").getValue()];
     };
 
     CylinderGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.CylinderGeometry(this.rack.get("radiusTop").get(), this.rack.get("radiusBottom").get(), this.rack.get("height").get(), this.rack.get("segmentsRadius").get(), this.rack.get("segmentsHeight").get(), this.rack.get("openEnded").get());
+        this.ob = new THREE.CylinderGeometry(this.rack.getField("radiusTop").getValue(), this.rack.getField("radiusBottom").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segmentsRadius").getValue(), this.rack.getField("segmentsHeight").getValue(), this.rack.getField("openEnded").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -259,14 +259,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     TorusGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get()];
+      return [this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("arc").getValue()];
     };
 
     TorusGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.TorusGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get());
+        this.ob = new THREE.TorusGeometry(this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("arc").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -316,14 +316,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     TorusKnotGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("p").get(), this.rack.get("q").get(), this.rack.get("heightScale").get()];
+      return [this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("p").getValue(), this.rack.getField("q").getValue(), this.rack.getField("heightScale").getValue()];
     };
 
     TorusKnotGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.TorusKnotGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("p").get(), this.rack.get("q").get(), this.rack.get("heightScale").get());
+        this.ob = new THREE.TorusKnotGeometry(this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("p").getValue(), this.rack.getField("q").getValue(), this.rack.getField("heightScale").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -368,14 +368,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     OctahedronGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("detail").get()];
+      return [this.rack.getField("radius").getValue(), this.rack.getField("detail").getValue()];
     };
 
     OctahedronGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.OctahedronGeometry(this.rack.get("radius").get(), this.rack.get("detail").get());
+        this.ob = new THREE.OctahedronGeometry(this.rack.getField("radius").getValue(), this.rack.getField("detail").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -428,30 +428,30 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     TextGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("font").get(), this.rack.get("text").get(), this.rack.get("size").get(), this.rack.get("height").get(), this.rack.get("curveSegments").get(), this.rack.get("bevelEnabled").get(), this.rack.get("bevelThickness").get(), this.rack.get("bevelSize").get()];
+      return [this.rack.getField("font").getValue(), this.rack.getField("text").getValue(), this.rack.getField("size").getValue(), this.rack.getField("height").getValue(), this.rack.getField("curveSegments").getValue(), this.rack.getField("bevelEnabled").getValue(), this.rack.getField("bevelThickness").getValue(), this.rack.getField("bevelSize").getValue()];
     };
 
     TextGeometry.prototype.compute = function() {
       var font, has_font_attribute, new_cache;
       new_cache = this.get_cache_array();
-      font = this.rack.get("font").get();
+      font = this.rack.get("font").getValue();
       has_font_attribute = function(f) {
         if (font["font"] && font["weight"]) return true;
         return false;
       };
-      if (!has_font_attribute(font) ||  this.rack.get("text").get() === "") {
+      if (!has_font_attribute(font) ||  this.rack.get("text").getValue() === "") {
         this.ob = false;
         this.rack.setField("out", this.ob);
         return false;
       }
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
         console.log("building text " + font.font + " / " + font.weight);
-        this.ob = new THREE.TextGeometry(this.rack.get("text").get(), {
-          size: this.rack.get("size").get(),
-          height: this.rack.get("height").get(),
+        this.ob = new THREE.TextGeometry(this.rack.getField("text").getValue(), {
+          size: this.rack.getField("size").getValue(),
+          height: this.rack.getField("height").getValue(),
           font: font.font,
           weight: font.weight,
-          curveSegments: this.rack.get("curveSegments").get()
+          curveSegments: this.rack.getField("curveSegments").getValue()
         });
         this.ob.computeBoundingBox();
         this.ob.computeVertexNormals();

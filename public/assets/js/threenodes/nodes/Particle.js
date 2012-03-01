@@ -33,7 +33,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           "sortParticles": false
         }
       });
-      this.ob = new THREE.ParticleSystem(this.rack.get('geometry').get(), this.rack.get('material').get());
+      this.ob = new THREE.ParticleSystem(this.rack.getField('geometry').getValue(), this.rack.getField('material').getValue());
       this.ob.dynamic = true;
       this.geometry_cache = false;
       this.material_cache = false;
@@ -42,26 +42,26 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     ParticleSystem.prototype.rebuild_geometry = function() {
       var field, geom;
-      field = this.rack.get('geometry');
+      field = this.rack.getField('geometry');
       if (field.connections.length > 0) {
         geom = field.connections[0].from_field.node;
         geom.cached = [];
         return geom.compute();
       } else {
-        return this.rack.get('geometry').setValue(new THREE.CubeGeometry(200, 200, 200));
+        return this.rack.getField('geometry').setValue(new THREE.CubeGeometry(200, 200, 200));
       }
     };
 
     ParticleSystem.prototype.compute = function() {
       var needs_rebuild;
       needs_rebuild = false;
-      if (this.material_cache !== this.rack.get('material').get().id) {
+      if (this.material_cache !== this.rack.getField('material').getValue().id) {
         this.rebuild_geometry();
       }
-      if (this.geometry_cache !== this.rack.get('geometry').get().id || this.material_cache !== this.rack.get('material').get().id || needs_rebuild) {
-        this.ob = new THREE.ParticleSystem(this.rack.get('geometry').get(), this.rack.get('material').get());
-        this.geometry_cache = this.rack.get('geometry').get().id;
-        this.material_cache = this.rack.get('material').get().id;
+      if (this.geometry_cache !== this.rack.getField('geometry').getValue().id || this.material_cache !== this.rack.getField('material').getValue().id || needs_rebuild) {
+        this.ob = new THREE.ParticleSystem(this.rack.getField('geometry').getValue(), this.rack.getField('material').getValue());
+        this.geometry_cache = this.rack.getField('geometry').getValue().id;
+        this.material_cache = this.rack.getField('material').getValue().id;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
       if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
@@ -163,8 +163,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      this.pool = this.rack.get("pool").get();
-      return this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
+      this.pool = this.rack.getField("pool").getValue();
+      return this.ob = new SPARKS.Emitter(this.rack.getField("counter").getValue());
     };
 
     SparksEmitter.prototype.setTargetParticle = function(p) {
@@ -173,25 +173,25 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     SparksEmitter.prototype.compute = function() {
       var initializers;
-      if (this.rack.get("pool").get() !== false) {
-        if (this.pool !== this.rack.get("pool").get()) {
+      if (this.rack.getField("pool").getValue() !== false) {
+        if (this.pool !== this.rack.getField("pool").getValue()) {
           this.ob.removeCallback("created");
           this.ob.removeCallback("dead");
           this.ob.stop();
-          this.ob = new SPARKS.Emitter(this.rack.get("counter").get());
+          this.ob = new SPARKS.Emitter(this.rack.getField("counter").getValue());
           this.geom = new THREE.Geometry();
-          this.pool = this.rack.get("pool").get();
+          this.pool = this.rack.getField("pool").getValue();
           this.pool.init_pool(this.geom);
           this.ob.addCallback("created", this.pool.on_particle_created);
           this.ob.addCallback("dead", this.pool.on_particle_dead);
           console.log("pool particle setup...");
         }
       }
-      initializers = this.rack.get("initializers").val.slice(0);
+      initializers = this.rack.getField("initializers").getValue().slice(0);
       initializers.push(this.target_initializer);
       this.ob._initializers = initializers;
-      this.ob._actions = this.rack.get("actions").val;
-      this.ob._counter = this.rack.get("counter").get();
+      this.ob._actions = this.rack.getField("actions").getValue();
+      this.ob._counter = this.rack.getField("counter").getValue();
       if (this.pool !== false && this.ob.isRunning() === false) this.ob.start();
       return this.rack.setField("out", this.geom);
     };
@@ -239,11 +239,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.Age(this.rack.get("easing").get());
+      return this.ob = new SPARKS.Age(this.rack.getField("easing").getValue());
     };
 
     SparksAge.prototype.compute = function() {
-      this.ob._easing = this.rack.get("easing").val;
+      this.ob._easing = this.rack.getField("easing").get("value");
       return this.rack.setField("action", this.ob);
     };
 
@@ -316,11 +316,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.Accelerate(this.rack.get("vector").get());
+      return this.ob = new SPARKS.Accelerate(this.rack.getField("vector").getValue());
     };
 
     SparksAccelerate.prototype.compute = function() {
-      this.ob.acceleration = this.rack.get("vector").get();
+      this.ob.acceleration = this.rack.getField("vector").getValue();
       return this.rack.setField("action", this.ob);
     };
 
@@ -355,11 +355,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.AccelerateFactor(this.rack.get("factor").get());
+      return this.ob = new SPARKS.AccelerateFactor(this.rack.getField("factor").getValue());
     };
 
     SparksAccelerateFactor.prototype.compute = function() {
-      this.ob.factor = this.rack.get("factor").get();
+      this.ob.factor = this.rack.getField("factor").getValue();
       return this.rack.setField("action", this.ob);
     };
 
@@ -394,11 +394,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.AccelerateVelocity(this.rack.get("factor").get());
+      return this.ob = new SPARKS.AccelerateVelocity(this.rack.getField("factor").getValue());
     };
 
     SparksAccelerateVelocity.prototype.compute = function() {
-      this.ob.factor = this.rack.get("factor").get();
+      this.ob.factor = this.rack.getField("factor").getValue();
       return this.rack.setField("action", this.ob);
     };
 
@@ -436,11 +436,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.RandomDrift(this.rack.get("vector").get());
+      return this.ob = new SPARKS.RandomDrift(this.rack.getField("vector").getValue());
     };
 
     SparksRandomDrift.prototype.compute = function() {
-      this.ob.drift = this.rack.get("vector").get();
+      this.ob.drift = this.rack.getField("vector").getValue();
       return this.rack.setField("action", this.ob);
     };
 
@@ -476,12 +476,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.Lifetime(this.rack.get("min").get(), this.rack.get("max").get());
+      return this.ob = new SPARKS.Lifetime(this.rack.getField("min").getValue(), this.rack.getField("max").getValue());
     };
 
     SparksLifetime.prototype.compute = function() {
-      this.ob._min = this.rack.get("min").get();
-      this.ob._min = this.rack.get("max").get();
+      this.ob._min = this.rack.getField("min").getValue();
+      this.ob._min = this.rack.getField("max").getValue();
       return this.rack.setField("initializer", this.ob);
     };
 
@@ -519,11 +519,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.Position(this.rack.get("zone").get());
+      return this.ob = new SPARKS.Position(this.rack.getField("zone").getValue());
     };
 
     SparksPosition.prototype.compute = function() {
-      this.ob.zone = this.rack.get("zone").get();
+      this.ob.zone = this.rack.getField("zone").getValue();
       return this.rack.setField("initializer", this.ob);
     };
 
@@ -561,11 +561,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.PointZone(this.rack.get("pos").get());
+      return this.ob = new SPARKS.PointZone(this.rack.getField("pos").getValue());
     };
 
     SparksPointZone.prototype.compute = function() {
-      this.ob.pos = this.rack.get("pos").get();
+      this.ob.pos = this.rack.getField("pos").getValue();
       return this.rack.setField("zone", this.ob);
     };
 
@@ -607,13 +607,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.LineZone(this.rack.get("start").get(), this.rack.get("end").get());
+      return this.ob = new SPARKS.LineZone(this.rack.getField("start").getValue(), this.rack.getField("end").getValue());
     };
 
     SparksLineZone.prototype.compute = function() {
-      if (this.ob.start !== this.rack.get("start").get() ||  this.ob.end !== this.rack.get("end").get()) {
-        this.ob.start = this.rack.get("start").get();
-        this.ob.end = this.rack.get("end").get();
+      if (this.ob.start !== this.rack.get("start").getValue() ||  this.ob.end !== this.rack.get("end").getValue()) {
+        this.ob.start = this.rack.getField("start").getValue();
+        this.ob.end = this.rack.getField("end").getValue();
         this.ob._length = this.ob.end.clone().subSelf(this.ob.start);
       }
       return this.rack.setField("zone", this.ob);
@@ -656,14 +656,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.CubeZone(this.rack.get("position").get(), this.rack.get("x").get(), this.rack.get("y").get(), this.rack.get("z").get());
+      return this.ob = new SPARKS.CubeZone(this.rack.getField("position").getValue(), this.rack.getField("x").getValue(), this.rack.getField("y").getValue(), this.rack.getField("z").getValue());
     };
 
     SparksCubeZone.prototype.compute = function() {
-      this.ob.position = this.rack.get("position").get();
-      this.ob.x = this.rack.get("x").get();
-      this.ob.y = this.rack.get("y").get();
-      this.ob.z = this.rack.get("z").get();
+      this.ob.position = this.rack.getField("position").getValue();
+      this.ob.x = this.rack.getField("x").getValue();
+      this.ob.y = this.rack.getField("y").getValue();
+      this.ob.z = this.rack.getField("z").getValue();
       return this.rack.setField("zone", this.ob);
     };
 
@@ -698,11 +698,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
-      return this.ob = new SPARKS.SteadyCounter(this.rack.get("rate").get());
+      return this.ob = new SPARKS.SteadyCounter(this.rack.getField("rate").getValue());
     };
 
     SparksSteadyCounter.prototype.compute = function() {
-      this.ob.pos = this.rack.get("rate").get();
+      this.ob.pos = this.rack.getField("rate").getValue();
       return this.rack.setField("counter", this.ob);
     };
 
@@ -761,7 +761,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         return new THREE.Vertex(new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY));
       };
       _results = [];
-      for (i = 0, _ref = this.rack.get("maxParticles").get() - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+      for (i = 0, _ref = this.rack.getField("maxParticles").getValue() - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
         pos = new_pos();
         geom.vertices.push(pos);
         _results.push(this.pool.add(pos));
@@ -845,12 +845,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     RandomCloudGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("nbrParticles").get(), this.rack.get("linearVelocity").get()];
+      return [this.rack.getField("radius").getValue(), this.rack.getField("nbrParticles").getValue(), this.rack.getField("linearVelocity").getValue()];
     };
 
     RandomCloudGeometry.prototype.limit_position = function(pos) {
       var margin, radius;
-      radius = this.rack.get("radius").get();
+      radius = this.rack.getField("radius").getValue();
       margin = 5;
       if (pos < radius * -1) {
         pos = radius - margin;
@@ -862,7 +862,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     RandomCloudGeometry.prototype.move_particles = function() {
       var key, p, rndVelocity, _ref;
-      rndVelocity = this.rack.get("rndVelocity").get();
+      rndVelocity = this.rack.getField("rndVelocity").getValue();
       _ref = this.ob.vertices;
       for (key in _ref) {
         p = _ref[key];
@@ -880,9 +880,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     RandomCloudGeometry.prototype.generate = function() {
       var i, linearVelocity, rad, total, v, vector;
       this.ob = new THREE.Geometry();
-      rad = this.rack.get("radius").get();
-      total = this.rack.get("nbrParticles").get();
-      linearVelocity = this.rack.get("linearVelocity").get();
+      rad = this.rack.getField("radius").getValue();
+      total = this.rack.getField("nbrParticles").getValue();
+      linearVelocity = this.rack.getField("linearVelocity").getValue();
       for (i = 0; 0 <= total ? i <= total : i >= total; 0 <= total ? i++ : i--) {
         vector = new THREE.Vector3(Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad);
         v = new THREE.Vertex(vector);

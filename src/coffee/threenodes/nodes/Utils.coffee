@@ -59,13 +59,13 @@ define [
               "random triangle": 5
         outputs:
           "out" : 0
-      @rack.add_center_textfield(@rack.get("out", true))
+      @rack.add_center_textfield(@rack.getField("out", true))
   
     compute: =>
-      duration = @rack.get("duration").get()
-      min = @rack.get("min").get()
-      max = @rack.get("max").get()
-      mode = @rack.get("mode").get()
+      duration = @rack.getField("duration").getValue()
+      min = @rack.getField("min").getValue()
+      max = @rack.getField("max").getValue()
+      mode = @rack.getField("mode").getValue()
       
       @clock = Date.now()
       time = (@taskinterval * @clock) % duration
@@ -152,7 +152,7 @@ define [
     compute: =>
       old = @rack.getField("out", true).getValue()
       @value = false
-      arr = @rack.get("array").get()
+      arr = @rack.getField("array").getValue()
       ind = parseInt(@rack.getField("index").getValue())
       if $.type(arr) == "array"
         @value = arr[ind % arr.length]
@@ -183,13 +183,13 @@ define [
         @audioContext = new window.webkitAudioContext()
       else
         $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
-      @url_cache = @rack.get("url").get()
+      @url_cache = @rack.getField("url").getValue()
       ThreeNodes.sound_nodes.push(this)
     
     onRegister: () ->
       super
-      if @rack.get("url").get() != ""
-        @loadAudio(@rack.get("url").get())
+      if @rack.getField("url").getValue() != ""
+        @loadAudio(@rack.getField("url").getValue())
     
     stopSound: () ->
       if @source
@@ -277,11 +277,11 @@ define [
       #console.log flash_sound_value
       if !@is_chrome()
         return
-      if @url_cache != @rack.get("url").get()
-        @url_cache = @rack.get("url").get()
+      if @url_cache != @rack.getField("url").getValue()
+        @url_cache = @rack.getField("url").getValue()
         @loadAudio(@url_cache)
       if @analyser
-        @analyser.smoothingTimeConstant = @rack.get("smoothingTime").get()
+        @analyser.smoothingTimeConstant = @rack.getField("smoothingTime").getValue()
         @analyser.getByteFrequencyData(@freqByteData)
         @analyser.getByteTimeDomainData(@timeByteData)
       
@@ -350,19 +350,19 @@ define [
           "max" : 99999999999
         outputs:
           "out" : 0
-      @rack.add_center_textfield(@rack.get("out", true))
+      @rack.add_center_textfield(@rack.getField("out", true))
     
     get_time: => new Date().getTime()
       
     compute: =>
-      oldval = @rack.get("out", true).get()
+      oldval = @rack.getField("out", true).getValue()
       now = @get_time()
-      if @rack.get("pause").get() == false
+      if @rack.getField("pause").getValue() == false
         @counter += now - @old
-      if @rack.get("reset").get() == true
+      if @rack.getField("reset").getValue() == true
         @counter = 0
       
-      diff = @rack.get("max").get() - @counter
+      diff = @rack.getField("max").getValue() - @counter
       if diff <= 0
         #@counter = diff * -1
         @counter = 0
@@ -427,8 +427,8 @@ define [
       @weightcache = -1
     
     compute: =>
-      findex = parseInt(@rack.get("font").get())
-      windex = parseInt(@rack.get("weight").get())
+      findex = parseInt(@rack.getField("font").getValue())
+      windex = parseInt(@rack.getField("weight").getValue())
       if findex > 4 || findex < 0
         findex = 0
       if windex != 0 || windex != 1

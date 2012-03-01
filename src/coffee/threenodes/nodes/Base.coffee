@@ -31,7 +31,7 @@ define [
           "out": {type: "Bool", val: @value}
     
     compute: =>
-      @rack.setField("out", @rack.getField("bool").get())
+      @rack.setField("out", @rack.getField("bool").getValue())
   
   class ThreeNodes.nodes.String extends ThreeNodes.NodeBase
     @node_name = 'String'
@@ -51,7 +51,7 @@ define [
       @rack.add_center_textfield(@rack.getField("string"))
     
     compute: =>
-      @rack.setField("out", @rack.getField("string").get())
+      @rack.setField("out", @rack.getField("string").getValue())
   
   class ThreeNodes.nodes.Vector2 extends ThreeNodes.NodeBase
     @node_name = 'Vector2'

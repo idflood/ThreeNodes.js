@@ -87,15 +87,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           "out": 0
         }
       });
-      return this.rack.add_center_textfield(this.rack.get("out", true));
+      return this.rack.add_center_textfield(this.rack.getField("out", true));
     };
 
     LFO.prototype.compute = function() {
       var duration, halfway, hi, lfoout, lfout, low, max, min, mode, range, src, srctmp, time;
-      duration = this.rack.get("duration").get();
-      min = this.rack.get("min").get();
-      max = this.rack.get("max").get();
-      mode = this.rack.get("mode").get();
+      duration = this.rack.getField("duration").getValue();
+      min = this.rack.getField("min").getValue();
+      max = this.rack.getField("max").getValue();
+      mode = this.rack.getField("mode").getValue();
       this.clock = Date.now();
       time = (this.taskinterval * this.clock) % duration;
       src = time / duration;
@@ -247,7 +247,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       var arr, ind, old;
       old = this.rack.getField("out", true).getValue();
       this.value = false;
-      arr = this.rack.get("array").get();
+      arr = this.rack.getField("array").getValue();
       ind = parseInt(this.rack.getField("index").getValue());
       if ($.type(arr) === "array") this.value = arr[ind % arr.length];
       if (this.value !== old) return this.rack.setField("out", this.value);
@@ -303,14 +303,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       } else {
         $(".options", this.main_view).prepend('<p class="warning">This node currently require chrome.</p>');
       }
-      this.url_cache = this.rack.get("url").get();
+      this.url_cache = this.rack.getField("url").getValue();
       return ThreeNodes.sound_nodes.push(this);
     };
 
     Mp3Input.prototype.onRegister = function() {
       Mp3Input.__super__.onRegister.apply(this, arguments);
-      if (this.rack.get("url").get() !== "") {
-        return this.loadAudio(this.rack.get("url").get());
+      if (this.rack.getField("url").getValue() !== "") {
+        return this.loadAudio(this.rack.getField("url").getValue());
       }
     };
 
@@ -413,12 +413,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     Mp3Input.prototype.compute = function() {
       var length, length3rd;
       if (!this.is_chrome()) return;
-      if (this.url_cache !== this.rack.get("url").get()) {
-        this.url_cache = this.rack.get("url").get();
+      if (this.url_cache !== this.rack.getField("url").getValue()) {
+        this.url_cache = this.rack.getField("url").getValue();
         this.loadAudio(this.url_cache);
       }
       if (this.analyser) {
-        this.analyser.smoothingTimeConstant = this.rack.get("smoothingTime").get();
+        this.analyser.smoothingTimeConstant = this.rack.getField("smoothingTime").getValue();
         this.analyser.getByteFrequencyData(this.freqByteData);
         this.analyser.getByteTimeDomainData(this.timeByteData);
       }
@@ -543,7 +543,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           "out": 0
         }
       });
-      return this.rack.add_center_textfield(this.rack.get("out", true));
+      return this.rack.add_center_textfield(this.rack.getField("out", true));
     };
 
     Timer.prototype.get_time = function() {
@@ -552,11 +552,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     Timer.prototype.compute = function() {
       var diff, now, oldval;
-      oldval = this.rack.get("out", true).get();
+      oldval = this.rack.getField("out", true).getValue();
       now = this.get_time();
-      if (this.rack.get("pause").get() === false) this.counter += now - this.old;
-      if (this.rack.get("reset").get() === true) this.counter = 0;
-      diff = this.rack.get("max").get() - this.counter;
+      if (this.rack.getField("pause").getValue() === false) {
+        this.counter += now - this.old;
+      }
+      if (this.rack.getField("reset").getValue() === true) this.counter = 0;
+      diff = this.rack.getField("max").getValue() - this.counter;
       if (diff <= 0) this.counter = 0;
       this.old = now;
       return this.rack.setField("out", this.counter);
@@ -651,8 +653,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     Font.prototype.compute = function() {
       var findex, font, weight, windex,
         _this = this;
-      findex = parseInt(this.rack.get("font").get());
-      windex = parseInt(this.rack.get("weight").get());
+      findex = parseInt(this.rack.getField("font").getValue());
+      windex = parseInt(this.rack.getField("weight").getValue());
       if (findex > 4 || findex < 0) findex = 0;
       if (windex !== 0 || windex !== 1) windex = 0;
       font = this.reverseFontMap[findex];

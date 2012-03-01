@@ -59,7 +59,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
     };
 
     Boolean.prototype.compute = function() {
-      return this.rack.setField("out", this.rack.getField("bool").get());
+      return this.rack.setField("out", this.rack.getField("bool").getValue());
     };
 
     return Boolean;
@@ -101,7 +101,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
     };
 
     String.prototype.compute = function() {
-      return this.rack.setField("out", this.rack.getField("string").get());
+      return this.rack.setField("out", this.rack.getField("string").getValue());
     };
 
     return String;

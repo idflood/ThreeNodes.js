@@ -21,11 +21,11 @@ define [
           "out" : {type: "Any", val: false}
   
     compute: =>
-      cond = @rack.get("condition").get()
+      cond = @rack.getField("condition").getValue()
       if cond == false
-        res = @rack.get("val1").val
+        res = @rack.getField("val1").attributes.value
       else
-        res = @rack.get("val2").val
+        res = @rack.getField("val2").attributes.value
       @rack.setField("out", res)
   
   class ThreeNodes.nodes.And extends ThreeNodes.NodeBase
@@ -42,7 +42,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get() != false && @rack.get("val2").get() != false
+      res = @rack.getField("val1").getValue() != false && @rack.getField("val2").getValue() != false
       @rack.setField("out", res)
   
   class ThreeNodes.nodes.Or extends ThreeNodes.NodeBase
@@ -59,7 +59,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get() != false || @rack.get("val2").get() != false
+      res = @rack.getField("val1").getValue() != false || @rack.getField("val2").getValue() != false
       @rack.setField("out", res)
   
   class ThreeNodes.nodes.Equal extends ThreeNodes.NodeBase
@@ -76,7 +76,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get(0) == @rack.get("val2").get(0)
+      res = @rack.getField("val1").getValue(0) == @rack.getField("val2").getValue(0)
       @rack.setField("out", res)
   
   class ThreeNodes.nodes.Smaller extends ThreeNodes.NodeBase
@@ -93,7 +93,7 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get(0) < @rack.get("val2").get(0)
+      res = @rack.getField("val1").getValue(0) < @rack.getField("val2").getValue(0)
       @rack.setField("out", res)
   
   class ThreeNodes.nodes.Greater extends ThreeNodes.NodeBase
@@ -110,5 +110,5 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.get("val1").get(0) > @rack.get("val2").get(0)
+      res = @rack.getField("val1").getValue(0) > @rack.getField("val2").getValue(0)
       @rack.setField("out", res)

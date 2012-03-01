@@ -37,19 +37,19 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           "out": 0
         }
       });
-      return this.v_out = this.rack.get("out", true);
+      return this.v_out = this.rack.getField("out", true);
     };
 
     RandomSpread.prototype.compute = function() {
       var i, needs_rebuild, _ref;
       needs_rebuild = false;
-      if (this.seed !== this.rack.get("seed").val || this.count !== parseInt(this.rack.get("count").get(0)) || this.width !== this.rack.get("width").val || this.offset !== this.rack.get("offset").val) {
-        this.seed = this.rack.get("seed").val;
+      if (this.seed !== this.rack.getField("seed").get("value") || this.count !== parseInt(this.rack.getField("count").getValue(0)) || this.width !== this.rack.getField("width").get("value") || this.offset !== this.rack.getField("offset").get("value")) {
+        this.seed = this.rack.getField("seed").get("value");
         this.rnd = new ThreeNodes.Utils.Rc4Random(this.seed.toString());
         this.value = [];
-        this.width = this.rack.get("width").get(0);
-        this.offset = this.rack.get("offset").get(0);
-        this.count = parseInt(this.rack.get("count").val);
+        this.width = this.rack.getField("width").getValue(0);
+        this.offset = this.rack.getField("offset").getValue(0);
+        this.count = parseInt(this.rack.getField("count").get("value"));
         for (i = 0, _ref = this.count - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
           this.value[i] = this.rnd.getRandomNumber() * this.width - this.width / 2 + this.offset;
         }
@@ -93,16 +93,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           "out": 0
         }
       });
-      return this.v_out = this.rack.get("out", true);
+      return this.v_out = this.rack.getField("out", true);
     };
 
     LinearSpread.prototype.compute = function() {
       var i, needs_rebuild, res, shift, stepSize, _ref;
       needs_rebuild = false;
-      this.width = this.rack.get("width").get(0);
-      this.offset = this.rack.get("offset").get(0);
-      this.phase = this.rack.get("phase").get(0);
-      this.count = parseInt(this.rack.get("count").val);
+      this.width = this.rack.getField("width").getValue(0);
+      this.offset = this.rack.getField("offset").getValue(0);
+      this.phase = this.rack.getField("phase").getValue(0);
+      this.count = parseInt(this.rack.getField("count").getValue());
       this.value = [];
       stepSize = this.width / this.count;
       shift = stepSize / 2;

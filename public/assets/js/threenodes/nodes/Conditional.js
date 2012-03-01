@@ -42,11 +42,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     IfElse.prototype.compute = function() {
       var cond, res;
-      cond = this.rack.get("condition").get();
+      cond = this.rack.getField("condition").getValue();
       if (cond === false) {
-        res = this.rack.get("val1").val;
+        res = this.rack.getField("val1").attributes.value;
       } else {
-        res = this.rack.get("val2").val;
+        res = this.rack.getField("val2").attributes.value;
       }
       return this.rack.setField("out", res);
     };
@@ -83,7 +83,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     And.prototype.compute = function() {
       var res;
-      res = this.rack.get("val1").get() !== false && this.rack.get("val2").get() !== false;
+      res = this.rack.getField("val1").getValue() !== false && this.rack.getField("val2").getValue() !== false;
       return this.rack.setField("out", res);
     };
 
@@ -119,7 +119,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     Or.prototype.compute = function() {
       var res;
-      res = this.rack.get("val1").get() !== false || this.rack.get("val2").get() !== false;
+      res = this.rack.getField("val1").getValue() !== false || this.rack.getField("val2").getValue() !== false;
       return this.rack.setField("out", res);
     };
 
@@ -161,7 +161,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     Equal.prototype.compute = function() {
       var res;
-      res = this.rack.get("val1").get(0) === this.rack.get("val2").get(0);
+      res = this.rack.getField("val1").getValue(0) === this.rack.getField("val2").getValue(0);
       return this.rack.setField("out", res);
     };
 
@@ -203,7 +203,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     Smaller.prototype.compute = function() {
       var res;
-      res = this.rack.get("val1").get(0) < this.rack.get("val2").get(0);
+      res = this.rack.getField("val1").getValue(0) < this.rack.getField("val2").getValue(0);
       return this.rack.setField("out", res);
     };
 
@@ -245,7 +245,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     Greater.prototype.compute = function() {
       var res;
-      res = this.rack.get("val1").get(0) > this.rack.get("val2").get(0);
+      res = this.rack.getField("val1").getValue(0) > this.rack.getField("val2").getValue(0);
       return this.rack.setField("out", res);
     };
 

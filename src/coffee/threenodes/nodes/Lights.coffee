@@ -49,7 +49,7 @@ define [
           "out": {type: "Any", val: @ob}
   
     compute: =>
-      if @rack.get("castShadow").get() != @ob.castShadow
+      if @rack.getField("castShadow").getValue() != @ob.castShadow
         ThreeNodes.rebuild_all_shaders()
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)

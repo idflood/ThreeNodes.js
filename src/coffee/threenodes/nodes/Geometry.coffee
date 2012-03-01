@@ -25,12 +25,12 @@ define [
       @cached = @get_cache_array()
     
     get_cache_array: =>
-      [@rack.get("width").get(), @rack.get("height").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get()]
+      [@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue()]
   
     compute: =>
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
-        @ob = new THREE.PlaneGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
+        @ob = new THREE.PlaneGeometry(@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue())
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
   
@@ -56,12 +56,12 @@ define [
       @cached = @get_cache_array()
     
     get_cache_array: =>
-      [@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get()]
+      [@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("depth").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue(), @rack.getField("segments_depth").getValue(), @rack.getField("flip").getValue()]
   
     compute: =>
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
-        @ob = new THREE.CubeGeometry(@rack.get("width").get(), @rack.get("height").get(), @rack.get("depth").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get(), @rack.get("segments_depth").get(), @rack.get("flip").get())
+        @ob = new THREE.CubeGeometry(@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("depth").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue(), @rack.getField("segments_depth").getValue(), @rack.getField("flip").getValue())
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
   
@@ -83,12 +83,12 @@ define [
       @cached = @get_cache_array()
     
     get_cache_array: =>
-      [@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get()]
+      [@rack.getField("radius").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue()]
   
     compute: =>
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
-        @ob = new THREE.SphereGeometry(@rack.get("radius").get(), @rack.get("segments_width").get(), @rack.get("segments_height").get())
+        @ob = new THREE.SphereGeometry(@rack.getField("radius").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue())
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
@@ -117,16 +117,16 @@ define [
     
     get_cache_array: =>
       [
-        @rack.get("radiusTop").get(), @rack.get("radiusBottom").get(), @rack.get("height").get(), 
-        @rack.get("segmentsRadius").get(), @rack.get("segmentsHeight").get(), @rack.get("openEnded").get()
+        @rack.getField("radiusTop").getValue(), @rack.getField("radiusBottom").getValue(), @rack.getField("height").getValue(), 
+        @rack.getField("segmentsRadius").getValue(), @rack.getField("segmentsHeight").getValue(), @rack.getField("openEnded").getValue()
       ]
   
     compute: =>
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.CylinderGeometry(
-          @rack.get("radiusTop").get(), @rack.get("radiusBottom").get(), @rack.get("height").get(), 
-          @rack.get("segmentsRadius").get(), @rack.get("segmentsHeight").get(), @rack.get("openEnded").get()
+          @rack.getField("radiusTop").getValue(), @rack.getField("radiusBottom").getValue(), @rack.getField("height").getValue(), 
+          @rack.getField("segmentsRadius").getValue(), @rack.getField("segmentsHeight").getValue(), @rack.getField("openEnded").getValue()
         )
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
@@ -153,16 +153,16 @@ define [
     
     get_cache_array: =>
       [
-        @rack.get("radius").get(), @rack.get("tube").get(), @rack.get("segmentsR").get(), 
-        @rack.get("segmentsT").get(), @rack.get("arc").get()
+        @rack.getField("radius").getValue(), @rack.getField("tube").getValue(), @rack.getField("segmentsR").getValue(), 
+        @rack.getField("segmentsT").getValue(), @rack.getField("arc").getValue()
       ]
   
     compute: =>
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.TorusGeometry(
-          @rack.get("radius").get(), @rack.get("tube").get(), @rack.get("segmentsR").get(), 
-          @rack.get("segmentsT").get(), @rack.get("arc").get()
+          @rack.getField("radius").getValue(), @rack.getField("tube").getValue(), @rack.getField("segmentsR").getValue(), 
+          @rack.getField("segmentsT").getValue(), @rack.getField("arc").getValue()
         )
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
@@ -191,16 +191,16 @@ define [
     
     get_cache_array: =>
       [
-        @rack.get("radius").get(), @rack.get("tube").get(), @rack.get("segmentsR").get(), 
-        @rack.get("segmentsT").get(), @rack.get("p").get(), @rack.get("q").get(), @rack.get("heightScale").get()
+        @rack.getField("radius").getValue(), @rack.getField("tube").getValue(), @rack.getField("segmentsR").getValue(), 
+        @rack.getField("segmentsT").getValue(), @rack.getField("p").getValue(), @rack.getField("q").getValue(), @rack.getField("heightScale").getValue()
       ]
   
     compute: =>
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.TorusKnotGeometry(
-          @rack.get("radius").get(), @rack.get("tube").get(), @rack.get("segmentsR").get(), 
-          @rack.get("segmentsT").get(), @rack.get("p").get(), @rack.get("q").get(), @rack.get("heightScale").get()
+          @rack.getField("radius").getValue(), @rack.getField("tube").getValue(), @rack.getField("segmentsR").getValue(), 
+          @rack.getField("segmentsT").getValue(), @rack.getField("p").getValue(), @rack.getField("q").getValue(), @rack.getField("heightScale").getValue()
         )
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
@@ -223,12 +223,12 @@ define [
       @cached = @get_cache_array()
     
     get_cache_array: =>
-      [@rack.get("radius").get(), @rack.get("detail").get()]
+      [@rack.getField("radius").getValue(), @rack.getField("detail").getValue()]
   
     compute: =>
       new_cache = @get_cache_array()
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
-        @ob = new THREE.OctahedronGeometry(@rack.get("radius").get(), @rack.get("detail").get())
+        @ob = new THREE.OctahedronGeometry(@rack.getField("radius").getValue(), @rack.getField("detail").getValue())
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
@@ -256,29 +256,29 @@ define [
       @cached = @get_cache_array()
     
     get_cache_array: =>
-      [@rack.get("font").get(), @rack.get("text").get(), @rack.get("size").get(), @rack.get("height").get(), @rack.get("curveSegments").get(),
-        @rack.get("bevelEnabled").get(), @rack.get("bevelThickness").get(), @rack.get("bevelSize").get()]
+      [@rack.getField("font").getValue(), @rack.getField("text").getValue(), @rack.getField("size").getValue(), @rack.getField("height").getValue(), @rack.getField("curveSegments").getValue(),
+        @rack.getField("bevelEnabled").getValue(), @rack.getField("bevelThickness").getValue(), @rack.getField("bevelSize").getValue()]
   
     compute: =>
       new_cache = @get_cache_array()
-      font = this.rack.get("font").get()
+      font = this.rack.get("font").getValue()
       has_font_attribute = (f) ->
         if font["font"] && font["weight"]
           return true
         false
       
-      if !has_font_attribute(font) || this.rack.get("text").get() == ""
+      if !has_font_attribute(font) || this.rack.get("text").getValue() == ""
         @ob = false
         @rack.setField("out", @ob)
         return false
       if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
         console.log "building text #{font.font} / #{font.weight}"
-        @ob = new THREE.TextGeometry @rack.get("text").get(),
-          size: @rack.get("size").get()
-          height: @rack.get("height").get()
+        @ob = new THREE.TextGeometry @rack.getField("text").getValue(),
+          size: @rack.getField("size").getValue()
+          height: @rack.getField("height").getValue()
           font: font.font
           weight: font.weight
-          curveSegments: @rack.get("curveSegments").get()
+          curveSegments: @rack.getField("curveSegments").getValue()
         @ob.computeBoundingBox()
         @ob.computeVertexNormals()
         

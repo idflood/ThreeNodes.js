@@ -50,9 +50,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     BloomPass.prototype.compute = function() {
       if (this.value_has_changed(['kernelSize', 'sigma', 'resolution']) === true) {
-        this.ob = new THREE.BloomPass(this.rack.get("strength").get(), this.rack.get('kernelSize').get(), this.rack.get('sigma').get(), this.rack.get('resolution').get());
+        this.ob = new THREE.BloomPass(this.rack.getField("strength").getValue(), this.rack.getField('kernelSize').getValue(), this.rack.getField('sigma').getValue(), this.rack.getField('resolution').getValue());
       }
-      this.ob.screenUniforms["opacity"].value = this.rack.get("strength").get();
+      this.ob.screenUniforms["opacity"].value = this.rack.getField("strength").getValue();
       return this.rack.setField("out", this.ob);
     };
 
@@ -108,7 +108,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     DotScreenPass.prototype.compute = function() {
       if (this.value_has_changed(['center', 'angle', 'scale']) === true) {
-        this.ob = new THREE.DotScreenPass(this.rack.get("center").get(), this.rack.get('angle').get(), this.rack.get('scale').get());
+        this.ob = new THREE.DotScreenPass(this.rack.getField("center").getValue(), this.rack.getField('angle').getValue(), this.rack.getField('scale').getValue());
       }
       return this.rack.setField("out", this.ob);
     };
@@ -162,10 +162,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     FilmPass.prototype.compute = function() {
-      this.ob.uniforms.grayscale.value = this.rack.get("grayscale").get();
-      this.ob.uniforms.nIntensity.value = this.rack.get("noiseIntensity").get();
-      this.ob.uniforms.sIntensity.value = this.rack.get("scanlinesIntensity").get();
-      this.ob.uniforms.sCount.value = this.rack.get("scanlinesCount").get();
+      this.ob.uniforms.grayscale.value = this.rack.getField("grayscale").getValue();
+      this.ob.uniforms.nIntensity.value = this.rack.getField("noiseIntensity").getValue();
+      this.ob.uniforms.sIntensity.value = this.rack.getField("scanlinesIntensity").getValue();
+      this.ob.uniforms.sCount.value = this.rack.getField("scanlinesCount").getValue();
       return this.rack.setField("out", this.ob);
     };
 
@@ -206,8 +206,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     VignettePass.prototype.compute = function() {
-      this.ob.uniforms["offset"].value = this.rack.get("offset").get();
-      this.ob.uniforms["darkness"].value = this.rack.get("darkness").get();
+      this.ob.uniforms["offset"].value = this.rack.getField("offset").getValue();
+      this.ob.uniforms["darkness"].value = this.rack.getField("darkness").getValue();
       return this.rack.setField("out", this.ob);
     };
 
@@ -247,7 +247,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     HorizontalBlurPass.prototype.compute = function() {
-      this.ob.uniforms["h"].value = this.rack.get("delta").get();
+      this.ob.uniforms["h"].value = this.rack.getField("delta").getValue();
       return this.rack.setField("out", this.ob);
     };
 
@@ -287,7 +287,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     VerticalBlurPass.prototype.compute = function() {
-      this.ob.uniforms["v"].value = this.rack.get("delta").get();
+      this.ob.uniforms["v"].value = this.rack.getField("delta").getValue();
       return this.rack.setField("out", this.ob);
     };
 
@@ -327,7 +327,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     BleachPass.prototype.compute = function() {
-      this.ob.uniforms["opacity"].value = this.rack.get("opacity").get();
+      this.ob.uniforms["opacity"].value = this.rack.getField("opacity").getValue();
       return this.rack.setField("out", this.ob);
     };
 
