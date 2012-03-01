@@ -47,7 +47,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
 
     ConnectionView.prototype.get_field_position = function(field) {
       var diff, o1;
-      o1 = $("#fid-" + field.fid + " .inner-field span").offset();
+      o1 = $("#fid-" + (field.get('fid')) + " .inner-field span").offset();
       if (!o1) {
         return {
           left: 0,

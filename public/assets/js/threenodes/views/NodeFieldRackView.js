@@ -13,8 +13,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
       NodeFieldRackView.__super__.constructor.apply(this, arguments);
     }
 
-    NodeFieldRackView.prototype.initialize = function() {
+    NodeFieldRackView.prototype.initialize = function(options) {
       var _this = this;
+      this.node = options.node;
       this.collection.bind("add", function(model) {});
       this.collection.bind("renderSidebar", function() {
         return _this.renderSidebar();
@@ -90,20 +91,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
         }
       });
       accept_class = ".outputs .inner-field";
-      if (field && field.is_output === true) accept_class = ".inputs .inner-field";
+      if (field && field.get("is_output") === true) {
+        accept_class = ".inputs .inner-field";
+      }
       $(".inner-field", $field).droppable({
         accept: accept_class,
         activeClass: "ui-state-active",
         hoverClass: "ui-state-hover",
         drop: function(event, ui) {
-          var field2, ng, origin;
+          var field2, origin;
           origin = $(ui.draggable).parent();
           field2 = origin.data("object");
-          ng = self.context.injector.get("NodeGraph");
-          return ng.connections.create({
-            from_field: field,
-            to_field: field2
-          });
+          return self.node.createConnection(field, field2);
         }
       });
       return this;
@@ -111,18 +110,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.tmpl.min", "order
 
     NodeFieldRackView.prototype.addCenterTextfield = function(field) {
       var f_in;
-      $(".options .center", this.options.node.main_view).append("<div><input type='text' id='f-txt-input-" + field.fid + "' /></div>");
-      f_in = $("#f-txt-input-" + field.fid);
+      $(".options .center", this.options.node.main_view).append("<div><input type='text' id='f-txt-input-" + (field.get('fid')) + "' /></div>");
+      f_in = $("#f-txt-input-" + (field.get('fid')));
       field.on_value_update_hooks.update_center_textfield = function(v) {
         if (v !== null) return f_in.val(v.toString());
       };
-      f_in.val(field.get());
-      if (field.is_output === true) {
+      f_in.val(field.getValue());
+      if (field.get("is_output") === true) {
         f_in.attr("disabled", "disabled");
       } else {
         f_in.keypress(function(e) {
           if (e.which === 13) {
-            field.set($(this).val());
+            field.setValue($(this).val());
             return $(this).blur();
           }
         });

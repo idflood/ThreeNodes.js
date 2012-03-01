@@ -129,7 +129,9 @@ define [
       layout = _view_node_field_in
       if @get("is_output")
         layout = _view_node_field_out
-      el = $.tmpl(layout, this)
+      el = $.tmpl layout,
+        fid: @get("fid")
+        name: @get("name")
       el.data("object", this)
       el
       
@@ -165,10 +167,10 @@ define [
       
       return @compute_value(val)
     
-    create_sidebar_container: (name = @name) =>
+    create_sidebar_container: (name = @get("name")) =>
       $cont = $("#tab-attribute")
-      $cont.append("<div id='side-field-" + @fid + "'></div>")
-      $target = $("#side-field-#{@fid}")
+      $cont.append("<div id='side-field-" + @get("fid") + "'></div>")
+      $target = $("#side-field-#{@get('fid')}")
       $target.append("<h3>#{name}</h3>")
       return $target
     
@@ -180,7 +182,7 @@ define [
       self = this
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_input.val(v)
-      f_input.val(@get())
+      f_input.val(@getValue())
       f_input.keypress (e) ->
         if e.which == 13
           self.setValue($(this).val())

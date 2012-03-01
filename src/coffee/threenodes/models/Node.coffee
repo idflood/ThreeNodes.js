@@ -65,10 +65,8 @@ define [
       @dirty = true
       @anim_obj = {}
       @is_animated = false
-      @view = false
       @out_connections = []
       @value = false
-      @main_view = false
       @inXML = options.inXML
       @inJSON = options.inJSON
       @context = options.context
@@ -84,10 +82,6 @@ define [
         
       
     post_init: () =>
-      # init view
-      #if @context.player_mode == false
-      @init_main_view()
-      
       # init fields
       @set_fields()
       
@@ -102,20 +96,13 @@ define [
         # load animation
         @loadAnimation()
             
-      if @view != false
-        # add field context menu after they have been created
-        @view.init_context_menu()
-      
       @onTimelineRebuild()
-      #@trigger("node:render")
+      @trigger("postInit")
       @
     
     typename: => String(@constructor.name)
     
-    init_main_view: () =>
-      @main_view = $(@el)
-      @main_view.data("object", this)
-      return this
+    createConnection: (field1, field2) => @trigger("createConnection", field1, field2)
     
     loadAnimation: () =>
       @anim = @createAnimContainer()

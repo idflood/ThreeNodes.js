@@ -18,6 +18,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     }
 
     NodeGraph.prototype.initialize = function(models, options) {
+      var _this = this;
       this.nodes_by_nid = {};
       this.fields_by_fid = {};
       this.connections = new ThreeNodes.ConnectionsCollection();
@@ -28,15 +29,22 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         });
       });
       this.types = false;
-      return this.bind("add", function(node) {
-        var template, tmpl, view;
+      this.bind("add", function(node) {
+        var $tmpl, template, tmpl, view;
         template = ThreeNodes.NodeView.template;
         tmpl = _.template(template, node);
+        $tmpl = $(tmpl).appendTo("#container");
         view = new ThreeNodes.NodeView({
           model: node,
-          el: $(tmpl)
+          el: $tmpl
         });
-        return $("#container").append(view.el);
+        return node.view = view;
+      });
+      return this.bind("createConnection", function(field1, field2) {
+        return _this.connections.create({
+          from_field: field1,
+          to_field: field2
+        });
       });
     };
 

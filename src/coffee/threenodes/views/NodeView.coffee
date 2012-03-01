@@ -15,6 +15,8 @@ define [
     @template = _view_node_template
         
     initialize: () ->
+      @model.main_view = $(@el)
+      
       @make_draggable()
       @init_el_click()
       @init_title_click()
@@ -23,11 +25,18 @@ define [
       @rack_view = new ThreeNodes.NodeFieldRackView
         node: @model
         collection: @model.rack
+        el: $(".options", @el)
       
       @model.bind 'change', @render
+      @model.bind 'postInit', @postInit
       @render()
       @model.post_init()
       @
+    
+    postInit: () =>
+      @model.main_view = $(@el)
+      $(@el).data("object", @model)
+      @init_context_menu()
     
     render: () =>
       $el = $(@el)
@@ -46,7 +55,7 @@ define [
       return @
     
     render_connections: () ->
-      @model.rack.render_connections()
+      @model.rack.renderConnections()
     
     compute_node_position: () ->
       pos = $(@el).position()

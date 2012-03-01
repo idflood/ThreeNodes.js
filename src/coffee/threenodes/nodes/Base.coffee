@@ -125,7 +125,7 @@ define [
     
     init_preview: () =>
       $(".center", @main_view).append("<div class='color_preview'></div>")
-      col = @rack.getField("rgb", true).get(0)
+      col = @rack.getField("rgb", true).getValue(0)
       self = this
       $(".color_preview", @main_view).ColorPicker
         color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}

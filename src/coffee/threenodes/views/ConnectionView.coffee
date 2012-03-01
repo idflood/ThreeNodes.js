@@ -36,7 +36,7 @@ define [
       @
     
     get_field_position: (field) ->
-      o1 = $("#fid-#{field.fid} .inner-field span").offset()
+      o1 = $("#fid-#{field.get('fid')} .inner-field span").offset()
       if !o1
         return {left: 0, top: 0}
       diff = 3

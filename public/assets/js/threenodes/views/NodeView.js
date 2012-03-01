@@ -9,24 +9,34 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
 
     function NodeView() {
       this.render = __bind(this.render, this);
+      this.postInit = __bind(this.postInit, this);
       NodeView.__super__.constructor.apply(this, arguments);
     }
 
     NodeView.template = _view_node_template;
 
     NodeView.prototype.initialize = function() {
+      this.model.main_view = $(this.el);
       this.make_draggable();
       this.init_el_click();
       this.init_title_click();
       this.make_selectable();
       this.rack_view = new ThreeNodes.NodeFieldRackView({
         node: this.model,
-        collection: this.model.rack
+        collection: this.model.rack,
+        el: $(".options", this.el)
       });
       this.model.bind('change', this.render);
+      this.model.bind('postInit', this.postInit);
       this.render();
       this.model.post_init();
       return this;
+    };
+
+    NodeView.prototype.postInit = function() {
+      this.model.main_view = $(this.el);
+      $(this.el).data("object", this.model);
+      return this.init_context_menu();
     };
 
     NodeView.prototype.render = function() {
@@ -55,7 +65,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
     };
 
     NodeView.prototype.render_connections = function() {
-      return this.model.rack.render_connections();
+      return this.model.rack.renderConnections();
     };
 
     NodeView.prototype.compute_node_position = function() {

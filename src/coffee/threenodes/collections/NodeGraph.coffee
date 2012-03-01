@@ -31,11 +31,19 @@ define [
       @bind "add", (node) ->
         template = ThreeNodes.NodeView.template
         tmpl = _.template(template, node)
+        $tmpl = $(tmpl).appendTo("#container")
         view = new ThreeNodes.NodeView
           model: node
-          el: $(tmpl)
-        
-        $("#container").append(view.el)
+          el: $tmpl
+        # keep a ref to the view in the model
+        # used mainly in NodeView.make_draggable
+        # it would be better without this
+        node.view = view
+      
+      @bind "createConnection", (field1, field2) =>
+        @connections.create
+          from_field: field1
+          to_field: field2
     
     create_node: (nodename, x, y, inXML = false, inJSON = false) =>
       if !ThreeNodes.nodes[nodename]

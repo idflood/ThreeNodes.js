@@ -196,7 +196,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var el, layout;
       layout = _view_node_field_in;
       if (this.get("is_output")) layout = _view_node_field_out;
-      el = $.tmpl(layout, this);
+      el = $.tmpl(layout, {
+        fid: this.get("fid"),
+        name: this.get("name")
+      });
       el.data("object", this);
       return el;
     };
@@ -244,10 +247,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     NodeField.prototype.create_sidebar_container = function(name) {
       var $cont, $target;
-      if (name == null) name = this.name;
+      if (name == null) name = this.get("name");
       $cont = $("#tab-attribute");
-      $cont.append("<div id='side-field-" + this.fid + "'></div>");
-      $target = $("#side-field-" + this.fid);
+      $cont.append("<div id='side-field-" + this.get("fid") + "'></div>");
+      $target = $("#side-field-" + (this.get('fid')));
       $target.append("<h3>" + name + "</h3>");
       return $target;
     };
@@ -263,7 +266,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
         return f_input.val(v);
       };
-      f_input.val(this.get());
+      f_input.val(this.getValue());
       f_input.keypress(function(e) {
         if (e.which === 13) {
           self.setValue($(this).val());

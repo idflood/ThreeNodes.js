@@ -39,7 +39,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       this.add_count_input = __bind(this.add_count_input, this);
       this.onTimelineRebuild = __bind(this.onTimelineRebuild, this);
       this.loadAnimation = __bind(this.loadAnimation, this);
-      this.init_main_view = __bind(this.init_main_view, this);
+      this.createConnection = __bind(this.createConnection, this);
       this.typename = __bind(this.typename, this);
       this.post_init = __bind(this.post_init, this);
       this.initialize = __bind(this.initialize, this);
@@ -118,10 +118,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       this.dirty = true;
       this.anim_obj = {};
       this.is_animated = false;
-      this.view = false;
       this.out_connections = [];
       this.value = false;
-      this.main_view = false;
       this.inXML = options.inXML;
       this.inJSON = options.inJSON;
       this.context = options.context;
@@ -137,13 +135,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
     };
 
     NodeBase.prototype.post_init = function() {
-      this.init_main_view();
       this.set_fields();
       this.rack.load(this.inXML, this.inJSON);
       this.anim = this.createAnimContainer();
       if (this.inJSON && this.inJSON.anim !== false) this.loadAnimation();
-      if (this.view !== false) this.view.init_context_menu();
       this.onTimelineRebuild();
+      this.trigger("postInit");
       return this;
     };
 
@@ -151,10 +148,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       return String(this.constructor.name);
     };
 
-    NodeBase.prototype.init_main_view = function() {
-      this.main_view = $(this.el);
-      this.main_view.data("object", this);
-      return this;
+    NodeBase.prototype.createConnection = function(field1, field2) {
+      return this.trigger("createConnection", field1, field2);
     };
 
     NodeBase.prototype.loadAnimation = function() {

@@ -10,7 +10,8 @@ define [
   "use strict"
   
   class ThreeNodes.NodeFieldRackView extends Backbone.View
-    initialize: () ->
+    initialize: (options) ->
+      @node = options.node
       @collection.bind "add", (model) ->
         #console.log "collection.add"
       @collection.bind "renderSidebar", () =>
@@ -67,7 +68,7 @@ define [
             return true
               
       accept_class = ".outputs .inner-field"
-      if field && field.is_output == true
+      if field && field.get("is_output") == true
         accept_class = ".inputs .inner-field"
       
       $(".inner-field", $field).droppable
@@ -77,27 +78,24 @@ define [
         drop: (event, ui) ->
           origin = $(ui.draggable).parent()
           field2 = origin.data("object")
-          ng = self.context.injector.get "NodeGraph"
-          ng.connections.create
-            from_field: field
-            to_field: field2
+          self.node.createConnection(field, field2)
       
       return this
     
     addCenterTextfield: (field) =>
-      $(".options .center", @options.node.main_view).append("<div><input type='text' id='f-txt-input-#{field.fid}' /></div>")
-      f_in = $("#f-txt-input-#{field.fid}")
+      $(".options .center", @options.node.main_view).append("<div><input type='text' id='f-txt-input-#{field.get('fid')}' /></div>")
+      f_in = $("#f-txt-input-#{field.get('fid')}")
       field.on_value_update_hooks.update_center_textfield = (v) ->
         if v != null
           f_in.val(v.toString())
           #f_in.val(v.toString().substring(0, 10))
-      f_in.val(field.get())
-      if field.is_output == true
+      f_in.val(field.getValue())
+      if field.get("is_output") == true
         f_in.attr("disabled", "disabled")
       else
         f_in.keypress (e) ->
           if e.which == 13
-            field.set($(this).val())
+            field.setValue($(this).val())
             $(this).blur()
       @
     
