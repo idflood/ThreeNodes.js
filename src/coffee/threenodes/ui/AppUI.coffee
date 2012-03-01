@@ -4,7 +4,7 @@ define [
   'Backbone',
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
-  "order!threenodes/core/WebglBase",
+  "order!threenodes/utils/WebglBase",
   "order!libs/jquery.tmpl.min",
   'order!threenodes/ui/AppSidebar',
   'order!threenodes/ui/AppMenuBar',
