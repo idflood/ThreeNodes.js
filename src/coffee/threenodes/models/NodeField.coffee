@@ -13,7 +13,6 @@ define [
       name: "fieldname"
       is_output: false
       value: 0
-      values: null
       default: null
     
     sync: () =>
