@@ -196,10 +196,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var el, layout;
       layout = _view_node_field_in;
       if (this.get("is_output")) layout = _view_node_field_out;
-      el = $.tmpl(layout, {
+      el = _.template(layout, {
         fid: this.get("fid"),
         name: this.get("name")
       });
+      el = $(el);
       el.data("object", this);
       return el;
     };

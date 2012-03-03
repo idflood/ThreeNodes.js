@@ -129,9 +129,10 @@ define [
       layout = _view_node_field_in
       if @get("is_output")
         layout = _view_node_field_out
-      el = $.tmpl layout,
+      el = _.template layout,
         fid: @get("fid")
         name: @get("name")
+      el = $(el)
       el.data("object", this)
       el
       

@@ -2,7 +2,6 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "order!libs/jquery.tmpl.min",
   "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/utils/Utils',
