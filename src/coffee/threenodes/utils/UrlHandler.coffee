@@ -4,7 +4,10 @@ define [
   'Backbone',
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.InitUrlHandler
+  class ThreeNodes.UrlHandler extends Backbone.Events
+    constructor: () ->
+      ThreeNodes.events.on "InitUrlHandler", (e) => @execute()
+    
     execute: () ->
       injector = @context.injector
       url_cache = false
@@ -18,13 +21,13 @@ define [
         
         if url.indexOf("play/") == 0
           url = url.replace("play/", "")
-          @context.commandMap.execute("SetDisplayModeCommand", true)
+          ThreeNodes.events.trigger("SetDisplayModeCommand", true)
         else
-          @context.commandMap.execute("SetDisplayModeCommand", false)
+          ThreeNodes.events.trigger("SetDisplayModeCommand", false)
         
         if url.indexOf("example/") == 0
           filename = url.replace("example/", "")
-          @context.commandMap.execute("ClearWorkspaceCommand")
+          ThreeNodes.events.trigger("ClearWorkspace")
           $.ajax
             url: "examples/#{filename}"
             dataType: 'text'
@@ -35,8 +38,4 @@ define [
       $(window).bind 'hashchange', (e) =>
         on_url_change(e)
         
-      #delay = (ms, func) -> setTimeout func, ms
-      #init_url = () ->
-      #  $(window).trigger( 'hashchange' )
-      #delay 500, -> init_url()
       on_url_change(null)

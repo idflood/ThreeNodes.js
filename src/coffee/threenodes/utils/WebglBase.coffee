@@ -11,6 +11,9 @@ define [
   "order!libs/three-extras/js/postprocessing/BloomPass",
   "order!libs/three-extras/js/postprocessing/FilmPass",
   "order!libs/three-extras/js/postprocessing/DotScreenPass",
+  "order!libs/BlobBuilder.min",
+  "order!libs/FileSaver.min",
+  "order!libs/canvas-toBlob.min",
 ], ($, _, Backbone) ->
   "use strict"
   ThreeNodes.Webgl = {}
@@ -35,7 +38,18 @@ define [
       ThreeNodes.Webgl.renderModel = @renderModel
       ThreeNodes.Webgl.effectScreen = @effectScreen
       
+      ThreeNodes.events.on "ExportImage", @exportImage
+      ThreeNodes.events.on "RebuildAllShaders", @rebuild_all_shaders
+      
       ThreeNodes.rebuild_all_shaders = @rebuild_all_shaders
+    
+    exportImage: (fname) =>
+      canvas = @current_renderer.domElement
+      #ThreeNodes.is_playing = false
+      on_write = (blob) ->
+        saveAs(blob, fname)
+        #ThreeNodes.is_playing = true
+      canvas.toBlob(on_write, "image/png")
     
     rebuild_all_shaders: () =>
       console.log "rebuilding shaders"

@@ -10,7 +10,7 @@ define [
       ng = app.nodegraph
       injector = app.injector
       filehandler = app.injector.get "FileHandler"
-      app.commandMap.execute "ClearWorkspaceCommand"
+      ThreeNodes.events.trigger("ClearWorkspace")
       
       n1 = ng.create_node("Number")
       n2 = ng.create_node("Vector3")

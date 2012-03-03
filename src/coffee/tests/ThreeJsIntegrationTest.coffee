@@ -12,7 +12,7 @@ define [
       test "Scene node children", () ->
         ng = app.nodegraph
         injector = app.injector
-        app.commandMap.execute "ClearWorkspaceCommand"
+        ThreeNodes.events.trigger("ClearWorkspace")
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")
         n3 = ng.create_node("ThreeMesh")
@@ -67,7 +67,7 @@ define [
       test "Camera -> object3d -> merge -> scene connection test (children array)", () ->
         ng = app.nodegraph
         injector = app.injector
-        app.commandMap.execute "ClearWorkspaceCommand"
+        ThreeNodes.events.trigger("ClearWorkspace")
         
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")

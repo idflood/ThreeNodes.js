@@ -5,9 +5,8 @@ define [
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
   "order!threenodes/utils/WebglBase",
-  "order!libs/jquery.tmpl.min",
-  'order!threenodes/ui/AppSidebar',
-  'order!threenodes/ui/AppMenuBar',
+  'order!threenodes/views/AppSidebar',
+  'order!threenodes/views/AppMenuBar',
   "order!libs/three-extras/js/RequestAnimationFrame",
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
@@ -16,20 +15,20 @@ define [
   "order!libs/jquery-scrollview/jquery.scrollview",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu) ->
   "use strict"
-  class ThreeNodes.AppUI
-    constructor: () ->
-      _.extend(@, Backbone.Events)
+  class ThreeNodes.AppUI extends Backbone.View
     
     onRegister: () =>
+      ThreeNodes.events.on "OnUIResize", @on_ui_window_resize
+      ThreeNodes.events.on "SetDisplayModeCommand", @setDisplayMode
+      
+      # trigger the url after the setDisplaymode event has been binded
+      ThreeNodes.events.trigger "InitUrlHandler"
+      
       injector = @context.injector
-      @context.commandMap.execute "InitUrlHandler"
       @player_mode = @context.player_mode
-      
-      injector.mapSingleton "ThreeNodes.AppSidebar", ThreeNodes.AppSidebar
-      injector.mapSingleton "ThreeNodes.AppMenuBar", ThreeNodes.AppMenuBar
-      
       @webgl = injector.get "ThreeNodes.WebglBase"
-    
+      
+      # setup SVG for drawing connections
       @svg = Raphael("graph", 4000, 4000)
       ThreeNodes.svg = @svg
       ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
@@ -37,19 +36,58 @@ define [
         'stroke-dasharray': "-"
         fill: "none"
         opacity: 0
-      @sidebar = injector.get "ThreeNodes.AppSidebar"
-      @menubar = injector.get "ThreeNodes.AppMenuBar"
-      @timeline = injector.get "AppTimeline"
+      
+      # setup menubar
+      menu_tmpl = _.template(ThreeNodes.AppMenuBar.template, {})
+      $menu_tmpl = $(menu_tmpl).prependTo("body")
+      @menubar = new ThreeNodes.AppMenuBar
+        el: $menu_tmpl
+      @menubar.context = @context
+      # redispatch menubar events
+      self = this
+      @menubar.trigger = (events) ->
+        Backbone.events.prototype.trigger.call(this)
+        self.trigger(events)
+      
+      # setup sidebar
+      @sidebar = new ThreeNodes.AppSidebar
+        el: $("#sidebar")
+      @sidebar.context = @context
+      @sidebar.onRegister()
+      
+      # setup timeline
+      @timeline = new ThreeNodes.AppTimeline()
+      @timeline.context = @context
+      @timeline.onRegister()
       
       @add_window_resize_handler()
+      @startUI()
+      @on_ui_window_resize()
+      @is_grabbing = false
+      @setupMouseScroll()
+    
+    startUI: () =>
       @init_context_menus()
       @init_bottom_toolbox()
       @init_display_mode_switch()
       @animate()
       @show_application()
-      @on_ui_window_resize()
-      @is_grabbing = false
+    
+    setDisplayMode: (is_player = false) =>
+      injector = @context.injector
+      if is_player == true
+        $("body").addClass("player-mode")
+        $("body").removeClass("editor-mode")
+      else
+        $("body").addClass("editor-mode")
+        $("body").removeClass("player-mode")
       
+      @context.player_mode = is_player
+      if is_player == false
+        injector.get("NodeGraph").renderAllConnections()
+      return true
+    
+    setupMouseScroll: () =>
       @scroll_target = $("#container-wrapper")
       is_from_target = (e) ->
         if e.target == $("#graph svg")[0]
@@ -88,7 +126,7 @@ define [
       @scroll_target.scrollLeft(x).scrollTop(y)
     
     switch_display_mode: () =>
-      @context.commandMap.execute("SetDisplayModeCommand", !@context.player_mode)
+      @setDisplayMode(!@context.player_mode)
       return this
     
     init_display_mode_switch: () =>
@@ -123,10 +161,10 @@ define [
         @on_ui_window_resize()
     
     init_context_menus: () =>
-      menu_field_menu = $.tmpl(_view_field_context_menu, {})
+      menu_field_menu = _.template(_view_field_context_menu, {})
       $("body").append(menu_field_menu)
       
-      node_menu = $.tmpl(_view_node_context_menu, {})
+      node_menu = _.template(_view_node_context_menu, {})
       $("body").append(node_menu)
     
     add_window_resize_handler: () =>
@@ -163,7 +201,6 @@ define [
       
       $("#sidebar").css
         bottom: timelinesize
-        #"height" h - 25)
       
     animate: () =>
       @render()

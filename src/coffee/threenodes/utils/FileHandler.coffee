@@ -7,7 +7,13 @@ define [
   "order!libs/json2",
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.FileHandler
+  class ThreeNodes.FileHandler extends Backbone.Events
+    constructor: () ->
+      ThreeNodes.events.on "SaveFile", @save_local_file
+      ThreeNodes.events.on "ExportCode", @export_code
+      ThreeNodes.events.on "LoadFile", @load_local_file_input_changed
+      ThreeNodes.events.on "LoadJSON", @load_from_json_data
+    
     save_local_file: () =>
       bb = new BlobBuilder()
       result_string = @get_local_json()
@@ -42,7 +48,7 @@ define [
         
       res += "\n\n"
       res += "// set player mode\n"
-      res += "app.commandMap.execute('SetDisplayModeCommand', true);\n"
+      res += "ThreeNodes.events.trigger('SetDisplayModeCommand', true);\n"
       res += "});"
       
       bb = new BlobBuilder()
@@ -115,7 +121,7 @@ define [
       ThreeNodes.uid = parseInt $("uid", loaded_data).attr("last")
     
     load_local_file_input_changed: (e) =>
-      @context.commandMap.execute("ClearWorkspaceCommand")
+      ThreeNodes.events.trigger("ClearWorkspace")
       nodegraph = @context.injector.get("NodeGraph")
       file = e.target.files[0]
       reader = new FileReader()

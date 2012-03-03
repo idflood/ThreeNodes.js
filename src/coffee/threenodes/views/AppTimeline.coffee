@@ -6,10 +6,7 @@ define [
   "order!libs/timeline.js/timeline-gui",
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.AppTimeline
-    constructor: () ->
-      _.extend(@, Backbone.Events)
-    
+  class ThreeNodes.AppTimeline extends Backbone.View
     onRegister: () =>
       ng = @context.injector.get("NodeGraph")
       
@@ -31,7 +28,7 @@ define [
         colorTrackBottomLine: "#555"
         colorPropertyLabel: "#999"
         onGuiSave: () =>
-          @context.commandMap.execute "OnUiResizeCommand"
+          ThreeNodes.events.trigger "OnUIResize"
         setPropertyValue: (propertyAnim, t) ->
           propertyAnim.target[propertyAnim.propertyName].setValue(t)
         applyPropertyValue: (propertyAnim, t) ->

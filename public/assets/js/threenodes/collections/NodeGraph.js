@@ -13,6 +13,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
       this.render = __bind(this.render, this);
       this.create_node = __bind(this.create_node, this);
+      this.clearWorkspace = __bind(this.clearWorkspace, this);
       this.initialize = __bind(this.initialize, this);
       NodeGraph.__super__.constructor.apply(this, arguments);
     }
@@ -21,6 +22,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       var _this = this;
       this.nodes_by_nid = {};
       this.fields_by_fid = {};
+      this.types = false;
       this.connections = new ThreeNodes.ConnectionsCollection();
       this.connections.bind("add", function(connection) {
         var view;
@@ -28,7 +30,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           model: connection
         });
       });
-      this.types = false;
       this.bind("add", function(node) {
         var $tmpl, template, tmpl, view;
         template = ThreeNodes.NodeView.template;
@@ -40,12 +41,29 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         });
         return node.view = view;
       });
-      return this.bind("createConnection", function(field1, field2) {
+      this.bind("createConnection", function(field1, field2) {
         return _this.connections.create({
           from_field: field1,
           to_field: field2
         });
       });
+      ThreeNodes.events.on("RmoveSelectedNodes", this.removeSelectedNodes);
+      ThreeNodes.events.on("CreateNode", this.create_node);
+      return ThreeNodes.events.on("ClearWorkspace", this.clearWorkspace);
+    };
+
+    NodeGraph.prototype.clearWorkspace = function() {
+      var timeline;
+      this.remove_all_connections();
+      this.remove_all_nodes();
+      this.context.reset_global_variables();
+      ThreeNodes.sound_nodes = [];
+      $("#webgl-window canvas").remove();
+      $("#timeline-container, #keyEditDialog").remove();
+      timeline = this.context.injector.get("AppTimeline");
+      timeline.onRegister();
+      ThreeNodes.events.trigger("OnUIResize");
+      return this;
     };
 
     NodeGraph.prototype.create_node = function(nodename, x, y, inXML, inJSON) {
@@ -121,6 +139,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.connections.render();
     };
 
+    NodeGraph.prototype.removeSelectedNodes = function() {
+      $(".node.ui-selected").each(function() {
+        return $(this).data("object").remove();
+      });
+      return true;
+    };
+
     NodeGraph.prototype.removeNode = function(n) {
       this.remove(n);
       if (this.nodes_by_nid[n.get("nid")]) {
@@ -137,7 +162,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.remove_all_nodes = function() {
+      var model, models, _i, _len;
       $("#tab-attribute").html("");
+      models = this.models.concat();
+      for (_i = 0, _len = models.length; _i < _len; _i++) {
+        model = models[_i];
+        model.remove();
+      }
       this.reset([]);
       return true;
     };

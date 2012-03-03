@@ -1,7 +1,11 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], function($, _, Backbone) {
-  "use strict";  return ThreeNodes.AppSidebar = (function() {
+  "use strict";  return ThreeNodes.AppSidebar = (function(_super) {
+
+    __extends(AppSidebar, _super);
 
     function AppSidebar() {
       this.init_sidebar_tab_new_node = __bind(this.init_sidebar_tab_new_node, this);
@@ -10,7 +14,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
       this.filter_list_item = __bind(this.filter_list_item, this);
       this.init_sidebar_toggle = __bind(this.init_sidebar_toggle, this);
       this.init_sidebar_tabs = __bind(this.init_sidebar_tabs, this);
-      this.onRegister = __bind(this.onRegister, this);      _.extend(this, Backbone.Events);
+      this.onRegister = __bind(this.onRegister, this);
+      AppSidebar.__super__.constructor.apply(this, arguments);
     }
 
     AppSidebar.prototype.onRegister = function() {
@@ -21,7 +26,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
     };
 
     AppSidebar.prototype.init_sidebar_tabs = function() {
-      return $("#sidebar").tabs({
+      return this.$el.tabs({
         fx: {
           opacity: 'toggle',
           duration: 100
@@ -30,13 +35,13 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
     };
 
     AppSidebar.prototype.init_sidebar_toggle = function() {
-      return $("#sidebar-toggle").click(function(e) {
-        var $t, o;
-        $t = $("#sidebar");
+      var _this = this;
+      $("#sidebar-toggle").click(function(e) {
+        var o;
         o = 10;
-        if ($t.position().left < -20) {
+        if (_this.$el.position().left < -20) {
           $("#sidebar-toggle").removeClass("toggle-closed");
-          $t.animate({
+          _this.$el.animate({
             left: 0
           }, {
             queue: false,
@@ -50,7 +55,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
           }, "swing");
         } else {
           $("#sidebar-toggle").addClass("toggle-closed");
-          $t.animate({
+          _this.$el.animate({
             left: -220
           }, {
             queue: false,
@@ -64,6 +69,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
           }, "swing");
         }
       });
+      return this;
     };
 
     AppSidebar.prototype.filter_list_item = function($item, value) {
@@ -143,7 +149,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
           nodename = ui.draggable.attr("rel");
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10;
           dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop();
-          self.context.commandMap.execute("CreateNodeCommand", nodename, dx, dy);
+          ThreeNodes.events.trigger("CreateNode", nodename, dx, dy);
           return $("#sidebar").show();
         }
       });
@@ -151,5 +157,5 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu"], fu
 
     return AppSidebar;
 
-  })();
+  })(Backbone.View);
 });

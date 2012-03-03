@@ -10,7 +10,7 @@ define [
       module "Math nodes"
       
       test "Basic math", () ->
-        app.commandMap.execute "ClearWorkspaceCommand"
+        ThreeNodes.events.trigger("ClearWorkspace")
         injector = app.injector
         ng = app.nodegraph
         

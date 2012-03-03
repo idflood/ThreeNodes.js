@@ -23,11 +23,12 @@ define [
     initialize: (models, options) =>
       @nodes_by_nid = {}
       @fields_by_fid = {}
+      @types = false
       @connections = new ThreeNodes.ConnectionsCollection()
       @connections.bind "add", (connection) ->
         view = new ThreeNodes.ConnectionView
           model: connection
-      @types = false
+      
       @bind "add", (node) ->
         template = ThreeNodes.NodeView.template
         tmpl = _.template(template, node)
@@ -44,6 +45,25 @@ define [
         @connections.create
           from_field: field1
           to_field: field2
+    
+      ThreeNodes.events.on "RmoveSelectedNodes", @removeSelectedNodes
+      ThreeNodes.events.on "CreateNode", @create_node
+      ThreeNodes.events.on "ClearWorkspace", @clearWorkspace
+    
+    clearWorkspace: () =>
+      @remove_all_connections()
+      @remove_all_nodes()
+      @context.reset_global_variables()
+      ThreeNodes.sound_nodes = []
+      $("#webgl-window canvas").remove()
+      
+      # create a new timeline
+      $("#timeline-container, #keyEditDialog").remove()
+      timeline = @context.injector.get "AppTimeline"
+      timeline.onRegister()
+      ThreeNodes.events.trigger "OnUIResize"
+      
+      return this
     
     create_node: (nodename, x, y, inXML = false, inJSON = false) =>
       if !ThreeNodes.nodes[nodename]
@@ -101,6 +121,11 @@ define [
     renderAllConnections: () =>
       @connections.render()
     
+    removeSelectedNodes: () ->
+      $(".node.ui-selected").each () ->
+        $(this).data("object").remove()
+      return true
+    
     removeNode: (n) ->
       @remove(n)
       if @nodes_by_nid[n.get("nid")]
@@ -114,6 +139,9 @@ define [
     
     remove_all_nodes: () ->
       $("#tab-attribute").html("")
+      models = @models.concat()
+      for model in models
+        model.remove()
       @reset([])
       true
     

@@ -1,10 +1,19 @@
+var __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
-  "use strict";  return ThreeNodes.InitUrlHandler = (function() {
+  "use strict";  return ThreeNodes.UrlHandler = (function(_super) {
 
-    function InitUrlHandler() {}
+    __extends(UrlHandler, _super);
 
-    InitUrlHandler.prototype.execute = function() {
+    function UrlHandler() {
+      var _this = this;
+      ThreeNodes.events.on("InitUrlHandler", function(e) {
+        return _this.execute();
+      });
+    }
+
+    UrlHandler.prototype.execute = function() {
       var injector, on_url_change, url_cache,
         _this = this;
       injector = this.context.injector;
@@ -16,13 +25,13 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
         if (url === url_cache) return false;
         if (url.indexOf("play/") === 0) {
           url = url.replace("play/", "");
-          _this.context.commandMap.execute("SetDisplayModeCommand", true);
+          ThreeNodes.events.trigger("SetDisplayModeCommand", true);
         } else {
-          _this.context.commandMap.execute("SetDisplayModeCommand", false);
+          ThreeNodes.events.trigger("SetDisplayModeCommand", false);
         }
         if (url.indexOf("example/") === 0) {
           filename = url.replace("example/", "");
-          _this.context.commandMap.execute("ClearWorkspaceCommand");
+          ThreeNodes.events.trigger("ClearWorkspace");
           $.ajax({
             url: "examples/" + filename,
             dataType: 'text',
@@ -39,7 +48,7 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       return on_url_change(null);
     };
 
-    return InitUrlHandler;
+    return UrlHandler;
 
-  })();
+  })(Backbone.Events);
 });

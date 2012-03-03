@@ -159,7 +159,7 @@ define [
     remove: () =>
       ng = @context.injector.get("NodeGraph")
       ng.removeNode(this)
-      @rack.remove_all_connections()
+      @rack.removeAllConnections()
       @main_view.remove()
       
       # todo: maybe remove fields
@@ -224,7 +224,6 @@ define [
     
     toCode: () =>
       ng = @context.injector.get("NodeGraph")
-      component = ng.get_component_by_type(@typename())
       res = "\n// node: #{@get('name')}\n"
       res += "var node_#{@get('nid')}_data = {\n"
       res += "\t" + "nid: #{@get('nid')},\n"
@@ -233,7 +232,7 @@ define [
       res += "\t" + "fields: #{@rack.toCode()},\n"
       res += "\t" + "anim: #{@getAnimationDataToCode()}\n"
       res += "};\n"
-      res += "var node_#{@nid} = nodegraph.create_node(\"#{component}\", \"#{@typename()}\", #{@get('x')}, #{@get('y')}, false, node_#{@get('nid')}_data);\n"
+      res += "var node_#{@get('nid')} = nodegraph.create_node(\"#{@typename()}\", #{@get('x')}, #{@get('y')}, false, node_#{@get('nid')}_data);\n"
       return res
     
     apply_fields_to_val: (afields, target, exceptions = [], index) =>

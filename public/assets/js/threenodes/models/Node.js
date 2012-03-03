@@ -234,7 +234,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       var ng;
       ng = this.context.injector.get("NodeGraph");
       ng.removeNode(this);
-      this.rack.remove_all_connections();
+      this.rack.removeAllConnections();
       return this.main_view.remove();
     };
 
@@ -330,9 +330,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
     };
 
     NodeBase.prototype.toCode = function() {
-      var component, ng, res;
+      var ng, res;
       ng = this.context.injector.get("NodeGraph");
-      component = ng.get_component_by_type(this.typename());
       res = "\n// node: " + (this.get('name')) + "\n";
       res += "var node_" + (this.get('nid')) + "_data = {\n";
       res += "\t" + ("nid: " + (this.get('nid')) + ",\n");
@@ -341,7 +340,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
       res += "\t" + ("anim: " + (this.getAnimationDataToCode()) + "\n");
       res += "};\n";
-      res += "var node_" + this.nid + " = nodegraph.create_node(\"" + component + "\", \"" + (this.typename()) + "\", " + (this.get('x')) + ", " + (this.get('y')) + ", false, node_" + (this.get('nid')) + "_data);\n";
+      res += "var node_" + (this.get('nid')) + " = nodegraph.create_node(\"" + (this.typename()) + "\", " + (this.get('x')) + ", " + (this.get('y')) + ", false, node_" + (this.get('nid')) + "_data);\n";
       return res;
     };
 

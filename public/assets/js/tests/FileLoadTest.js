@@ -10,7 +10,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         var c1, c2, filehandler, json_string1, json_string2, n1, n2, n3, ng;
         ng = app.nodegraph;
         filehandler = app.injector.get("FileHandler");
-        app.commandMap.execute("ClearWorkspaceCommand");
+        ThreeNodes.events.trigger("ClearWorkspace");
         n1 = ng.create_node("Number", 363, 113);
         n2 = ng.create_node("Number");
         c1 = ng.connections.create({
@@ -21,7 +21,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng.render();
         json_string1 = filehandler.get_local_json();
         console.log(json_string1);
-        app.commandMap.execute("ClearWorkspaceCommand");
+        ThreeNodes.events.trigger("ClearWorkspace");
         filehandler.load_from_json_data(json_string1);
         ng.render();
         equals(ng.length, 2, "The 2 nodes are created in the nodegraph");
@@ -30,7 +30,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         equals(ng.models[0].get("y"), 113, "node1.y has been set");
         equals(ng.models[0].v_in.getValue(), 4, "The first node input has been set to 4");
         equals(ng.models[1].v_out.getValue(), 4, "The second node has been connected and the output is 4");
-        app.commandMap.execute("ClearWorkspaceCommand");
+        ThreeNodes.events.trigger("ClearWorkspace");
         n1 = ng.create_node("Vector3");
         n2 = ng.create_node("Number");
         n3 = ng.create_node("Number");
@@ -46,14 +46,14 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         n1.rack.getField("y").setValue(12);
         ng.render();
         json_string2 = filehandler.get_local_json();
-        app.commandMap.execute("ClearWorkspaceCommand");
+        ThreeNodes.events.trigger("ClearWorkspace");
         filehandler.load_from_json_data(json_string2);
         ng.render();
         equals(ng.length, 3, "The 3 nodes are created in the nodegraph");
         equals(ng.connections.length, 2, "2 connections has been created");
         equals(ng.models[1].v_out.getValue(), 0.7, "node2.input has been set");
         equals(ng.models[2].v_out.getValue(), 12, "node3.input has been set");
-        app.commandMap.execute("ClearWorkspaceCommand");
+        ThreeNodes.events.trigger("ClearWorkspace");
         n1 = ng.create_node("Scene");
         n2 = ng.create_node("Merge");
         n3 = ng.create_node("ThreeMesh");
@@ -67,7 +67,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         });
         ng.render();
         json_string2 = filehandler.get_local_json();
-        app.commandMap.execute("ClearWorkspaceCommand");
+        ThreeNodes.events.trigger("ClearWorkspace");
         filehandler.load_from_json_data(json_string2);
         ng.render();
         equals(ng.length, 3, "The 3 nodes are created in the nodegraph");

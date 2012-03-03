@@ -1,7 +1,11 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/json2"], function($, _, Backbone) {
-  "use strict";  return ThreeNodes.FileHandler = (function() {
+  "use strict";  return ThreeNodes.FileHandler = (function(_super) {
+
+    __extends(FileHandler, _super);
 
     function FileHandler() {
       this.load_local_file_input_changed = __bind(this.load_local_file_input_changed, this);
@@ -10,7 +14,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       this.get_local_xml = __bind(this.get_local_xml, this);
       this.get_local_json = __bind(this.get_local_json, this);
       this.export_code = __bind(this.export_code, this);
-      this.save_local_file = __bind(this.save_local_file, this);
+      this.save_local_file = __bind(this.save_local_file, this);      ThreeNodes.events.on("SaveFile", this.save_local_file);
+      ThreeNodes.events.on("ExportCode", this.export_code);
+      ThreeNodes.events.on("LoadFile", this.load_local_file_input_changed);
+      ThreeNodes.events.on("LoadJSON", this.load_from_json_data);
     }
 
     FileHandler.prototype.save_local_file = function() {
@@ -52,7 +59,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       }
       res += "\n\n";
       res += "// set player mode\n";
-      res += "app.commandMap.execute('SetDisplayModeCommand', true);\n";
+      res += "ThreeNodes.events.trigger('SetDisplayModeCommand', true);\n";
       res += "});";
       bb = new BlobBuilder();
       bb.append(res);
@@ -151,7 +158,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     FileHandler.prototype.load_local_file_input_changed = function(e) {
       var file, nodegraph, reader, self;
-      this.context.commandMap.execute("ClearWorkspaceCommand");
+      ThreeNodes.events.trigger("ClearWorkspace");
       nodegraph = this.context.injector.get("NodeGraph");
       file = e.target.files[0];
       reader = new FileReader();
@@ -166,5 +173,5 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     return FileHandler;
 
-  })();
+  })(Backbone.Events);
 });

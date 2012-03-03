@@ -28,27 +28,21 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/collections/NodeGraph',
-  'order!threenodes/ui/AppUI',
-  'order!threenodes/ui/AppTimeline',
+  'order!threenodes/views/AppUI',
+  'order!threenodes/views/AppTimeline',
   'order!threenodes/utils/AppWebsocket',
   'order!threenodes/utils/Injector',
   'order!threenodes/utils/CommandMap',
   'order!threenodes/utils/FileHandler',
-  'order!threenodes/commands/ClearWorkspaceCommand',
-  'order!threenodes/commands/RemoveConnectionCommand',
-  'order!threenodes/commands/CreateNodeCommand',
-  'order!threenodes/commands/SaveFileCommand',
-  'order!threenodes/commands/LoadLocalFileCommand',
-  'order!threenodes/commands/RebuildShadersCommand',
-  'order!threenodes/commands/RemoveSelectedNodesCommand',
-  'order!threenodes/commands/SetDisplayModeCommand',
-  'order!threenodes/commands/InitUrlHandler',
-  'order!threenodes/commands/ExportCodeCommand',
-  'order!threenodes/commands/ExportImageCommand',
-  'order!threenodes/commands/OnUiResizeCommand',
+  'order!threenodes/utils/UrlHandler',
   "order!libs/jquery.ba-bbq.min",
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   "use strict"
+  
+  # use a global event dispatcher instead of the context/commandMap thing
+  # it may be removed if all commands are converted to backbone class (event)
+  ThreeNodes.events = _.extend({}, Backbone.Events)
+  
   class ThreeNodes.App
     constructor: (@testing_mode = false) ->
       console.log "ThreeNodes app init..."
@@ -64,18 +58,8 @@ define [
       @injector = new ThreeNodes.Injector(this)
       @commandMap = new ThreeNodes.CommandMap(this)
       
-      @commandMap.register "ClearWorkspaceCommand", ThreeNodes.ClearWorkspaceCommand
-      @commandMap.register "RemoveConnectionCommand", ThreeNodes.RemoveConnectionCommand
-      @commandMap.register "CreateNodeCommand", ThreeNodes.CreateNodeCommand
-      @commandMap.register "SaveFileCommand", ThreeNodes.SaveFileCommand
-      @commandMap.register "LoadLocalFileCommand", ThreeNodes.LoadLocalFileCommand
-      @commandMap.register "RebuildShadersCommand", ThreeNodes.RebuildShadersCommand
-      @commandMap.register "RemoveSelectedNodesCommand", ThreeNodes.RemoveSelectedNodesCommand
-      @commandMap.register "InitUrlHandler", ThreeNodes.InitUrlHandler
-      @commandMap.register "SetDisplayModeCommand", ThreeNodes.SetDisplayModeCommand
-      @commandMap.register "ExportCodeCommand", ThreeNodes.ExportCodeCommand
-      @commandMap.register "ExportImageCommand", ThreeNodes.ExportImageCommand
-      @commandMap.register "OnUiResizeCommand", ThreeNodes.OnUiResizeCommand
+      @url_handler = new ThreeNodes.UrlHandler()
+      @url_handler.context = this
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
@@ -91,16 +75,17 @@ define [
       @player_mode = false
             
       if @testing_mode == false
-        @ui = @injector.get "AppUI"
-        @ui.bind("render", @nodegraph.render)
+        @ui = @injector.get "AppUI",
+          el: $("body")
+        @ui.on("render", @nodegraph.render)
       else
         $("body").addClass "test-mode"
         @timeline = @injector.get "AppTimeline"
-        @commandMap.execute "InitUrlHandler"
+        ThreeNodes.events.trigger "InitUrlHandler"
       return true
     
     clear_workspace: () ->
-      @context.commandMap.execute "ClearWorkspaceCommand"
+      ThreeNodes.events.trigger("ClearWorkspace")
     
     reset_global_variables: () ->
       ThreeNodes.uid = 0

@@ -1,11 +1,12 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/three-extras/js/postprocessing/FilmPass", "order!libs/three-extras/js/postprocessing/DotScreenPass"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/three-extras/js/ShaderExtras", "order!libs/three-extras/js/postprocessing/EffectComposer", "order!libs/three-extras/js/postprocessing/MaskPass", "order!libs/three-extras/js/postprocessing/RenderPass", "order!libs/three-extras/js/postprocessing/ShaderPass", "order!libs/three-extras/js/postprocessing/BloomPass", "order!libs/three-extras/js/postprocessing/FilmPass", "order!libs/three-extras/js/postprocessing/DotScreenPass", "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/canvas-toBlob.min"], function($, _, Backbone) {
   "use strict";  ThreeNodes.Webgl = {};
   return ThreeNodes.WebglBase = (function() {
 
     function WebglBase() {
-      this.rebuild_all_shaders = __bind(this.rebuild_all_shaders, this);      console.log("webgl init...");
+      this.rebuild_all_shaders = __bind(this.rebuild_all_shaders, this);
+      this.exportImage = __bind(this.exportImage, this);      console.log("webgl init...");
       this.current_scene = new THREE.Scene();
       this.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
       this.current_renderer = new THREE.WebGLRenderer({
@@ -23,8 +24,19 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
       ThreeNodes.Webgl.composer = this.composer;
       ThreeNodes.Webgl.renderModel = this.renderModel;
       ThreeNodes.Webgl.effectScreen = this.effectScreen;
+      ThreeNodes.events.on("ExportImage", this.exportImage);
+      ThreeNodes.events.on("RebuildAllShaders", this.rebuild_all_shaders);
       ThreeNodes.rebuild_all_shaders = this.rebuild_all_shaders;
     }
+
+    WebglBase.prototype.exportImage = function(fname) {
+      var canvas, on_write;
+      canvas = this.current_renderer.domElement;
+      on_write = function(blob) {
+        return saveAs(blob, fname);
+      };
+      return canvas.toBlob(on_write, "image/png");
+    };
 
     WebglBase.prototype.rebuild_all_shaders = function() {
       var n, sub_material, _i, _j, _len, _len2, _ref, _ref2;

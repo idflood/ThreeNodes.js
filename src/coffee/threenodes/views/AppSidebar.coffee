@@ -5,10 +5,7 @@ define [
   "order!libs/jquery.contextMenu",
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.AppSidebar
-    constructor: () ->
-      _.extend(@, Backbone.Events)
-    
+  class ThreeNodes.AppSidebar extends Backbone.View
     onRegister: () =>
       @init_sidebar_tab_new_node()
       @init_sidebar_search()
@@ -16,23 +13,23 @@ define [
       @init_sidebar_tabs()
     
     init_sidebar_tabs: () =>
-      $("#sidebar").tabs
+      @$el.tabs
         fx:
           opacity: 'toggle'
           duration: 100
     
     init_sidebar_toggle: () =>
-      $("#sidebar-toggle").click (e) ->
-        $t = $("#sidebar")
+      $("#sidebar-toggle").click (e) =>
         o = 10
-        if $t.position().left < -20
+        if @$el.position().left < -20
           $("#sidebar-toggle").removeClass("toggle-closed")
-          $t.animate({left: 0}, { queue: false, duration: 140 }, "swing")
+          @$el.animate({left: 0}, { queue: false, duration: 140 }, "swing")
           $("#sidebar-toggle").animate({left: 220 + o}, { queue: false, duration: 80 }, "swing")
         else
           $("#sidebar-toggle").addClass("toggle-closed")
-          $t.animate({left: -220}, { queue: false, duration: 120 }, "swing")
+          @$el.animate({left: -220}, { queue: false, duration: 120 }, "swing")
           $("#sidebar-toggle").animate({left: o}, { queue: false, duration: 180 }, "swing")
+      @
     
     filter_list_item: ($item, value) =>
       s = $.trim($("a", $item).html()).toLowerCase()
@@ -99,5 +96,5 @@ define [
           nodename = ui.draggable.attr("rel")
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10
           dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop()
-          self.context.commandMap.execute("CreateNodeCommand", nodename, dx, dy)
+          ThreeNodes.events.trigger("CreateNode", nodename, dx, dy)
           $("#sidebar").show()

@@ -29,6 +29,9 @@ define [
       
       @model.bind 'change', @render
       @model.bind 'postInit', @postInit
+      #@model.bind "remove", () =>
+      #  if @el
+      #    $(@el).remove()
       @render()
       @model.post_init()
       @

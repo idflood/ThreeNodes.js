@@ -8,7 +8,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       module("Math nodes");
       test("Basic math", function() {
         var c1, injector, n1, n2, n2_out, ng, node_mult;
-        app.commandMap.execute("ClearWorkspaceCommand");
+        ThreeNodes.events.trigger("ClearWorkspace");
         injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
