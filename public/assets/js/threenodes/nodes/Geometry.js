@@ -434,12 +434,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     TextGeometry.prototype.compute = function() {
       var font, has_font_attribute, new_cache;
       new_cache = this.get_cache_array();
-      font = this.rack.get("font").getValue();
+      font = this.rack.getField("font").getValue();
       has_font_attribute = function(f) {
         if (font["font"] && font["weight"]) return true;
         return false;
       };
-      if (!has_font_attribute(font) ||  this.rack.get("text").getValue() === "") {
+      if (!has_font_attribute(font) ||  this.rack.getField("text").getValue() === "") {
         this.ob = false;
         this.rack.setField("out", this.ob);
         return false;

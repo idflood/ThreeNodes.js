@@ -43,6 +43,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         name: "fieldname",
         is_output: false,
         value: 0,
+        values: null,
         "default": null
       };
     };

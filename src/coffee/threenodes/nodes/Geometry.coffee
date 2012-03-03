@@ -261,13 +261,13 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      font = this.rack.get("font").getValue()
+      font = this.rack.getField("font").getValue()
       has_font_attribute = (f) ->
         if font["font"] && font["weight"]
           return true
         false
       
-      if !has_font_attribute(font) || this.rack.get("text").getValue() == ""
+      if !has_font_attribute(font) || this.rack.getField("text").getValue() == ""
         @ob = false
         @rack.setField("out", @ob)
         return false

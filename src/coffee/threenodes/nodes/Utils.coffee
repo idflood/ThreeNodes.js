@@ -417,11 +417,10 @@ define [
       @reverseFontMap = {}
       @reverseWeightMap = {}
       
-      for i of @rack.node_fields_by_name.inputs.weight.possible_values
-        @reverseWeightMap[@rack.node_fields_by_name.inputs.weight.possible_values[i]] = i
-      
-      for i of @rack.node_fields_by_name.inputs.font.possible_values
-        @reverseFontMap[@rack.node_fields_by_name.inputs.font.possible_values[i]] = i
+      for i of @rack.getField("weight").get("possibilities")
+        @reverseWeightMap[@rack.getField("weight").get("possibilities")[i]] = i
+      for i of @rack.getField("font").get("possibilities")
+        @reverseFontMap[@rack.getField("font").get("possibilities")[i]] = i
       
       @fontcache = -1
       @weightcache = -1

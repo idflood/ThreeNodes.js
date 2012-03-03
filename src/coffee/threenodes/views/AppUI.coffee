@@ -26,7 +26,6 @@ define [
       
       injector = @context.injector
       @player_mode = @context.player_mode
-      @webgl = injector.get "ThreeNodes.WebglBase"
       
       # setup SVG for drawing connections
       @svg = Raphael("graph", 4000, 4000)

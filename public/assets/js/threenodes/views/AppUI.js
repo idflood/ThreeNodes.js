@@ -35,7 +35,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       ThreeNodes.events.trigger("InitUrlHandler");
       injector = this.context.injector;
       this.player_mode = this.context.player_mode;
-      this.webgl = injector.get("ThreeNodes.WebglBase");
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
       ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({

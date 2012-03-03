@@ -640,11 +640,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
       this.reverseFontMap = {};
       this.reverseWeightMap = {};
-      for (i in this.rack.node_fields_by_name.inputs.weight.possible_values) {
-        this.reverseWeightMap[this.rack.node_fields_by_name.inputs.weight.possible_values[i]] = i;
+      for (i in this.rack.getField("weight").get("possibilities")) {
+        this.reverseWeightMap[this.rack.getField("weight").get("possibilities")[i]] = i;
       }
-      for (i in this.rack.node_fields_by_name.inputs.font.possible_values) {
-        this.reverseFontMap[this.rack.node_fields_by_name.inputs.font.possible_values[i]] = i;
+      for (i in this.rack.getField("font").get("possibilities")) {
+        this.reverseFontMap[this.rack.getField("font").get("possibilities")[i]] = i;
       }
       this.fontcache = -1;
       return this.weightcache = -1;

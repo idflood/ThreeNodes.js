@@ -66,11 +66,10 @@ define [
       @injector.mapSingleton "AppTimeline", ThreeNodes.AppTimeline
       @injector.mapSingleton "AppUI", AppUI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
-      @injector.mapSingleton "ThreeNodes.WebglBase", ThreeNodes.WebglBase
       
       @nodegraph = @injector.get "NodeGraph"
       @socket = @injector.get "AppWebsocket"
-      @webgl = @injector.get "ThreeNodes.WebglBase"
+      @webgl = new ThreeNodes.WebglBase()
       
       @player_mode = false
             

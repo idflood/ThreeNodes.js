@@ -51,10 +51,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
       this.injector.mapSingleton("AppTimeline", ThreeNodes.AppTimeline);
       this.injector.mapSingleton("AppUI", AppUI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
-      this.injector.mapSingleton("ThreeNodes.WebglBase", ThreeNodes.WebglBase);
       this.nodegraph = this.injector.get("NodeGraph");
       this.socket = this.injector.get("AppWebsocket");
-      this.webgl = this.injector.get("ThreeNodes.WebglBase");
+      this.webgl = new ThreeNodes.WebglBase();
       this.player_mode = false;
       if (this.testing_mode === false) {
         this.ui = this.injector.get("AppUI", {
