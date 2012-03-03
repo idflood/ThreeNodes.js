@@ -35,7 +35,7 @@ define [
       
       highlight_possible_targets = () ->
         target = ".outputs .field"
-        if field.is_output == true
+        if field.get("is_output") == true
           target = ".inputs .field"
         $(target).filter () ->
           $(this).parent().parent().parent().attr("id") != "nid-#{self.nid}"
@@ -65,7 +65,7 @@ define [
             ThreeNodes.svg_connecting_line.attr
               path: get_path(pos, ui.position, self.options.node.main_view.position())
             return true
-              
+      
       accept_class = ".outputs .inner-field"
       if field && field.get("is_output") == true
         accept_class = ".inputs .inner-field"

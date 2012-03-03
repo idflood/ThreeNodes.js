@@ -48,7 +48,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
       highlight_possible_targets = function() {
         var target;
         target = ".outputs .field";
-        if (field.is_output === true) target = ".inputs .field";
+        if (field.get("is_output") === true) target = ".inputs .field";
         return $(target).filter(function() {
           return $(this).parent().parent().parent().attr("id") !== ("nid-" + self.nid);
         }).addClass("field-possible-target");
