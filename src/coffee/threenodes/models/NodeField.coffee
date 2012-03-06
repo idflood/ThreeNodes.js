@@ -201,7 +201,7 @@ define [
           $(this).blur()
       f_input
   
-    create_sidebar_field_title: (name = @name) =>
+    create_sidebar_field_title: (name = @get("name")) =>
       $cont = $("#tab-attribute")
       $cont.append("<h3>#{name}</h3>")
       return $cont

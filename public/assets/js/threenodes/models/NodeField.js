@@ -295,7 +295,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     NodeField.prototype.create_sidebar_field_title = function(name) {
       var $cont;
-      if (name == null) name = this.name;
+      if (name == null) name = this.get("name");
       $cont = $("#tab-attribute");
       $cont.append("<h3>" + name + "</h3>");
       return $cont;
