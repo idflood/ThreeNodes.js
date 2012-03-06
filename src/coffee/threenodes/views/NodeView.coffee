@@ -28,9 +28,6 @@ define [
       
       @model.bind 'change', @render
       @model.bind 'postInit', @postInit
-      #@model.bind "remove", () =>
-      #  if @el
-      #    $(@el).remove()
       @render()
       @model.post_init()
       @
@@ -151,7 +148,7 @@ define [
             ob = $(this).data("object")
             ob.anim.objectTrack.name = $(".head span", ob.main_view).html()
             nodes.push(ob.anim)
-          self.model.apptimeline.timeline.selectAnims(nodes)
+          self.model.apptimeline.selectAnims(nodes)
       return @
   
   

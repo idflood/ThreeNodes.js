@@ -59,9 +59,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       });
       this.sidebar.context = this.context;
       this.sidebar.onRegister();
-      this.timeline = new ThreeNodes.AppTimeline();
-      this.timeline.context = this.context;
-      this.timeline.onRegister();
       this.add_window_resize_handler();
       this.startUI();
       this.on_ui_window_resize();
@@ -221,7 +218,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     };
 
     AppUI.prototype.render = function() {
-      if (this.timeline) this.timeline.update();
       if (ThreeNodes.is_playing === true) return this.trigger("render");
     };
 

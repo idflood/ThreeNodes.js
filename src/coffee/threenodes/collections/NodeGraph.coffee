@@ -58,10 +58,7 @@ define [
       $("#webgl-window canvas").remove()
       
       # create a new timeline
-      $("#timeline-container, #keyEditDialog").remove()
-      timeline = @context.injector.get "AppTimeline"
-      timeline.onRegister()
-      ThreeNodes.events.trigger "OnUIResize"
+      @trigger("resetTimeline")
       
       return this
     

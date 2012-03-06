@@ -63,11 +63,11 @@ define [
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
-      @injector.mapSingleton "AppTimeline", ThreeNodes.AppTimeline
       @injector.mapSingleton "AppUI", AppUI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
       @nodegraph = @injector.get "NodeGraph"
+      @nodegraph.on "resetTimeline", @initTimeline
       @socket = @injector.get "AppWebsocket"
       @webgl = new ThreeNodes.WebglBase()
       
@@ -77,11 +77,23 @@ define [
         @ui = @injector.get "AppUI",
           el: $("body")
         @ui.on("render", @nodegraph.render)
+        @initTimeline()
       else
         $("body").addClass "test-mode"
-        @timeline = @injector.get "AppTimeline"
         ThreeNodes.events.trigger "InitUrlHandler"
+        @initTimeline()
+      
       return true
+    
+    initTimeline: () =>
+      $("#timeline-container, #keyEditDialog").remove()
+      if @ui && @timelineView
+        @ui.off("render", @timelineView.update)
+      @timelineView = new ThreeNodes.AppTimeline
+        nodegraph: @nodegraph
+      if @ui
+        @ui.on("render", @timelineView.update)
+      ThreeNodes.events.trigger "OnUIResize"
     
     clear_workspace: () ->
       ThreeNodes.events.trigger("ClearWorkspace")

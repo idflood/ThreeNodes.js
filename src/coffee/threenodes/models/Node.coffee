@@ -76,7 +76,7 @@ define [
       @setName(@typename())
       @load(@inXML, @inJSON)
       
-      @apptimeline = @context.injector.get "AppTimeline"
+      @apptimeline = @context.timelineView.timeline
       @rack = new ThreeNodes.NodeFieldsCollection [],
         node: this
         
@@ -271,17 +271,17 @@ define [
       c
   
     disable_property_anim: (field) =>
-      if @anim && field.is_output == false
-        @anim.disableProperty(field.name)
+      if @anim && field.get("is_output") == false
+        @anim.disableProperty(field.get("name"))
   
     enable_property_anim: (field) =>
-      if field.is_output == true || !@anim
+      if field.get("is_output") == true || !@anim
         return false
       if field.is_animation_property()
-        @anim.enableProperty(field.name)
+        @anim.enableProperty(field.get("name"))
     
     createAnimContainer: () =>
-      res = anim("nid-" + @nid, @rack.node_fields_by_name.inputs)
+      res = anim("nid-" + @get("nid"), @rack.node_fields_by_name.inputs)
       # enable track animation only for number/boolean
       for f of @rack.node_fields_by_name.inputs
         field = @rack.node_fields_by_name.inputs[f]

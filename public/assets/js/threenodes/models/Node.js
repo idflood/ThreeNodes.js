@@ -128,7 +128,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       }
       this.setName(this.typename());
       this.load(this.inXML, this.inJSON);
-      this.apptimeline = this.context.injector.get("AppTimeline");
+      this.apptimeline = this.context.timelineView.timeline;
       return this.rack = new ThreeNodes.NodeFieldsCollection([], {
         node: this
       });
@@ -399,21 +399,21 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
     };
 
     NodeBase.prototype.disable_property_anim = function(field) {
-      if (this.anim && field.is_output === false) {
-        return this.anim.disableProperty(field.name);
+      if (this.anim && field.get("is_output") === false) {
+        return this.anim.disableProperty(field.get("name"));
       }
     };
 
     NodeBase.prototype.enable_property_anim = function(field) {
-      if (field.is_output === true || !this.anim) return false;
+      if (field.get("is_output") === true || !this.anim) return false;
       if (field.is_animation_property()) {
-        return this.anim.enableProperty(field.name);
+        return this.anim.enableProperty(field.get("name"));
       }
     };
 
     NodeBase.prototype.createAnimContainer = function() {
       var f, field, res;
-      res = anim("nid-" + this.nid, this.rack.node_fields_by_name.inputs);
+      res = anim("nid-" + this.get("nid"), this.rack.node_fields_by_name.inputs);
       for (f in this.rack.node_fields_by_name.inputs) {
         field = this.rack.node_fields_by_name.inputs[f];
         if (field.is_animation_property() === false) {

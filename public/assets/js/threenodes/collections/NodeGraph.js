@@ -53,16 +53,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.clearWorkspace = function() {
-      var timeline;
       this.remove_all_connections();
       this.remove_all_nodes();
       this.context.reset_global_variables();
       ThreeNodes.sound_nodes = [];
       $("#webgl-window canvas").remove();
-      $("#timeline-container, #keyEditDialog").remove();
-      timeline = this.context.injector.get("AppTimeline");
-      timeline.onRegister();
-      ThreeNodes.events.trigger("OnUIResize");
+      this.trigger("resetTimeline");
       return this;
     };
 

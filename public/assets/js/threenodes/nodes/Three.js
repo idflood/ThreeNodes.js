@@ -620,8 +620,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     WebGLRenderer.prototype.add_mouse_handler = function() {
       $(this.ob.domElement).unbind("mousemove");
       $(this.ob.domElement).bind("mousemove", function(e) {
-        ThreeNodes.mouseX = e.layerX;
-        return ThreeNodes.mouseY = e.layerY;
+        ThreeNodes.mouseX = e.clientX;
+        return ThreeNodes.mouseY = e.clientY;
       });
       return this;
     };

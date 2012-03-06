@@ -7,9 +7,8 @@ define [
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.AppTimeline extends Backbone.View
-    onRegister: () =>
-      ng = @context.injector.get("NodeGraph")
-      
+    initialize: (options) =>
+      ng = options.nodegraph
       # reset canvas height
       localStorage["timeline.js.settings.canvasHeight"] = 46 + 120
       

@@ -187,7 +187,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
             ob.anim.objectTrack.name = $(".head span", ob.main_view).html();
             return nodes.push(ob.anim);
           });
-          return self.model.apptimeline.timeline.selectAnims(nodes);
+          return self.model.apptimeline.selectAnims(nodes);
         }
       });
       return this;

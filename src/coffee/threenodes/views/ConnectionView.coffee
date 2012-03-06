@@ -45,7 +45,7 @@ define [
       if o1.left == diff && o1.top == diff
         o1 = $("#nid-#{field.node.get('nid')}").offset()
         o1.top += $("#nid-#{field.node.get('nid')}").outerHeight() / 2 + 3
-        if field.is_output == true
+        if field.get("is_output") == true
           o1.left += $("#nid-#{field.node.get('nid')}").outerWidth() - 2
       o1
     

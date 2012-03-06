@@ -54,11 +54,6 @@ define [
       @sidebar.context = @context
       @sidebar.onRegister()
       
-      # setup timeline
-      @timeline = new ThreeNodes.AppTimeline()
-      @timeline.context = @context
-      @timeline.onRegister()
-      
       @add_window_resize_handler()
       @startUI()
       @on_ui_window_resize()
@@ -181,8 +176,6 @@ define [
       nodegraph.renderAllConnections()
       
     render: () =>
-      if @timeline
-        @timeline.update()
       if ThreeNodes.is_playing == true
         @trigger("render")
     

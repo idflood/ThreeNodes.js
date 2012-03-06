@@ -353,8 +353,8 @@ define [
     add_mouse_handler: =>
       $(@ob.domElement).unbind "mousemove"
       $(@ob.domElement).bind "mousemove", (e) ->
-        ThreeNodes.mouseX = e.layerX
-        ThreeNodes.mouseY = e.layerY
+        ThreeNodes.mouseX = e.clientX
+        ThreeNodes.mouseY = e.clientY
       return this
     
     create_popup_view: ->

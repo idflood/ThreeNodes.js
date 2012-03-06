@@ -1,4 +1,5 @@
-var ThreeNodes;
+var ThreeNodes,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 ThreeNodes = {};
 
@@ -34,6 +35,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
 
     function App(testing_mode) {
       this.testing_mode = testing_mode != null ? testing_mode : false;
+      this.initTimeline = __bind(this.initTimeline, this);
       console.log("ThreeNodes app init...");
       this.current_scene = false;
       this.current_camera = false;
@@ -48,10 +50,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
       this.url_handler.context = this;
       this.injector.mapSingleton("NodeGraph", ThreeNodes.NodeGraph);
       this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);
-      this.injector.mapSingleton("AppTimeline", ThreeNodes.AppTimeline);
       this.injector.mapSingleton("AppUI", AppUI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
       this.nodegraph = this.injector.get("NodeGraph");
+      this.nodegraph.on("resetTimeline", this.initTimeline);
       this.socket = this.injector.get("AppWebsocket");
       this.webgl = new ThreeNodes.WebglBase();
       this.player_mode = false;
@@ -60,13 +62,26 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
           el: $("body")
         });
         this.ui.on("render", this.nodegraph.render);
+        this.initTimeline();
       } else {
         $("body").addClass("test-mode");
-        this.timeline = this.injector.get("AppTimeline");
         ThreeNodes.events.trigger("InitUrlHandler");
+        this.initTimeline();
       }
       return true;
     }
+
+    App.prototype.initTimeline = function() {
+      $("#timeline-container, #keyEditDialog").remove();
+      if (this.ui && this.timelineView) {
+        this.ui.off("render", this.timelineView.update);
+      }
+      this.timelineView = new ThreeNodes.AppTimeline({
+        nodegraph: this.nodegraph
+      });
+      if (this.ui) this.ui.on("render", this.timelineView.update);
+      return ThreeNodes.events.trigger("OnUIResize");
+    };
 
     App.prototype.clear_workspace = function() {
       return ThreeNodes.events.trigger("ClearWorkspace");
