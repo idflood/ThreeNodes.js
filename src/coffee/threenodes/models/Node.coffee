@@ -96,7 +96,7 @@ define [
         # load animation
         @loadAnimation()
             
-      @onTimelineRebuild()
+      @showNodeAnimation()
       @trigger("postInit")
       @
     
@@ -117,7 +117,7 @@ define [
         @anim.timeline.rebuildTrackAnimsFromKeys(track)
       true
     
-    onTimelineRebuild: () =>
+    showNodeAnimation: () =>
       nodeAnimation = false
       for propTrack in @anim.objectTrack.propertyTracks
         $target = $('.inputs .field-' + propTrack.name , @main_view)

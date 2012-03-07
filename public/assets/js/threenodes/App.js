@@ -76,10 +76,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
       if (this.ui && this.timelineView) {
         this.ui.off("render", this.timelineView.update);
       }
-      this.timelineView = new ThreeNodes.AppTimeline({
-        nodegraph: this.nodegraph
-      });
+      if (this.timelineView) {
+        this.timelineView.off("trackRebuild", this.nodegraph.showNodesAnimation);
+        this.timelineView.off("startSound", this.nodegraph.startSound);
+        this.timelineView.off("stopSound", this.nodegraph.stopSound);
+      }
+      this.timelineView = new ThreeNodes.AppTimeline();
       if (this.ui) this.ui.on("render", this.timelineView.update);
+      this.timelineView.on("trackRebuild", this.nodegraph.showNodesAnimation);
+      this.timelineView.on("startSound", this.nodegraph.startSound);
+      this.timelineView.on("stopSound", this.nodegraph.stopSound);
       return ThreeNodes.events.trigger("OnUIResize");
     };
 

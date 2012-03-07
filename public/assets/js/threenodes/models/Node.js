@@ -37,7 +37,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       this.input_value_has_changed = __bind(this.input_value_has_changed, this);
       this.create_cache_object = __bind(this.create_cache_object, this);
       this.add_count_input = __bind(this.add_count_input, this);
-      this.onTimelineRebuild = __bind(this.onTimelineRebuild, this);
+      this.showNodeAnimation = __bind(this.showNodeAnimation, this);
       this.loadAnimation = __bind(this.loadAnimation, this);
       this.createConnection = __bind(this.createConnection, this);
       this.typename = __bind(this.typename, this);
@@ -139,7 +139,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       this.rack.load(this.inXML, this.inJSON);
       this.anim = this.createAnimContainer();
       if (this.inJSON && this.inJSON.anim !== false) this.loadAnimation();
-      this.onTimelineRebuild();
+      this.showNodeAnimation();
       this.trigger("postInit");
       return this;
     };
@@ -173,7 +173,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       return true;
     };
 
-    NodeBase.prototype.onTimelineRebuild = function() {
+    NodeBase.prototype.showNodeAnimation = function() {
       var $target, nodeAnimation, propTrack, _i, _len, _ref;
       nodeAnimation = false;
       _ref = this.anim.objectTrack.propertyTracks;

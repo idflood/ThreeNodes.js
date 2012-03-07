@@ -14,9 +14,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
     }
 
     AppTimeline.prototype.initialize = function(options) {
-      var ng,
-        _this = this;
-      ng = options.nodegraph;
+      var _this = this;
       localStorage["timeline.js.settings.canvasHeight"] = 46 + 120;
       this.timeline = new Timeline({
         displayOnlySelected: true,
@@ -45,34 +43,13 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
           return propertyAnim.target[propertyAnim.propertyName].getValue();
         },
         onTrackRebuild: function() {
-          var node, _i, _len, _ref, _results;
-          _ref = ng.models;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            node = _ref[_i];
-            _results.push(node.onTimelineRebuild());
-          }
-          return _results;
+          return _this.trigger("trackRebuild");
         },
         onStop: function() {
-          var node, _i, _len, _ref, _results;
-          _ref = ThreeNodes.sound_nodes;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            node = _ref[_i];
-            _results.push(node.stopSound());
-          }
-          return _results;
+          return _this.trigger("stopSound");
         },
         onPlay: function(time) {
-          var node, _i, _len, _ref, _results;
-          _ref = ThreeNodes.sound_nodes;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            node = _ref[_i];
-            _results.push(node.playSound(time));
-          }
-          return _results;
+          return _this.trigger("startSound", time);
         }
       });
       Timeline.globalInstance = this.timeline;

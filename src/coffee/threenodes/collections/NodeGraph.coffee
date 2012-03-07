@@ -134,6 +134,21 @@ define [
     get_node: (nid) =>
       @nodes_by_nid[nid]
     
+    showNodesAnimation: () =>
+      @invoke "showNodeAnimation"
+    
+    startSound: (time) =>
+      @each (node) ->
+        if node.playSound instanceof Function
+          node.playSound(time)
+      @
+    
+    stopSound: () =>
+      @each (node) ->
+        if node.stopSound instanceof Function
+          node.stopSound()
+      @
+    
     remove_all_nodes: () ->
       $("#tab-attribute").html("")
       models = @models.concat()

@@ -8,6 +8,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     __extends(NodeGraph, _super);
 
     function NodeGraph() {
+      this.stopSound = __bind(this.stopSound, this);
+      this.startSound = __bind(this.startSound, this);
+      this.showNodesAnimation = __bind(this.showNodesAnimation, this);
       this.get_node = __bind(this.get_node, this);
       this.renderAllConnections = __bind(this.renderAllConnections, this);
       this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
@@ -155,6 +158,24 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     NodeGraph.prototype.get_node = function(nid) {
       return this.nodes_by_nid[nid];
+    };
+
+    NodeGraph.prototype.showNodesAnimation = function() {
+      return this.invoke("showNodeAnimation");
+    };
+
+    NodeGraph.prototype.startSound = function(time) {
+      this.each(function(node) {
+        if (node.playSound instanceof Function) return node.playSound(time);
+      });
+      return this;
+    };
+
+    NodeGraph.prototype.stopSound = function() {
+      this.each(function(node) {
+        if (node.stopSound instanceof Function) return node.stopSound();
+      });
+      return this;
     };
 
     NodeGraph.prototype.remove_all_nodes = function() {

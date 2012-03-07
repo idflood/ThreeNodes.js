@@ -89,10 +89,20 @@ define [
       $("#timeline-container, #keyEditDialog").remove()
       if @ui && @timelineView
         @ui.off("render", @timelineView.update)
-      @timelineView = new ThreeNodes.AppTimeline
-        nodegraph: @nodegraph
+      
+      if @timelineView
+        @timelineView.off("trackRebuild", @nodegraph.showNodesAnimation)
+        @timelineView.off("startSound", @nodegraph.startSound)
+        @timelineView.off("stopSound", @nodegraph.stopSound)
+      
+      @timelineView = new ThreeNodes.AppTimeline()
+      
       if @ui
         @ui.on("render", @timelineView.update)
+      
+      @timelineView.on("trackRebuild", @nodegraph.showNodesAnimation)
+      @timelineView.on("startSound", @nodegraph.startSound)
+      @timelineView.on("stopSound", @nodegraph.stopSound)
       ThreeNodes.events.trigger "OnUIResize"
     
     clear_workspace: () ->

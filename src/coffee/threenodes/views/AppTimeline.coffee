@@ -8,7 +8,6 @@ define [
   "use strict"
   class ThreeNodes.AppTimeline extends Backbone.View
     initialize: (options) =>
-      ng = options.nodegraph
       # reset canvas height
       localStorage["timeline.js.settings.canvasHeight"] = 46 + 120
       
@@ -34,15 +33,9 @@ define [
           propertyAnim.target[propertyAnim.propertyName].setValue(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
         getPropertyValue: (propertyAnim) ->
           propertyAnim.target[propertyAnim.propertyName].getValue()
-        onTrackRebuild: () ->
-          for node in ng.models
-            node.onTimelineRebuild()
-        onStop: () ->
-          for node in ThreeNodes.sound_nodes
-            node.stopSound()
-        onPlay: (time) ->
-          for node in ThreeNodes.sound_nodes
-            node.playSound(time)
+        onTrackRebuild: () => @trigger("trackRebuild")
+        onStop: () => @trigger("stopSound")
+        onPlay: (time) => @trigger("startSound", time)
       Timeline.globalInstance = @timeline
       
       @timeline.loop(-1)
