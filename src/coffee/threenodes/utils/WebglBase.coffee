@@ -45,10 +45,8 @@ define [
     
     exportImage: (fname) =>
       canvas = @current_renderer.domElement
-      #ThreeNodes.is_playing = false
       on_write = (blob) ->
         saveAs(blob, fname)
-        #ThreeNodes.is_playing = true
       canvas.toBlob(on_write, "image/png")
     
     rebuild_all_shaders: () =>

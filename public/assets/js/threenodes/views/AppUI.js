@@ -218,7 +218,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     };
 
     AppUI.prototype.render = function() {
-      if (ThreeNodes.is_playing === true) return this.trigger("render");
+      return this.trigger("render");
     };
 
     AppUI.prototype.on_ui_window_resize = function() {

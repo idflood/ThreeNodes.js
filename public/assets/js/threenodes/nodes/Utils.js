@@ -303,8 +303,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       } else {
         $(".options", this.main_view).prepend('<p class="warning">This node currently require chrome.</p>');
       }
-      this.url_cache = this.rack.getField("url").getValue();
-      return ThreeNodes.sound_nodes.push(this);
+      return this.url_cache = this.rack.getField("url").getValue();
     };
 
     Mp3Input.prototype.onRegister = function() {

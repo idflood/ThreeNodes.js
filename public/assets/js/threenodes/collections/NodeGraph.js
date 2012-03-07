@@ -59,7 +59,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.remove_all_connections();
       this.remove_all_nodes();
       this.context.reset_global_variables();
-      ThreeNodes.sound_nodes = [];
       $("#webgl-window canvas").remove();
       this.trigger("resetTimeline");
       return this;
@@ -161,7 +160,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.showNodesAnimation = function() {
-      return this.invoke("showNodeAnimation");
+      this.invoke("showNodeAnimation");
+      return this;
     };
 
     NodeGraph.prototype.startSound = function(time) {
@@ -179,13 +179,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.remove_all_nodes = function() {
-      var model, models, _i, _len;
+      var models;
       $("#tab-attribute").html("");
       models = this.models.concat();
-      for (_i = 0, _len = models.length; _i < _len; _i++) {
-        model = models[_i];
-        model.remove();
-      }
+      _.invoke(models, "remove");
       this.reset([]);
       return true;
     };

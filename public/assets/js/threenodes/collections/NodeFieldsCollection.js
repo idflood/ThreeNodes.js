@@ -194,26 +194,13 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeField'], function
     };
 
     NodeFieldsCollection.prototype.renderConnections = function() {
-      var f;
-      for (f in this.node_fields.inputs) {
-        this.node_fields.inputs[f].render_connections();
-      }
-      for (f in this.node_fields.outputs) {
-        this.node_fields.outputs[f].render_connections();
-      }
-      return true;
+      this.invoke("render_connections");
+      return this;
     };
 
     NodeFieldsCollection.prototype.removeAllConnections = function() {
-      var f, _results;
-      for (f in this.node_fields.inputs) {
-        this.node_fields.inputs[f].remove_connections();
-      }
-      _results = [];
-      for (f in this.node_fields.outputs) {
-        _results.push(this.node_fields.outputs[f].remove_connections());
-      }
-      return _results;
+      this.invoke("remove_connections");
+      return this;
     };
 
     NodeFieldsCollection.prototype.addField = function(name, value, direction) {

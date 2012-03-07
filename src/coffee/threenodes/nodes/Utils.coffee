@@ -184,7 +184,6 @@ define [
       else
         $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
       @url_cache = @rack.getField("url").getValue()
-      ThreeNodes.sound_nodes.push(this)
     
     onRegister: () ->
       super

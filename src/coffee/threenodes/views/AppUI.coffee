@@ -176,8 +176,7 @@ define [
       nodegraph.renderAllConnections()
       
     render: () =>
-      if ThreeNodes.is_playing == true
-        @trigger("render")
+      @trigger("render")
     
     on_ui_window_resize: () =>
       w = $(window).width()

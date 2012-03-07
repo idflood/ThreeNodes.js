@@ -121,17 +121,12 @@ define [
       res
     
     renderConnections: =>
-      for f of @node_fields.inputs
-        @node_fields.inputs[f].render_connections()
-      for f of @node_fields.outputs
-        @node_fields.outputs[f].render_connections()
-      true
+      @invoke "render_connections"
+      @
     
     removeAllConnections: =>
-      for f of @node_fields.inputs
-        @node_fields.inputs[f].remove_connections()
-      for f of @node_fields.outputs
-        @node_fields.outputs[f].remove_connections()
+      @invoke "remove_connections"
+      @
     
     addField: (name, value, direction = "inputs") =>
       f = false

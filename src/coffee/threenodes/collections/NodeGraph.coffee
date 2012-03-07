@@ -54,7 +54,6 @@ define [
       @remove_all_connections()
       @remove_all_nodes()
       @context.reset_global_variables()
-      ThreeNodes.sound_nodes = []
       $("#webgl-window canvas").remove()
       
       # create a new timeline
@@ -136,6 +135,7 @@ define [
     
     showNodesAnimation: () =>
       @invoke "showNodeAnimation"
+      @
     
     startSound: (time) =>
       @each (node) ->
@@ -152,8 +152,7 @@ define [
     remove_all_nodes: () ->
       $("#tab-attribute").html("")
       models = @models.concat()
-      for model in models
-        model.remove()
+      _.invoke models, "remove"
       @reset([])
       true
     

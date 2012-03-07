@@ -7,13 +7,9 @@ ThreeNodes.websocket_enabled = false;
 
 ThreeNodes.nodes = {};
 
-ThreeNodes.sound_nodes = [];
-
 ThreeNodes.mouseX = 0;
 
 ThreeNodes.mouseY = 0;
-
-ThreeNodes.is_playing = true;
 
 ThreeNodes.fields = {
   types: {}
