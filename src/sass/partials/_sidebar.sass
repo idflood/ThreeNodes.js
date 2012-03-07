@@ -79,3 +79,38 @@
   background: #eee
   a
     color: #333
+
+.input-container
+  position: relative
+  overflow: visible
+#sidebar input
+  padding: 4px 7px
+  width: 188px
+  border: #333
+  background: #2a2a2a
+  +single-box-shadow(#222, 0, 1px, 14px, false, inset)
+  &:focus
+    outline: 0
+    border: #444
+    +single-box-shadow(#222, 0, 1px, 6px, false, inset)
+    background: #222
+  &:hover
+    border: #3a3a3a
+    
+
+#sidebar .slider-container
+  position: relative
+  width: 202px
+  .min, .max
+    position: absolute
+    top: 0
+    font-size: 9px
+  .min
+    left: 0
+  .max
+    right: 0
+  a.ui-slider-handle
+    background: #fff
+    padding: 0
+    &:focus
+      outline: 0
