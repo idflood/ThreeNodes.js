@@ -27,12 +27,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.fields_by_fid = {};
       this.types = false;
       this.connections = new ThreeNodes.ConnectionsCollection();
-      this.connections.bind("add", function(connection) {
-        var view;
-        return view = new ThreeNodes.ConnectionView({
-          model: connection
+      if (options.is_test === false) {
+        this.connections.bind("add", function(connection) {
+          var view;
+          return view = new ThreeNodes.ConnectionView({
+            model: connection
+          });
         });
-      });
+      }
       this.bind("add", function(node) {
         var $tmpl, template, tmpl, view;
         template = ThreeNodes.NodeView.template;

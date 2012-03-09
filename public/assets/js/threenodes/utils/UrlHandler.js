@@ -14,14 +14,13 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
     }
 
     UrlHandler.prototype.execute = function() {
-      var injector, on_url_change, url_cache,
+      var on_url_change, url_cache,
         _this = this;
-      injector = this.context.injector;
       url_cache = false;
       on_url_change = function(e) {
         var fh, filename, url;
         url = $.param.fragment();
-        fh = injector.get("FileHandler");
+        fh = _this.context.file_handler;
         if (url === url_cache) return false;
         if (url.indexOf("play/") === 0) {
           url = url.replace("play/", "");

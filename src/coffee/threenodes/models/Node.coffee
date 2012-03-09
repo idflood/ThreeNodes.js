@@ -225,7 +225,6 @@ define [
       "\t\t\t<node nid='#{@nid}' type='#{@typename()}' x='#{pos.left}' y='#{pos.top}'>#{@rack.toXML()}</node>\n"
     
     toCode: () =>
-      ng = @context.injector.get("NodeGraph")
       res = "\n// node: #{@get('name')}\n"
       res += "var node_#{@get('nid')}_data = {\n"
       res += "\t" + "nid: #{@get('nid')},\n"

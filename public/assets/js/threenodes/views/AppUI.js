@@ -96,9 +96,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     };
 
     AppUI.prototype.setDisplayMode = function(is_player) {
-      var injector;
       if (is_player == null) is_player = false;
-      injector = this.context.injector;
       if (is_player === true) {
         $("body").addClass("player-mode");
         $("body").removeClass("editor-mode");
@@ -107,7 +105,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         $("body").removeClass("player-mode");
       }
       this.context.player_mode = is_player;
-      if (is_player === false) injector.get("NodeGraph").renderAllConnections();
+      if (is_player === false) this.context.nodegraph.renderAllConnections();
       return true;
     };
 
@@ -234,7 +232,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       $("#sidebar").delay(delay_intro).show();
       $("#container-wrapper").delay(delay_intro).show();
       $("#sidebar-toggle").delay(delay_intro).show();
-      nodegraph = this.context.injector.get("NodeGraph");
+      nodegraph = this.context.nodegraph;
       return nodegraph.renderAllConnections();
     };
 

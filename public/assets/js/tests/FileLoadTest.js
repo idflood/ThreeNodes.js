@@ -9,7 +9,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       test("JSON loader", function() {
         var c1, c2, filehandler, json_string1, json_string2, n1, n2, n3, ng;
         ng = app.nodegraph;
-        filehandler = app.injector.get("FileHandler");
+        filehandler = app.file_handler;
         ThreeNodes.events.trigger("ClearWorkspace");
         n1 = ng.create_node("Number", 363, 113);
         n2 = ng.create_node("Number");

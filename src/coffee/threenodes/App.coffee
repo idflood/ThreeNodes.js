@@ -61,9 +61,12 @@ define [
       @injector.mapSingleton "AppUI", AppUI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
-      @nodegraph = @injector.get "NodeGraph"
+      @nodegraph = new ThreeNodes.NodeGraph([], {is_test: @testing_mode})
+      @nodegraph.context = this
       @socket = @injector.get "AppWebsocket"
       @webgl = new ThreeNodes.WebglBase()
+      @file_handler = new ThreeNodes.FileHandler()
+      @file_handler.context = this
       
       @player_mode = false
       

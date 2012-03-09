@@ -11,7 +11,7 @@ define [
       
       test "JSON save", () ->
         ng = app.nodegraph
-        filehandler = app.injector.get "FileHandler"
+        filehandler = app.file_handler
         ThreeNodes.events.trigger("ClearWorkspace")
         
         # test with two number nodes connected

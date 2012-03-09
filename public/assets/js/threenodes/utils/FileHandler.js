@@ -30,7 +30,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     FileHandler.prototype.export_code = function() {
       var bb, c, fileSaver, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
-      nodegraph = this.context.injector.get("NodeGraph");
+      nodegraph = this.context.nodegraph;
       res = "//\n";
       res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n";
       res += "//\n\n";
@@ -68,7 +68,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     FileHandler.prototype.get_local_json = function() {
       var nodegraph, res;
-      nodegraph = this.context.injector.get("NodeGraph");
+      nodegraph = this.context.nodegraph;
       res = {
         uid: ThreeNodes.uid,
         nodes: jQuery.map(nodegraph.models, function(n, i) {
@@ -83,7 +83,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     FileHandler.prototype.get_local_xml = function() {
       var c, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
-      nodegraph = this.context.injector.get("NodeGraph");
+      nodegraph = this.context.nodegraph;
       res = "";
       res += '<?xml version="1.0" encoding="UTF-8"?>\n';
       res += "<app>\n";
@@ -108,7 +108,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     FileHandler.prototype.load_from_json_data = function(txt) {
       var connection, delay, loaded_data, n, node, nodegraph, _i, _j, _len, _len2, _ref, _ref2;
-      nodegraph = this.context.injector.get("NodeGraph");
+      nodegraph = this.context.nodegraph;
       loaded_data = JSON.parse(txt);
       _ref = loaded_data.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -131,7 +131,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     FileHandler.prototype.load_from_xml_data = function(txt) {
       var loaded_data, nodegraph;
-      nodegraph = this.context.injector.get("NodeGraph");
+      nodegraph = this.context.nodegraph;
       loaded_data = $(txt);
       $("node", loaded_data).each(function() {
         var $this, n, nid, type, x, y;
@@ -159,7 +159,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
     FileHandler.prototype.load_local_file_input_changed = function(e) {
       var file, nodegraph, reader, self;
       ThreeNodes.events.trigger("ClearWorkspace");
-      nodegraph = this.context.injector.get("NodeGraph");
+      nodegraph = this.context.nodegraph;
       file = e.target.files[0];
       reader = new FileReader();
       self = this;

@@ -74,7 +74,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     NodeField.prototype.onRegister = function() {
       var ng;
-      ng = this.context.injector.get("NodeGraph");
+      ng = this.context.nodegraph;
       ng.fields_by_fid[this.fid] = this;
       return this.on_value_changed(this.val);
     };

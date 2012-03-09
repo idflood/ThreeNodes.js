@@ -82,7 +82,6 @@ define [
       return @
     
     setDisplayMode: (is_player = false) =>
-      injector = @context.injector
       if is_player == true
         $("body").addClass("player-mode")
         $("body").removeClass("editor-mode")
@@ -92,7 +91,7 @@ define [
       
       @context.player_mode = is_player
       if is_player == false
-        injector.get("NodeGraph").renderAllConnections()
+        @context.nodegraph.renderAllConnections()
       return true
     
     setupMouseScroll: () =>
@@ -186,7 +185,7 @@ define [
       $("#container-wrapper").delay(delay_intro).show()
       $("#sidebar-toggle").delay(delay_intro).show()
       
-      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph = @context.nodegraph
       nodegraph.renderAllConnections()
       
     render: () =>

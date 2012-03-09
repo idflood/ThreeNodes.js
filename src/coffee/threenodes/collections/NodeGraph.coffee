@@ -25,9 +25,10 @@ define [
       @fields_by_fid = {}
       @types = false
       @connections = new ThreeNodes.ConnectionsCollection()
-      @connections.bind "add", (connection) ->
-        view = new ThreeNodes.ConnectionView
-          model: connection
+      if options.is_test == false
+        @connections.bind "add", (connection) ->
+          view = new ThreeNodes.ConnectionView
+            model: connection
       
       @bind "add", (node) ->
         template = ThreeNodes.NodeView.template

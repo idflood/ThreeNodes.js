@@ -21,7 +21,7 @@ define [
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json")
     
     export_code: () =>
-      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph = @context.nodegraph
       res = "//\n"
       res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
       res += "//\n\n"
@@ -56,7 +56,7 @@ define [
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
       
     get_local_json: () =>
-      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph = @context.nodegraph
       res = 
         uid: ThreeNodes.uid
         nodes: jQuery.map(nodegraph.models, (n, i) -> n.toJSON())
@@ -64,7 +64,7 @@ define [
       JSON.stringify(res)
     
     get_local_xml: () =>
-      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph = @context.nodegraph
       res = ""
       res += '<?xml version="1.0" encoding="UTF-8"?>\n'
       res += ("<app>\n")
@@ -85,7 +85,7 @@ define [
       res
     
     load_from_json_data: (txt) =>
-      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph = @context.nodegraph
       loaded_data = JSON.parse(txt)
       for node in loaded_data.nodes
         n = nodegraph.create_node(node.type, node.x, node.y, false, node)
@@ -98,7 +98,7 @@ define [
       delay 1, -> nodegraph.renderAllConnections()
     
     load_from_xml_data: (txt) =>
-      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph = @context.nodegraph
       loaded_data = $(txt)
       
       $("node", loaded_data).each () ->
@@ -122,7 +122,7 @@ define [
     
     load_local_file_input_changed: (e) =>
       ThreeNodes.events.trigger("ClearWorkspace")
-      nodegraph = @context.injector.get("NodeGraph")
+      nodegraph = @context.nodegraph
       file = e.target.files[0]
       reader = new FileReader()
       self = this

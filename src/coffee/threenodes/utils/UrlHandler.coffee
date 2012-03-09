@@ -9,12 +9,11 @@ define [
       ThreeNodes.events.on "InitUrlHandler", (e) => @execute()
     
     execute: () ->
-      injector = @context.injector
       url_cache = false
       
       on_url_change = (e) =>
         url = $.param.fragment()
-        fh = injector.get("FileHandler")
+        fh = @context.file_handler
         
         if url == url_cache
           return false

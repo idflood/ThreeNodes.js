@@ -35,7 +35,7 @@ define [
       @set("fid", fid)
     
     onRegister: () ->
-      ng = @context.injector.get("NodeGraph")
+      ng = @context.nodegraph
       ng.fields_by_fid[@fid] = this
       @on_value_changed(@val)
     

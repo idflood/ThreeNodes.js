@@ -334,8 +334,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
     };
 
     NodeBase.prototype.toCode = function() {
-      var ng, res;
-      ng = this.context.injector.get("NodeGraph");
+      var res;
       res = "\n// node: " + (this.get('name')) + "\n";
       res += "var node_" + (this.get('nid')) + "_data = {\n";
       res += "\t" + ("nid: " + (this.get('nid')) + ",\n");

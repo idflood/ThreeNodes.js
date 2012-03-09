@@ -48,9 +48,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
       this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);
       this.injector.mapSingleton("AppUI", AppUI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
-      this.nodegraph = this.injector.get("NodeGraph");
+      this.nodegraph = new ThreeNodes.NodeGraph([], {
+        is_test: this.testing_mode
+      });
+      this.nodegraph.context = this;
       this.socket = this.injector.get("AppWebsocket");
       this.webgl = new ThreeNodes.WebglBase();
+      this.file_handler = new ThreeNodes.FileHandler();
+      this.file_handler.context = this;
       this.player_mode = false;
       this.nodegraph.on("remove", function() {
         return _this.timelineView.selectAnims([]);
