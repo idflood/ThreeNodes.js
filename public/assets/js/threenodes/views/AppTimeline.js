@@ -9,6 +9,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
 
     function AppTimeline() {
       this.update = __bind(this.update, this);
+      this.remove = __bind(this.remove, this);
+      this.selectAnims = __bind(this.selectAnims, this);
       this.initialize = __bind(this.initialize, this);
       AppTimeline.__super__.constructor.apply(this, arguments);
     }
@@ -55,6 +57,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       Timeline.globalInstance = this.timeline;
       this.timeline.loop(-1);
       return this.time = 0;
+    };
+
+    AppTimeline.prototype.selectAnims = function(nodes) {
+      return this.timeline.selectAnims(nodes);
+    };
+
+    AppTimeline.prototype.remove = function() {
+      this.undelegateEvents();
+      this.timeline.destroy();
+      this.timeline = null;
+      this.time = null;
+      return AppTimeline.__super__.remove.apply(this, arguments);
     };
 
     AppTimeline.prototype.update = function() {

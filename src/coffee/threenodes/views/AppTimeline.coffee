@@ -41,6 +41,16 @@ define [
       @timeline.loop(-1)
       @time = 0
     
+    selectAnims: (nodes) =>
+      @timeline.selectAnims(nodes)
+    
+    remove: () =>
+      @undelegateEvents()
+      @timeline.destroy()
+      @timeline = null
+      @time = null
+      super
+    
     update: () =>
       n = Date.now()
       if @timeline

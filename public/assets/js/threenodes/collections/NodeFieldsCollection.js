@@ -27,12 +27,27 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/NodeField'], function
       this.setField = __bind(this.setField, this);
       this.getField = __bind(this.getField, this);
       this.load = __bind(this.load, this);
+      this.destroy = __bind(this.destroy, this);
       this.initialize = __bind(this.initialize, this);
       NodeFieldsCollection.__super__.constructor.apply(this, arguments);
     }
 
     NodeFieldsCollection.prototype.initialize = function(models, options) {
       this.node = options.node;
+      this.node_fields = {};
+      this.node_fields.inputs = {};
+      this.node_fields.outputs = {};
+      this.node_fields_by_name = {};
+      this.node_fields_by_name.inputs = {};
+      return this.node_fields_by_name.outputs = {};
+    };
+
+    NodeFieldsCollection.prototype.destroy = function() {
+      this.removeAllConnections();
+      this.each(function(field) {
+        return field.remove();
+      });
+      this.node = false;
       this.node_fields = {};
       this.node_fields.inputs = {};
       this.node_fields.outputs = {};

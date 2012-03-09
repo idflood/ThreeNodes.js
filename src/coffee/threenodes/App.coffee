@@ -32,6 +32,7 @@ define [
   'order!threenodes/utils/FileHandler',
   'order!threenodes/utils/UrlHandler',
   "order!libs/jquery.ba-bbq.min",
+  "order!threenodes/utils/WebglBase",
 ], ($, _, Backbone, NodeGraph, AppUI) ->
   "use strict"
   
@@ -48,8 +49,6 @@ define [
       @effectScreen = false
       @renderModel = false
       @composer = false
-           
-      ThreeNodes.webgl_materials_node = []
       
       @injector = new ThreeNodes.Injector(this)
       @commandMap = new ThreeNodes.CommandMap(this)
@@ -63,12 +62,17 @@ define [
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
       @nodegraph = @injector.get "NodeGraph"
-      @nodegraph.on "resetTimeline", @initTimeline
       @socket = @injector.get "AppWebsocket"
       @webgl = new ThreeNodes.WebglBase()
       
       @player_mode = false
-            
+      
+      @nodegraph.on "remove", () =>
+        @timelineView.selectAnims([])
+      
+      ThreeNodes.events.on "ClearWorkspace", () =>
+        @clearWorkspace()
+      
       if @testing_mode == false
         @ui = @injector.get "AppUI",
           el: $("body")
@@ -85,27 +89,30 @@ define [
       $("#timeline-container, #keyEditDialog").remove()
       if @ui && @timelineView
         @ui.off("render", @timelineView.update)
+        @ui.off("selectAnims", @timelineView.selectAnims)
       
       if @timelineView
         @timelineView.off("trackRebuild", @nodegraph.showNodesAnimation)
         @timelineView.off("startSound", @nodegraph.startSound)
         @timelineView.off("stopSound", @nodegraph.stopSound)
+        @timelineView.remove()
       
       @timelineView = new ThreeNodes.AppTimeline()
       
       if @ui
         @ui.on("render", @timelineView.update)
+        @ui.on("selectAnims", @timelineView.selectAnims)
       
       @timelineView.on("trackRebuild", @nodegraph.showNodesAnimation)
       @timelineView.on("startSound", @nodegraph.startSound)
       @timelineView.on("stopSound", @nodegraph.stopSound)
       ThreeNodes.events.trigger "OnUIResize"
     
-    clear_workspace: () ->
-      ThreeNodes.events.trigger("ClearWorkspace")
+    clearWorkspace: () ->
+      @reset_global_variables()
+      @initTimeline()
     
     reset_global_variables: () ->
       ThreeNodes.uid = 0
       @nodegraph.node_connections = []
-      
-      ThreeNodes.webgl_materials_node = []
+      ThreeNodes.selected_nodes = $([])

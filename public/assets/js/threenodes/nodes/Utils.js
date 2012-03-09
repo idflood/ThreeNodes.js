@@ -269,6 +269,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.loadAudio = __bind(this.loadAudio, this);
       this.createSound = __bind(this.createSound, this);
       this.finishLoad = __bind(this.finishLoad, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       this.is_chrome = __bind(this.is_chrome, this);
       Mp3Input.__super__.constructor.apply(this, arguments);
@@ -304,6 +305,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         $(".options", this.main_view).prepend('<p class="warning">This node currently require chrome.</p>');
       }
       return this.url_cache = this.rack.getField("url").getValue();
+    };
+
+    Mp3Input.prototype.remove = function() {
+      this.stopSound();
+      delete this.audioContext;
+      delete this.url_cache;
+      return Mp3Input.__super__.remove.apply(this, arguments);
     };
 
     Mp3Input.prototype.onRegister = function() {
@@ -572,6 +580,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function Font() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Font.__super__.constructor.apply(this, arguments);
     }
@@ -647,6 +656,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       }
       this.fontcache = -1;
       return this.weightcache = -1;
+    };
+
+    Font.prototype.remove = function() {
+      delete this.reverseFontMap;
+      delete this.reverseWeightMap;
+      delete this.ob;
+      return Font.__super__.remove.apply(this, arguments);
     };
 
     Font.prototype.compute = function() {

@@ -29,6 +29,24 @@ define [
       @vars_shadow_options = ["castShadow", "receiveShadow"]
       @shadow_cache = @create_cache_object(@vars_shadow_options)
     
+    deleteObjectAttributes: (ob) =>
+      if ob
+        delete ob.up
+        delete ob.position
+        delete ob.rotation
+        delete ob.scale
+        delete ob.matrix
+        delete ob.matrixWorld
+        delete ob.matrixRotationWorld
+        delete ob.quaternion
+        delete ob._vector
+    
+    remove: () =>
+      super
+      @deleteObjectAttributes(@ob)
+      delete @ob
+      delete @shadow_cache
+    
     get_children_array: =>
       childs = @rack.getField("children").get("value")
       if childs && $.type(childs) != "array"
@@ -55,7 +73,7 @@ define [
         if child instanceof THREE.Light == true
           if ind == -1
             @ob.add(child)
-            ThreeNodes.rebuild_all_shaders()
+            ThreeNodes.events.trigger("RebuildAllShaders")
         else
           if ind == -1
             #console.log "scene add child"
@@ -76,6 +94,16 @@ define [
       @v_fog = @rack.addField("fog", {type: 'Any', val: null})
       current_scene = @ob
     
+    remove: () =>
+      if @ob
+        delete @ob.fog
+        delete @ob.__objects
+        delete @ob.__lights
+        delete @ob.__objectsAdded
+        delete @ob.__objectsRemoved
+      delete @vfog
+      super
+      
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
       @apply_children()
@@ -86,7 +114,12 @@ define [
       super
       @material_cache = false
       @geometry_cache = false
-      
+    
+    remove: () =>
+      delete @material_cache
+      delete @geometry_cache
+      super
+    
     rebuild_geometry: =>
       field = @rack.getField('geometry')
       if field.connections.length > 0
@@ -128,7 +161,16 @@ define [
       @ob = [new THREE.Mesh(@rack.getField('geometry').getValue(), @rack.getField('material').getValue())]
       @last_slice_count = 1
       @compute()
-      
+    
+    remove: () =>
+      if @ob
+        for item in @ob
+          @deleteObjectAttributes(item)
+          delete item.geometry
+          delete item.material
+          
+      super
+    
     compute: =>
       needs_rebuild = false
       numItems = @rack.getMaxInputSliceCount()
@@ -156,7 +198,7 @@ define [
         @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
-        ThreeNodes.rebuild_all_shaders()
+        ThreeNodes.events.trigger("RebuildAllShaders")
       
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       @geometry_cache = @get_geometry_cache()
@@ -210,7 +252,7 @@ define [
         @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
-        ThreeNodes.rebuild_all_shaders()
+        ThreeNodes.events.trigger("RebuildAllShaders")
       
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       @geometry_cache = @get_geometry_cache()
@@ -235,7 +277,24 @@ define [
           "useTarget": false
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    deleteObjectAttributes: (ob) =>
+      if ob
+        delete ob.up
+        delete ob.position
+        delete ob.rotation
+        delete ob.scale
+        delete ob.matrix
+        delete ob.matrixWorld
+        delete ob.matrixRotationWorld
+        delete ob.quaternion
+        delete ob._vector
+   
+    remove: () =>
+      @deleteObjectAttributes(@ob)
+      delete @ob
+      super
+    
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['target'])
       @ob.lookAt(@rack.getField("target").getValue())
@@ -254,7 +313,12 @@ define [
           "image": {type: "String", val: false}
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    remove: () =>
+      delete @ob
+      delete @cached
+      super
+    
     compute: =>
       current = @rack.getField("image").getValue()
       if current && current != ""
@@ -281,7 +345,11 @@ define [
           "far": 1000
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       if @ob == false
         @ob = new THREE.Fog(0xffffff, 1, 1000)
@@ -301,7 +369,11 @@ define [
           "density": 0.00025
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       if @ob == false
         @ob = new THREE.FogExp2(0xffffff, 0.00025)
@@ -345,10 +417,32 @@ define [
       self = this
       
       @add_mouse_handler()
-      @webgl_container.click (e) =>
+      @webgl_container.bind "click", (e) =>
+        console.log "webgl.click"
         if @context.player_mode == false
           @create_popup_view()
       return this
+    
+    remove: () =>
+      if @win && @win != false
+        @win.close()
+      
+      if ThreeNodes.Webgl.current_camera == @rack.getField("camera").getValue()
+        ThreeNodes.Webgl.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
+        ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
+      if ThreeNodes.Webgl.current_scene == @rack.getField("scene").getValue()
+        ThreeNodes.Webgl.current_scene = new THREE.Scene()
+        ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
+      
+      @webgl_container.unbind()
+      $(@ob.domElement).unbind()
+      @webgl_container.remove()
+      delete @ob
+      delete @width
+      delete @height
+      delete @webgl_container
+      delete @win
+      super
     
     add_mouse_handler: =>
       $(@ob.domElement).unbind "mousemove"
@@ -457,7 +551,4 @@ define [
       ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer
       ThreeNodes.Webgl.composer.render(0.05)
     
-    remove: () =>
-      if @win && @win != false
-        @win.close()
-      super
+  return true

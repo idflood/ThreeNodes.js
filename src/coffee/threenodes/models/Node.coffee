@@ -79,7 +79,7 @@ define [
       @apptimeline = @context.timelineView.timeline
       @rack = new ThreeNodes.NodeFieldsCollection [],
         node: this
-        
+      @
       
     post_init: () =>
       # init fields
@@ -102,10 +102,21 @@ define [
     
     typename: => String(@constructor.name)
     
+    remove: () =>
+      if @anim
+        @anim.destroy()
+      @rack.destroy()
+      delete @rack
+      delete @view
+      delete @main_view
+      delete @apptimeline
+      delete @context
+      delete @anim
+      @destroy()
+    
     createConnection: (field1, field2) => @trigger("createConnection", field1, field2)
     
     loadAnimation: () =>
-      @anim = @createAnimContainer()
       for propLabel, anims of @inJSON.anim
         track = @anim.getPropertyTrack(propLabel)
         for propKey in anims
@@ -155,15 +166,6 @@ define [
     
     has_out_connection: () =>
       @out_connections.length != 0
-    
-    remove: () =>
-      ng = @context.injector.get("NodeGraph")
-      ng.removeNode(this)
-      @rack.removeAllConnections()
-      @main_view.remove()
-      
-      # todo: maybe remove fields
-      # todo: remove sidebar attributes if this is the selected node
     
     getUpstreamNodes: () => @rack.getUpstreamNodes()
     getDownstreamNodes: () => @rack.getDownstreamNodes()
@@ -295,6 +297,11 @@ define [
       @v_out = @rack.addField("out", {type: "Float", val: 0}, "outputs")
       
     process_val: (num, i) => num
+    
+    remove: () =>
+      delete @v_in
+      delete @v_out
+      super
     
     compute: =>
       res = []

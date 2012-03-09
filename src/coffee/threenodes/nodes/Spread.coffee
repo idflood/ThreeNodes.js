@@ -29,7 +29,11 @@ define [
           "out" : 0
       
       @v_out = @rack.getField("out", true)
-  
+    
+    remove: () =>
+      delete @v_out
+      super
+    
     compute: =>
       needs_rebuild = false
       if @seed != @rack.getField("seed").get("value") || @count != parseInt(@rack.getField("count").getValue(0)) || @width != @rack.getField("width").get("value") || @offset != @rack.getField("offset").get("value")
@@ -66,7 +70,11 @@ define [
           "out" : 0
       
       @v_out = @rack.getField("out", true)
-  
+    
+    remove: () =>
+      delete @v_out
+      super
+    
     compute: =>
       needs_rebuild = false
       @width = @rack.getField("width").getValue(0)

@@ -15,6 +15,19 @@ define [
       @node_fields_by_name.inputs = {}
       @node_fields_by_name.outputs = {}
     
+    destroy: () =>
+      @removeAllConnections()
+      @each (field) ->
+        field.remove()
+      @node = false
+      @node_fields = {}
+      @node_fields.inputs = {}
+      @node_fields.outputs = {}
+      @node_fields_by_name = {}
+      @node_fields_by_name.inputs = {}
+      @node_fields_by_name.outputs = {}
+      
+    
     load: (xml, json) =>
       if xml
         @fromXML(xml)

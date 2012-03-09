@@ -26,6 +26,11 @@ define [
       if @get("fid") == -1
         @set("fid", ThreeNodes.Utils.get_uid())
     
+    remove: () =>
+      delete @on_value_update_hooks
+      delete @node
+      delete @connections
+    
     setFID: (fid) =>
       @set("fid", fid)
     
@@ -248,7 +253,6 @@ define [
       val
     
     on_value_changed : (val) =>
-      #@set("value", @compute_value(val))
       return val
     
   class ThreeNodes.fields.types.Array extends ThreeNodes.NodeField

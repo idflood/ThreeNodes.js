@@ -33,6 +33,9 @@ define [
       @to_field.remove_connections()
       @to_field.node.dirty = true
       @to_field.changed = true
+      delete @from_field
+      delete @to_field
+      delete @node
       
       @trigger "connection:removed", this
       @destroy()

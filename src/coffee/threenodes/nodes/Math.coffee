@@ -61,7 +61,11 @@ define [
       switch $.type(a)
         when "number" then new THREE.Vector3(@process_val(a, b.x, i), @process_val(a, b.y, i), @process_val(a, b.z, i))
         when "object" then new THREE.Vector3(@process_val(a.x, b, i), @process_val(a.y, b, i), @process_val(a.z, b, i))
-      
+    
+    remove: () =>
+      delete @v_factor
+      super
+    
     compute: =>
       res = []
       numItems = @rack.getMaxInputSliceCount()

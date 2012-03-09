@@ -9,6 +9,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function RandomSpread() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       RandomSpread.__super__.constructor.apply(this, arguments);
     }
@@ -40,6 +41,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.v_out = this.rack.getField("out", true);
     };
 
+    RandomSpread.prototype.remove = function() {
+      delete this.v_out;
+      return RandomSpread.__super__.remove.apply(this, arguments);
+    };
+
     RandomSpread.prototype.compute = function() {
       var i, needs_rebuild, _ref;
       needs_rebuild = false;
@@ -66,6 +72,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function LinearSpread() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       LinearSpread.__super__.constructor.apply(this, arguments);
     }
@@ -94,6 +101,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         }
       });
       return this.v_out = this.rack.getField("out", true);
+    };
+
+    LinearSpread.prototype.remove = function() {
+      delete this.v_out;
+      return LinearSpread.__super__.remove.apply(this, arguments);
     };
 
     LinearSpread.prototype.compute = function() {

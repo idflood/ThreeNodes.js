@@ -10,6 +10,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function PlaneGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       PlaneGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -39,6 +40,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cache_array();
     };
 
+    PlaneGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return PlaneGeometry.__super__.remove.apply(this, arguments);
+    };
+
     PlaneGeometry.prototype.get_cache_array = function() {
       return [this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue()];
     };
@@ -63,6 +70,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function CubeGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       CubeGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -95,6 +103,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cache_array();
     };
 
+    CubeGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return CubeGeometry.__super__.remove.apply(this, arguments);
+    };
+
     CubeGeometry.prototype.get_cache_array = function() {
       return [this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("depth").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue(), this.rack.getField("segments_depth").getValue(), this.rack.getField("flip").getValue()];
     };
@@ -119,6 +133,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function SphereGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SphereGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -147,6 +162,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cache_array();
     };
 
+    SphereGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return SphereGeometry.__super__.remove.apply(this, arguments);
+    };
+
     SphereGeometry.prototype.get_cache_array = function() {
       return [this.rack.getField("radius").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue()];
     };
@@ -172,6 +193,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function CylinderGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       CylinderGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -203,6 +225,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cache_array();
     };
 
+    CylinderGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return CylinderGeometry.__super__.remove.apply(this, arguments);
+    };
+
     CylinderGeometry.prototype.get_cache_array = function() {
       return [this.rack.getField("radiusTop").getValue(), this.rack.getField("radiusBottom").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segmentsRadius").getValue(), this.rack.getField("segmentsHeight").getValue(), this.rack.getField("openEnded").getValue()];
     };
@@ -228,6 +256,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function TorusGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       TorusGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -258,6 +287,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cache_array();
     };
 
+    TorusGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return TorusGeometry.__super__.remove.apply(this, arguments);
+    };
+
     TorusGeometry.prototype.get_cache_array = function() {
       return [this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("arc").getValue()];
     };
@@ -283,6 +318,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function TorusKnotGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       TorusKnotGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -315,6 +351,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cache_array();
     };
 
+    TorusKnotGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return TorusKnotGeometry.__super__.remove.apply(this, arguments);
+    };
+
     TorusKnotGeometry.prototype.get_cache_array = function() {
       return [this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("p").getValue(), this.rack.getField("q").getValue(), this.rack.getField("heightScale").getValue()];
     };
@@ -340,6 +382,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function OctahedronGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       OctahedronGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -367,6 +410,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cache_array();
     };
 
+    OctahedronGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return OctahedronGeometry.__super__.remove.apply(this, arguments);
+    };
+
     OctahedronGeometry.prototype.get_cache_array = function() {
       return [this.rack.getField("radius").getValue(), this.rack.getField("detail").getValue()];
     };
@@ -392,6 +441,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function TextGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       TextGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -425,6 +475,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         }
       });
       return this.cached = this.get_cache_array();
+    };
+
+    TextGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return TextGeometry.__super__.remove.apply(this, arguments);
     };
 
     TextGeometry.prototype.get_cache_array = function() {

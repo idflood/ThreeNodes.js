@@ -13,7 +13,8 @@ define [
       @auto_evaluate = true
       @material_class = false
       @last_slice_count = -1
-      ThreeNodes.webgl_materials_node[ThreeNodes.webgl_materials_node.length] = this
+      @is_material = true
+      ThreeNodes.events.on "RebuildAllShaders", @rebuildShader
       @rack.addFields
         inputs:
           "opacity": 1
@@ -32,6 +33,24 @@ define [
               "Subtractive": THREE.SubtractiveBlending
               "Multiply": THREE.MultiplyBlending
               "AdditiveAlpha": THREE.AdditiveAlphaBlending
+    
+    rebuildShader: () =>
+      if !@ob
+        return @
+      if $.type(@ob) == "array"
+        for sub_material in @ob
+          console.log sub_material
+          sub_material.program = false
+      else
+        @ob.program = false
+      @
+    
+    remove: () =>
+      ThreeNodes.events.off "RebuildAllShaders", @rebuildShader
+      delete @ob
+      delete @material_cache
+      delete @material_class
+      super
     
     compute: =>
       needs_rebuild = false

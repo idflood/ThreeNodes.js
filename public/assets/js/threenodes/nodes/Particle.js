@@ -10,6 +10,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function ParticleSystem() {
       this.compute = __bind(this.compute, this);
       this.rebuild_geometry = __bind(this.rebuild_geometry, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       ParticleSystem.__super__.constructor.apply(this, arguments);
     }
@@ -40,6 +41,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.compute();
     };
 
+    ParticleSystem.prototype.remove = function() {
+      ParticleSystem.__super__.remove.apply(this, arguments);
+      delete this.geometry_cache;
+      return delete this.material_cache;
+    };
+
     ParticleSystem.prototype.rebuild_geometry = function() {
       var field, geom;
       field = this.rack.getField('geometry');
@@ -64,7 +71,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         this.material_cache = this.rack.getField('material').getValue().id;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
-      if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
+      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
       return this.rack.setField("out", this.ob);
     };
 
@@ -168,7 +175,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     SparksEmitter.prototype.setTargetParticle = function(p) {
-      if (this.pool) return this.pool.pool.get();
+      if (this.pool && this.pool.pool) return this.pool.pool.get();
     };
 
     SparksEmitter.prototype.compute = function() {
@@ -201,8 +208,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       if (this.ob) {
         this.ob.removeCallback("created");
         this.ob.removeCallback("dead");
-        return this.ob.stop();
+        this.ob.stop();
       }
+      delete this.ob;
+      delete this.target_initializer;
+      delete this.geom;
+      return delete this.pool;
     };
 
     return SparksEmitter;
@@ -214,6 +225,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksAge() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAge.__super__.constructor.apply(this, arguments);
     }
@@ -242,6 +254,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.Age(this.rack.getField("easing").getValue());
     };
 
+    SparksAge.prototype.remove = function() {
+      delete this.ob;
+      return SparksAge.__super__.remove.apply(this, arguments);
+    };
+
     SparksAge.prototype.compute = function() {
       this.ob._easing = this.rack.getField("easing").get("value");
       return this.rack.setField("action", this.ob);
@@ -256,6 +273,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksMove() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksMove.__super__.constructor.apply(this, arguments);
     }
@@ -278,6 +296,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.Move();
     };
 
+    SparksMove.prototype.remove = function() {
+      delete this.ob;
+      return SparksMove.__super__.remove.apply(this, arguments);
+    };
+
     SparksMove.prototype.compute = function() {
       return this.rack.setField("action", this.ob);
     };
@@ -291,6 +314,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksAccelerate() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerate.__super__.constructor.apply(this, arguments);
     }
@@ -319,6 +343,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.Accelerate(this.rack.getField("vector").getValue());
     };
 
+    SparksAccelerate.prototype.remove = function() {
+      delete this.ob;
+      return SparksAccelerate.__super__.remove.apply(this, arguments);
+    };
+
     SparksAccelerate.prototype.compute = function() {
       this.ob.acceleration = this.rack.getField("vector").getValue();
       return this.rack.setField("action", this.ob);
@@ -333,6 +362,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksAccelerateFactor() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerateFactor.__super__.constructor.apply(this, arguments);
     }
@@ -358,6 +388,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.AccelerateFactor(this.rack.getField("factor").getValue());
     };
 
+    SparksAccelerateFactor.prototype.remove = function() {
+      delete this.ob;
+      return SparksAccelerateFactor.__super__.remove.apply(this, arguments);
+    };
+
     SparksAccelerateFactor.prototype.compute = function() {
       this.ob.factor = this.rack.getField("factor").getValue();
       return this.rack.setField("action", this.ob);
@@ -372,6 +407,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksAccelerateVelocity() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksAccelerateVelocity.__super__.constructor.apply(this, arguments);
     }
@@ -397,6 +433,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.AccelerateVelocity(this.rack.getField("factor").getValue());
     };
 
+    SparksAccelerateVelocity.prototype.remove = function() {
+      delete this.ob;
+      return SparksAccelerateVelocity.__super__.remove.apply(this, arguments);
+    };
+
     SparksAccelerateVelocity.prototype.compute = function() {
       this.ob.factor = this.rack.getField("factor").getValue();
       return this.rack.setField("action", this.ob);
@@ -411,6 +452,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksRandomDrift() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksRandomDrift.__super__.constructor.apply(this, arguments);
     }
@@ -439,6 +481,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.RandomDrift(this.rack.getField("vector").getValue());
     };
 
+    SparksRandomDrift.prototype.remove = function() {
+      delete this.ob;
+      return SparksRandomDrift.__super__.remove.apply(this, arguments);
+    };
+
     SparksRandomDrift.prototype.compute = function() {
       this.ob.drift = this.rack.getField("vector").getValue();
       return this.rack.setField("action", this.ob);
@@ -453,6 +500,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksLifetime() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksLifetime.__super__.constructor.apply(this, arguments);
     }
@@ -479,6 +527,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.Lifetime(this.rack.getField("min").getValue(), this.rack.getField("max").getValue());
     };
 
+    SparksLifetime.prototype.remove = function() {
+      delete this.ob;
+      return SparksLifetime.__super__.remove.apply(this, arguments);
+    };
+
     SparksLifetime.prototype.compute = function() {
       this.ob._min = this.rack.getField("min").getValue();
       this.ob._min = this.rack.getField("max").getValue();
@@ -494,6 +547,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksPosition() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksPosition.__super__.constructor.apply(this, arguments);
     }
@@ -522,6 +576,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.Position(this.rack.getField("zone").getValue());
     };
 
+    SparksPosition.prototype.remove = function() {
+      delete this.ob;
+      return SparksPosition.__super__.remove.apply(this, arguments);
+    };
+
     SparksPosition.prototype.compute = function() {
       this.ob.zone = this.rack.getField("zone").getValue();
       return this.rack.setField("initializer", this.ob);
@@ -536,6 +595,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksPointZone() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksPointZone.__super__.constructor.apply(this, arguments);
     }
@@ -564,6 +624,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.PointZone(this.rack.getField("pos").getValue());
     };
 
+    SparksPointZone.prototype.remove = function() {
+      delete this.ob;
+      return SparksPointZone.__super__.remove.apply(this, arguments);
+    };
+
     SparksPointZone.prototype.compute = function() {
       this.ob.pos = this.rack.getField("pos").getValue();
       return this.rack.setField("zone", this.ob);
@@ -578,6 +643,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksLineZone() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksLineZone.__super__.constructor.apply(this, arguments);
     }
@@ -610,6 +676,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.LineZone(this.rack.getField("start").getValue(), this.rack.getField("end").getValue());
     };
 
+    SparksLineZone.prototype.remove = function() {
+      delete this.ob;
+      return SparksLineZone.__super__.remove.apply(this, arguments);
+    };
+
     SparksLineZone.prototype.compute = function() {
       if (this.ob.start !== this.rack.get("start").getValue() ||  this.ob.end !== this.rack.get("end").getValue()) {
         this.ob.start = this.rack.getField("start").getValue();
@@ -628,6 +699,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksCubeZone() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksCubeZone.__super__.constructor.apply(this, arguments);
     }
@@ -659,6 +731,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.CubeZone(this.rack.getField("position").getValue(), this.rack.getField("x").getValue(), this.rack.getField("y").getValue(), this.rack.getField("z").getValue());
     };
 
+    SparksCubeZone.prototype.remove = function() {
+      delete this.ob;
+      return SparksCubeZone.__super__.remove.apply(this, arguments);
+    };
+
     SparksCubeZone.prototype.compute = function() {
       this.ob.position = this.rack.getField("position").getValue();
       this.ob.x = this.rack.getField("x").getValue();
@@ -676,6 +753,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SparksSteadyCounter() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SparksSteadyCounter.__super__.constructor.apply(this, arguments);
     }
@@ -701,6 +779,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.ob = new SPARKS.SteadyCounter(this.rack.getField("rate").getValue());
     };
 
+    SparksSteadyCounter.prototype.remove = function() {
+      delete this.ob;
+      return SparksSteadyCounter.__super__.remove.apply(this, arguments);
+    };
+
     SparksSteadyCounter.prototype.compute = function() {
       this.ob.pos = this.rack.getField("rate").getValue();
       return this.rack.setField("counter", this.ob);
@@ -719,6 +802,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.on_particle_updated = __bind(this.on_particle_updated, this);
       this.on_particle_created = __bind(this.on_particle_created, this);
       this.init_pool = __bind(this.init_pool, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       ParticlePool.__super__.constructor.apply(this, arguments);
     }
@@ -742,6 +826,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
+    };
+
+    ParticlePool.prototype.remove = function() {
+      delete this.pool;
+      delete this.geom;
+      return ParticlePool.__super__.remove.apply(this, arguments);
     };
 
     ParticlePool.prototype.init_pool = function(geom) {
@@ -808,6 +898,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.move_particles = __bind(this.move_particles, this);
       this.limit_position = __bind(this.limit_position, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       RandomCloudGeometry.__super__.constructor.apply(this, arguments);
     }
@@ -842,6 +933,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
       this.cache = this.get_cache_array();
       return this.generate();
+    };
+
+    RandomCloudGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cache;
+      return RandomCloudGeometry.__super__.remove.apply(this, arguments);
     };
 
     RandomCloudGeometry.prototype.get_cache_array = function() {

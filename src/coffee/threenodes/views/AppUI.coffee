@@ -4,7 +4,6 @@ define [
   'Backbone',
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
-  "order!threenodes/utils/WebglBase",
   'order!threenodes/views/AppSidebar',
   'order!threenodes/views/AppMenuBar',
   "order!libs/three-extras/js/RequestAnimationFrame",
@@ -66,6 +65,21 @@ define [
       @init_display_mode_switch()
       @animate()
       @show_application()
+      @makeSelectable()
+    
+    makeSelectable: () ->
+      #self = this
+      $("#container").selectable
+        filter: ".node"
+        stop: (event, ui) =>
+          $selected = $(".node.ui-selected")
+          nodes = []
+          $selected.each () ->
+            ob = $(this).data("object")
+            ob.anim.objectTrack.name = $(".head span", ob.main_view).html()
+            nodes.push(ob.anim)
+          @trigger("selectAnims", nodes)
+      return @
     
     setDisplayMode: (is_player = false) =>
       injector = @context.injector

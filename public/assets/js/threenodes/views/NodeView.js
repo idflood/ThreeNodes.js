@@ -8,6 +8,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
     __extends(NodeView, _super);
 
     function NodeView() {
+      this.remove = __bind(this.remove, this);
       this.render = __bind(this.render, this);
       this.postInit = __bind(this.postInit, this);
       NodeView.__super__.constructor.apply(this, arguments);
@@ -16,11 +17,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
     NodeView.template = _view_node_template;
 
     NodeView.prototype.initialize = function() {
-      this.model.main_view = $(this.el);
+      var _this = this;
+      this.model.main_view = this.$el;
       this.make_draggable();
       this.init_el_click();
       this.init_title_click();
-      this.make_selectable();
       this.rack_view = new ThreeNodes.NodeFieldRackView({
         node: this.model,
         collection: this.model.rack,
@@ -28,6 +29,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
       });
       this.model.bind('change', this.render);
       this.model.bind('postInit', this.postInit);
+      this.model.bind('remove', function() {
+        return _this.remove();
+      });
       this.render();
       this.model.post_init();
       return this;
@@ -72,6 +76,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
       var pos;
       pos = $(this.el).position();
       return this.model.setPosition(pos.left, pos.top);
+    };
+
+    NodeView.prototype.remove = function() {
+      $(this.el).draggable("destroy");
+      $(this.el).unbind();
+      this.undelegateEvents();
+      this.rack_view.remove();
+      this.rack_view = null;
+      return NodeView.__super__.remove.apply(this, arguments);
     };
 
     NodeView.prototype.init_el_click = function() {
@@ -166,28 +179,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
           });
           self.compute_node_position();
           return self.render_connections();
-        }
-      });
-      return this;
-    };
-
-    NodeView.prototype.make_selectable = function() {
-      var self,
-        _this = this;
-      self = this;
-      $("#container").selectable({
-        filter: ".node",
-        stop: function(event, ui) {
-          var $selected, nodes;
-          $selected = $(".node.ui-selected");
-          nodes = [];
-          $selected.each(function() {
-            var ob;
-            ob = $(this).data("object");
-            ob.anim.objectTrack.name = $(".head span", ob.main_view).html();
-            return nodes.push(ob.anim);
-          });
-          return self.model.apptimeline.selectAnims(nodes);
         }
       });
       return this;

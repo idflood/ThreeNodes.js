@@ -22,7 +22,12 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @cached = @get_cached_array ['kernelSize', 'sigma', 'resolution']
-        
+    
+    remove: () =>
+      delete @ob
+      delete @cached
+      super
+    
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
       if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
@@ -51,7 +56,12 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @cached = @get_cached_array ['center', 'angle', 'scale']
-        
+    
+    remove: () =>
+      delete @ob
+      delete @cached
+      super
+    
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
       if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
@@ -80,7 +90,12 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @cached = @get_cached_array ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
-        
+    
+    remove: () =>
+      delete @ob
+      delete @cached
+      super
+    
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
       if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
@@ -109,7 +124,11 @@ define [
           "darkness": 1.0
         outputs:
           "out": {type: "Any", val: @ob}
-      
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.uniforms[ "offset" ].value = @rack.getField("offset").getValue()
       @ob.uniforms[ "darkness" ].value = @rack.getField("darkness").getValue()
@@ -128,7 +147,11 @@ define [
           "delta": 1.0 / 512.0
         outputs:
           "out": {type: "Any", val: @ob}
-      
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.uniforms[ "h" ].value = @rack.getField("delta").getValue()
       @rack.setField("out", @ob)
@@ -146,7 +169,11 @@ define [
           "delta": 1.0 / 512.0
         outputs:
           "out": {type: "Any", val: @ob}
-      
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.uniforms[ "v" ].value = @rack.getField("delta").getValue()
       @rack.setField("out", @ob)
@@ -164,7 +191,11 @@ define [
           "opacity": 0.95
         outputs:
           "out": {type: "Any", val: @ob}
-      
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.uniforms[ "opacity" ].value = @rack.getField("opacity").getValue()
       @rack.setField("out", @ob)

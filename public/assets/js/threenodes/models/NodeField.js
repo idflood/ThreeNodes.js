@@ -32,6 +32,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.getValue = __bind(this.getValue, this);
       this.setValue = __bind(this.setValue, this);
       this.setFID = __bind(this.setFID, this);
+      this.remove = __bind(this.remove, this);
       this.initialize = __bind(this.initialize, this);
       this.sync = __bind(this.sync, this);
       NodeField.__super__.constructor.apply(this, arguments);
@@ -59,6 +60,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       if (this.get("fid") === -1) {
         return this.set("fid", ThreeNodes.Utils.get_uid());
       }
+    };
+
+    NodeField.prototype.remove = function() {
+      delete this.on_value_update_hooks;
+      delete this.node;
+      return delete this.connections;
     };
 
     NodeField.prototype.setFID = function(fid) {

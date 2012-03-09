@@ -9,6 +9,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function NodeMaterialBase() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.rebuildShader = __bind(this.rebuildShader, this);
       this.set_fields = __bind(this.set_fields, this);
       NodeMaterialBase.__super__.constructor.apply(this, arguments);
     }
@@ -19,7 +21,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.auto_evaluate = true;
       this.material_class = false;
       this.last_slice_count = -1;
-      ThreeNodes.webgl_materials_node[ThreeNodes.webgl_materials_node.length] = this;
+      this.is_material = true;
+      ThreeNodes.events.on("RebuildAllShaders", this.rebuildShader);
       return this.rack.addFields({
         inputs: {
           "opacity": 1,
@@ -42,6 +45,30 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
+    };
+
+    NodeMaterialBase.prototype.rebuildShader = function() {
+      var sub_material, _i, _len, _ref;
+      if (!this.ob) return this;
+      if ($.type(this.ob) === "array") {
+        _ref = this.ob;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          sub_material = _ref[_i];
+          console.log(sub_material);
+          sub_material.program = false;
+        }
+      } else {
+        this.ob.program = false;
+      }
+      return this;
+    };
+
+    NodeMaterialBase.prototype.remove = function() {
+      ThreeNodes.events.off("RebuildAllShaders", this.rebuildShader);
+      delete this.ob;
+      delete this.material_cache;
+      delete this.material_class;
+      return NodeMaterialBase.__super__.remove.apply(this, arguments);
     };
 
     NodeMaterialBase.prototype.compute = function() {

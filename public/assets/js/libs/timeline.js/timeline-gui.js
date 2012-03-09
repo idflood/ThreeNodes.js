@@ -111,31 +111,55 @@ Timeline.prototype.initGUI = function (parameters) {
   this.buildInputDialog();
 
   var self = this;
-  this.canvas.addEventListener('click', function (event) {
-    self.onMouseClick(event);
-  }, false);
-  this.canvas.addEventListener('mousedown', function (event) {
-    self.onMouseDown(event);
-  }, false);
-  document.body.addEventListener('mousemove', function (event) {
-    self.onDocumentMouseMove(event);
-  }, false);
-  this.canvas.addEventListener('mousemove', function (event) {
-    self.onCanvasMouseMove(event);
-  }, false);
-  document.body.addEventListener('mouseup', function (event) {
-    self.onMouseUp(event);
-  }, false);
-  this.canvas.addEventListener('dblclick', function (event) {
-    self.onMouseDoubleClick(event);
-  }, false);
+  this.onMouseClick = self.onMouseClick.bind(this);
+  this.onMouseDown = self.onMouseDown.bind(this);
+  this.onDocumentMouseMove = self.onDocumentMouseMove.bind(this);
+  this.onCanvasMouseMove = self.onCanvasMouseMove.bind(this);
+  this.onMouseUp = self.onMouseUp.bind(this);
+  this.onMouseDoubleClick = self.onMouseDoubleClick.bind(this);
+  this.onMouseWheel = self.onMouseWheel.bind(this);
+  
+  this.canvas.addEventListener('click', self.onMouseClick, false);
+  this.canvas.addEventListener('mousedown', self.onMouseDown, false);
+  document.body.addEventListener('mousemove', self.onDocumentMouseMove, false);
+  this.canvas.addEventListener('mousemove', self.onCanvasMouseMove, false);
+  document.body.addEventListener('mouseup', self.onMouseUp, false);
+  this.canvas.addEventListener('dblclick', self.onMouseDoubleClick, false);
 
   // firefox use special DOMMouseScroll event
   var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-  this.canvas.addEventListener(mousewheel, function (event) {
-    self.onMouseWheel(event);
-  }, false);
+  this.canvas.addEventListener(mousewheel, self.onMouseWheel, false);
 }
+
+Timeline.prototype.removeGUI = function () {
+  var self = this;
+  // remove event listeners
+  if (this.canvas) {
+    this.canvas.removeEventListener('click', self.onMouseClick);
+    this.canvas.removeEventListener('mousedown', self.onMouseDown);
+    this.canvas.removeEventListener('mousemove', self.onCanvasMouseMove);
+    this.canvas.removeEventListener('dblclick', self.onMouseDoubleClick);
+    var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+    this.canvas.removeEventListener(mousewheel, self.onMouseWheel);
+  }
+  document.body.removeEventListener('mousemove', self.onDocumentMouseMove);
+  document.body.removeEventListener('mouseup', self.onMouseUp);
+  if (this.container && this.canvas) {
+    this.container.removeChild(this.canvas);
+  }
+  if (this.splitter) {
+    document.body.removeChild(this.splitter);
+  }
+  delete this.onGuiSave;
+  //document.body.removeChild(this.container);
+  delete this.selectedKeys;
+  delete this.selectedAnims;
+  delete this.displayedTracks;
+  delete this.container;
+  delete this.canvas;
+  delete this.splitter;
+  delete this.c;
+};
 
 Timeline.prototype.onMouseDown = function (event) {
   if (event.shiftKey == false && event.metaKey == false) {

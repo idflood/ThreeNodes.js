@@ -23,7 +23,11 @@ define [
           "distance": 0
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    remove: =>
+      delete @ob
+      super
+    
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
@@ -47,10 +51,14 @@ define [
           "castShadow": false
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    remove: =>
+      delete @ob
+      super
+    
     compute: =>
       if @rack.getField("castShadow").getValue() != @ob.castShadow
-        ThreeNodes.rebuild_all_shaders()
+        ThreeNodes.events.trigger("RebuildAllShaders")
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
   
@@ -71,7 +79,11 @@ define [
           "distance": 0
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    remove: =>
+      delete @ob
+      super
+    
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
@@ -91,7 +103,11 @@ define [
           "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
         outputs:
           "out": {type: "Any", val: @ob}
-  
+    
+    remove: =>
+      delete @ob
+      super
+    
     compute: =>
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)

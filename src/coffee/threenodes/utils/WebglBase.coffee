@@ -39,9 +39,6 @@ define [
       ThreeNodes.Webgl.effectScreen = @effectScreen
       
       ThreeNodes.events.on "ExportImage", @exportImage
-      ThreeNodes.events.on "RebuildAllShaders", @rebuild_all_shaders
-      
-      ThreeNodes.rebuild_all_shaders = @rebuild_all_shaders
     
     exportImage: (fname) =>
       canvas = @current_renderer.domElement
@@ -49,13 +46,3 @@ define [
         saveAs(blob, fname)
       canvas.toBlob(on_write, "image/png")
     
-    rebuild_all_shaders: () =>
-      console.log "rebuilding shaders"
-      for n in ThreeNodes.webgl_materials_node
-        if $.type(n.ob) == "array"
-          for sub_material in n.ob
-            console.log sub_material
-            sub_material.program = false
-        else
-          n.ob.program = false
-      return true

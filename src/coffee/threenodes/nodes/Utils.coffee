@@ -185,6 +185,12 @@ define [
         $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
       @url_cache = @rack.getField("url").getValue()
     
+    remove: () =>
+      @stopSound()
+      delete @audioContext
+      delete @url_cache
+      super
+    
     onRegister: () ->
       super
       if @rack.getField("url").getValue() != ""
@@ -309,6 +315,7 @@ define [
           "low" : 0
           "medium" : 0
           "high" : 0
+    
     compute: () =>
       #console.log flash_sound_value
       @rack.setField("low", ThreeNodes.flash_sound_value.kick)
@@ -424,6 +431,12 @@ define [
       @fontcache = -1
       @weightcache = -1
     
+    remove: () =>
+      delete @reverseFontMap
+      delete @reverseWeightMap
+      delete @ob
+      super
+      
     compute: =>
       findex = parseInt(@rack.getField("font").getValue())
       windex = parseInt(@rack.getField("weight").getValue())

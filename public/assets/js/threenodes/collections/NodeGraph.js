@@ -44,6 +44,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         });
         return node.view = view;
       });
+      this.bind("remove", function(node) {
+        if (_this.nodes_by_nid[node.get("nid")]) {
+          return delete _this.nodes_by_nid[node.get("nid")];
+        }
+      });
       this.bind("createConnection", function(field1, field2) {
         return _this.connections.create({
           from_field: field1,
@@ -58,9 +63,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     NodeGraph.prototype.clearWorkspace = function() {
       this.remove_all_connections();
       this.remove_all_nodes();
-      this.context.reset_global_variables();
       $("#webgl-window canvas").remove();
-      this.trigger("resetTimeline");
       return this;
     };
 
@@ -142,13 +145,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         return $(this).data("object").remove();
       });
       return true;
-    };
-
-    NodeGraph.prototype.removeNode = function(n) {
-      this.remove(n);
-      if (this.nodes_by_nid[n.get("nid")]) {
-        return delete this.nodes_by_nid[n.get("nid")];
-      }
     };
 
     NodeGraph.prototype.removeConnection = function(c) {

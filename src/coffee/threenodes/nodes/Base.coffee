@@ -69,6 +69,10 @@ define [
           "x" : 0
           "y" : 0
     
+    remove: () =>
+      delete @vec
+      super
+    
     compute: =>
       res = []
       resx = []
@@ -133,10 +137,22 @@ define [
           self.rack.getField("r").setValue(rgb.r / 255)
           self.rack.getField("g").setValue(rgb.g / 255)
           self.rack.getField("b").setValue(rgb.b / 255)
+      
       # on output value change set preview color
       self.rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) ->
         $(".color_preview", self.main_view).css
           background: v[0].getContextStyle()
+    
+    remove: () =>
+      $(".color_preview", @main_view).each () ->
+        if $(this).data('colorpickerId')
+          cal = $('#' + $(this).data('colorpickerId'))
+          picker = cal.data('colorpicker')
+          if picker
+            delete picker.onChange
+      $(".color_preview", @main_view).unbind()
+      $(".color_preview", @main_view).remove()
+      super
     
     set_fields: =>
       super

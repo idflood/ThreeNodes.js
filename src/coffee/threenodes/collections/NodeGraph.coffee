@@ -41,11 +41,15 @@ define [
         # it would be better without this
         node.view = view
       
+      @bind "remove", (node) =>
+        if @nodes_by_nid[node.get("nid")]
+          delete @nodes_by_nid[node.get("nid")]
+      
       @bind "createConnection", (field1, field2) =>
         @connections.create
           from_field: field1
           to_field: field2
-    
+      
       ThreeNodes.events.on "RmoveSelectedNodes", @removeSelectedNodes
       ThreeNodes.events.on "CreateNode", @create_node
       ThreeNodes.events.on "ClearWorkspace", @clearWorkspace
@@ -53,11 +57,10 @@ define [
     clearWorkspace: () =>
       @remove_all_connections()
       @remove_all_nodes()
-      @context.reset_global_variables()
       $("#webgl-window canvas").remove()
       
       # create a new timeline
-      @trigger("resetTimeline")
+      #@trigger("resetTimeline")
       
       return this
     
@@ -121,11 +124,6 @@ define [
       $(".node.ui-selected").each () ->
         $(this).data("object").remove()
       return true
-    
-    removeNode: (n) ->
-      @remove(n)
-      if @nodes_by_nid[n.get("nid")]
-        delete @nodes_by_nid[n.get("nid")]
     
     removeConnection: (c) ->
       @connections.remove(c)

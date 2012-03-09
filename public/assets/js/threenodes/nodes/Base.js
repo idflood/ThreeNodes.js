@@ -113,6 +113,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
 
     function Vector2() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Vector2.__super__.constructor.apply(this, arguments);
     }
@@ -138,6 +139,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
           "y": 0
         }
       });
+    };
+
+    Vector2.prototype.remove = function() {
+      delete this.vec;
+      return Vector2.__super__.remove.apply(this, arguments);
     };
 
     Vector2.prototype.compute = function() {
@@ -222,6 +228,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
     function Color() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
+      this.remove = __bind(this.remove, this);
       this.init_preview = __bind(this.init_preview, this);
       Color.__super__.constructor.apply(this, arguments);
     }
@@ -252,6 +259,20 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
           background: v[0].getContextStyle()
         });
       };
+    };
+
+    Color.prototype.remove = function() {
+      $(".color_preview", this.main_view).each(function() {
+        var cal, picker;
+        if ($(this).data('colorpickerId')) {
+          cal = $('#' + $(this).data('colorpickerId'));
+          picker = cal.data('colorpicker');
+          if (picker) return delete picker.onChange;
+        }
+      });
+      $(".color_preview", this.main_view).unbind();
+      $(".color_preview", this.main_view).remove();
+      return Color.__super__.remove.apply(this, arguments);
     };
 
     Color.prototype.set_fields = function() {

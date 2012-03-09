@@ -25,6 +25,11 @@ define [
       @material_cache = false
       @compute()
     
+    remove: () =>
+      super
+      delete @geometry_cache
+      delete @material_cache
+    
     rebuild_geometry: =>
       field = @rack.getField('geometry')
       if field.connections.length > 0
@@ -49,7 +54,7 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
       
       if needs_rebuild == true
-        ThreeNodes.rebuild_all_shaders()
+        ThreeNodes.events.trigger("RebuildAllShaders")
       
       @rack.setField("out", @ob)
   
@@ -97,7 +102,7 @@ define [
       #@ob.start()
     
     setTargetParticle: (p) =>
-      if @pool
+      if @pool && @pool.pool
         return @pool.pool.get()
     
     compute: =>
@@ -134,6 +139,10 @@ define [
         @ob.removeCallback "created"
         @ob.removeCallback "dead"
         @ob.stop()
+      delete @ob
+      delete @target_initializer
+      delete @geom
+      delete @pool
   
   class ThreeNodes.nodes.SparksAge extends ThreeNodes.NodeBase
     @node_name = 'Age'
@@ -149,6 +158,11 @@ define [
         outputs:
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.Age(@rack.getField("easing").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob._easing = @rack.getField("easing").get("value")
       @rack.setField("action", @ob)
@@ -164,6 +178,11 @@ define [
         outputs:
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.Move()
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @rack.setField("action", @ob)
   
@@ -181,6 +200,11 @@ define [
         outputs:
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.Accelerate(@rack.getField("vector").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.acceleration = @rack.getField("vector").getValue()
       @rack.setField("action", @ob)
@@ -199,6 +223,11 @@ define [
         outputs:
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.AccelerateFactor(@rack.getField("factor").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.factor = @rack.getField("factor").getValue()
       @rack.setField("action", @ob)
@@ -217,6 +246,11 @@ define [
         outputs:
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.AccelerateVelocity(@rack.getField("factor").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.factor = @rack.getField("factor").getValue()
       @rack.setField("action", @ob)
@@ -235,6 +269,11 @@ define [
         outputs:
           "action": {type: "Any", val: @ob}
       @ob = new SPARKS.RandomDrift(@rack.getField("vector").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.drift = @rack.getField("vector").getValue()
       @rack.setField("action", @ob)
@@ -254,6 +293,11 @@ define [
         outputs:
           "initializer": {type: "Any", val: @ob}
       @ob = new SPARKS.Lifetime(@rack.getField("min").getValue(), @rack.getField("max").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob._min = @rack.getField("min").getValue()
       @ob._min = @rack.getField("max").getValue()
@@ -273,6 +317,11 @@ define [
         outputs:
           "initializer": {type: "Any", val: @ob}
       @ob = new SPARKS.Position(@rack.getField("zone").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.zone = @rack.getField("zone").getValue()
       @rack.setField("initializer", @ob)
@@ -291,6 +340,11 @@ define [
         outputs:
           "zone": {type: "Any", val: @ob}
       @ob = new SPARKS.PointZone(@rack.getField("pos").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.pos = @rack.getField("pos").getValue()
       @rack.setField("zone", @ob)
@@ -310,6 +364,11 @@ define [
         outputs:
           "zone": {type: "Any", val: @ob}
       @ob = new SPARKS.LineZone(@rack.getField("start").getValue(), @rack.getField("end").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       if this.ob.start != this.rack.get("start").getValue() || this.ob.end != this.rack.get("end").getValue()
         @ob.start = @rack.getField("start").getValue()
@@ -334,6 +393,11 @@ define [
         outputs:
           "zone": {type: "Any", val: @ob}
       @ob = new SPARKS.CubeZone(@rack.getField("position").getValue(), @rack.getField("x").getValue(), @rack.getField("y").getValue(), @rack.getField("z").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.position = @rack.getField("position").getValue()
       @ob.x = @rack.getField("x").getValue()
@@ -355,6 +419,11 @@ define [
         outputs:
           "counter": {type: "Any", val: @ob}
       @ob = new SPARKS.SteadyCounter(@rack.getField("rate").getValue())
+    
+    remove: () =>
+      delete @ob
+      super
+    
     compute: =>
       @ob.pos = @rack.getField("rate").getValue()
       @rack.setField("counter", @ob)
@@ -372,6 +441,11 @@ define [
           "maxParticles": 10000
         outputs:
           "pool": {type: "Any", val: this}
+    
+    remove: () =>
+      delete @pool
+      delete @geom
+      super
     
     init_pool: (geom) =>
       @geom = geom
@@ -435,6 +509,11 @@ define [
       @cache = @get_cache_array()
       @generate()
     
+    remove: () =>
+      delete @ob
+      delete @cache
+      super
+      
     get_cache_array: =>
       [@rack.getField("radius").getValue(), @rack.getField("nbrParticles").getValue(), @rack.getField("linearVelocity").getValue()]
     

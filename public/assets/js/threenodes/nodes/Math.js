@@ -129,6 +129,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function NodeNumberParam1() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.apply_num_to_vec3 = __bind(this.apply_num_to_vec3, this);
       this.apply_num_to_vec2 = __bind(this.apply_num_to_vec2, this);
       this.process_val = __bind(this.process_val, this);
@@ -155,6 +156,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         case "object":
           return new THREE.Vector3(this.process_val(a.x, b, i), this.process_val(a.y, b, i), this.process_val(a.z, b, i));
       }
+    };
+
+    NodeNumberParam1.prototype.remove = function() {
+      delete this.v_factor;
+      return NodeNumberParam1.__super__.remove.apply(this, arguments);
     };
 
     NodeNumberParam1.prototype.compute = function() {

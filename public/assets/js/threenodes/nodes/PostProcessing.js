@@ -10,6 +10,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function BloomPass() {
       this.compute = __bind(this.compute, this);
       this.value_has_changed = __bind(this.value_has_changed, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       BloomPass.__super__.constructor.apply(this, arguments);
     }
@@ -36,6 +37,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         }
       });
       return this.cached = this.get_cached_array(['kernelSize', 'sigma', 'resolution']);
+    };
+
+    BloomPass.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return BloomPass.__super__.remove.apply(this, arguments);
     };
 
     BloomPass.prototype.value_has_changed = function(vals) {
@@ -66,6 +73,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function DotScreenPass() {
       this.compute = __bind(this.compute, this);
       this.value_has_changed = __bind(this.value_has_changed, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       DotScreenPass.__super__.constructor.apply(this, arguments);
     }
@@ -96,6 +104,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.cached = this.get_cached_array(['center', 'angle', 'scale']);
     };
 
+    DotScreenPass.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return DotScreenPass.__super__.remove.apply(this, arguments);
+    };
+
     DotScreenPass.prototype.value_has_changed = function(vals) {
       var newvals;
       newvals = this.get_cached_array(vals);
@@ -123,6 +137,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     function FilmPass() {
       this.compute = __bind(this.compute, this);
       this.value_has_changed = __bind(this.value_has_changed, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       FilmPass.__super__.constructor.apply(this, arguments);
     }
@@ -149,6 +164,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         }
       });
       return this.cached = this.get_cached_array(['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']);
+    };
+
+    FilmPass.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return FilmPass.__super__.remove.apply(this, arguments);
     };
 
     FilmPass.prototype.value_has_changed = function(vals) {
@@ -178,6 +199,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function VignettePass() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       VignettePass.__super__.constructor.apply(this, arguments);
     }
@@ -205,6 +227,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    VignettePass.prototype.remove = function() {
+      delete this.ob;
+      return VignettePass.__super__.remove.apply(this, arguments);
+    };
+
     VignettePass.prototype.compute = function() {
       this.ob.uniforms["offset"].value = this.rack.getField("offset").getValue();
       this.ob.uniforms["darkness"].value = this.rack.getField("darkness").getValue();
@@ -220,6 +247,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function HorizontalBlurPass() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       HorizontalBlurPass.__super__.constructor.apply(this, arguments);
     }
@@ -246,6 +274,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    HorizontalBlurPass.prototype.remove = function() {
+      delete this.ob;
+      return HorizontalBlurPass.__super__.remove.apply(this, arguments);
+    };
+
     HorizontalBlurPass.prototype.compute = function() {
       this.ob.uniforms["h"].value = this.rack.getField("delta").getValue();
       return this.rack.setField("out", this.ob);
@@ -260,6 +293,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function VerticalBlurPass() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       VerticalBlurPass.__super__.constructor.apply(this, arguments);
     }
@@ -286,6 +320,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    VerticalBlurPass.prototype.remove = function() {
+      delete this.ob;
+      return VerticalBlurPass.__super__.remove.apply(this, arguments);
+    };
+
     VerticalBlurPass.prototype.compute = function() {
       this.ob.uniforms["v"].value = this.rack.getField("delta").getValue();
       return this.rack.setField("out", this.ob);
@@ -300,6 +339,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function BleachPass() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       BleachPass.__super__.constructor.apply(this, arguments);
     }
@@ -324,6 +364,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
+    };
+
+    BleachPass.prototype.remove = function() {
+      delete this.ob;
+      return BleachPass.__super__.remove.apply(this, arguments);
     };
 
     BleachPass.prototype.compute = function() {

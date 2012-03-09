@@ -10,6 +10,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
     function NodeFieldRackView() {
       this.addCenterTextfield = __bind(this.addCenterTextfield, this);
       this.renderSidebar = __bind(this.renderSidebar, this);
+      this.remove = __bind(this.remove, this);
       NodeFieldRackView.__super__.constructor.apply(this, arguments);
     }
 
@@ -26,6 +27,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery.contextMenu", "or
       return this.collection.bind("field:registered", function(model, el) {
         return _this.add_field_listener(el);
       });
+    };
+
+    NodeFieldRackView.prototype.remove = function() {
+      this.undelegateEvents();
+      delete this.collection;
+      return NodeFieldRackView.__super__.remove.apply(this, arguments);
     };
 
     NodeFieldRackView.prototype.renderSidebar = function() {

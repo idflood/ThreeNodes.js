@@ -5,7 +5,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
   return ThreeNodes.WebglBase = (function() {
 
     function WebglBase() {
-      this.rebuild_all_shaders = __bind(this.rebuild_all_shaders, this);
       this.exportImage = __bind(this.exportImage, this);      console.log("webgl init...");
       this.current_scene = new THREE.Scene();
       this.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
@@ -25,8 +24,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
       ThreeNodes.Webgl.renderModel = this.renderModel;
       ThreeNodes.Webgl.effectScreen = this.effectScreen;
       ThreeNodes.events.on("ExportImage", this.exportImage);
-      ThreeNodes.events.on("RebuildAllShaders", this.rebuild_all_shaders);
-      ThreeNodes.rebuild_all_shaders = this.rebuild_all_shaders;
     }
 
     WebglBase.prototype.exportImage = function(fname) {
@@ -36,26 +33,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
         return saveAs(blob, fname);
       };
       return canvas.toBlob(on_write, "image/png");
-    };
-
-    WebglBase.prototype.rebuild_all_shaders = function() {
-      var n, sub_material, _i, _j, _len, _len2, _ref, _ref2;
-      console.log("rebuilding shaders");
-      _ref = ThreeNodes.webgl_materials_node;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        n = _ref[_i];
-        if ($.type(n.ob) === "array") {
-          _ref2 = n.ob;
-          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-            sub_material = _ref2[_j];
-            console.log(sub_material);
-            sub_material.program = false;
-          }
-        } else {
-          n.ob.program = false;
-        }
-      }
-      return true;
     };
 
     return WebglBase;

@@ -31,7 +31,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       this.update = __bind(this.update, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
       this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
-      this.remove = __bind(this.remove, this);
       this.has_out_connection = __bind(this.has_out_connection, this);
       this.set_fields = __bind(this.set_fields, this);
       this.input_value_has_changed = __bind(this.input_value_has_changed, this);
@@ -40,6 +39,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       this.showNodeAnimation = __bind(this.showNodeAnimation, this);
       this.loadAnimation = __bind(this.loadAnimation, this);
       this.createConnection = __bind(this.createConnection, this);
+      this.remove = __bind(this.remove, this);
       this.typename = __bind(this.typename, this);
       this.post_init = __bind(this.post_init, this);
       this.initialize = __bind(this.initialize, this);
@@ -129,9 +129,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       this.setName(this.typename());
       this.load(this.inXML, this.inJSON);
       this.apptimeline = this.context.timelineView.timeline;
-      return this.rack = new ThreeNodes.NodeFieldsCollection([], {
+      this.rack = new ThreeNodes.NodeFieldsCollection([], {
         node: this
       });
+      return this;
     };
 
     NodeBase.prototype.post_init = function() {
@@ -148,13 +149,24 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       return String(this.constructor.name);
     };
 
+    NodeBase.prototype.remove = function() {
+      if (this.anim) this.anim.destroy();
+      this.rack.destroy();
+      delete this.rack;
+      delete this.view;
+      delete this.main_view;
+      delete this.apptimeline;
+      delete this.context;
+      delete this.anim;
+      return this.destroy();
+    };
+
     NodeBase.prototype.createConnection = function(field1, field2) {
       return this.trigger("createConnection", field1, field2);
     };
 
     NodeBase.prototype.loadAnimation = function() {
       var anims, propKey, propLabel, track, _i, _len, _ref;
-      this.anim = this.createAnimContainer();
       _ref = this.inJSON.anim;
       for (propLabel in _ref) {
         anims = _ref[propLabel];
@@ -228,14 +240,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
 
     NodeBase.prototype.has_out_connection = function() {
       return this.out_connections.length !== 0;
-    };
-
-    NodeBase.prototype.remove = function() {
-      var ng;
-      ng = this.context.injector.get("NodeGraph");
-      ng.removeNode(this);
-      this.rack.removeAllConnections();
-      return this.main_view.remove();
     };
 
     NodeBase.prototype.getUpstreamNodes = function() {
@@ -432,6 +436,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
 
     function NodeNumberSimple() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
       NodeNumberSimple.__super__.constructor.apply(this, arguments);
@@ -450,6 +455,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
 
     NodeNumberSimple.prototype.process_val = function(num, i) {
       return num;
+    };
+
+    NodeNumberSimple.prototype.remove = function() {
+      delete this.v_in;
+      delete this.v_out;
+      return NodeNumberSimple.__super__.remove.apply(this, arguments);
     };
 
     NodeNumberSimple.prototype.compute = function() {

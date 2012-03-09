@@ -13,6 +13,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.compute = __bind(this.compute, this);
       this.apply_children = __bind(this.apply_children, this);
       this.get_children_array = __bind(this.get_children_array, this);
+      this.remove = __bind(this.remove, this);
+      this.deleteObjectAttributes = __bind(this.deleteObjectAttributes, this);
       this.set_fields = __bind(this.set_fields, this);
       Object3D.__super__.constructor.apply(this, arguments);
     }
@@ -59,6 +61,27 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
     };
 
+    Object3D.prototype.deleteObjectAttributes = function(ob) {
+      if (ob) {
+        delete ob.up;
+        delete ob.position;
+        delete ob.rotation;
+        delete ob.scale;
+        delete ob.matrix;
+        delete ob.matrixWorld;
+        delete ob.matrixRotationWorld;
+        delete ob.quaternion;
+        return delete ob._vector;
+      }
+    };
+
+    Object3D.prototype.remove = function() {
+      Object3D.__super__.remove.apply(this, arguments);
+      this.deleteObjectAttributes(this.ob);
+      delete this.ob;
+      return delete this.shadow_cache;
+    };
+
     Object3D.prototype.get_children_array = function() {
       var childs;
       childs = this.rack.getField("children").get("value");
@@ -88,7 +111,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         if (child instanceof THREE.Light === true) {
           if (ind === -1) {
             this.ob.add(child);
-            _results.push(ThreeNodes.rebuild_all_shaders());
+            _results.push(ThreeNodes.events.trigger("RebuildAllShaders"));
           } else {
             _results.push(void 0);
           }
@@ -118,6 +141,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function Scene() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Scene.__super__.constructor.apply(this, arguments);
     }
@@ -137,6 +161,18 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return current_scene = this.ob;
     };
 
+    Scene.prototype.remove = function() {
+      if (this.ob) {
+        delete this.ob.fog;
+        delete this.ob.__objects;
+        delete this.ob.__lights;
+        delete this.ob.__objectsAdded;
+        delete this.ob.__objectsRemoved;
+      }
+      delete this.vfog;
+      return Scene.__super__.remove.apply(this, arguments);
+    };
+
     Scene.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
       this.apply_children();
@@ -154,6 +190,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.get_material_cache = __bind(this.get_material_cache, this);
       this.get_geometry_cache = __bind(this.get_geometry_cache, this);
       this.rebuild_geometry = __bind(this.rebuild_geometry, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Object3DwithMeshAndMaterial.__super__.constructor.apply(this, arguments);
     }
@@ -162,6 +199,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       Object3DwithMeshAndMaterial.__super__.set_fields.apply(this, arguments);
       this.material_cache = false;
       return this.geometry_cache = false;
+    };
+
+    Object3DwithMeshAndMaterial.prototype.remove = function() {
+      delete this.material_cache;
+      delete this.geometry_cache;
+      return Object3DwithMeshAndMaterial.__super__.remove.apply(this, arguments);
     };
 
     Object3DwithMeshAndMaterial.prototype.rebuild_geometry = function() {
@@ -215,6 +258,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function ThreeMesh() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       ThreeMesh.__super__.constructor.apply(this, arguments);
     }
@@ -245,6 +289,20 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.compute();
     };
 
+    ThreeMesh.prototype.remove = function() {
+      var item, _i, _len, _ref;
+      if (this.ob) {
+        _ref = this.ob;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          this.deleteObjectAttributes(item);
+          delete item.geometry;
+          delete item.material;
+        }
+      }
+      return ThreeMesh.__super__.remove.apply(this, arguments);
+    };
+
     ThreeMesh.prototype.compute = function() {
       var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
       needs_rebuild = false;
@@ -269,7 +327,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
         this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
-      if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
+      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();
@@ -346,7 +404,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
         this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
-      if (needs_rebuild === true) ThreeNodes.rebuild_all_shaders();
+      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();
@@ -362,6 +420,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function Camera() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.deleteObjectAttributes = __bind(this.deleteObjectAttributes, this);
       this.set_fields = __bind(this.set_fields, this);
       Camera.__super__.constructor.apply(this, arguments);
     }
@@ -398,6 +458,26 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    Camera.prototype.deleteObjectAttributes = function(ob) {
+      if (ob) {
+        delete ob.up;
+        delete ob.position;
+        delete ob.rotation;
+        delete ob.scale;
+        delete ob.matrix;
+        delete ob.matrixWorld;
+        delete ob.matrixRotationWorld;
+        delete ob.quaternion;
+        return delete ob._vector;
+      }
+    };
+
+    Camera.prototype.remove = function() {
+      this.deleteObjectAttributes(this.ob);
+      delete this.ob;
+      return Camera.__super__.remove.apply(this, arguments);
+    };
+
     Camera.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['target']);
       this.ob.lookAt(this.rack.getField("target").getValue());
@@ -413,6 +493,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function Texture() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Texture.__super__.constructor.apply(this, arguments);
     }
@@ -441,6 +522,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    Texture.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return Texture.__super__.remove.apply(this, arguments);
+    };
+
     Texture.prototype.compute = function() {
       var current;
       current = this.rack.getField("image").getValue();
@@ -464,6 +551,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function Fog() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Fog.__super__.constructor.apply(this, arguments);
     }
@@ -493,6 +581,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    Fog.prototype.remove = function() {
+      delete this.ob;
+      return Fog.__super__.remove.apply(this, arguments);
+    };
+
     Fog.prototype.compute = function() {
       if (this.ob === false) this.ob = new THREE.Fog(0xffffff, 1, 1000);
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -508,6 +601,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function FogExp2() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       FogExp2.__super__.constructor.apply(this, arguments);
     }
@@ -536,6 +630,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    FogExp2.prototype.remove = function() {
+      delete this.ob;
+      return FogExp2.__super__.remove.apply(this, arguments);
+    };
+
     FogExp2.prototype.compute = function() {
       if (this.ob === false) this.ob = new THREE.FogExp2(0xffffff, 0.00025);
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
@@ -545,17 +644,17 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     return FogExp2;
 
   })(ThreeNodes.NodeBase);
-  return ThreeNodes.nodes.WebGLRenderer = (function(_super) {
+  ThreeNodes.nodes.WebGLRenderer = (function(_super) {
 
     __extends(WebGLRenderer, _super);
 
     function WebGLRenderer() {
-      this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
       this.add_renderer_to_dom = __bind(this.add_renderer_to_dom, this);
       this.apply_post_fx = __bind(this.apply_post_fx, this);
       this.apply_size = __bind(this.apply_size, this);
       this.add_mouse_handler = __bind(this.add_mouse_handler, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       WebGLRenderer.__super__.constructor.apply(this, arguments);
     }
@@ -611,10 +710,32 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.apply_bg_color();
       self = this;
       this.add_mouse_handler();
-      this.webgl_container.click(function(e) {
+      this.webgl_container.bind("click", function(e) {
+        console.log("webgl.click");
         if (_this.context.player_mode === false) return _this.create_popup_view();
       });
       return this;
+    };
+
+    WebGLRenderer.prototype.remove = function() {
+      if (this.win && this.win !== false) this.win.close();
+      if (ThreeNodes.Webgl.current_camera === this.rack.getField("camera").getValue()) {
+        ThreeNodes.Webgl.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
+        ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera;
+      }
+      if (ThreeNodes.Webgl.current_scene === this.rack.getField("scene").getValue()) {
+        ThreeNodes.Webgl.current_scene = new THREE.Scene();
+        ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene;
+      }
+      this.webgl_container.unbind();
+      $(this.ob.domElement).unbind();
+      this.webgl_container.remove();
+      delete this.ob;
+      delete this.width;
+      delete this.height;
+      delete this.webgl_container;
+      delete this.win;
+      return WebGLRenderer.__super__.remove.apply(this, arguments);
     };
 
     WebGLRenderer.prototype.add_mouse_handler = function() {
@@ -730,12 +851,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return ThreeNodes.Webgl.composer.render(0.05);
     };
 
-    WebGLRenderer.prototype.remove = function() {
-      if (this.win && this.win !== false) this.win.close();
-      return WebGLRenderer.__super__.remove.apply(this, arguments);
-    };
-
     return WebGLRenderer;
 
   })(ThreeNodes.NodeBase);
+  return true;
 });

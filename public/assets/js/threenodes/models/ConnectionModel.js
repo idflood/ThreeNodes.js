@@ -47,6 +47,9 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       this.to_field.remove_connections();
       this.to_field.node.dirty = true;
       this.to_field.changed = true;
+      delete this.from_field;
+      delete this.to_field;
+      delete this.node;
       this.trigger("connection:removed", this);
       this.destroy();
       return false;

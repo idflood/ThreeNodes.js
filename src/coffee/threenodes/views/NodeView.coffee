@@ -14,12 +14,11 @@ define [
     @template = _view_node_template
         
     initialize: () ->
-      @model.main_view = $(@el)
+      @model.main_view = @$el
       
       @make_draggable()
       @init_el_click()
       @init_title_click()
-      @make_selectable()
       
       @rack_view = new ThreeNodes.NodeFieldRackView
         node: @model
@@ -28,6 +27,7 @@ define [
       
       @model.bind 'change', @render
       @model.bind 'postInit', @postInit
+      @model.bind 'remove', () => @remove()
       @render()
       @model.post_init()
       @
@@ -59,6 +59,14 @@ define [
     compute_node_position: () ->
       pos = $(@el).position()
       @model.setPosition(pos.left, pos.top)
+    
+    remove: () =>
+      $(this.el).draggable("destroy")
+      $(this.el).unbind()
+      @undelegateEvents()
+      @rack_view.remove()
+      @rack_view = null
+      super
     
     init_el_click: () ->
       self = this
@@ -136,20 +144,5 @@ define [
           self.compute_node_position()
           self.render_connections()
       return @
-    
-    make_selectable: () ->
-      self = this
-      $("#container").selectable
-        filter: ".node"
-        stop: (event, ui) =>
-          $selected = $(".node.ui-selected")
-          nodes = []
-          $selected.each () ->
-            ob = $(this).data("object")
-            ob.anim.objectTrack.name = $(".head span", ob.main_view).html()
-            nodes.push(ob.anim)
-          self.model.apptimeline.selectAnims(nodes)
-      return @
-  
   
   return ThreeNodes.NodeView

@@ -24,6 +24,11 @@ define [
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
     
+    remove: =>
+      delete @ob
+      delete @cached
+      super
+    
     get_cache_array: =>
       [@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue()]
   
@@ -55,6 +60,11 @@ define [
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
     
+    remove: =>
+      delete @ob
+      delete @cached
+      super
+    
     get_cache_array: =>
       [@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("depth").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue(), @rack.getField("segments_depth").getValue(), @rack.getField("flip").getValue()]
   
@@ -81,6 +91,11 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
+    
+    remove: =>
+      delete @ob
+      delete @cached
+      super
     
     get_cache_array: =>
       [@rack.getField("radius").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue()]
@@ -114,6 +129,11 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
+    
+    remove: =>
+      delete @ob
+      delete @cached
+      super
     
     get_cache_array: =>
       [
@@ -150,6 +170,11 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
+    
+    remove: =>
+      delete @ob
+      delete @cached
+      super
     
     get_cache_array: =>
       [
@@ -189,6 +214,11 @@ define [
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
     
+    remove: =>
+      delete @ob
+      delete @cached
+      super
+    
     get_cache_array: =>
       [
         @rack.getField("radius").getValue(), @rack.getField("tube").getValue(), @rack.getField("segmentsR").getValue(), 
@@ -222,6 +252,11 @@ define [
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
     
+    remove: =>
+      delete @ob
+      delete @cached
+      super
+    
     get_cache_array: =>
       [@rack.getField("radius").getValue(), @rack.getField("detail").getValue()]
   
@@ -254,6 +289,11 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @cached = @get_cache_array()
+    
+    remove: =>
+      delete @ob
+      delete @cached
+      super
     
     get_cache_array: =>
       [@rack.getField("font").getValue(), @rack.getField("text").getValue(), @rack.getField("size").getValue(), @rack.getField("height").getValue(), @rack.getField("curveSegments").getValue(),

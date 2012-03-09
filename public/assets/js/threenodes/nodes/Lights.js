@@ -9,6 +9,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function PointLight() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       PointLight.__super__.constructor.apply(this, arguments);
     }
@@ -43,6 +44,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    PointLight.prototype.remove = function() {
+      delete this.ob;
+      return PointLight.__super__.remove.apply(this, arguments);
+    };
+
     PointLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.setField("out", this.ob);
@@ -57,6 +63,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function SpotLight() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SpotLight.__super__.constructor.apply(this, arguments);
     }
@@ -96,9 +103,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    SpotLight.prototype.remove = function() {
+      delete this.ob;
+      return SpotLight.__super__.remove.apply(this, arguments);
+    };
+
     SpotLight.prototype.compute = function() {
       if (this.rack.getField("castShadow").getValue() !== this.ob.castShadow) {
-        ThreeNodes.rebuild_all_shaders();
+        ThreeNodes.events.trigger("RebuildAllShaders");
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.setField("out", this.ob);
@@ -113,6 +125,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function DirectionalLight() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       DirectionalLight.__super__.constructor.apply(this, arguments);
     }
@@ -147,6 +160,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
     };
 
+    DirectionalLight.prototype.remove = function() {
+      delete this.ob;
+      return DirectionalLight.__super__.remove.apply(this, arguments);
+    };
+
     DirectionalLight.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.setField("out", this.ob);
@@ -161,6 +179,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     function AmbientLight() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       AmbientLight.__super__.constructor.apply(this, arguments);
     }
@@ -191,6 +210,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
       });
+    };
+
+    AmbientLight.prototype.remove = function() {
+      delete this.ob;
+      return AmbientLight.__super__.remove.apply(this, arguments);
     };
 
     AmbientLight.prototype.compute = function() {

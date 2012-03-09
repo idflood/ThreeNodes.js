@@ -20,6 +20,11 @@ define [
       @collection.bind "field:registered", (model, el) =>
         @add_field_listener(el)
     
+    remove: () =>
+      @undelegateEvents()
+      delete @collection
+      super
+    
     renderSidebar: () =>
       $target = $("#tab-attribute")
       $target.html("");
