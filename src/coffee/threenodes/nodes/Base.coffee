@@ -150,6 +150,8 @@ define [
           picker = cal.data('colorpicker')
           if picker
             delete picker.onChange
+          # remove colorpicker dom element
+          cal.remove()
       $(".color_preview", @main_view).unbind()
       $(".color_preview", @main_view).remove()
       super

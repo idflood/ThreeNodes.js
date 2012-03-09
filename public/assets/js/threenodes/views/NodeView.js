@@ -79,6 +79,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
     };
 
     NodeView.prototype.remove = function() {
+      $(".field", this.el).destroyContextMenu();
       $(this.el).draggable("destroy");
       $(this.el).unbind();
       this.undelegateEvents();

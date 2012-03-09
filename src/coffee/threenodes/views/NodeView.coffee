@@ -61,6 +61,7 @@ define [
       @model.setPosition(pos.left, pos.top)
     
     remove: () =>
+      $(".field", this.el).destroyContextMenu()
       $(this.el).draggable("destroy")
       $(this.el).unbind()
       @undelegateEvents()

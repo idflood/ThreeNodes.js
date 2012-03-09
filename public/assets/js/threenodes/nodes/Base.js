@@ -267,7 +267,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
         if ($(this).data('colorpickerId')) {
           cal = $('#' + $(this).data('colorpickerId'));
           picker = cal.data('colorpicker');
-          if (picker) return delete picker.onChange;
+          if (picker) delete picker.onChange;
+          return cal.remove();
         }
       });
       $(".color_preview", this.main_view).unbind();

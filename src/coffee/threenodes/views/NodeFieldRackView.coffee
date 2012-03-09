@@ -2,7 +2,6 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "order!libs/jquery.contextMenu",
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone) ->
@@ -11,8 +10,8 @@ define [
   class ThreeNodes.NodeFieldRackView extends Backbone.View
     initialize: (options) ->
       @node = options.node
-      @collection.bind "add", (model) ->
-        #console.log "collection.add"
+      #@collection.bind "add", (model) ->
+      #  console.log "collection.add"
       @collection.bind "renderSidebar", () =>
         @renderSidebar()
       @collection.bind "addCenterTextfield", (field) =>
@@ -22,6 +21,12 @@ define [
     
     remove: () =>
       @undelegateEvents()
+      $(".inner-field", $(@el)).droppable("destroy")
+      $(".inner-field", $(@el)).draggable("destroy")
+      # remove elements which may have events attached
+      $(".inner-field", $(@el)).remove()
+      $(".field", $(@el)).remove()
+      $("input", $(@el)).remove()
       delete @collection
       super
     

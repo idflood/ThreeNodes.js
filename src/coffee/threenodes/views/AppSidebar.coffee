@@ -2,7 +2,6 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  "order!libs/jquery.contextMenu",
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.AppSidebar extends Backbone.View
