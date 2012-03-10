@@ -65,7 +65,8 @@ define [
       @injector.mapSingleton "UI", ThreeNodes.UI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
-      @nodegraph = new ThreeNodes.NodeGraph([], {is_test: testing_mode})
+      @nodegraph = new ThreeNodes.NodeGraph [],
+        is_test: testing_mode
       @nodegraph.context = this
       @socket = @injector.get "AppWebsocket"
       @webgl = new ThreeNodes.WebglBase()
@@ -108,6 +109,7 @@ define [
         @timelineView.remove()
       
       @timelineView = new ThreeNodes.AppTimeline()
+      @nodegraph.timeline = @timelineView
       
       if @ui
         @ui.on("render", @timelineView.update)

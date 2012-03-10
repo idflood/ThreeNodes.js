@@ -96,6 +96,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         this.timelineView.remove();
       }
       this.timelineView = new ThreeNodes.AppTimeline();
+      this.nodegraph.timeline = this.timelineView;
       if (this.ui) {
         this.ui.on("render", this.timelineView.update);
         this.ui.on("selectAnims", this.timelineView.selectAnims);

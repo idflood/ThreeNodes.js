@@ -66,7 +66,7 @@ define [
       n = new ThreeNodes.nodes[nodename]
         x: x
         y: y
-        timeline: @context
+        timeline: @timeline
         inXML: inXML
         inJSON: inJSON
       
@@ -113,7 +113,6 @@ define [
         to_node = tmp
         from = from_node.rack.node_fields_by_name.outputs[connection.to.toString()]
         to = to_node.rack.node_fields_by_name.inputs[connection.from.toString()]
-        
       
       c = @connections.create
           from_field: from
