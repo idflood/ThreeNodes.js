@@ -712,7 +712,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.add_mouse_handler();
       this.webgl_container.bind("click", function(e) {
         console.log("webgl.click");
-        if (_this.context.player_mode === false) return _this.create_popup_view();
+        if (ThreeNodes.settings.player_mode === false) {
+          return _this.create_popup_view();
+        }
       });
       return this;
     };
@@ -795,7 +797,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       h = this.rack.getField('height').getValue();
       dw = w;
       dh = h;
-      if (this.win === false && this.context.player_mode === false) {
+      if (this.win === false && ThreeNodes.settings.player_mode === false) {
         maxw = 220;
         r = w / h;
         dw = maxw;
@@ -835,7 +837,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           this.win = false;
         }
       }
-      if (!this.context.testing_mode) this.add_renderer_to_dom();
+      if (!ThreeNodes.settings.testing_mode) this.add_renderer_to_dom();
       this.apply_size();
       this.apply_bg_color();
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);

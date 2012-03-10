@@ -25,7 +25,6 @@ define [
       ThreeNodes.events.trigger "InitUrlHandler"
       
       injector = @context.injector
-      @player_mode = @context.player_mode
       
       # create the main ui
       ui_tmpl = _.template(_view_app_ui, {})
@@ -96,7 +95,7 @@ define [
         $("body").removeClass("player-mode")
         $("#display-mode-switch").html("player mode")
       
-      @context.player_mode = is_player
+      ThreeNodes.settings.player_mode = is_player
       if is_player == false
         @context.nodegraph.renderAllConnections()
       return true
@@ -140,7 +139,7 @@ define [
       @scroll_target.scrollLeft(x).scrollTop(y)
     
     switch_display_mode: () =>
-      @setDisplayMode(!@context.player_mode)
+      @setDisplayMode(!ThreeNodes.settings.player_mode)
       return this
     
     init_display_mode_switch: () =>

@@ -72,7 +72,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       n = new ThreeNodes.nodes[nodename]({
         x: x,
         y: y,
-        context: this.context,
+        timeline: this.context,
         inXML: inXML,
         inJSON: inJSON
       });

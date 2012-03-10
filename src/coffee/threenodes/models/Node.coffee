@@ -69,14 +69,13 @@ define [
       @value = false
       @inXML = options.inXML
       @inJSON = options.inJSON
-      @context = options.context
+      @apptimeline = options.timeline
         
       if @inXML == false && @inJSON == false
         @setNID(ThreeNodes.Utils.get_uid())
       @setName(@typename())
       @load(@inXML, @inJSON)
       
-      @apptimeline = @context.timelineView.timeline
       @rack = new ThreeNodes.NodeFieldsCollection [],
         node: this
       @
@@ -110,7 +109,6 @@ define [
       delete @view
       delete @main_view
       delete @apptimeline
-      delete @context
       delete @anim
       @destroy()
     
@@ -252,7 +250,7 @@ define [
         .addClass "field-possible-target"
       else
         field_click_2 = field
-        c = @context.injector.instanciate(ThreeNodes.NodeConnection, ThreeNodes.field_click_1, field_click_2)
+        @trigger("createConnection", ThreeNodes.field_click_1, field_click_2)
         $(".field").removeClass "field-possible-target"
         ThreeNodes.field_click_1 = false
     

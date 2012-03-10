@@ -34,7 +34,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
       ThreeNodes.events.trigger("InitUrlHandler");
       injector = this.context.injector;
-      this.player_mode = this.context.player_mode;
       ui_tmpl = _.template(_view_app_ui, {});
       $("#footer").before(ui_tmpl);
       this.svg = Raphael("graph", 4000, 4000);
@@ -108,7 +107,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         $("body").removeClass("player-mode");
         $("#display-mode-switch").html("player mode");
       }
-      this.context.player_mode = is_player;
+      ThreeNodes.settings.player_mode = is_player;
       if (is_player === false) this.context.nodegraph.renderAllConnections();
       return true;
     };
@@ -166,7 +165,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     };
 
     UI.prototype.switch_display_mode = function() {
-      this.setDisplayMode(!this.context.player_mode);
+      this.setDisplayMode(!ThreeNodes.settings.player_mode);
       return this;
     };
 

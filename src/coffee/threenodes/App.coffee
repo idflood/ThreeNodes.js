@@ -40,7 +40,12 @@ define [
   ThreeNodes.events = _.extend({}, Backbone.Events)
   
   class ThreeNodes.App
-    constructor: (@testing_mode = false) ->
+    constructor: (testing_mode = false) ->
+      # save settings in a global object
+      # if you have a more elegant way to handle this don't hesitate
+      ThreeNodes.settings =
+        testing_mode: testing_mode
+        player_mode: false
       console.log "ThreeNodes app init..."
       @current_scene = false
       @current_camera = false
@@ -60,22 +65,20 @@ define [
       @injector.mapSingleton "UI", ThreeNodes.UI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
-      @nodegraph = new ThreeNodes.NodeGraph([], {is_test: @testing_mode})
+      @nodegraph = new ThreeNodes.NodeGraph([], {is_test: testing_mode})
       @nodegraph.context = this
       @socket = @injector.get "AppWebsocket"
       @webgl = new ThreeNodes.WebglBase()
       @file_handler = new ThreeNodes.FileHandler()
       @file_handler.context = this
-      
-      @player_mode = false
-      
+            
       @nodegraph.on "remove", () =>
         @timelineView.selectAnims([])
       
       ThreeNodes.events.on "ClearWorkspace", () =>
         @clearWorkspace()
       
-      if @testing_mode == false
+      if testing_mode == false
         @ui = @injector.get "UI",
           el: $("body")
         @ui.on("render", @nodegraph.render)

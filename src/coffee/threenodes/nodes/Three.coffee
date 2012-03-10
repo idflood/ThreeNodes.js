@@ -419,7 +419,7 @@ define [
       @add_mouse_handler()
       @webgl_container.bind "click", (e) =>
         console.log "webgl.click"
-        if @context.player_mode == false
+        if ThreeNodes.settings.player_mode == false
           @create_popup_view()
       return this
     
@@ -494,7 +494,7 @@ define [
       h = @rack.getField('height').getValue()
       dw = w
       dh = h
-      if @win == false && @context.player_mode == false
+      if @win == false && ThreeNodes.settings.player_mode == false
         maxw = 220
         r = w / h
         dw = maxw
@@ -531,7 +531,7 @@ define [
         if @win.closed && @preview_mode == false
           @preview_mode = true
           @win = false
-      if !@context.testing_mode
+      if !ThreeNodes.settings.testing_mode
         @add_renderer_to_dom()
       
       @apply_size()

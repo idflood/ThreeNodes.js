@@ -31,8 +31,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
 
     function App(testing_mode) {
       var _this = this;
-      this.testing_mode = testing_mode != null ? testing_mode : false;
+      if (testing_mode == null) testing_mode = false;
       this.initTimeline = __bind(this.initTimeline, this);
+      ThreeNodes.settings = {
+        testing_mode: testing_mode,
+        player_mode: false
+      };
       console.log("ThreeNodes app init...");
       this.current_scene = false;
       this.current_camera = false;
@@ -49,21 +53,20 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
       this.injector.mapSingleton("UI", ThreeNodes.UI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
       this.nodegraph = new ThreeNodes.NodeGraph([], {
-        is_test: this.testing_mode
+        is_test: testing_mode
       });
       this.nodegraph.context = this;
       this.socket = this.injector.get("AppWebsocket");
       this.webgl = new ThreeNodes.WebglBase();
       this.file_handler = new ThreeNodes.FileHandler();
       this.file_handler.context = this;
-      this.player_mode = false;
       this.nodegraph.on("remove", function() {
         return _this.timelineView.selectAnims([]);
       });
       ThreeNodes.events.on("ClearWorkspace", function() {
         return _this.clearWorkspace();
       });
-      if (this.testing_mode === false) {
+      if (testing_mode === false) {
         this.ui = this.injector.get("UI", {
           el: $("body")
         });

@@ -122,13 +122,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       this.value = false;
       this.inXML = options.inXML;
       this.inJSON = options.inJSON;
-      this.context = options.context;
+      this.apptimeline = options.timeline;
       if (this.inXML === false && this.inJSON === false) {
         this.setNID(ThreeNodes.Utils.get_uid());
       }
       this.setName(this.typename());
       this.load(this.inXML, this.inJSON);
-      this.apptimeline = this.context.timelineView.timeline;
       this.rack = new ThreeNodes.NodeFieldsCollection([], {
         node: this
       });
@@ -156,7 +155,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       delete this.view;
       delete this.main_view;
       delete this.apptimeline;
-      delete this.context;
       delete this.anim;
       return this.destroy();
     };
@@ -364,7 +362,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
     };
 
     NodeBase.prototype.create_field_connection = function(field) {
-      var c, f, field_click_2;
+      var f, field_click_2;
       f = this;
       if (ThreeNodes.field_click_1 === false) {
         ThreeNodes.field_click_1 = field;
@@ -373,7 +371,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
         }).addClass("field-possible-target");
       } else {
         field_click_2 = field;
-        c = this.context.injector.instanciate(ThreeNodes.NodeConnection, ThreeNodes.field_click_1, field_click_2);
+        this.trigger("createConnection", ThreeNodes.field_click_1, field_click_2);
         $(".field").removeClass("field-possible-target");
         return ThreeNodes.field_click_1 = false;
       }

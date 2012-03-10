@@ -66,7 +66,7 @@ define [
       n = new ThreeNodes.nodes[nodename]
         x: x
         y: y
-        context: @context
+        timeline: @context
         inXML: inXML
         inJSON: inJSON
       
