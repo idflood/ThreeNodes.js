@@ -23,8 +23,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     NodeGraph.prototype.initialize = function(models, options) {
       var _this = this;
-      this.nodes_by_nid = {};
-      this.fields_by_fid = {};
       this.types = false;
       this.connections = new ThreeNodes.ConnectionsCollection();
       if (options.is_test === false) {
@@ -45,11 +43,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           el: $tmpl
         });
         return node.view = view;
-      });
-      this.bind("remove", function(node) {
-        if (_this.nodes_by_nid[node.get("nid")]) {
-          return delete _this.nodes_by_nid[node.get("nid")];
-        }
       });
       this.bind("createConnection", function(field1, field2) {
         return _this.connections.create({
@@ -85,7 +78,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
       n.load(inXML, inJSON);
       this.add(n);
-      this.nodes_by_nid[n.get("nid")] = n;
       return n;
     };
 
@@ -161,7 +153,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.get_node = function(nid) {
-      return this.nodes_by_nid[nid];
+      var node, _i, _len, _ref;
+      _ref = this.models;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        if (node.get("nid").toString() === nid) return node;
+      }
+      return false;
     };
 
     NodeGraph.prototype.showNodesAnimation = function() {

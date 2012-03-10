@@ -35,6 +35,11 @@ define [
       @connections = []
       if @get("fid") == -1
         @set("fid", ThreeNodes.Utils.get_uid())
+      
+      # this was called in onRegister
+      # but onRegister was not called
+      # todo: remove this comment if this doesn't cause issue
+      #@on_value_changed(@val)
     
     remove: () =>
       delete @on_value_update_hooks
@@ -43,11 +48,6 @@ define [
     
     setFID: (fid) =>
       @set("fid", fid)
-    
-    onRegister: () ->
-      ng = @context.nodegraph
-      ng.fields_by_fid[@fid] = this
-      @on_value_changed(@val)
     
     setValue: (v) =>
       @changed = true

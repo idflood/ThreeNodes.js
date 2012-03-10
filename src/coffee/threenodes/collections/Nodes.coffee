@@ -21,10 +21,9 @@ define [
   class ThreeNodes.NodeGraph extends Backbone.Collection
     
     initialize: (models, options) =>
-      @nodes_by_nid = {}
-      @fields_by_fid = {}
       @types = false
       @connections = new ThreeNodes.ConnectionsCollection()
+      
       if options.is_test == false
         @connections.bind "add", (connection) ->
           view = new ThreeNodes.ConnectionView
@@ -41,11 +40,7 @@ define [
         # used mainly in NodeView.make_draggable
         # it would be better without this
         node.view = view
-      
-      @bind "remove", (node) =>
-        if @nodes_by_nid[node.get("nid")]
-          delete @nodes_by_nid[node.get("nid")]
-      
+            
       @bind "createConnection", (field1, field2) =>
         @connections.create
           from_field: field1
@@ -77,7 +72,6 @@ define [
       
       n.load(inXML, inJSON)
       @add(n)
-      @nodes_by_nid[n.get("nid")] = n
       n
     
     render: () =>
@@ -140,7 +134,10 @@ define [
       @connections.remove(c)
     
     get_node: (nid) =>
-      @nodes_by_nid[nid]
+      for node in @models
+        if node.get("nid").toString() == nid
+          return node
+      return false
     
     showNodesAnimation: () =>
       @invoke "showNodeAnimation"

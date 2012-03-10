@@ -87,13 +87,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return this.set("fid", fid);
     };
 
-    NodeField.prototype.onRegister = function() {
-      var ng;
-      ng = this.context.nodegraph;
-      ng.fields_by_fid[this.fid] = this;
-      return this.on_value_changed(this.val);
-    };
-
     NodeField.prototype.setValue = function(v) {
       var connection, default_val, hook, new_val, prev_val, tmp_val, _i, _len, _ref;
       this.changed = true;
