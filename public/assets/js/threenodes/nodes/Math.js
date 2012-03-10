@@ -1,90 +1,145 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Math.Sin = (function() {
-    __extends(Sin, ThreeNodes.NodeNumberSimple);
-    function Sin() {
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'order!threenodes/utils/Utils'], function($, _, Backbone) {
+  "use strict";  ThreeNodes.nodes.MathSin = (function(_super) {
+
+    __extends(MathSin, _super);
+
+    function MathSin() {
       this.process_val = __bind(this.process_val, this);
-      Sin.__super__.constructor.apply(this, arguments);
+      MathSin.__super__.constructor.apply(this, arguments);
     }
-    Sin.prototype.process_val = function(num, i) {
+
+    MathSin.node_name = 'Sin';
+
+    MathSin.group_name = 'Math';
+
+    MathSin.prototype.process_val = function(num, i) {
       return Math.sin(num);
     };
-    return Sin;
-  })();
-  ThreeNodes.nodes.types.Math.Cos = (function() {
-    __extends(Cos, ThreeNodes.NodeNumberSimple);
-    function Cos() {
+
+    return MathSin;
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.nodes.MathCos = (function(_super) {
+
+    __extends(MathCos, _super);
+
+    function MathCos() {
       this.process_val = __bind(this.process_val, this);
-      Cos.__super__.constructor.apply(this, arguments);
+      MathCos.__super__.constructor.apply(this, arguments);
     }
-    Cos.prototype.process_val = function(num, i) {
+
+    MathCos.node_name = 'Cos';
+
+    MathCos.group_name = 'Math';
+
+    MathCos.prototype.process_val = function(num, i) {
       return Math.cos(num);
     };
-    return Cos;
-  })();
-  ThreeNodes.nodes.types.Math.Tan = (function() {
-    __extends(Tan, ThreeNodes.NodeNumberSimple);
-    function Tan() {
+
+    return MathCos;
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.nodes.MathTan = (function(_super) {
+
+    __extends(MathTan, _super);
+
+    function MathTan() {
       this.process_val = __bind(this.process_val, this);
-      Tan.__super__.constructor.apply(this, arguments);
+      MathTan.__super__.constructor.apply(this, arguments);
     }
-    Tan.prototype.process_val = function(num, i) {
+
+    MathTan.node_name = 'Tan';
+
+    MathTan.group_name = 'Math';
+
+    MathTan.prototype.process_val = function(num, i) {
       return Math.tan(num);
     };
-    return Tan;
-  })();
-  ThreeNodes.nodes.types.Math.Round = (function() {
-    __extends(Round, ThreeNodes.NodeNumberSimple);
-    function Round() {
+
+    return MathTan;
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.nodes.MathRound = (function(_super) {
+
+    __extends(MathRound, _super);
+
+    function MathRound() {
       this.process_val = __bind(this.process_val, this);
-      Round.__super__.constructor.apply(this, arguments);
+      MathRound.__super__.constructor.apply(this, arguments);
     }
-    Round.prototype.process_val = function(num, i) {
+
+    MathRound.node_name = 'Round';
+
+    MathRound.group_name = 'Math';
+
+    MathRound.prototype.process_val = function(num, i) {
       return Math.round(num);
     };
-    return Round;
-  })();
-  ThreeNodes.nodes.types.Math.Ceil = (function() {
-    __extends(Ceil, ThreeNodes.NodeNumberSimple);
-    function Ceil() {
+
+    return MathRound;
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.nodes.MathCeil = (function(_super) {
+
+    __extends(MathCeil, _super);
+
+    function MathCeil() {
       this.process_val = __bind(this.process_val, this);
-      Ceil.__super__.constructor.apply(this, arguments);
+      MathCeil.__super__.constructor.apply(this, arguments);
     }
-    Ceil.prototype.process_val = function(num, i) {
+
+    MathCeil.node_name = 'Ceil';
+
+    MathCeil.group_name = 'Math';
+
+    MathCeil.prototype.process_val = function(num, i) {
       return Math.ceil(num);
     };
-    return Ceil;
-  })();
-  ThreeNodes.nodes.types.Math.Floor = (function() {
-    __extends(Floor, ThreeNodes.NodeNumberSimple);
-    function Floor() {
+
+    return MathCeil;
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.nodes.MathFloor = (function(_super) {
+
+    __extends(MathFloor, _super);
+
+    function MathFloor() {
       this.process_val = __bind(this.process_val, this);
-      Floor.__super__.constructor.apply(this, arguments);
+      MathFloor.__super__.constructor.apply(this, arguments);
     }
-    Floor.prototype.process_val = function(num, i) {
+
+    MathFloor.node_name = 'Floor';
+
+    MathFloor.group_name = 'Math';
+
+    MathFloor.prototype.process_val = function(num, i) {
       return Math.floor(num);
     };
-    return Floor;
-  })();
-  ThreeNodes.NodeNumberParam1 = (function() {
-    __extends(NodeNumberParam1, ThreeNodes.NodeNumberSimple);
+
+    return MathFloor;
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.NodeNumberParam1 = (function(_super) {
+
+    __extends(NodeNumberParam1, _super);
+
     function NodeNumberParam1() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.apply_num_to_vec3 = __bind(this.apply_num_to_vec3, this);
       this.apply_num_to_vec2 = __bind(this.apply_num_to_vec2, this);
       this.process_val = __bind(this.process_val, this);
       NodeNumberParam1.__super__.constructor.apply(this, arguments);
     }
+
     NodeNumberParam1.prototype.process_val = function(num, numb, i) {
       return num + numb;
     };
+
     NodeNumberParam1.prototype.apply_num_to_vec2 = function(a, b, i) {
       switch ($.type(a)) {
         case "number":
@@ -93,6 +148,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return new THREE.Vector2(this.process_val(a.x, b, i), this.process_val(a.y, b, i));
       }
     };
+
     NodeNumberParam1.prototype.apply_num_to_vec3 = function(a, b, i) {
       switch ($.type(a)) {
         case "number":
@@ -101,13 +157,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           return new THREE.Vector3(this.process_val(a.x, b, i), this.process_val(a.y, b, i), this.process_val(a.z, b, i));
       }
     };
+
+    NodeNumberParam1.prototype.remove = function() {
+      delete this.v_factor;
+      return NodeNumberParam1.__super__.remove.apply(this, arguments);
+    };
+
     NodeNumberParam1.prototype.compute = function() {
       var i, numItems, ref, refb, res;
       res = [];
       numItems = this.rack.getMaxInputSliceCount();
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-        ref = this.v_in.get(i);
-        refb = this.v_factor.get(i);
+        ref = this.v_in.getValue(i);
+        refb = this.v_factor.getValue(i);
         switch ($.type(ref)) {
           case "number":
             switch ($.type(refb)) {
@@ -146,115 +208,174 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
             }
         }
       }
-      this.v_out.set(res);
+      this.v_out.setValue(res);
       return true;
     };
+
     return NodeNumberParam1;
-  })();
-  ThreeNodes.nodes.types.Math.Mod = (function() {
-    __extends(Mod, ThreeNodes.NodeNumberParam1);
-    function Mod() {
+
+  })(ThreeNodes.NodeNumberSimple);
+  ThreeNodes.nodes.MathMod = (function(_super) {
+
+    __extends(MathMod, _super);
+
+    function MathMod() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Mod.__super__.constructor.apply(this, arguments);
+      MathMod.__super__.constructor.apply(this, arguments);
     }
-    Mod.prototype.set_fields = function() {
-      Mod.__super__.set_fields.apply(this, arguments);
+
+    MathMod.node_name = 'Mod';
+
+    MathMod.group_name = 'Math';
+
+    MathMod.prototype.set_fields = function() {
+      MathMod.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
         type: "Float",
         val: 2
       });
     };
-    Mod.prototype.process_val = function(num, numb, i) {
+
+    MathMod.prototype.process_val = function(num, numb, i) {
       return num % numb;
     };
-    return Mod;
-  })();
-  ThreeNodes.nodes.types.Math.Add = (function() {
-    __extends(Add, ThreeNodes.NodeNumberParam1);
-    function Add() {
+
+    return MathMod;
+
+  })(ThreeNodes.NodeNumberParam1);
+  ThreeNodes.nodes.MathAdd = (function(_super) {
+
+    __extends(MathAdd, _super);
+
+    function MathAdd() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Add.__super__.constructor.apply(this, arguments);
+      MathAdd.__super__.constructor.apply(this, arguments);
     }
-    Add.prototype.set_fields = function() {
-      Add.__super__.set_fields.apply(this, arguments);
+
+    MathAdd.node_name = 'Add';
+
+    MathAdd.group_name = 'Math';
+
+    MathAdd.prototype.set_fields = function() {
+      MathAdd.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
         type: "Float",
         val: 1
       });
     };
-    Add.prototype.process_val = function(num, numb, i) {
+
+    MathAdd.prototype.process_val = function(num, numb, i) {
       return num + numb;
     };
-    return Add;
-  })();
-  ThreeNodes.nodes.types.Math.Subtract = (function() {
-    __extends(Subtract, ThreeNodes.NodeNumberParam1);
-    function Subtract() {
+
+    return MathAdd;
+
+  })(ThreeNodes.NodeNumberParam1);
+  ThreeNodes.nodes.MathSubtract = (function(_super) {
+
+    __extends(MathSubtract, _super);
+
+    function MathSubtract() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Subtract.__super__.constructor.apply(this, arguments);
+      MathSubtract.__super__.constructor.apply(this, arguments);
     }
-    Subtract.prototype.set_fields = function() {
-      Subtract.__super__.set_fields.apply(this, arguments);
+
+    MathSubtract.node_name = 'Subtract';
+
+    MathSubtract.group_name = 'Math';
+
+    MathSubtract.prototype.set_fields = function() {
+      MathSubtract.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
         type: "Float",
         val: 1
       });
     };
-    Subtract.prototype.process_val = function(num, numb, i) {
+
+    MathSubtract.prototype.process_val = function(num, numb, i) {
       return num - numb;
     };
-    return Subtract;
-  })();
-  ThreeNodes.nodes.types.Math.Mult = (function() {
-    __extends(Mult, ThreeNodes.NodeNumberParam1);
-    function Mult() {
+
+    return MathSubtract;
+
+  })(ThreeNodes.NodeNumberParam1);
+  ThreeNodes.nodes.MathMult = (function(_super) {
+
+    __extends(MathMult, _super);
+
+    function MathMult() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Mult.__super__.constructor.apply(this, arguments);
+      MathMult.__super__.constructor.apply(this, arguments);
     }
-    Mult.prototype.set_fields = function() {
-      Mult.__super__.set_fields.apply(this, arguments);
+
+    MathMult.node_name = 'Mult';
+
+    MathMult.group_name = 'Math';
+
+    MathMult.prototype.set_fields = function() {
+      MathMult.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("factor", {
         type: "Float",
         val: 2
       });
     };
-    Mult.prototype.process_val = function(num, numb, i) {
+
+    MathMult.prototype.process_val = function(num, numb, i) {
       return num * numb;
     };
-    return Mult;
-  })();
-  ThreeNodes.nodes.types.Math.Divide = (function() {
-    __extends(Divide, ThreeNodes.NodeNumberParam1);
-    function Divide() {
+
+    return MathMult;
+
+  })(ThreeNodes.NodeNumberParam1);
+  ThreeNodes.nodes.MathDivide = (function(_super) {
+
+    __extends(MathDivide, _super);
+
+    function MathDivide() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Divide.__super__.constructor.apply(this, arguments);
+      MathDivide.__super__.constructor.apply(this, arguments);
     }
-    Divide.prototype.set_fields = function() {
-      Divide.__super__.set_fields.apply(this, arguments);
+
+    MathDivide.node_name = 'Divide';
+
+    MathDivide.group_name = 'Math';
+
+    MathDivide.prototype.set_fields = function() {
+      MathDivide.__super__.set_fields.apply(this, arguments);
       return this.v_factor = this.rack.addField("y", {
         type: "Float",
         val: 2
       });
     };
-    Divide.prototype.process_val = function(num, numb, i) {
+
+    MathDivide.prototype.process_val = function(num, numb, i) {
       return num / numb;
     };
-    return Divide;
-  })();
-  ThreeNodes.nodes.types.Math.Min = (function() {
-    __extends(Min, ThreeNodes.NodeNumberParam1);
-    function Min() {
+
+    return MathDivide;
+
+  })(ThreeNodes.NodeNumberParam1);
+  ThreeNodes.nodes.MathMin = (function(_super) {
+
+    __extends(MathMin, _super);
+
+    function MathMin() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Min.__super__.constructor.apply(this, arguments);
+      MathMin.__super__.constructor.apply(this, arguments);
     }
-    Min.prototype.set_fields = function() {
-      Min.__super__.set_fields.apply(this, arguments);
+
+    MathMin.node_name = 'Min';
+
+    MathMin.group_name = 'Math';
+
+    MathMin.prototype.set_fields = function() {
+      MathMin.__super__.set_fields.apply(this, arguments);
       this.v_factor = this.rack.addField("in2", {
         type: "Float",
         val: 0
@@ -264,20 +385,30 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         in2: 0
       };
     };
-    Min.prototype.process_val = function(num, numb, i) {
+
+    MathMin.prototype.process_val = function(num, numb, i) {
       return Math.min(num, numb);
     };
-    return Min;
-  })();
-  ThreeNodes.nodes.types.Math.Max = (function() {
-    __extends(Max, ThreeNodes.NodeNumberParam1);
-    function Max() {
+
+    return MathMin;
+
+  })(ThreeNodes.NodeNumberParam1);
+  ThreeNodes.nodes.MathMax = (function(_super) {
+
+    __extends(MathMax, _super);
+
+    function MathMax() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Max.__super__.constructor.apply(this, arguments);
+      MathMax.__super__.constructor.apply(this, arguments);
     }
-    Max.prototype.set_fields = function() {
-      Max.__super__.set_fields.apply(this, arguments);
+
+    MathMax.node_name = 'Max';
+
+    MathMax.group_name = 'Math';
+
+    MathMax.prototype.set_fields = function() {
+      MathMax.__super__.set_fields.apply(this, arguments);
       this.v_factor = this.rack.addField("in2", {
         type: "Float",
         val: 0
@@ -287,32 +418,43 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         in2: 0
       };
     };
-    Max.prototype.process_val = function(num, numb, i) {
+
+    MathMax.prototype.process_val = function(num, numb, i) {
       return Math.max(num, numb);
     };
-    return Max;
-  })();
-  return ThreeNodes.nodes.types.Math.Attenuation = (function() {
-    __extends(Attenuation, ThreeNodes.NodeNumberParam1);
-    function Attenuation() {
+
+    return MathMax;
+
+  })(ThreeNodes.NodeNumberParam1);
+  return ThreeNodes.nodes.MathAttenuation = (function(_super) {
+
+    __extends(MathAttenuation, _super);
+
+    function MathAttenuation() {
       this.process_val = __bind(this.process_val, this);
       this.set_fields = __bind(this.set_fields, this);
-      Attenuation.__super__.constructor.apply(this, arguments);
+      MathAttenuation.__super__.constructor.apply(this, arguments);
     }
-    Attenuation.prototype.set_fields = function() {
-      Attenuation.__super__.set_fields.apply(this, arguments);
+
+    MathAttenuation.node_name = 'Attenuation';
+
+    MathAttenuation.group_name = 'Math';
+
+    MathAttenuation.prototype.set_fields = function() {
+      MathAttenuation.__super__.set_fields.apply(this, arguments);
       this.def_val = this.rack.addField("default", 0);
       this.reset_val = this.rack.addField("reset", false);
       this.v_factor = this.rack.addField("factor", 0.8);
-      return this.val = this.def_val.get();
+      return this.val = this.def_val.getValue();
     };
-    Attenuation.prototype.process_val = function(num, numb, i) {
-      if (this.reset_val.get(i) === true) {
-        this.val = this.def_val.get(i);
-      }
-      this.val = this.val + (this.v_in.get(i) - this.val) * this.v_factor.get(i);
+
+    MathAttenuation.prototype.process_val = function(num, numb, i) {
+      if (this.reset_val.getValue(i) === true) this.val = this.def_val.getValue(i);
+      this.val = this.val + (this.v_in.getValue(i) - this.val) * this.v_factor.getValue(i);
       return this.val;
     };
-    return Attenuation;
-  })();
+
+    return MathAttenuation;
+
+  })(ThreeNodes.NodeNumberParam1);
 });

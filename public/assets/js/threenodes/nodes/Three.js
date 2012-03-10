@@ -1,24 +1,29 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'order!threenodes/utils/Utils'], function($, _, Backbone) {
   "use strict";
   var Object3DwithMeshAndMaterial;
-  ThreeNodes.nodes.types.Three.Object3D = (function() {
-    __extends(Object3D, ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Object3D = (function(_super) {
+
+    __extends(Object3D, _super);
+
     function Object3D() {
       this.compute = __bind(this.compute, this);
+      this.apply_children = __bind(this.apply_children, this);
       this.get_children_array = __bind(this.get_children_array, this);
+      this.remove = __bind(this.remove, this);
+      this.deleteObjectAttributes = __bind(this.deleteObjectAttributes, this);
       this.set_fields = __bind(this.set_fields, this);
       Object3D.__super__.constructor.apply(this, arguments);
     }
+
+    Object3D.node_name = 'Object3D';
+
+    Object3D.group_name = 'Three';
+
     Object3D.prototype.set_fields = function() {
-      Object3D.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
       this.ob = new THREE.Object3D();
       this.rack.addFields({
@@ -55,63 +60,38 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_shadow_options = ["castShadow", "receiveShadow"];
       return this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
     };
+
+    Object3D.prototype.deleteObjectAttributes = function(ob) {
+      if (ob) {
+        delete ob.up;
+        delete ob.position;
+        delete ob.rotation;
+        delete ob.scale;
+        delete ob.matrix;
+        delete ob.matrixWorld;
+        delete ob.matrixRotationWorld;
+        delete ob.quaternion;
+        return delete ob._vector;
+      }
+    };
+
+    Object3D.prototype.remove = function() {
+      Object3D.__super__.remove.apply(this, arguments);
+      this.deleteObjectAttributes(this.ob);
+      delete this.ob;
+      return delete this.shadow_cache;
+    };
+
     Object3D.prototype.get_children_array = function() {
       var childs;
-      childs = this.rack.get("children").val;
-      if (childs && $.type(childs) !== "array") {
-        return [childs];
-      }
+      childs = this.rack.getField("children").get("value");
+      if (childs && $.type(childs) !== "array") return [childs];
       return childs;
     };
-    Object3D.prototype.compute = function() {
-      var child, childs_in, ind, _i, _j, _len, _len2, _ref;
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
-      childs_in = this.get_children_array();
-      if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
-        while (this.ob.children.length > 0) {
-          this.ob.remove(this.ob.children[0]);
-        }
-      }
-      _ref = this.ob.children;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
-        ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child) {
-          this.ob.remove(child);
-        }
-      }
-      for (_j = 0, _len2 = childs_in.length; _j < _len2; _j++) {
-        child = childs_in[_j];
-        ind = this.ob.children.indexOf(child);
-        if (ind === -1) {
-          this.ob.add(child);
-        }
-      }
-      return this.rack.set("out", this.ob);
-    };
-    return Object3D;
-  })();
-  ThreeNodes.nodes.types.Three.Scene = (function() {
-    __extends(Scene, ThreeNodes.nodes.types.Three.Object3D);
-    function Scene() {
-      this.compute = __bind(this.compute, this);
-      this.apply_children = __bind(this.apply_children, this);
-      this.set_fields = __bind(this.set_fields, this);
-      Scene.__super__.constructor.apply(this, arguments);
-    }
-    Scene.prototype.set_fields = function() {
-      var current_scene;
-      Scene.__super__.set_fields.apply(this, arguments);
-      this.ob = new THREE.Scene();
-      this.v_fog = this.rack.addField("fog", {
-        type: 'Any',
-        val: null
-      });
-      return current_scene = this.ob;
-    };
-    Scene.prototype.apply_children = function() {
-      var child, childs_in, ind, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
-      if (this.rack.get("children").connections.length === 0 && this.ob.children.length !== 0) {
+
+    Object3D.prototype.apply_children = function() {
+      var child, childs_in, ind, _i, _j, _len, _len2, _ref, _results;
+      if (this.rack.getField("children").connections.length === 0 && this.ob.children.length !== 0) {
         while (this.ob.children.length > 0) {
           this.ob.remove(this.ob.children[0]);
         }
@@ -122,96 +102,173 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child instanceof THREE.Light === false) {
-          this.ob.remove(child);
-        }
-      }
-      _ref2 = this.ob.children;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        child = _ref2[_j];
-        ind = childs_in.indexOf(child);
-        if (child && ind === -1 && child instanceof THREE.Light === true) {
-          this.ob.remove(child);
-        }
+        if (child && ind === -1) this.ob.remove(child);
       }
       _results = [];
-      for (_k = 0, _len3 = childs_in.length; _k < _len3; _k++) {
-        child = childs_in[_k];
-        _results.push(child instanceof THREE.Light === true ? (ind = this.ob.children.indexOf(child), ind === -1 ? (this.ob.add(child), ThreeNodes.rebuild_all_shaders()) : void 0) : (ind = this.ob.children.indexOf(child), ind === -1 ? this.ob.add(child) : void 0));
+      for (_j = 0, _len2 = childs_in.length; _j < _len2; _j++) {
+        child = childs_in[_j];
+        ind = this.ob.children.indexOf(child);
+        if (child instanceof THREE.Light === true) {
+          if (ind === -1) {
+            this.ob.add(child);
+            _results.push(ThreeNodes.events.trigger("RebuildAllShaders"));
+          } else {
+            _results.push(void 0);
+          }
+        } else {
+          if (ind === -1) {
+            _results.push(this.ob.add(child));
+          } else {
+            _results.push(void 0);
+          }
+        }
       }
       return _results;
     };
+
+    Object3D.prototype.compute = function() {
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children']);
+      this.apply_children();
+      return this.rack.setField("out", this.ob);
+    };
+
+    return Object3D;
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Scene = (function(_super) {
+
+    __extends(Scene, _super);
+
+    function Scene() {
+      this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.set_fields = __bind(this.set_fields, this);
+      Scene.__super__.constructor.apply(this, arguments);
+    }
+
+    Scene.node_name = 'Scene';
+
+    Scene.group_name = 'Three';
+
+    Scene.prototype.set_fields = function() {
+      var current_scene;
+      Scene.__super__.set_fields.apply(this, arguments);
+      this.ob = new THREE.Scene();
+      this.v_fog = this.rack.addField("fog", {
+        type: 'Any',
+        val: null
+      });
+      return current_scene = this.ob;
+    };
+
+    Scene.prototype.remove = function() {
+      if (this.ob) {
+        delete this.ob.fog;
+        delete this.ob.__objects;
+        delete this.ob.__lights;
+        delete this.ob.__objectsAdded;
+        delete this.ob.__objectsRemoved;
+      }
+      delete this.vfog;
+      return Scene.__super__.remove.apply(this, arguments);
+    };
+
     Scene.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'lights']);
       this.apply_children();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return Scene;
-  })();
-  Object3DwithMeshAndMaterial = (function() {
-    __extends(Object3DwithMeshAndMaterial, ThreeNodes.nodes.types.Three.Object3D);
+
+  })(ThreeNodes.nodes.Object3D);
+  Object3DwithMeshAndMaterial = (function(_super) {
+
+    __extends(Object3DwithMeshAndMaterial, _super);
+
     function Object3DwithMeshAndMaterial() {
       this.get_material_cache = __bind(this.get_material_cache, this);
       this.get_geometry_cache = __bind(this.get_geometry_cache, this);
       this.rebuild_geometry = __bind(this.rebuild_geometry, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Object3DwithMeshAndMaterial.__super__.constructor.apply(this, arguments);
     }
+
     Object3DwithMeshAndMaterial.prototype.set_fields = function() {
       Object3DwithMeshAndMaterial.__super__.set_fields.apply(this, arguments);
       this.material_cache = false;
       return this.geometry_cache = false;
     };
+
+    Object3DwithMeshAndMaterial.prototype.remove = function() {
+      delete this.material_cache;
+      delete this.geometry_cache;
+      return Object3DwithMeshAndMaterial.__super__.remove.apply(this, arguments);
+    };
+
     Object3DwithMeshAndMaterial.prototype.rebuild_geometry = function() {
       var field, geom;
-      field = this.rack.get('geometry');
+      field = this.rack.getField('geometry');
       if (field.connections.length > 0) {
         geom = field.connections[0].from_field.node;
         geom.cached = [];
         return geom.compute();
       } else {
-        return this.rack.get('geometry').set(new THREE.CubeGeometry(200, 200, 200));
+        return this.rack.getField('geometry').setValue(new THREE.CubeGeometry(200, 200, 200));
       }
     };
+
     Object3DwithMeshAndMaterial.prototype.get_geometry_cache = function() {
       var f, res, _i, _len, _ref;
       res = "";
-      if (jQuery.type(this.rack.get('geometry').val) === "array") {
-        _ref = this.rack.get('geometry').val;
+      if (jQuery.type(this.rack.getField('geometry').get("value")) === "array") {
+        _ref = this.rack.getField('geometry').get("value");
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
           res += f.id;
         }
       } else {
-        res = this.rack.get('geometry').val.id;
+        res = this.rack.getField('geometry').get("value").id;
       }
       return res;
     };
+
     Object3DwithMeshAndMaterial.prototype.get_material_cache = function() {
       var f, res, _i, _len, _ref;
       res = "";
-      if (jQuery.type(this.rack.get('material').val) === "array") {
-        _ref = this.rack.get('material').val;
+      if (jQuery.type(this.rack.getField('material').get("value")) === "array") {
+        _ref = this.rack.getField('material').get("value");
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           f = _ref[_i];
           res += f.id;
         }
       } else {
-        res = this.rack.get('material').val.id;
+        res = this.rack.getField('material').get("value").id;
       }
       return res;
     };
+
     return Object3DwithMeshAndMaterial;
-  })();
-  ThreeNodes.nodes.types.Three.Mesh = (function() {
-    __extends(Mesh, Object3DwithMeshAndMaterial);
-    function Mesh() {
+
+  })(ThreeNodes.nodes.Object3D);
+  ThreeNodes.nodes.ThreeMesh = (function(_super) {
+
+    __extends(ThreeMesh, _super);
+
+    function ThreeMesh() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
-      Mesh.__super__.constructor.apply(this, arguments);
+      ThreeMesh.__super__.constructor.apply(this, arguments);
     }
-    Mesh.prototype.set_fields = function() {
-      Mesh.__super__.set_fields.apply(this, arguments);
+
+    ThreeMesh.node_name = 'Mesh';
+
+    ThreeMesh.group_name = 'Three';
+
+    ThreeMesh.prototype.set_fields = function() {
+      ThreeMesh.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
         inputs: {
           "geometry": {
@@ -227,11 +284,26 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "overdraw": false
         }
       });
-      this.ob = [new THREE.Mesh(this.rack.get('geometry').get(), this.rack.get('material').get())];
+      this.ob = [new THREE.Mesh(this.rack.getField('geometry').getValue(), this.rack.getField('material').getValue())];
       this.last_slice_count = 1;
       return this.compute();
     };
-    Mesh.prototype.compute = function() {
+
+    ThreeMesh.prototype.remove = function() {
+      var item, _i, _len, _ref;
+      if (this.ob) {
+        _ref = this.ob;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          this.deleteObjectAttributes(item);
+          delete item.geometry;
+          delete item.material;
+        }
+      }
+      return ThreeMesh.__super__.remove.apply(this, arguments);
+    };
+
+    ThreeMesh.prototype.compute = function() {
       var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
       needs_rebuild = false;
       numItems = this.rack.getMaxInputSliceCount();
@@ -244,38 +316,43 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
         needs_rebuild = true;
       }
-      if (this.material_cache !== new_material_cache) {
-        this.rebuild_geometry();
-      }
+      if (this.material_cache !== new_material_cache) this.rebuild_geometry();
       if (this.geometry_cache !== new_geometry_cache || this.material_cache !== new_material_cache || needs_rebuild) {
         this.ob = [];
         for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-          item = new THREE.Mesh(this.rack.get('geometry').get(i), this.rack.get('material').get(i));
+          item = new THREE.Mesh(this.rack.getField('geometry').getValue(i), this.rack.getField('material').getValue(i));
           this.ob[i] = item;
         }
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
         this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
-      if (needs_rebuild === true) {
-        ThreeNodes.rebuild_all_shaders();
-      }
+      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
-    return Mesh;
-  })();
-  ThreeNodes.nodes.types.Three.Line = (function() {
-    __extends(Line, Object3DwithMeshAndMaterial);
-    function Line() {
+
+    return ThreeMesh;
+
+  })(Object3DwithMeshAndMaterial);
+  ThreeNodes.nodes.ThreeLine = (function(_super) {
+
+    __extends(ThreeLine, _super);
+
+    function ThreeLine() {
       this.compute = __bind(this.compute, this);
       this.set_fields = __bind(this.set_fields, this);
-      Line.__super__.constructor.apply(this, arguments);
+      ThreeLine.__super__.constructor.apply(this, arguments);
     }
-    Line.prototype.set_fields = function() {
-      Line.__super__.set_fields.apply(this, arguments);
+
+    ThreeLine.node_name = 'Line';
+
+    ThreeLine.group_name = 'Three';
+
+    ThreeLine.prototype.set_fields = function() {
+      ThreeLine.__super__.set_fields.apply(this, arguments);
       this.rack.addFields({
         inputs: {
           "geometry": {
@@ -298,11 +375,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           }
         }
       });
-      this.ob = [new THREE.Line(this.rack.get('geometry').get(), this.rack.get('material').get())];
+      this.ob = [new THREE.Line(this.rack.getField('geometry').getValue(), this.rack.getField('material').getValue())];
       this.last_slice_count = 1;
       return this.compute();
     };
-    Line.prototype.compute = function() {
+
+    ThreeLine.prototype.compute = function() {
       var i, item, needs_rebuild, new_geometry_cache, new_material_cache, numItems;
       needs_rebuild = false;
       numItems = this.rack.getMaxInputSliceCount();
@@ -315,36 +393,43 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       if (this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
         needs_rebuild = true;
       }
-      if (this.material_cache !== new_material_cache) {
-        this.rebuild_geometry();
-      }
+      if (this.material_cache !== new_material_cache) this.rebuild_geometry();
       if (this.geometry_cache !== new_geometry_cache || this.material_cache !== new_material_cache || needs_rebuild) {
         this.ob = [];
         for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
-          item = new THREE.Line(this.rack.get('geometry').get(i), this.rack.get('material').get(i));
+          item = new THREE.Line(this.rack.getField('geometry').getValue(i), this.rack.getField('material').getValue(i));
           this.ob[i] = item;
         }
       }
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
         this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
-      if (needs_rebuild === true) {
-        ThreeNodes.rebuild_all_shaders();
-      }
+      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
-    return Line;
-  })();
-  ThreeNodes.nodes.types.Three.Camera = (function() {
-    __extends(Camera, ThreeNodes.NodeBase);
+
+    return ThreeLine;
+
+  })(Object3DwithMeshAndMaterial);
+  ThreeNodes.nodes.Camera = (function(_super) {
+
+    __extends(Camera, _super);
+
     function Camera() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.deleteObjectAttributes = __bind(this.deleteObjectAttributes, this);
       this.set_fields = __bind(this.set_fields, this);
       Camera.__super__.constructor.apply(this, arguments);
     }
+
+    Camera.node_name = 'Camera';
+
+    Camera.group_name = 'Three';
+
     Camera.prototype.set_fields = function() {
       Camera.__super__.set_fields.apply(this, arguments);
       this.ob = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
@@ -372,20 +457,51 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
+    Camera.prototype.deleteObjectAttributes = function(ob) {
+      if (ob) {
+        delete ob.up;
+        delete ob.position;
+        delete ob.rotation;
+        delete ob.scale;
+        delete ob.matrix;
+        delete ob.matrixWorld;
+        delete ob.matrixRotationWorld;
+        delete ob.quaternion;
+        return delete ob._vector;
+      }
+    };
+
+    Camera.prototype.remove = function() {
+      this.deleteObjectAttributes(this.ob);
+      delete this.ob;
+      return Camera.__super__.remove.apply(this, arguments);
+    };
+
     Camera.prototype.compute = function() {
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['target']);
-      this.ob.lookAt(this.rack.get("target").get());
-      return this.rack.set("out", this.ob);
+      this.ob.lookAt(this.rack.getField("target").getValue());
+      return this.rack.setField("out", this.ob);
     };
+
     return Camera;
-  })();
-  ThreeNodes.nodes.types.Three.Texture = (function() {
-    __extends(Texture, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Texture = (function(_super) {
+
+    __extends(Texture, _super);
+
     function Texture() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Texture.__super__.constructor.apply(this, arguments);
     }
+
+    Texture.node_name = 'Texture';
+
+    Texture.group_name = 'Three';
+
     Texture.prototype.set_fields = function() {
       Texture.__super__.set_fields.apply(this, arguments);
       this.ob = false;
@@ -405,9 +521,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
+    Texture.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return Texture.__super__.remove.apply(this, arguments);
+    };
+
     Texture.prototype.compute = function() {
       var current;
-      current = this.rack.get("image").get();
+      current = this.rack.getField("image").getValue();
       if (current && current !== "") {
         if (this.cached === false ||  ($.type(this.cached) === "object" && this.cached.constructor === THREE.Texture && this.cached.image.attributes[0].nodeValue !== current)) {
           this.ob = new THREE.ImageUtils.loadTexture(current);
@@ -416,17 +539,27 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           this.cached = this.ob;
         }
       }
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return Texture;
-  })();
-  ThreeNodes.nodes.types.Three.Fog = (function() {
-    __extends(Fog, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.Fog = (function(_super) {
+
+    __extends(Fog, _super);
+
     function Fog() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       Fog.__super__.constructor.apply(this, arguments);
     }
+
+    Fog.node_name = 'Fog';
+
+    Fog.group_name = 'Three';
+
     Fog.prototype.set_fields = function() {
       Fog.__super__.set_fields.apply(this, arguments);
       this.ob = false;
@@ -447,22 +580,36 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
-    Fog.prototype.compute = function() {
-      if (this.ob === false) {
-        this.ob = new THREE.Fog(0xffffff, 1, 1000);
-      }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+
+    Fog.prototype.remove = function() {
+      delete this.ob;
+      return Fog.__super__.remove.apply(this, arguments);
     };
+
+    Fog.prototype.compute = function() {
+      if (this.ob === false) this.ob = new THREE.Fog(0xffffff, 1, 1000);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
+    };
+
     return Fog;
-  })();
-  ThreeNodes.nodes.types.Three.FogExp2 = (function() {
-    __extends(FogExp2, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.FogExp2 = (function(_super) {
+
+    __extends(FogExp2, _super);
+
     function FogExp2() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       FogExp2.__super__.constructor.apply(this, arguments);
     }
+
+    FogExp2.node_name = 'FogExp2';
+
+    FogExp2.group_name = 'Three';
+
     FogExp2.prototype.set_fields = function() {
       FogExp2.__super__.set_fields.apply(this, arguments);
       this.ob = false;
@@ -482,29 +629,43 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
-    FogExp2.prototype.compute = function() {
-      if (this.ob === false) {
-        this.ob = new THREE.FogExp2(0xffffff, 0.00025);
-      }
-      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+
+    FogExp2.prototype.remove = function() {
+      delete this.ob;
+      return FogExp2.__super__.remove.apply(this, arguments);
     };
+
+    FogExp2.prototype.compute = function() {
+      if (this.ob === false) this.ob = new THREE.FogExp2(0xffffff, 0.00025);
+      this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
+      return this.rack.setField("out", this.ob);
+    };
+
     return FogExp2;
-  })();
-  return ThreeNodes.nodes.types.Three.WebGLRenderer = (function() {
-    __extends(WebGLRenderer, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.WebGLRenderer = (function(_super) {
+
+    __extends(WebGLRenderer, _super);
+
     function WebGLRenderer() {
-      this.remove = __bind(this.remove, this);
       this.compute = __bind(this.compute, this);
       this.add_renderer_to_dom = __bind(this.add_renderer_to_dom, this);
       this.apply_post_fx = __bind(this.apply_post_fx, this);
       this.apply_size = __bind(this.apply_size, this);
       this.add_mouse_handler = __bind(this.add_mouse_handler, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       WebGLRenderer.__super__.constructor.apply(this, arguments);
     }
+
+    WebGLRenderer.node_name = 'WebGLRenderer';
+
+    WebGLRenderer.group_name = 'Three';
+
     WebGLRenderer.prototype.set_fields = function() {
-      var self;
+      var self,
+        _this = this;
       WebGLRenderer.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
       this.preview_mode = true;
@@ -542,26 +703,52 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           "shadowMapSoft": true
         }
       });
-      this.rack.get("camera").val.position.z = 1000;
+      this.rack.getField("camera").attributes.value.position.z = 1000;
       this.win = false;
       this.apply_size();
       this.old_bg = false;
       this.apply_bg_color();
       self = this;
       this.add_mouse_handler();
-      this.webgl_container.click(__bind(function(e) {
-        if (this.context.player_mode === false) {
-          return this.create_popup_view();
+      this.webgl_container.bind("click", function(e) {
+        console.log("webgl.click");
+        if (ThreeNodes.settings.player_mode === false) {
+          return _this.create_popup_view();
         }
-      }, this));
+      });
       return this;
     };
-    WebGLRenderer.prototype.add_mouse_handler = function() {
-      return $(this.ob.domElement).mousemove(function(e) {
-        ThreeNodes.mouseX = e.layerX;
-        return ThreeNodes.mouseY = e.layerY;
-      });
+
+    WebGLRenderer.prototype.remove = function() {
+      if (this.win && this.win !== false) this.win.close();
+      if (ThreeNodes.Webgl.current_camera === this.rack.getField("camera").getValue()) {
+        ThreeNodes.Webgl.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
+        ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera;
+      }
+      if (ThreeNodes.Webgl.current_scene === this.rack.getField("scene").getValue()) {
+        ThreeNodes.Webgl.current_scene = new THREE.Scene();
+        ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene;
+      }
+      this.webgl_container.unbind();
+      $(this.ob.domElement).unbind();
+      this.webgl_container.remove();
+      delete this.ob;
+      delete this.width;
+      delete this.height;
+      delete this.webgl_container;
+      delete this.win;
+      return WebGLRenderer.__super__.remove.apply(this, arguments);
     };
+
+    WebGLRenderer.prototype.add_mouse_handler = function() {
+      $(this.ob.domElement).unbind("mousemove");
+      $(this.ob.domElement).bind("mousemove", function(e) {
+        ThreeNodes.mouseX = e.clientX;
+        return ThreeNodes.mouseY = e.clientY;
+      });
+      return this;
+    };
+
     WebGLRenderer.prototype.create_popup_view = function() {
       this.preview_mode = false;
       this.creating_popup = true;
@@ -573,25 +760,25 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       this.apply_bg_color(true);
       this.apply_size(true);
-      return this.add_mouse_handler();
+      this.add_mouse_handler();
+      return this;
     };
+
     WebGLRenderer.prototype.create_preview_view = function() {
       this.preview_mode = true;
       this.webgl_container.append(this.ob.domElement);
       this.apply_bg_color(true);
       this.apply_size(true);
-      return this.add_mouse_handler();
+      this.add_mouse_handler();
+      return this;
     };
+
     WebGLRenderer.prototype.apply_bg_color = function(force_refresh) {
       var new_val;
-      if (force_refresh == null) {
-        force_refresh = false;
-      }
-      new_val = this.rack.get('bg_color').get().getContextStyle();
-      if (this.old_bg === new_val && force_refresh === false) {
-        return false;
-      }
-      this.ob.setClearColor(this.rack.get('bg_color').get(), 1);
+      if (force_refresh == null) force_refresh = false;
+      new_val = this.rack.getField('bg_color').getValue().getContextStyle();
+      if (this.old_bg === new_val && force_refresh === false) return false;
+      this.ob.setClearColor(this.rack.getField('bg_color').getValue(), 1);
       this.webgl_container.css({
         background: new_val
       });
@@ -602,16 +789,15 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       return this.old_bg = new_val;
     };
+
     WebGLRenderer.prototype.apply_size = function(force_refresh) {
       var dh, dw, h, maxw, r, w;
-      if (force_refresh == null) {
-        force_refresh = false;
-      }
-      w = this.rack.get('width').get();
-      h = this.rack.get('height').get();
+      if (force_refresh == null) force_refresh = false;
+      w = this.rack.getField('width').getValue();
+      h = this.rack.getField('height').getValue();
       dw = w;
       dh = h;
-      if (this.win === false && this.context.player_mode === false) {
+      if (this.win === false && ThreeNodes.settings.player_mode === false) {
         maxw = 220;
         r = w / h;
         dw = maxw;
@@ -619,20 +805,20 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       if (dw !== this.width || dh !== this.height ||  force_refresh) {
         this.ob.setSize(dw, dh);
-        if (this.win && this.win !== false) {
-          this.win.resizeTo(dw, dh + 52);
-        }
+        if (this.win && this.win !== false) this.win.resizeTo(dw, dh + 52);
       }
       this.width = dw;
       return this.height = dh;
     };
+
     WebGLRenderer.prototype.apply_post_fx = function() {
       var fxs;
-      fxs = this.rack.get("postfx").get().slice(0);
+      fxs = this.rack.getField("postfx").getValue().slice(0);
       fxs.unshift(ThreeNodes.Webgl.renderModel);
       fxs.push(ThreeNodes.Webgl.effectScreen);
       return ThreeNodes.Webgl.composer.passes = fxs;
     };
+
     WebGLRenderer.prototype.add_renderer_to_dom = function() {
       if (this.preview_mode && $("canvas", this.webgl_container).length === 0) {
         this.create_preview_view();
@@ -641,10 +827,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         return this.create_popup_view();
       }
     };
+
     WebGLRenderer.prototype.compute = function() {
-      if (this.creating_popup === true && !this.win) {
-        return;
-      }
+      if (this.creating_popup === true && !this.win) return;
       this.creating_popup = false;
       if (this.win !== false) {
         if (this.win.closed && this.preview_mode === false) {
@@ -652,16 +837,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
           this.win = false;
         }
       }
-      if (!this.context.testing_mode) {
-        this.add_renderer_to_dom();
-      }
+      if (!ThreeNodes.settings.testing_mode) this.add_renderer_to_dom();
       this.apply_size();
       this.apply_bg_color();
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx']);
-      ThreeNodes.Webgl.current_camera = this.rack.get("camera").get();
-      ThreeNodes.Webgl.current_scene = this.rack.get("scene").get();
-      this.rack.get("camera").get().aspect = this.width / this.height;
-      this.rack.get("camera").get().updateProjectionMatrix();
+      ThreeNodes.Webgl.current_camera = this.rack.getField("camera").getValue();
+      ThreeNodes.Webgl.current_scene = this.rack.getField("scene").getValue();
+      this.rack.getField("camera").getValue().aspect = this.width / this.height;
+      this.rack.getField("camera").getValue().updateProjectionMatrix();
       this.apply_post_fx();
       this.ob.clear();
       ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene;
@@ -669,12 +852,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer;
       return ThreeNodes.Webgl.composer.render(0.05);
     };
-    WebGLRenderer.prototype.remove = function() {
-      if (this.win && this.win !== false) {
-        this.win.close();
-      }
-      return WebGLRenderer.__super__.remove.apply(this, arguments);
-    };
+
     return WebGLRenderer;
-  })();
+
+  })(ThreeNodes.NodeBase);
+  return true;
 });

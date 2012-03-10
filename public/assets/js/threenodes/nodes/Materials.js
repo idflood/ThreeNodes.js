@@ -1,26 +1,28 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.NodeMaterialBase = (function() {
-    __extends(NodeMaterialBase, ThreeNodes.NodeBase);
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'order!threenodes/utils/Utils'], function($, _, Backbone) {
+  "use strict";  ThreeNodes.NodeMaterialBase = (function(_super) {
+
+    __extends(NodeMaterialBase, _super);
+
     function NodeMaterialBase() {
       this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.rebuildShader = __bind(this.rebuildShader, this);
       this.set_fields = __bind(this.set_fields, this);
       NodeMaterialBase.__super__.constructor.apply(this, arguments);
     }
+
     NodeMaterialBase.prototype.set_fields = function() {
       NodeMaterialBase.__super__.set_fields.apply(this, arguments);
       this.ob = false;
       this.auto_evaluate = true;
       this.material_class = false;
       this.last_slice_count = -1;
-      ThreeNodes.webgl_materials_node[ThreeNodes.webgl_materials_node.length] = this;
+      this.is_material = true;
+      ThreeNodes.events.on("RebuildAllShaders", this.rebuildShader);
       return this.rack.addFields({
         inputs: {
           "opacity": 1,
@@ -44,6 +46,31 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
         }
       });
     };
+
+    NodeMaterialBase.prototype.rebuildShader = function() {
+      var sub_material, _i, _len, _ref;
+      if (!this.ob) return this;
+      if ($.type(this.ob) === "array") {
+        _ref = this.ob;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          sub_material = _ref[_i];
+          console.log(sub_material);
+          sub_material.program = false;
+        }
+      } else {
+        this.ob.program = false;
+      }
+      return this;
+    };
+
+    NodeMaterialBase.prototype.remove = function() {
+      ThreeNodes.events.off("RebuildAllShaders", this.rebuildShader);
+      delete this.ob;
+      delete this.material_cache;
+      delete this.material_class;
+      return NodeMaterialBase.__super__.remove.apply(this, arguments);
+    };
+
     NodeMaterialBase.prototype.compute = function() {
       var i, needs_rebuild, numItems;
       needs_rebuild = false;
@@ -62,16 +89,25 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       }
       this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
       this.last_slice_count = numItems;
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return NodeMaterialBase;
-  })();
-  ThreeNodes.nodes.types.Materials.MeshBasicMaterial = (function() {
-    __extends(MeshBasicMaterial, ThreeNodes.NodeMaterialBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.MeshBasicMaterial = (function(_super) {
+
+    __extends(MeshBasicMaterial, _super);
+
     function MeshBasicMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       MeshBasicMaterial.__super__.constructor.apply(this, arguments);
     }
+
+    MeshBasicMaterial.node_name = 'MeshBasic';
+
+    MeshBasicMaterial.group_name = 'Materials';
+
     MeshBasicMaterial.prototype.set_fields = function() {
       MeshBasicMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -104,14 +140,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
+
     return MeshBasicMaterial;
-  })();
-  ThreeNodes.nodes.types.Materials.LineBasicMaterial = (function() {
-    __extends(LineBasicMaterial, ThreeNodes.NodeMaterialBase);
+
+  })(ThreeNodes.NodeMaterialBase);
+  ThreeNodes.nodes.LineBasicMaterial = (function(_super) {
+
+    __extends(LineBasicMaterial, _super);
+
     function LineBasicMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       LineBasicMaterial.__super__.constructor.apply(this, arguments);
     }
+
+    LineBasicMaterial.node_name = 'LineBasic';
+
+    LineBasicMaterial.group_name = 'Materials';
+
     LineBasicMaterial.prototype.set_fields = function() {
       LineBasicMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -134,14 +179,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
+
     return LineBasicMaterial;
-  })();
-  ThreeNodes.nodes.types.Materials.MeshLambertMaterial = (function() {
-    __extends(MeshLambertMaterial, ThreeNodes.NodeMaterialBase);
+
+  })(ThreeNodes.NodeMaterialBase);
+  ThreeNodes.nodes.MeshLambertMaterial = (function(_super) {
+
+    __extends(MeshLambertMaterial, _super);
+
     function MeshLambertMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       MeshLambertMaterial.__super__.constructor.apply(this, arguments);
     }
+
+    MeshLambertMaterial.node_name = 'MeshLambert';
+
+    MeshLambertMaterial.group_name = 'Materials';
+
     MeshLambertMaterial.prototype.set_fields = function() {
       MeshLambertMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -176,14 +230,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
+
     return MeshLambertMaterial;
-  })();
-  return ThreeNodes.nodes.types.Materials.MeshPhongMaterial = (function() {
-    __extends(MeshPhongMaterial, ThreeNodes.NodeMaterialBase);
+
+  })(ThreeNodes.NodeMaterialBase);
+  return ThreeNodes.nodes.MeshPhongMaterial = (function(_super) {
+
+    __extends(MeshPhongMaterial, _super);
+
     function MeshPhongMaterial() {
       this.set_fields = __bind(this.set_fields, this);
       MeshPhongMaterial.__super__.constructor.apply(this, arguments);
     }
+
+    MeshPhongMaterial.node_name = 'MeshPhong';
+
+    MeshPhongMaterial.group_name = 'Materials';
+
     MeshPhongMaterial.prototype.set_fields = function() {
       MeshPhongMaterial.__super__.set_fields.apply(this, arguments);
       this.ob = [];
@@ -227,6 +290,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
       return this.material_cache = this.create_cache_object(this.vars_rebuild_shader_on_change);
     };
+
     return MeshPhongMaterial;
-  })();
+
+  })(ThreeNodes.NodeMaterialBase);
 });

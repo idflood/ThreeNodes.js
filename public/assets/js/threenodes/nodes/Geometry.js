@@ -1,20 +1,24 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-};
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "order!libs/jquery.tmpl.min", "order!libs/jquery.contextMenu", 'order!threenodes/core/NodeFieldRack', 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.nodes.types.Geometry.PlaneGeometry = (function() {
-    __extends(PlaneGeometry, ThreeNodes.NodeBase);
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'order!threenodes/utils/Utils'], function($, _, Backbone) {
+  "use strict";  ThreeNodes.nodes.PlaneGeometry = (function(_super) {
+
+    __extends(PlaneGeometry, _super);
+
     function PlaneGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       PlaneGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    PlaneGeometry.node_name = 'Plane';
+
+    PlaneGeometry.group_name = 'Geometry';
+
     PlaneGeometry.prototype.set_fields = function() {
       PlaneGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -35,28 +39,46 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    PlaneGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get()];
+
+    PlaneGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return PlaneGeometry.__super__.remove.apply(this, arguments);
     };
+
+    PlaneGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue()];
+    };
+
     PlaneGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.PlaneGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
+        this.ob = new THREE.PlaneGeometry(this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return PlaneGeometry;
-  })();
-  ThreeNodes.nodes.types.Geometry.CubeGeometry = (function() {
-    __extends(CubeGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.CubeGeometry = (function(_super) {
+
+    __extends(CubeGeometry, _super);
+
     function CubeGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       CubeGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    CubeGeometry.node_name = 'Cube';
+
+    CubeGeometry.group_name = 'Geometry';
+
     CubeGeometry.prototype.set_fields = function() {
       CubeGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -80,28 +102,46 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    CubeGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get()];
+
+    CubeGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return CubeGeometry.__super__.remove.apply(this, arguments);
     };
+
+    CubeGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("depth").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue(), this.rack.getField("segments_depth").getValue(), this.rack.getField("flip").getValue()];
+    };
+
     CubeGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.CubeGeometry(this.rack.get("width").get(), this.rack.get("height").get(), this.rack.get("depth").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get(), this.rack.get("segments_depth").get(), this.rack.get("flip").get());
+        this.ob = new THREE.CubeGeometry(this.rack.getField("width").getValue(), this.rack.getField("height").getValue(), this.rack.getField("depth").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue(), this.rack.getField("segments_depth").getValue(), this.rack.getField("flip").getValue());
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return CubeGeometry;
-  })();
-  ThreeNodes.nodes.types.Geometry.SphereGeometry = (function() {
-    __extends(SphereGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.SphereGeometry = (function(_super) {
+
+    __extends(SphereGeometry, _super);
+
     function SphereGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       SphereGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    SphereGeometry.node_name = 'Sphere';
+
+    SphereGeometry.group_name = 'Geometry';
+
     SphereGeometry.prototype.set_fields = function() {
       SphereGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -121,29 +161,47 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    SphereGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get()];
+
+    SphereGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return SphereGeometry.__super__.remove.apply(this, arguments);
     };
+
+    SphereGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("radius").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue()];
+    };
+
     SphereGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.SphereGeometry(this.rack.get("radius").get(), this.rack.get("segments_width").get(), this.rack.get("segments_height").get());
+        this.ob = new THREE.SphereGeometry(this.rack.getField("radius").getValue(), this.rack.getField("segments_width").getValue(), this.rack.getField("segments_height").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return SphereGeometry;
-  })();
-  ThreeNodes.nodes.types.Geometry.CylinderGeometry = (function() {
-    __extends(CylinderGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.CylinderGeometry = (function(_super) {
+
+    __extends(CylinderGeometry, _super);
+
     function CylinderGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       CylinderGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    CylinderGeometry.node_name = 'Cylinder';
+
+    CylinderGeometry.group_name = 'Geometry';
+
     CylinderGeometry.prototype.set_fields = function() {
       CylinderGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -166,29 +224,47 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    CylinderGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radiusTop").get(), this.rack.get("radiusBottom").get(), this.rack.get("height").get(), this.rack.get("segmentsRadius").get(), this.rack.get("segmentsHeight").get(), this.rack.get("openEnded").get()];
+
+    CylinderGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return CylinderGeometry.__super__.remove.apply(this, arguments);
     };
+
+    CylinderGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("radiusTop").getValue(), this.rack.getField("radiusBottom").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segmentsRadius").getValue(), this.rack.getField("segmentsHeight").getValue(), this.rack.getField("openEnded").getValue()];
+    };
+
     CylinderGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.CylinderGeometry(this.rack.get("radiusTop").get(), this.rack.get("radiusBottom").get(), this.rack.get("height").get(), this.rack.get("segmentsRadius").get(), this.rack.get("segmentsHeight").get(), this.rack.get("openEnded").get());
+        this.ob = new THREE.CylinderGeometry(this.rack.getField("radiusTop").getValue(), this.rack.getField("radiusBottom").getValue(), this.rack.getField("height").getValue(), this.rack.getField("segmentsRadius").getValue(), this.rack.getField("segmentsHeight").getValue(), this.rack.getField("openEnded").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return CylinderGeometry;
-  })();
-  ThreeNodes.nodes.types.Geometry.TorusGeometry = (function() {
-    __extends(TorusGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.TorusGeometry = (function(_super) {
+
+    __extends(TorusGeometry, _super);
+
     function TorusGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       TorusGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    TorusGeometry.node_name = 'Torus';
+
+    TorusGeometry.group_name = 'Geometry';
+
     TorusGeometry.prototype.set_fields = function() {
       TorusGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -210,29 +286,47 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    TorusGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get()];
+
+    TorusGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return TorusGeometry.__super__.remove.apply(this, arguments);
     };
+
+    TorusGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("arc").getValue()];
+    };
+
     TorusGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.TorusGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("arc").get());
+        this.ob = new THREE.TorusGeometry(this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("arc").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return TorusGeometry;
-  })();
-  ThreeNodes.nodes.types.Geometry.TorusKnotGeometry = (function() {
-    __extends(TorusKnotGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.TorusKnotGeometry = (function(_super) {
+
+    __extends(TorusKnotGeometry, _super);
+
     function TorusKnotGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       TorusKnotGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    TorusKnotGeometry.node_name = 'TorusKnot';
+
+    TorusKnotGeometry.group_name = 'Geometry';
+
     TorusKnotGeometry.prototype.set_fields = function() {
       TorusKnotGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -256,29 +350,47 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    TorusKnotGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("p").get(), this.rack.get("q").get(), this.rack.get("heightScale").get()];
+
+    TorusKnotGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return TorusKnotGeometry.__super__.remove.apply(this, arguments);
     };
+
+    TorusKnotGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("p").getValue(), this.rack.getField("q").getValue(), this.rack.getField("heightScale").getValue()];
+    };
+
     TorusKnotGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.TorusKnotGeometry(this.rack.get("radius").get(), this.rack.get("tube").get(), this.rack.get("segmentsR").get(), this.rack.get("segmentsT").get(), this.rack.get("p").get(), this.rack.get("q").get(), this.rack.get("heightScale").get());
+        this.ob = new THREE.TorusKnotGeometry(this.rack.getField("radius").getValue(), this.rack.getField("tube").getValue(), this.rack.getField("segmentsR").getValue(), this.rack.getField("segmentsT").getValue(), this.rack.getField("p").getValue(), this.rack.getField("q").getValue(), this.rack.getField("heightScale").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return TorusKnotGeometry;
-  })();
-  ThreeNodes.nodes.types.Geometry.OctahedronGeometry = (function() {
-    __extends(OctahedronGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  ThreeNodes.nodes.OctahedronGeometry = (function(_super) {
+
+    __extends(OctahedronGeometry, _super);
+
     function OctahedronGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       OctahedronGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    OctahedronGeometry.node_name = 'Octahedron';
+
+    OctahedronGeometry.group_name = 'Geometry';
+
     OctahedronGeometry.prototype.set_fields = function() {
       OctahedronGeometry.__super__.set_fields.apply(this, arguments);
       this.auto_evaluate = true;
@@ -297,29 +409,47 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    OctahedronGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("radius").get(), this.rack.get("detail").get()];
+
+    OctahedronGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return OctahedronGeometry.__super__.remove.apply(this, arguments);
     };
+
+    OctahedronGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("radius").getValue(), this.rack.getField("detail").getValue()];
+    };
+
     OctahedronGeometry.prototype.compute = function() {
       var new_cache;
       new_cache = this.get_cache_array();
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
-        this.ob = new THREE.OctahedronGeometry(this.rack.get("radius").get(), this.rack.get("detail").get());
+        this.ob = new THREE.OctahedronGeometry(this.rack.getField("radius").getValue(), this.rack.getField("detail").getValue());
         this.cached = new_cache;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return OctahedronGeometry;
-  })();
-  return ThreeNodes.nodes.types.Geometry.TextGeometry = (function() {
-    __extends(TextGeometry, ThreeNodes.NodeBase);
+
+  })(ThreeNodes.NodeBase);
+  return ThreeNodes.nodes.TextGeometry = (function(_super) {
+
+    __extends(TextGeometry, _super);
+
     function TextGeometry() {
       this.compute = __bind(this.compute, this);
       this.get_cache_array = __bind(this.get_cache_array, this);
+      this.remove = __bind(this.remove, this);
       this.set_fields = __bind(this.set_fields, this);
       TextGeometry.__super__.constructor.apply(this, arguments);
     }
+
+    TextGeometry.node_name = 'Text';
+
+    TextGeometry.group_name = 'Geometry';
+
     TextGeometry.prototype.set_fields = function() {
       TextGeometry.__super__.set_fields.apply(this, arguments);
       this.ob = false;
@@ -346,39 +476,47 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", "or
       });
       return this.cached = this.get_cache_array();
     };
-    TextGeometry.prototype.get_cache_array = function() {
-      return [this.rack.get("font").get(), this.rack.get("text").get(), this.rack.get("size").get(), this.rack.get("height").get(), this.rack.get("curveSegments").get(), this.rack.get("bevelEnabled").get(), this.rack.get("bevelThickness").get(), this.rack.get("bevelSize").get()];
+
+    TextGeometry.prototype.remove = function() {
+      delete this.ob;
+      delete this.cached;
+      return TextGeometry.__super__.remove.apply(this, arguments);
     };
+
+    TextGeometry.prototype.get_cache_array = function() {
+      return [this.rack.getField("font").getValue(), this.rack.getField("text").getValue(), this.rack.getField("size").getValue(), this.rack.getField("height").getValue(), this.rack.getField("curveSegments").getValue(), this.rack.getField("bevelEnabled").getValue(), this.rack.getField("bevelThickness").getValue(), this.rack.getField("bevelSize").getValue()];
+    };
+
     TextGeometry.prototype.compute = function() {
       var font, has_font_attribute, new_cache;
       new_cache = this.get_cache_array();
-      font = this.rack.get("font").get();
+      font = this.rack.getField("font").getValue();
       has_font_attribute = function(f) {
-        if (font["font"] && font["weight"]) {
-          return true;
-        }
+        if (font["font"] && font["weight"]) return true;
         return false;
       };
-      if (!has_font_attribute(font) ||  this.rack.get("text").get() === "") {
+      if (!has_font_attribute(font) ||  this.rack.getField("text").getValue() === "") {
         this.ob = false;
-        this.rack.set("out", this.ob);
+        this.rack.setField("out", this.ob);
         return false;
       }
       if (ThreeNodes.Utils.flatArraysAreEquals(new_cache, this.cached) === false) {
         console.log("building text " + font.font + " / " + font.weight);
-        this.ob = new THREE.TextGeometry(this.rack.get("text").get(), {
-          size: this.rack.get("size").get(),
-          height: this.rack.get("height").get(),
+        this.ob = new THREE.TextGeometry(this.rack.getField("text").getValue(), {
+          size: this.rack.getField("size").getValue(),
+          height: this.rack.getField("height").getValue(),
           font: font.font,
           weight: font.weight,
-          curveSegments: this.rack.get("curveSegments").get()
+          curveSegments: this.rack.getField("curveSegments").getValue()
         });
         this.ob.computeBoundingBox();
         this.ob.computeVertexNormals();
         this.cached = new_cache;
       }
-      return this.rack.set("out", this.ob);
+      return this.rack.setField("out", this.ob);
     };
+
     return TextGeometry;
-  })();
+
+  })(ThreeNodes.NodeBase);
 });

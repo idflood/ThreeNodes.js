@@ -1,11 +1,16 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
 ThreeNodes.uid = 0;
+
 ThreeNodes.Utils = {};
+
 ThreeNodes.Utils.get_uid = function() {
   return ThreeNodes.uid += 1;
 };
+
 ThreeNodes.Utils.Rc4Random = (function() {
-  "use strict";  function Rc4Random(seed) {
+  "use strict";
+  function Rc4Random(seed) {
     this.getRandomNumber = __bind(this.getRandomNumber, this);
     this.getRandomByte = __bind(this.getRandomByte, this);
     var i, j, t, _ref, _ref2;
@@ -23,6 +28,7 @@ ThreeNodes.Utils.Rc4Random = (function() {
       this.keySchedule[j] = t;
     }
   }
+
   Rc4Random.prototype.getRandomByte = function() {
     var t;
     this.keySchedule_i = (this.keySchedule_i + 1) % 256;
@@ -32,6 +38,7 @@ ThreeNodes.Utils.Rc4Random = (function() {
     this.keySchedule[this.keySchedule_j] = t;
     return this.keySchedule[(this.keySchedule[this.keySchedule_i] + this.keySchedule[this.keySchedule_j]) % 256];
   };
+
   Rc4Random.prototype.getRandomNumber = function() {
     var i, multiplier, number, _ref;
     number = 0;
@@ -42,18 +49,17 @@ ThreeNodes.Utils.Rc4Random = (function() {
     }
     return number / 18446744073709551616;
   };
+
   return Rc4Random;
+
 })();
+
 ThreeNodes.Utils.flatArraysAreEquals = function(arr1, arr2) {
   var i, k, _len;
-  if (arr1.length !== arr2.length) {
-    return false;
-  }
+  if (arr1.length !== arr2.length) return false;
   for (i = 0, _len = arr1.length; i < _len; i++) {
     k = arr1[i];
-    if (arr1[i] !== arr2[i]) {
-      return false;
-    }
+    if (arr1[i] !== arr2[i]) return false;
   }
   return true;
 };

@@ -47,6 +47,21 @@ Timeline.getGlobalInstance = function () {
   return Timeline.globalInstance;
 };
 
+Timeline.prototype.destroy = function () {
+  this.stop();
+  delete this.setPropertyValue;
+  delete this.applyPropertyValue;
+  delete this.getPropertyValue;
+  delete this.onStop;
+  delete this.onPlay;
+  this.removeGUI();
+  
+  delete this.parameters;
+  delete this.anims;
+  delete this.anims_container;
+  delete this.tracks;
+};
+
 //Possible values of n:
 //-1 infinite loop
 //0  play forever without looping, continue increasing time even after last animation
@@ -81,6 +96,10 @@ Timeline.prototype.start = function () {
 };
 
 Timeline.prototype.preUpdate = function () {
+  //placeholder for hooks like GUI rendering
+};
+
+Timeline.prototype.removeGUI = function () {
   //placeholder for hooks like GUI rendering
 };
 
@@ -183,7 +202,7 @@ function Anim(name, target, timeline, startFunction, endFunction) {
   if (!this.objectTrack.name) {
     this.objectTrack.name = "Object" + timeline.trackNameCounter++;
   }
-  timeline.tracks.push(this.objectTrack);
+  this.timeline.tracks.push(this.objectTrack);
   this.tracks.push(this.objectTrack);
 
   for (var propertyName in target) {
@@ -203,10 +222,30 @@ function Anim(name, target, timeline, startFunction, endFunction) {
     this.tracks.push(prop);
   }
 
-  timeline.anims_container.push(this)
+  this.timeline.anims_container.push(this);
+}
+
+Anim.prototype.destroy = function () {
+  // remove the Anim references from the timeline
+  var idx = this.timeline.tracks.indexOf(this.objectTrack);
+  if (idx !== -1) {
+    this.timeline.tracks.splice(idx, 1);
+  }
+  idx = this.timeline.anims_container.indexOf(this);
+  if (idx !== -1) {
+    this.timeline.anims_container.splice(idx, 1);
+  }
+  delete this.propertyAnims;
+  delete this.target;
+  delete this.timeline;
+  delete this.tracks;
+  delete this.objectTrack;
 }
 
 Anim.prototype.disableProperty = function (propertyName) {
+  if (!this.objectTrack) {
+    return false;
+  }
   for (var i = 0; i < this.objectTrack.propertyTracks.length; i++) {
     var prop = this.objectTrack.propertyTracks[i];
     if (prop.propertyName == propertyName) {
@@ -216,6 +255,9 @@ Anim.prototype.disableProperty = function (propertyName) {
 }
 
 Anim.prototype.enableProperty = function (propertyName) {
+  if (!this.objectTrack) {
+    return false;
+  }
   for (var i = 0; i < this.objectTrack.propertyTracks.length; i++) {
     var prop = this.objectTrack.propertyTracks[i];
     if (prop.propertyName == propertyName) {
@@ -225,6 +267,9 @@ Anim.prototype.enableProperty = function (propertyName) {
 }
 
 Anim.prototype.getPropertyTrack = function (propertyName) {
+  if (!this.objectTrack) {
+    return false;
+  }
   for (var i = 0; i < this.objectTrack.propertyTracks.length; i++) {
     var prop = this.objectTrack.propertyTracks[i];
     if (prop.propertyName == propertyName) {

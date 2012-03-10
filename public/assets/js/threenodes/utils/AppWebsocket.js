@@ -1,6 +1,8 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
 define(['jQuery', 'Underscore', 'Backbone', "order!libs/sockjs-latest.min"], function($, _, Backbone) {
   "use strict";  return ThreeNodes.AppWebsocket = (function() {
+
     function AppWebsocket() {
       this.on_websocket_message = __bind(this.on_websocket_message, this);
       var self, socket, webso;
@@ -28,11 +30,14 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/sockjs-latest.min"], fun
         true;
       }
     }
+
     AppWebsocket.prototype.on_websocket_message = function(data) {
       var messg;
       messg = data.data;
       return ThreeNodes.flash_sound_value = jQuery.parseJSON(messg);
     };
+
     return AppWebsocket;
+
   })();
 });
