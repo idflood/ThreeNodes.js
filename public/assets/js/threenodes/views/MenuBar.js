@@ -3,18 +3,18 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.html"], function($, _, Backbone, _view_menubar) {
-  "use strict";  return ThreeNodes.AppMenuBar = (function(_super) {
+  "use strict";  return ThreeNodes.MenuBar = (function(_super) {
 
-    __extends(AppMenuBar, _super);
+    __extends(MenuBar, _super);
 
-    function AppMenuBar() {
+    function MenuBar() {
       this.on_link_click = __bind(this.on_link_click, this);
-      AppMenuBar.__super__.constructor.apply(this, arguments);
+      MenuBar.__super__.constructor.apply(this, arguments);
     }
 
-    AppMenuBar.template = _view_menubar;
+    MenuBar.template = _view_menubar;
 
-    AppMenuBar.prototype.initialize = function() {
+    MenuBar.prototype.initialize = function() {
       var self,
         _this = this;
       this.$el.menubar();
@@ -30,7 +30,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
       });
     };
 
-    AppMenuBar.prototype.on_link_click = function(event, link, url) {
+    MenuBar.prototype.on_link_click = function(event, link, url) {
       var is_exception;
       is_exception = (function() {
         switch ($(link).text().toLowerCase()) {
@@ -67,7 +67,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
       return true;
     };
 
-    return AppMenuBar;
+    return MenuBar;
 
   })(Backbone.View);
 });

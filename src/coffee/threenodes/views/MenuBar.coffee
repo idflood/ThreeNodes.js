@@ -5,7 +5,7 @@ define [
   "text!templates/app_menubar.tmpl.html",
 ], ($, _, Backbone, _view_menubar) ->
   "use strict"
-  class ThreeNodes.AppMenuBar extends Backbone.View
+  class ThreeNodes.MenuBar extends Backbone.View
     @template = _view_menubar
     
     initialize: () ->

@@ -2,7 +2,7 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  'order!threenodes/collections/NodeFieldsCollection',
+  'order!threenodes/collections/Fields',
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone) ->
   "use strict"

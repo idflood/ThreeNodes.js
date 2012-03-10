@@ -4,7 +4,7 @@ define [
   'Backbone',
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.AppSidebar extends Backbone.View
+  class ThreeNodes.Sidebar extends Backbone.View
     onRegister: () =>
       @init_sidebar_tab_new_node()
       @init_sidebar_search()

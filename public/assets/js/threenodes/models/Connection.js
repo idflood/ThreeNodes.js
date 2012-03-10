@@ -3,11 +3,11 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, Backbone) {
-  "use strict";  return ThreeNodes.ConnectionModel = (function(_super) {
+  "use strict";  return ThreeNodes.Connection = (function(_super) {
 
-    __extends(ConnectionModel, _super);
+    __extends(Connection, _super);
 
-    function ConnectionModel() {
+    function Connection() {
       this.setCID = __bind(this.setCID, this);
       this.switch_fields_if_needed = __bind(this.switch_fields_if_needed, this);
       this.validate = __bind(this.validate, this);
@@ -15,16 +15,16 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       this.remove = __bind(this.remove, this);
       this.initialize = __bind(this.initialize, this);
       this.sync = __bind(this.sync, this);
-      ConnectionModel.__super__.constructor.apply(this, arguments);
+      Connection.__super__.constructor.apply(this, arguments);
     }
 
-    ConnectionModel.prototype.defaults = {
+    Connection.prototype.defaults = {
       "cid": -1
     };
 
-    ConnectionModel.prototype.sync = function() {};
+    Connection.prototype.sync = function() {};
 
-    ConnectionModel.prototype.initialize = function(options) {
+    Connection.prototype.initialize = function(options) {
       this.options = options;
       this.node = this.options.node;
       if (this.get("cid") === -1) {
@@ -41,7 +41,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       }
     };
 
-    ConnectionModel.prototype.remove = function() {
+    Connection.prototype.remove = function() {
       this.from_field.unregister_connection(this);
       this.to_field.unregister_connection(this);
       this.to_field.remove_connections();
@@ -55,11 +55,11 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       return false;
     };
 
-    ConnectionModel.prototype.render = function() {
+    Connection.prototype.render = function() {
       return this.trigger("render", this, this);
     };
 
-    ConnectionModel.prototype.validate = function(attrs, options) {
+    Connection.prototype.validate = function(attrs, options) {
       this.from_field = attrs.from_field;
       this.to_field = attrs.to_field;
       if (!this.from_field || !this.to_field) return true;
@@ -73,7 +73,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       return false;
     };
 
-    ConnectionModel.prototype.switch_fields_if_needed = function() {
+    Connection.prototype.switch_fields_if_needed = function() {
       var f_out;
       if (this.from_field.get("is_output") === false) {
         f_out = this.to_field;
@@ -83,13 +83,13 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       return this;
     };
 
-    ConnectionModel.prototype.setCID = function(cid) {
+    Connection.prototype.setCID = function(cid) {
       return this.set({
         "cid": cid
       });
     };
 
-    ConnectionModel.prototype.toJSON = function() {
+    Connection.prototype.toJSON = function() {
       var res;
       res = {
         id: this.get("cid"),
@@ -101,11 +101,11 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       return res;
     };
 
-    ConnectionModel.prototype.toXML = function() {
+    Connection.prototype.toXML = function() {
       return "\t\t<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>\n";
     };
 
-    ConnectionModel.prototype.toCode = function() {
+    Connection.prototype.toCode = function() {
       var res;
       res = "var connection_" + (this.get('cid')) + "_data = {\n";
       res += "\t" + ("id: " + (this.get('cid')) + ",\n");
@@ -116,7 +116,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       return res;
     };
 
-    return ConnectionModel;
+    return Connection;
 
   })(Backbone.Model);
 });

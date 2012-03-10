@@ -15,7 +15,7 @@ define [
   'order!threenodes/nodes/Utils',
   'order!threenodes/nodes/Spread',
   'order!threenodes/nodes/Particle',
-  'order!threenodes/collections/ConnectionsCollection',
+  'order!threenodes/collections/Connections',
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.NodeGraph extends Backbone.Collection

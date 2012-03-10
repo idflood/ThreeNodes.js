@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFieldsCollection', 'order!threenodes/utils/Utils'], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields', 'order!threenodes/utils/Utils'], function($, _, Backbone) {
   "use strict";  ThreeNodes.field_click_1 = false;
   ThreeNodes.selected_nodes = $([]);
   ThreeNodes.nodes_offset = {

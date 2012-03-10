@@ -23,9 +23,9 @@ define [
   'jQuery',
   'Underscore',
   'Backbone',
-  'order!threenodes/collections/NodeGraph',
-  'order!threenodes/views/AppUI',
-  'order!threenodes/views/AppTimeline',
+  'order!threenodes/collections/Nodes',
+  'order!threenodes/views/UI',
+  'order!threenodes/views/Timeline',
   'order!threenodes/utils/AppWebsocket',
   'order!threenodes/utils/Injector',
   'order!threenodes/utils/CommandMap',
@@ -57,7 +57,7 @@ define [
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
-      @injector.mapSingleton "AppUI", ThreeNodes.AppUI
+      @injector.mapSingleton "UI", ThreeNodes.UI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
       @nodegraph = new ThreeNodes.NodeGraph([], {is_test: @testing_mode})
@@ -76,7 +76,7 @@ define [
         @clearWorkspace()
       
       if @testing_mode == false
-        @ui = @injector.get "AppUI",
+        @ui = @injector.get "UI",
           el: $("body")
         @ui.on("render", @nodegraph.render)
         @initTimeline()

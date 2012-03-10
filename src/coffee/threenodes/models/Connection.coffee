@@ -5,7 +5,7 @@ define [
 ], (_, Backbone) ->
   "use strict"
   
-  class ThreeNodes.ConnectionModel extends Backbone.Model
+  class ThreeNodes.Connection extends Backbone.Model
     defaults:
       "cid": -1
     

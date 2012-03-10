@@ -5,8 +5,8 @@ define [
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
   "text!templates/app_ui.tmpl.html",
-  'order!threenodes/views/AppSidebar',
-  'order!threenodes/views/AppMenuBar',
+  'order!threenodes/views/Sidebar',
+  'order!threenodes/views/MenuBar',
   "order!libs/three-extras/js/RequestAnimationFrame",
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
@@ -15,7 +15,7 @@ define [
   "order!libs/jquery-scrollview/jquery.scrollview",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   "use strict"
-  class ThreeNodes.AppUI extends Backbone.View
+  class ThreeNodes.UI extends Backbone.View
     
     onRegister: () =>
       ThreeNodes.events.on "OnUIResize", @on_ui_window_resize
@@ -41,9 +41,9 @@ define [
         opacity: 0
       
       # setup menubar
-      menu_tmpl = _.template(ThreeNodes.AppMenuBar.template, {})
+      menu_tmpl = _.template(ThreeNodes.MenuBar.template, {})
       $menu_tmpl = $(menu_tmpl).prependTo("body")
-      @menubar = new ThreeNodes.AppMenuBar
+      @menubar = new ThreeNodes.MenuBar
         el: $menu_tmpl
       @menubar.context = @context
       # redispatch menubar events
@@ -53,7 +53,7 @@ define [
         self.trigger(events)
       
       # setup sidebar
-      @sidebar = new ThreeNodes.AppSidebar
+      @sidebar = new ThreeNodes.Sidebar
         el: $("#sidebar")
       @sidebar.context = @context
       @sidebar.onRegister()

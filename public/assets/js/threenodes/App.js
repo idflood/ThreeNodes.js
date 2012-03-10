@@ -25,7 +25,7 @@ ThreeNodes.flash_sound_value = {
   hat: 0
 };
 
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGraph', 'order!threenodes/views/AppUI', 'order!threenodes/views/AppTimeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
   "use strict";  ThreeNodes.events = _.extend({}, Backbone.Events);
   return ThreeNodes.App = (function() {
 
@@ -46,7 +46,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
       this.url_handler.context = this;
       this.injector.mapSingleton("NodeGraph", ThreeNodes.NodeGraph);
       this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);
-      this.injector.mapSingleton("AppUI", ThreeNodes.AppUI);
+      this.injector.mapSingleton("UI", ThreeNodes.UI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
       this.nodegraph = new ThreeNodes.NodeGraph([], {
         is_test: this.testing_mode
@@ -64,7 +64,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
         return _this.clearWorkspace();
       });
       if (this.testing_mode === false) {
-        this.ui = this.injector.get("AppUI", {
+        this.ui = this.injector.get("UI", {
           el: $("body")
         });
         this.ui.on("render", this.nodegraph.render);

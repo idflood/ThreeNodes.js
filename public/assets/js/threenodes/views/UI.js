@@ -2,12 +2,12 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "text!templates/app_ui.tmpl.html", 'order!threenodes/views/AppSidebar', 'order!threenodes/views/AppMenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) {
-  "use strict";  return ThreeNodes.AppUI = (function(_super) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "text!templates/app_ui.tmpl.html", 'order!threenodes/views/Sidebar', 'order!threenodes/views/MenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) {
+  "use strict";  return ThreeNodes.UI = (function(_super) {
 
-    __extends(AppUI, _super);
+    __extends(UI, _super);
 
-    function AppUI() {
+    function UI() {
       this.animate = __bind(this.animate, this);
       this.on_ui_window_resize = __bind(this.on_ui_window_resize, this);
       this.render = __bind(this.render, this);
@@ -25,10 +25,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.setDisplayMode = __bind(this.setDisplayMode, this);
       this.startUI = __bind(this.startUI, this);
       this.onRegister = __bind(this.onRegister, this);
-      AppUI.__super__.constructor.apply(this, arguments);
+      UI.__super__.constructor.apply(this, arguments);
     }
 
-    AppUI.prototype.onRegister = function() {
+    UI.prototype.onRegister = function() {
       var $menu_tmpl, injector, menu_tmpl, self, ui_tmpl;
       ThreeNodes.events.on("OnUIResize", this.on_ui_window_resize);
       ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
@@ -45,9 +45,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         fill: "none",
         opacity: 0
       });
-      menu_tmpl = _.template(ThreeNodes.AppMenuBar.template, {});
+      menu_tmpl = _.template(ThreeNodes.MenuBar.template, {});
       $menu_tmpl = $(menu_tmpl).prependTo("body");
-      this.menubar = new ThreeNodes.AppMenuBar({
+      this.menubar = new ThreeNodes.MenuBar({
         el: $menu_tmpl
       });
       this.menubar.context = this.context;
@@ -56,7 +56,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         Backbone.events.prototype.trigger.call(this);
         return self.trigger(events);
       };
-      this.sidebar = new ThreeNodes.AppSidebar({
+      this.sidebar = new ThreeNodes.Sidebar({
         el: $("#sidebar")
       });
       this.sidebar.context = this.context;
@@ -68,7 +68,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this.setupMouseScroll();
     };
 
-    AppUI.prototype.startUI = function() {
+    UI.prototype.startUI = function() {
       this.init_context_menus();
       this.init_bottom_toolbox();
       this.init_display_mode_switch();
@@ -77,7 +77,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this.makeSelectable();
     };
 
-    AppUI.prototype.makeSelectable = function() {
+    UI.prototype.makeSelectable = function() {
       var _this = this;
       $("#container").selectable({
         filter: ".node",
@@ -97,7 +97,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this;
     };
 
-    AppUI.prototype.setDisplayMode = function(is_player) {
+    UI.prototype.setDisplayMode = function(is_player) {
       if (is_player == null) is_player = false;
       if (is_player === true) {
         $("body").addClass("player-mode");
@@ -113,7 +113,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return true;
     };
 
-    AppUI.prototype.setupMouseScroll = function() {
+    UI.prototype.setupMouseScroll = function() {
       var is_from_target,
         _this = this;
       this.scroll_target = $("#container-wrapper");
@@ -154,23 +154,23 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return true;
     };
 
-    AppUI.prototype.stropgrab = function() {
+    UI.prototype.stropgrab = function() {
       return this.is_grabbing = false;
     };
 
-    AppUI.prototype.scrollTo = function(dx, dy) {
+    UI.prototype.scrollTo = function(dx, dy) {
       var x, y;
       x = this.scroll_target.scrollLeft() + dx;
       y = this.scroll_target.scrollTop() + dy;
       return this.scroll_target.scrollLeft(x).scrollTop(y);
     };
 
-    AppUI.prototype.switch_display_mode = function() {
+    UI.prototype.switch_display_mode = function() {
       this.setDisplayMode(!this.context.player_mode);
       return this;
     };
 
-    AppUI.prototype.init_display_mode_switch = function() {
+    UI.prototype.init_display_mode_switch = function() {
       var _this = this;
       $("body").append("<div id='display-mode-switch'>switch mode</div>");
       return $("#display-mode-switch").click(function(e) {
@@ -178,14 +178,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       });
     };
 
-    AppUI.prototype.init_bottom_toolbox = function() {
+    UI.prototype.init_bottom_toolbox = function() {
       var $container;
       $("body").append("<div id='bottom-toolbox'></div>");
       $container = $("#bottom-toolbox");
       return this.init_resize_slider($container);
     };
 
-    AppUI.prototype.init_resize_slider = function($container) {
+    UI.prototype.init_resize_slider = function($container) {
       var scale_graph;
       $container.append("<div id='zoom-slider'></div>");
       scale_graph = function(val) {
@@ -206,7 +206,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       });
     };
 
-    AppUI.prototype.init_timeline_switcher = function($container) {
+    UI.prototype.init_timeline_switcher = function($container) {
       var _this = this;
       $container.append("<div id='timeline-switcher'><a href='#'>Toggle timeline</a></div>");
       return $("#timeline-switcher a").click(function(e) {
@@ -216,7 +216,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       });
     };
 
-    AppUI.prototype.init_context_menus = function() {
+    UI.prototype.init_context_menus = function() {
       var menu_field_menu, node_menu;
       menu_field_menu = _.template(_view_field_context_menu, {});
       $("body").append(menu_field_menu);
@@ -224,12 +224,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return $("body").append(node_menu);
     };
 
-    AppUI.prototype.add_window_resize_handler = function() {
+    UI.prototype.add_window_resize_handler = function() {
       $(window).resize(this.on_ui_window_resize);
       return this.on_ui_window_resize();
     };
 
-    AppUI.prototype.show_application = function() {
+    UI.prototype.show_application = function() {
       var delay_intro, nodegraph;
       delay_intro = 500;
       $("body > header").delay(delay_intro).hide();
@@ -240,11 +240,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return nodegraph.renderAllConnections();
     };
 
-    AppUI.prototype.render = function() {
+    UI.prototype.render = function() {
       return this.trigger("render");
     };
 
-    AppUI.prototype.on_ui_window_resize = function() {
+    UI.prototype.on_ui_window_resize = function() {
       var h, timelinesize, toolbox_pos, w;
       w = $(window).width();
       h = $(window).height();
@@ -260,12 +260,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       });
     };
 
-    AppUI.prototype.animate = function() {
+    UI.prototype.animate = function() {
       this.render();
       return requestAnimationFrame(this.animate);
     };
 
-    return AppUI;
+    return UI;
 
   })(Backbone.View);
 });

@@ -1,13 +1,13 @@
 define [
   'Underscore', 
   'Backbone',
-  'order!threenodes/models/ConnectionModel',
+  'order!threenodes/models/Connection',
   'order!threenodes/views/ConnectionView',
 ], (_, Backbone) ->
   "use strict"
   
   class ThreeNodes.ConnectionsCollection extends Backbone.Collection
-    model: ThreeNodes.ConnectionModel
+    model: ThreeNodes.Connection
     
     initialize: () =>
       @.bind "connection:removed", (c) =>
