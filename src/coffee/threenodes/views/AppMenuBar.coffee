@@ -53,7 +53,5 @@ define [
         return true
       
       # sends "normal" urls to the router
-      #event.stopPropagation()
-      #Backbone.history.navigate(url)
       return true
     

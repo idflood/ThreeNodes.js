@@ -239,8 +239,9 @@ define [
     apply_fields_to_val: (afields, target, exceptions = [], index) =>
       for f of afields
         nf = afields[f]
-        if exceptions.indexOf(nf.get("name")) == -1
-          target[nf.get("name")] = @rack.getField(nf.get("name")).getValue(index)
+        field_name = nf.get("name")
+        if exceptions.indexOf(field_name) == -1
+          target[field_name] = @rack.getField(field_name).getValue(index)
     
     create_field_connection: (field) =>
       f = this

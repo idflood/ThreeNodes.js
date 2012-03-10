@@ -34,6 +34,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.setFID = __bind(this.setFID, this);
       this.remove = __bind(this.remove, this);
       this.initialize = __bind(this.initialize, this);
+      this.set = __bind(this.set, this);
+      this._validate = __bind(this._validate, this);
       this.sync = __bind(this.sync, this);
       NodeField.__super__.constructor.apply(this, arguments);
     }
@@ -49,6 +51,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     NodeField.prototype.sync = function() {};
+
+    NodeField.prototype._validate = function(attrs, options) {
+      return true;
+    };
+
+    NodeField.prototype.set = function(key, value, options) {
+      if (options == null) options = {};
+      if (key === "value") {
+        this.attributes[key] = value;
+        return this;
+      }
+      return NodeField.__super__.set.apply(this, arguments);
+    };
 
     NodeField.prototype.initialize = function(options) {
       var self;
@@ -80,7 +95,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     };
 
     NodeField.prototype.setValue = function(v) {
-      var connection, hook, new_val, prev_val, tmp_val, _i, _len, _ref;
+      var connection, default_val, hook, new_val, prev_val, tmp_val, _i, _len, _ref;
       this.changed = true;
       if (this.node) this.node.dirty = true;
       prev_val = this.get("value");
@@ -100,12 +115,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         }
       }
       if (new_val === null) {
-        if (this.get("default") !== null && this.get("default") !== void 0) {
-          prev_val = this.get("default");
-        }
+        default_val = this.get("default");
+        if (default_val !== null && default_val !== void 0) prev_val = default_val;
         new_val = prev_val;
       }
-      this.set("value", new_val);
+      this.set("value", new_val, {
+        silent: true
+      });
       for (hook in this.on_value_update_hooks) {
         this.on_value_update_hooks[hook](new_val);
       }

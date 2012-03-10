@@ -348,13 +348,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
     };
 
     NodeBase.prototype.apply_fields_to_val = function(afields, target, exceptions, index) {
-      var f, nf, _results;
+      var f, field_name, nf, _results;
       if (exceptions == null) exceptions = [];
       _results = [];
       for (f in afields) {
         nf = afields[f];
-        if (exceptions.indexOf(nf.get("name")) === -1) {
-          _results.push(target[nf.get("name")] = this.rack.getField(nf.get("name")).getValue(index));
+        field_name = nf.get("name");
+        if (exceptions.indexOf(field_name) === -1) {
+          _results.push(target[field_name] = this.rack.getField(field_name).getValue(index));
         } else {
           _results.push(void 0);
         }

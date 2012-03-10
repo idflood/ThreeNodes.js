@@ -22,8 +22,8 @@ define [
       @rack.add_center_textfield(@rack.getField("out", true))
   
     compute: =>
-      @value = @rack.getField("min").getValue() + Math.random() * (@rack.getField("max").getValue() - @rack.getField("min").getValue())
-      @rack.setField("out", @value)
+      value = @rack.getField("min").getValue() + Math.random() * (@rack.getField("max").getValue() - @rack.getField("min").getValue())
+      @rack.setField("out", value)
   
   # based on http://www.cycling74.com/forums/topic.php?id=7821
   class ThreeNodes.nodes.LFO extends ThreeNodes.NodeBase

@@ -33,8 +33,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     Random.prototype.compute = function() {
-      this.value = this.rack.getField("min").getValue() + Math.random() * (this.rack.getField("max").getValue() - this.rack.getField("min").getValue());
-      return this.rack.setField("out", this.value);
+      var value;
+      value = this.rack.getField("min").getValue() + Math.random() * (this.rack.getField("max").getValue() - this.rack.getField("min").getValue());
+      return this.rack.setField("out", value);
     };
 
     return Random;

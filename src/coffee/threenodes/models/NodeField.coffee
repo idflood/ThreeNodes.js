@@ -16,6 +16,16 @@ define [
       default: null
     
     sync: () =>
+    _validate: (attrs, options) => return true
+    
+    # override the backbone set method if the key is "value"
+    # this is one of the most called function so this needs to be fast
+    set: (key, value, options = {}) =>
+      if key == "value"
+        this.attributes[key] = value
+        return this
+      
+      super
     
     initialize: (options) =>
       self = this
@@ -60,11 +70,12 @@ define [
       
       # reset the value if it's null and it has a default
       if new_val == null
-        if @get("default") != null && @get("default") != undefined
-          prev_val = @get("default")
+        default_val = @get("default")
+        if default_val != null && default_val != undefined
+          prev_val = default_val
         new_val = prev_val
       
-      @set("value", new_val)
+      @set("value", new_val, {silent: true})
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
       if @get("is_output") == true
