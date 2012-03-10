@@ -77,10 +77,10 @@ define [
     toJSON: () ->
       res =
         id: @get("cid")
-        from_node: @get("from_field").node.get("nid")
-        from: @get("from_field").get("name")
-        to_node: @get("to_field").node.get("nid")
-        to: @get("to_field").get("name")
+        from_node: @from_field.node.get("nid")
+        from: @from_field.get("name")
+        to_node: @to_field.node.get("nid")
+        to: @to_field.get("name")
       res
     
     toXML: () ->
@@ -89,8 +89,8 @@ define [
     toCode: () ->
       res = "var connection_#{@get('cid')}_data = {\n"
       res += "\t" + "id: #{@get('cid')},\n"
-      res += "\t" + "from_node: #{@get('from_field').node.get('nid')}, from: '#{@get('from_field').get('name')}',\n"
-      res += "\t" + "to_node: #{@get('to_field').node.get('nid')}, to: '#{@get('to_field').get('name')}'\n"
+      res += "\t" + "from_node: #{@from_field.node.get('nid')}, from: '#{@from_field.get('name')}',\n"
+      res += "\t" + "to_node: #{@to_field.node.get('nid')}, to: '#{@to_field.get('name')}'\n"
       res += "};\n"
       res += "var connection_#{@cid} = nodegraph.createConnectionFromObject(connection_#{@get('cid')}_data);\n"
       res

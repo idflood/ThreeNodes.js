@@ -93,10 +93,10 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       var res;
       res = {
         id: this.get("cid"),
-        from_node: this.get("from_field").node.get("nid"),
-        from: this.get("from_field").get("name"),
-        to_node: this.get("to_field").node.get("nid"),
-        to: this.get("to_field").get("name")
+        from_node: this.from_field.node.get("nid"),
+        from: this.from_field.get("name"),
+        to_node: this.to_field.node.get("nid"),
+        to: this.to_field.get("name")
       };
       return res;
     };
@@ -109,8 +109,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       var res;
       res = "var connection_" + (this.get('cid')) + "_data = {\n";
       res += "\t" + ("id: " + (this.get('cid')) + ",\n");
-      res += "\t" + ("from_node: " + (this.get('from_field').node.get('nid')) + ", from: '" + (this.get('from_field').get('name')) + "',\n");
-      res += "\t" + ("to_node: " + (this.get('to_field').node.get('nid')) + ", to: '" + (this.get('to_field').get('name')) + "'\n");
+      res += "\t" + ("from_node: " + (this.from_field.node.get('nid')) + ", from: '" + (this.from_field.get('name')) + "',\n");
+      res += "\t" + ("to_node: " + (this.to_field.node.get('nid')) + ", to: '" + (this.to_field.get('name')) + "'\n");
       res += "};\n";
       res += "var connection_" + this.cid + " = nodegraph.createConnectionFromObject(connection_" + (this.get('cid')) + "_data);\n";
       return res;

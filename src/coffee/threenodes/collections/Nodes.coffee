@@ -112,10 +112,20 @@ define [
       from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
       to_node = @get_node(connection.to_node.toString())
       to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
+      # if a field is missing try to switch from/to
+      if !from || !to
+        tmp = from_node
+        from_node = to_node
+        to_node = tmp
+        from = from_node.rack.node_fields_by_name.outputs[connection.to.toString()]
+        to = to_node.rack.node_fields_by_name.inputs[connection.from.toString()]
+        
+      
       c = @connections.create
           from_field: from
           to_field: to
           cid: connection.id
+      
       c
     
     renderAllConnections: () =>
