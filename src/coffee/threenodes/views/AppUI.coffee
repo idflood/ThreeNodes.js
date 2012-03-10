@@ -4,6 +4,7 @@ define [
   'Backbone',
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
+  "text!templates/app_ui.tmpl.html",
   'order!threenodes/views/AppSidebar',
   'order!threenodes/views/AppMenuBar',
   "order!libs/three-extras/js/RequestAnimationFrame",
@@ -12,7 +13,7 @@ define [
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   "order!libs/jquery.transform2d",
   "order!libs/jquery-scrollview/jquery.scrollview",
-], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu) ->
+], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   "use strict"
   class ThreeNodes.AppUI extends Backbone.View
     
@@ -25,6 +26,10 @@ define [
       
       injector = @context.injector
       @player_mode = @context.player_mode
+      
+      # create the main ui
+      ui_tmpl = _.template(_view_app_ui, {})
+      $("#footer").before(ui_tmpl)
       
       # setup SVG for drawing connections
       @svg = Raphael("graph", 4000, 4000)

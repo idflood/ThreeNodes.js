@@ -14,9 +14,15 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       n2 = ng.create_node("Vector3");
       rnd = ng.create_node("Random");
       node_mult = ng.create_node("MathMult");
-      node_mult.rack.get("factor").set(3);
-      injector.instanciate(ThreeNodes.NodeConnection, n1.v_out, node_mult.v_in);
-      injector.instanciate(ThreeNodes.NodeConnection, rnd.v_out, n1.v_in);
+      node_mult.rack.getField("factor").setValue(3);
+      ng.connections.create({
+        from_field: n1.v_out,
+        to_field: node_mult.v_in
+      });
+      ng.connections.create({
+        from_field: rnd.v_out,
+        to_field: n1.v_in
+      });
       ng.render();
       JSLitmus.test("Simple math.mult function", function() {
         return ng.render();

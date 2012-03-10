@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", 'order!threenodes/views/AppSidebar', 'order!threenodes/views/AppMenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "text!templates/app_ui.tmpl.html", 'order!threenodes/views/AppSidebar', 'order!threenodes/views/AppMenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) {
   "use strict";  return ThreeNodes.AppUI = (function(_super) {
 
     __extends(AppUI, _super);
@@ -29,12 +29,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     }
 
     AppUI.prototype.onRegister = function() {
-      var $menu_tmpl, injector, menu_tmpl, self;
+      var $menu_tmpl, injector, menu_tmpl, self, ui_tmpl;
       ThreeNodes.events.on("OnUIResize", this.on_ui_window_resize);
       ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
       ThreeNodes.events.trigger("InitUrlHandler");
       injector = this.context.injector;
       this.player_mode = this.context.player_mode;
+      ui_tmpl = _.template(_view_app_ui, {});
+      $("#footer").before(ui_tmpl);
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
       ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
