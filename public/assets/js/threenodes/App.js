@@ -25,7 +25,7 @@ ThreeNodes.flash_sound_value = {
   hat: 0
 };
 
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGraph', 'order!threenodes/views/AppUI', 'order!threenodes/views/AppTimeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!libs/jquery.ba-bbq.min", "order!threenodes/utils/WebglBase"], function($, _, Backbone, NodeGraph, AppUI) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGraph', 'order!threenodes/views/AppUI', 'order!threenodes/views/AppTimeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
   "use strict";  ThreeNodes.events = _.extend({}, Backbone.Events);
   return ThreeNodes.App = (function() {
 
@@ -46,7 +46,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
       this.url_handler.context = this;
       this.injector.mapSingleton("NodeGraph", ThreeNodes.NodeGraph);
       this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);
-      this.injector.mapSingleton("AppUI", AppUI);
+      this.injector.mapSingleton("AppUI", ThreeNodes.AppUI);
       this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
       this.nodegraph = new ThreeNodes.NodeGraph([], {
         is_test: this.testing_mode
@@ -74,6 +74,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeGr
         ThreeNodes.events.trigger("InitUrlHandler");
         this.initTimeline();
       }
+      Backbone.history.start({
+        pushState: false
+      });
       return true;
     }
 

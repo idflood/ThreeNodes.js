@@ -9,30 +9,51 @@ define [
     @template = _view_menubar
     
     initialize: () ->
-      @$el.menubar
-        select: @on_menu_select
+      @$el.menubar()
+      
+      self = this
+      $("a", @$el).click (event) ->
+        if $(this).next().is("ul")
+          return false
+        
+        url = $(this).attr('href').substr(1)
+        self.on_link_click(event, this, url)
       
       $("#main_file_input_open").change (e) =>
         ThreeNodes.events.trigger("LoadFile", e)
     
-    on_menu_select: (event, ui) =>
-      if $('a', ui.item).attr('href') == "#example"
-        rel = $('a', ui.item).attr("rel")
-        ThreeNodes.events.trigger("ClearWorkspace")
-        $.ajax
-          url: "examples/#{rel}"
-          dataType: 'text'
-          success: (data) ->
-            ThreeNodes.events.trigger("LoadJSON", data)
-        return this
+    on_link_click: (event, link, url) =>
+      is_exception = switch $(link).text().toLowerCase()
+        when "new"
+          ThreeNodes.events.trigger("ClearWorkspace")
+          Backbone.history.navigate("", false)
+          true
+        when "open"
+          $("#main_file_input_open").click()
+          true
+        when "save"
+          ThreeNodes.events.trigger("SaveFile")
+          true
+        when "export to code"
+          ThreeNodes.events.trigger("ExportCode")
+          true
+        when "export image"
+          ThreeNodes.events.trigger("ExportImage", "exported-image.png")
+          true
+        when "rebuild all shaders"
+          ThreeNodes.events.trigger("RebuildAllShaders")
+          true
+        when "remove selected node(s)"
+          ThreeNodes.events.trigger("RmoveSelectedNodes")
+          true
+        else false
       
-      switch ui.item.text().toLowerCase()
-        when "new" then ThreeNodes.events.trigger("ClearWorkspace")
-        when "open" then $("#main_file_input_open").click()
-        when "save" then ThreeNodes.events.trigger("SaveFile")
-        when "export to code" then ThreeNodes.events.trigger("ExportCode")
-        when "export image" then ThreeNodes.events.trigger("ExportImage", "exported-image.png")
-        when "rebuild all shaders" then ThreeNodes.events.trigger("RebuildAllShaders")
-        when "remove selected node(s)" then ThreeNodes.events.trigger("RmoveSelectedNodes")
-      return this
+      if is_exception == true
+        event.preventDefault()
+        return true
+      
+      # sends "normal" urls to the router
+      #event.stopPropagation()
+      #Backbone.history.navigate(url)
+      return true
     

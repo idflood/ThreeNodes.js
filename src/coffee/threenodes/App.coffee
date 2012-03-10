@@ -31,9 +31,8 @@ define [
   'order!threenodes/utils/CommandMap',
   'order!threenodes/utils/FileHandler',
   'order!threenodes/utils/UrlHandler',
-  "order!libs/jquery.ba-bbq.min",
   "order!threenodes/utils/WebglBase",
-], ($, _, Backbone, NodeGraph, AppUI) ->
+], ($, _, Backbone) ->
   "use strict"
   
   # use a global event dispatcher instead of the context/commandMap thing
@@ -58,7 +57,7 @@ define [
       
       @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
       @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
-      @injector.mapSingleton "AppUI", AppUI
+      @injector.mapSingleton "AppUI", ThreeNodes.AppUI
       @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
       
       @nodegraph = new ThreeNodes.NodeGraph([], {is_test: @testing_mode})
@@ -86,6 +85,11 @@ define [
         ThreeNodes.events.trigger "InitUrlHandler"
         @initTimeline()
       
+      # removing this would require to redirect path
+      # for the node.js server and github page (if possible)
+      # for simplicity disable pushState
+      Backbone.history.start
+        pushState: false
       return true
     
     initTimeline: () =>

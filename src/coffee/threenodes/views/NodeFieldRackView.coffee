@@ -10,8 +10,6 @@ define [
   class ThreeNodes.NodeFieldRackView extends Backbone.View
     initialize: (options) ->
       @node = options.node
-      #@collection.bind "add", (model) ->
-      #  console.log "collection.add"
       @collection.bind "renderSidebar", () =>
         @renderSidebar()
       @collection.bind "addCenterTextfield", (field) =>
@@ -21,8 +19,12 @@ define [
     
     remove: () =>
       @undelegateEvents()
-      $(".inner-field", $(@el)).droppable("destroy")
-      $(".inner-field", $(@el)).draggable("destroy")
+      $(".inner-field", $(@el)).each () ->
+        if $(this).data("droppable")
+          $(this).droppable("destroy")
+      $(".inner-field", $(@el)).each () ->
+        if $(this).data("draggable")
+          $(this).draggable("destroy")
       # remove elements which may have events attached
       $(".inner-field", $(@el)).remove()
       $(".field", $(@el)).remove()

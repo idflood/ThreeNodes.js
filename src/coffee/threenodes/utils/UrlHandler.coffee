@@ -4,37 +4,28 @@ define [
   'Backbone',
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.UrlHandler extends Backbone.Events
-    constructor: () ->
-      ThreeNodes.events.on "InitUrlHandler", (e) => @execute()
+  class ThreeNodes.UrlHandler extends Backbone.Router
+    routes:
+      "": "onDefault"
+      "play": "onPlay"
+      "example/:file": "onExample"
+      "play/example/:file": "onPlayExample"
     
-    execute: () ->
-      url_cache = false
-      
-      on_url_change = (e) =>
-        url = $.param.fragment()
-        fh = @context.file_handler
-        
-        if url == url_cache
-          return false
-        
-        if url.indexOf("play/") == 0
-          url = url.replace("play/", "")
-          ThreeNodes.events.trigger("SetDisplayModeCommand", true)
-        else
-          ThreeNodes.events.trigger("SetDisplayModeCommand", false)
-        
-        if url.indexOf("example/") == 0
-          filename = url.replace("example/", "")
-          ThreeNodes.events.trigger("ClearWorkspace")
-          $.ajax
-            url: "examples/#{filename}"
-            dataType: 'text'
-            success: (data) ->
-              fh.load_from_json_data(data)
-        url_cache = $.param.fragment()
-      
-      $(window).bind 'hashchange', (e) =>
-        on_url_change(e)
-        
-      on_url_change(null)
+    onDefault: () =>
+      ThreeNodes.events.trigger("SetDisplayModeCommand", false)
+    
+    onPlay: () =>
+      ThreeNodes.events.trigger("SetDisplayModeCommand", true)
+    
+    onExample: (file, player_mode = false) =>
+      fh = @context.file_handler
+      ThreeNodes.events.trigger("SetDisplayModeCommand", player_mode)
+      ThreeNodes.events.trigger("ClearWorkspace")
+      $.ajax
+        url: "examples/#{file}"
+        dataType: 'text'
+        success: (data) ->
+          fh.load_from_json_data(data)
+    
+    onPlayExample: (file) =>
+      @onExample(file, true)

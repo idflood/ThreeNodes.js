@@ -8,59 +8,63 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
     __extends(AppMenuBar, _super);
 
     function AppMenuBar() {
-      this.on_menu_select = __bind(this.on_menu_select, this);
+      this.on_link_click = __bind(this.on_link_click, this);
       AppMenuBar.__super__.constructor.apply(this, arguments);
     }
 
     AppMenuBar.template = _view_menubar;
 
     AppMenuBar.prototype.initialize = function() {
-      var _this = this;
-      this.$el.menubar({
-        select: this.on_menu_select
+      var self,
+        _this = this;
+      this.$el.menubar();
+      self = this;
+      $("a", this.$el).click(function(event) {
+        var url;
+        if ($(this).next().is("ul")) return false;
+        url = $(this).attr('href').substr(1);
+        return self.on_link_click(event, this, url);
       });
       return $("#main_file_input_open").change(function(e) {
         return ThreeNodes.events.trigger("LoadFile", e);
       });
     };
 
-    AppMenuBar.prototype.on_menu_select = function(event, ui) {
-      var rel;
-      if ($('a', ui.item).attr('href') === "#example") {
-        rel = $('a', ui.item).attr("rel");
-        ThreeNodes.events.trigger("ClearWorkspace");
-        $.ajax({
-          url: "examples/" + rel,
-          dataType: 'text',
-          success: function(data) {
-            return ThreeNodes.events.trigger("LoadJSON", data);
-          }
-        });
-        return this;
+    AppMenuBar.prototype.on_link_click = function(event, link, url) {
+      var is_exception;
+      is_exception = (function() {
+        switch ($(link).text().toLowerCase()) {
+          case "new":
+            ThreeNodes.events.trigger("ClearWorkspace");
+            Backbone.history.navigate("", false);
+            return true;
+          case "open":
+            $("#main_file_input_open").click();
+            return true;
+          case "save":
+            ThreeNodes.events.trigger("SaveFile");
+            return true;
+          case "export to code":
+            ThreeNodes.events.trigger("ExportCode");
+            return true;
+          case "export image":
+            ThreeNodes.events.trigger("ExportImage", "exported-image.png");
+            return true;
+          case "rebuild all shaders":
+            ThreeNodes.events.trigger("RebuildAllShaders");
+            return true;
+          case "remove selected node(s)":
+            ThreeNodes.events.trigger("RmoveSelectedNodes");
+            return true;
+          default:
+            return false;
+        }
+      })();
+      if (is_exception === true) {
+        event.preventDefault();
+        return true;
       }
-      switch (ui.item.text().toLowerCase()) {
-        case "new":
-          ThreeNodes.events.trigger("ClearWorkspace");
-          break;
-        case "open":
-          $("#main_file_input_open").click();
-          break;
-        case "save":
-          ThreeNodes.events.trigger("SaveFile");
-          break;
-        case "export to code":
-          ThreeNodes.events.trigger("ExportCode");
-          break;
-        case "export image":
-          ThreeNodes.events.trigger("ExportImage", "exported-image.png");
-          break;
-        case "rebuild all shaders":
-          ThreeNodes.events.trigger("RebuildAllShaders");
-          break;
-        case "remove selected node(s)":
-          ThreeNodes.events.trigger("RmoveSelectedNodes");
-      }
-      return this;
+      return true;
     };
 
     return AppMenuBar;

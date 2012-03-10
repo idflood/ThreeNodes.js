@@ -17,7 +17,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     NodeFieldRackView.prototype.initialize = function(options) {
       var _this = this;
       this.node = options.node;
-      this.collection.bind("add", function(model) {});
       this.collection.bind("renderSidebar", function() {
         return _this.renderSidebar();
       });
@@ -31,8 +30,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
 
     NodeFieldRackView.prototype.remove = function() {
       this.undelegateEvents();
-      $(".inner-field", $(this.el)).droppable("destroy");
-      $(".inner-field", $(this.el)).draggable("destroy");
+      $(".inner-field", $(this.el)).each(function() {
+        if ($(this).data("droppable")) return $(this).droppable("destroy");
+      });
+      $(".inner-field", $(this.el)).each(function() {
+        if ($(this).data("draggable")) return $(this).draggable("destroy");
+      });
       $(".inner-field", $(this.el)).remove();
       $(".field", $(this.el)).remove();
       $("input", $(this.el)).remove();

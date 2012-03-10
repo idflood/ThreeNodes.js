@@ -99,7 +99,7 @@ $c: $background_color - #050505
   position: absolute
   cursor: pointer
   top: 4px
-  right: 6px
+  right: 23px
   z-index: 9997
   background: #000
   border-radius: 5px
@@ -107,6 +107,7 @@ $c: $background_color - #050505
   font-size: 9px
   text-transform: uppercase
   letter-spacing: 1px
+  +single-transition("background, color", 300ms)
   &:hover
     background: #efefef
     color: #333

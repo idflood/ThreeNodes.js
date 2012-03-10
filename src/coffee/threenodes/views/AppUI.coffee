@@ -85,9 +85,11 @@ define [
       if is_player == true
         $("body").addClass("player-mode")
         $("body").removeClass("editor-mode")
+        $("#display-mode-switch").html("editor mode")
       else
         $("body").addClass("editor-mode")
         $("body").removeClass("player-mode")
+        $("#display-mode-switch").html("player mode")
       
       @context.player_mode = is_player
       if is_player == false
