@@ -53,7 +53,7 @@ define [
       @changed = true
       if @node
         @node.dirty = true
-      prev_val = @get("value")
+      prev_val = @attributes["value"]
       new_val = @on_value_changed(v)
       
       # remove all null values from the array
@@ -70,7 +70,7 @@ define [
       
       # reset the value if it's null and it has a default
       if new_val == null
-        default_val = @get("default")
+        default_val = @attributes["default"]
         if default_val != null && default_val != undefined
           prev_val = default_val
         new_val = prev_val
@@ -78,13 +78,13 @@ define [
       @set("value", new_val, {silent: true})
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
-      if @get("is_output") == true
+      if @attributes["is_output"] == true
         for connection in @connections
           connection.to_field.setValue(new_val)
       true
   
     getValue: (index = 0) =>
-      val = @get("value")
+      val = @attributes["value"]
       if $.type(val) != "array"
         return val
       else
@@ -99,7 +99,7 @@ define [
       @connections.length > 0
     
     getSliceCount: () =>
-      val = @get("value")
+      val = @attributes["value"]
       if jQuery.type(val) != "array"
         return 1
       return val.length

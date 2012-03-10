@@ -98,7 +98,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var connection, default_val, hook, new_val, prev_val, tmp_val, _i, _len, _ref;
       this.changed = true;
       if (this.node) this.node.dirty = true;
-      prev_val = this.get("value");
+      prev_val = this.attributes["value"];
       new_val = this.on_value_changed(v);
       if ($.type(new_val) === "array") {
         tmp_val = _.filter(new_val, function(item) {
@@ -115,7 +115,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         }
       }
       if (new_val === null) {
-        default_val = this.get("default");
+        default_val = this.attributes["default"];
         if (default_val !== null && default_val !== void 0) prev_val = default_val;
         new_val = prev_val;
       }
@@ -125,7 +125,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       for (hook in this.on_value_update_hooks) {
         this.on_value_update_hooks[hook](new_val);
       }
-      if (this.get("is_output") === true) {
+      if (this.attributes["is_output"] === true) {
         _ref = this.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           connection = _ref[_i];
@@ -138,7 +138,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.getValue = function(index) {
       var val;
       if (index == null) index = 0;
-      val = this.get("value");
+      val = this.attributes["value"];
       if ($.type(val) !== "array") {
         return val;
       } else {
@@ -159,7 +159,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     NodeField.prototype.getSliceCount = function() {
       var val;
-      val = this.get("value");
+      val = this.attributes["value"];
       if (jQuery.type(val) !== "array") return 1;
       return val.length;
     };

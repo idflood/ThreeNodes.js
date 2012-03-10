@@ -220,7 +220,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       res = {};
       for (_i = 0, _len = values.length; _i < _len; _i++) {
         v = values[_i];
-        res[v] = this.rack.getField(v).getValue();
+        res[v] = this.rack.getField(v).attributes["value"];
       }
       return res;
     };
@@ -230,7 +230,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/NodeFi
       if (cache == null) cache = this.material_cache;
       for (_i = 0, _len = values.length; _i < _len; _i++) {
         v = values[_i];
-        v2 = this.rack.getField(v).getValue();
+        v2 = this.rack.getField(v).attributes["value"];
         if (v2 !== cache[v]) return true;
       }
       return false;

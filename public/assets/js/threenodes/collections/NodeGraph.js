@@ -97,16 +97,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         if (node.has_out_connection() === false || node.auto_evaluate || node.delays_output) {
-          terminalNodes[node.get("nid")] = node;
+          terminalNodes[node.attributes["nid"]] = node;
         }
-        invalidNodes[node.get("nid")] = node;
+        invalidNodes[node.attributes["nid"]] = node;
       }
       evaluateSubGraph = function(node) {
         var upnode, upstreamNodes, _j, _len2;
         upstreamNodes = node.getUpstreamNodes();
         for (_j = 0, _len2 = upstreamNodes.length; _j < _len2; _j++) {
           upnode = upstreamNodes[_j];
-          if (invalidNodes[upnode.get("nid")] && !upnode.delays_output) {
+          if (invalidNodes[upnode.attributes["nid"]] && !upnode.delays_output) {
             evaluateSubGraph(upnode);
           }
         }
@@ -115,7 +115,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           node.dirty = false;
           node.rack.setFieldInputUnchanged();
         }
-        delete invalidNodes[node.get("nid")];
+        delete invalidNodes[node.attributes["nid"]];
         return true;
       };
       for (nid in terminalNodes) {

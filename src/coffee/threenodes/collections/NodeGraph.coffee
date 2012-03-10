@@ -86,20 +86,20 @@ define [
       
       for node in @models
         if node.has_out_connection() == false || node.auto_evaluate || node.delays_output
-          terminalNodes[node.get("nid")] = node
-        invalidNodes[node.get("nid")] = node
+          terminalNodes[node.attributes["nid"]] = node
+        invalidNodes[node.attributes["nid"]] = node
       
       evaluateSubGraph = (node) ->
         upstreamNodes = node.getUpstreamNodes()
         for upnode in upstreamNodes
-          if invalidNodes[upnode.get("nid")] && !upnode.delays_output
+          if invalidNodes[upnode.attributes["nid"]] && !upnode.delays_output
             evaluateSubGraph(upnode)
         if node.dirty || node.auto_evaluate
           node.update()
           node.dirty = false
           node.rack.setFieldInputUnchanged()
         
-        delete invalidNodes[node.get("nid")]
+        delete invalidNodes[node.attributes["nid"]]
         true
       
       for nid of terminalNodes

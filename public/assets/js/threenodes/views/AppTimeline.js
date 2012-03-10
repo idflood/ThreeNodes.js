@@ -42,7 +42,13 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
           return propertyAnim.target[propertyAnim.propertyName].setValue(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t);
         },
         getPropertyValue: function(propertyAnim) {
-          return propertyAnim.target[propertyAnim.propertyName].getValue();
+          var val;
+          val = propertyAnim.target[propertyAnim.propertyName].attributes["value"];
+          if ($.type(val) !== "array") {
+            return val;
+          } else {
+            return val[0];
+          }
         },
         onTrackRebuild: function() {
           return _this.trigger("trackRebuild");

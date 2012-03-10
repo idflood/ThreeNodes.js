@@ -32,7 +32,11 @@ define [
         applyPropertyValue: (propertyAnim, t) ->
           propertyAnim.target[propertyAnim.propertyName].setValue(propertyAnim.startValue + (propertyAnim.endValue - propertyAnim.startValue) * t)
         getPropertyValue: (propertyAnim) ->
-          propertyAnim.target[propertyAnim.propertyName].getValue()
+          val = propertyAnim.target[propertyAnim.propertyName].attributes["value"]
+          if $.type(val) != "array"
+            return val
+          else
+            return val[0]
         onTrackRebuild: () => @trigger("trackRebuild")
         onStop: () => @trigger("stopSound")
         onPlay: (time) => @trigger("startSound", time)

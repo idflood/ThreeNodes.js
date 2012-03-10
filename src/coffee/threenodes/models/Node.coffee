@@ -151,12 +151,12 @@ define [
     create_cache_object: (values) =>
       res = {}
       for v in values
-        res[v] = @rack.getField(v).getValue()
+        res[v] = @rack.getField(v).attributes["value"]
       res
     
     input_value_has_changed: (values, cache = @material_cache) =>
       for v in values
-        v2 = @rack.getField(v).getValue()
+        v2 = @rack.getField(v).attributes["value"]
         if v2 != cache[v]
           return true
       false
