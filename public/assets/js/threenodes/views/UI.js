@@ -24,16 +24,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.setupMouseScroll = __bind(this.setupMouseScroll, this);
       this.setDisplayMode = __bind(this.setDisplayMode, this);
       this.startUI = __bind(this.startUI, this);
-      this.onRegister = __bind(this.onRegister, this);
+      var $menu_tmpl, menu_tmpl, self, ui_tmpl;
       UI.__super__.constructor.apply(this, arguments);
-    }
-
-    UI.prototype.onRegister = function() {
-      var $menu_tmpl, injector, menu_tmpl, self, ui_tmpl;
       ThreeNodes.events.on("OnUIResize", this.on_ui_window_resize);
       ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
       ThreeNodes.events.trigger("InitUrlHandler");
-      injector = this.context.injector;
       ui_tmpl = _.template(_view_app_ui, {});
       $("#footer").before(ui_tmpl);
       this.svg = Raphael("graph", 4000, 4000);
@@ -49,7 +44,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.menubar = new ThreeNodes.MenuBar({
         el: $menu_tmpl
       });
-      this.menubar.context = this.context;
       self = this;
       this.menubar.trigger = function(events) {
         Backbone.events.prototype.trigger.call(this);
@@ -58,14 +52,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.sidebar = new ThreeNodes.Sidebar({
         el: $("#sidebar")
       });
-      this.sidebar.context = this.context;
-      this.sidebar.onRegister();
       this.add_window_resize_handler();
       this.startUI();
       this.on_ui_window_resize();
       this.is_grabbing = false;
-      return this.setupMouseScroll();
-    };
+      this.setupMouseScroll();
+    }
 
     UI.prototype.startUI = function() {
       this.init_context_menus();
@@ -108,7 +100,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         $("#display-mode-switch").html("player mode");
       }
       ThreeNodes.settings.player_mode = is_player;
-      if (is_player === false) this.context.nodegraph.renderAllConnections();
+      if (is_player === false) this.trigger("renderConnections");
       return true;
     };
 
@@ -229,14 +221,13 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     };
 
     UI.prototype.show_application = function() {
-      var delay_intro, nodegraph;
+      var delay_intro;
       delay_intro = 500;
       $("body > header").delay(delay_intro).hide();
       $("#sidebar").delay(delay_intro).show();
       $("#container-wrapper").delay(delay_intro).show();
       $("#sidebar-toggle").delay(delay_intro).show();
-      nodegraph = this.context.nodegraph;
-      return nodegraph.renderAllConnections();
+      return this.trigger("renderConnections");
     };
 
     UI.prototype.render = function() {

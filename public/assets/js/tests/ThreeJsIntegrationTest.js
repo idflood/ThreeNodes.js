@@ -7,9 +7,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
     function ThreeJsIntegrationTest(app) {
       module("ThreeJsIntegrationTest");
       test("Scene node children", function() {
-        var c1, c2, c3, c4, injector, mesh, meshNode, n1, n2, n3, n4, n5, ng;
+        var c1, c2, c3, c4, mesh, meshNode, n1, n2, n3, n4, n5, ng;
         ng = app.nodegraph;
-        injector = app.injector;
         ThreeNodes.events.trigger("ClearWorkspace");
         n1 = ng.create_node("Scene");
         n2 = ng.create_node("Merge");
@@ -58,9 +57,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(n5.rack.getField("postfx").getValue().length, 0, "Webgl.postfx array is empty");
       });
       test("Camera -> object3d -> merge -> scene connection test (children array)", function() {
-        var injector, n1, n2, ng, node_camera, node_object3d, node_webgl;
+        var n1, n2, ng, node_camera, node_object3d, node_webgl;
         ng = app.nodegraph;
-        injector = app.injector;
         ThreeNodes.events.trigger("ClearWorkspace");
         n1 = ng.create_node("Scene");
         n2 = ng.create_node("Merge");

@@ -8,7 +8,6 @@ define [
   class NodeGraphSpeedTest
     constructor: (app) ->
       ng = app.nodegraph
-      injector = app.injector
       filehandler = app.file_handler
       ThreeNodes.events.trigger("ClearWorkspace")
       

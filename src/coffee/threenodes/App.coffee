@@ -12,7 +12,6 @@ ThreeNodes.mouseY = 0
 ThreeNodes.fields =
   types: {}
 
-ThreeNodes.webgl_materials_node = []
 ThreeNodes.svg = false
 ThreeNodes.flash_sound_value =
   kick: 0
@@ -27,8 +26,6 @@ define [
   'order!threenodes/views/UI',
   'order!threenodes/views/Timeline',
   'order!threenodes/utils/AppWebsocket',
-  'order!threenodes/utils/Injector',
-  'order!threenodes/utils/CommandMap',
   'order!threenodes/utils/FileHandler',
   'order!threenodes/utils/UrlHandler',
   "order!threenodes/utils/WebglBase",
@@ -41,37 +38,27 @@ define [
   
   class ThreeNodes.App
     constructor: (testing_mode = false) ->
+      console.log "ThreeNodes app init..."
       # save settings in a global object
       # if you have a more elegant way to handle this don't hesitate
       ThreeNodes.settings =
         testing_mode: testing_mode
         player_mode: false
-      console.log "ThreeNodes app init..."
+      
       @current_scene = false
       @current_camera = false
       @current_renderer = false
       @effectScreen = false
       @renderModel = false
       @composer = false
-      
-      @injector = new ThreeNodes.Injector(this)
-      @commandMap = new ThreeNodes.CommandMap(this)
-      
+            
       @url_handler = new ThreeNodes.UrlHandler()
-      @url_handler.context = this
-      
-      @injector.mapSingleton "NodeGraph", ThreeNodes.NodeGraph
-      @injector.mapSingleton "AppWebsocket", ThreeNodes.AppWebsocket
-      @injector.mapSingleton "UI", ThreeNodes.UI
-      @injector.mapSingleton "FileHandler", ThreeNodes.FileHandler
-      
       @nodegraph = new ThreeNodes.NodeGraph [],
         is_test: testing_mode
-      @nodegraph.context = this
-      @socket = @injector.get "AppWebsocket"
+      
+      @socket = new ThreeNodes.AppWebsocket()
       @webgl = new ThreeNodes.WebglBase()
-      @file_handler = new ThreeNodes.FileHandler()
-      @file_handler.context = this
+      @file_handler = new ThreeNodes.FileHandler(@nodegraph)
             
       @nodegraph.on "remove", () =>
         @timelineView.selectAnims([])
@@ -80,9 +67,10 @@ define [
         @clearWorkspace()
       
       if testing_mode == false
-        @ui = @injector.get "UI",
+        @ui = new ThreeNodes.UI
           el: $("body")
         @ui.on("render", @nodegraph.render)
+        @ui.on("renderConnections", @nodegraph.renderAllConnections)
         @initTimeline()
       else
         $("body").addClass "test-mode"
@@ -118,7 +106,7 @@ define [
       @timelineView.on("trackRebuild", @nodegraph.showNodesAnimation)
       @timelineView.on("startSound", @nodegraph.startSound)
       @timelineView.on("stopSound", @nodegraph.stopSound)
-      ThreeNodes.events.trigger "OnUIResize"
+      ThreeNodes.events.trigger("OnUIResize")
     
     clearWorkspace: () ->
       @reset_global_variables()

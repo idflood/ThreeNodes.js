@@ -13,17 +13,12 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       this.filter_list = __bind(this.filter_list, this);
       this.filter_list_item = __bind(this.filter_list_item, this);
       this.init_sidebar_toggle = __bind(this.init_sidebar_toggle, this);
-      this.init_sidebar_tabs = __bind(this.init_sidebar_tabs, this);
-      this.onRegister = __bind(this.onRegister, this);
-      Sidebar.__super__.constructor.apply(this, arguments);
-    }
-
-    Sidebar.prototype.onRegister = function() {
+      this.init_sidebar_tabs = __bind(this.init_sidebar_tabs, this);      Sidebar.__super__.constructor.apply(this, arguments);
       this.init_sidebar_tab_new_node();
       this.init_sidebar_search();
       this.init_sidebar_toggle();
-      return this.init_sidebar_tabs();
-    };
+      this.init_sidebar_tabs();
+    }
 
     Sidebar.prototype.init_sidebar_tabs = function() {
       return this.$el.tabs({

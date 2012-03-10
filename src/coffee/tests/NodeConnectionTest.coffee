@@ -11,7 +11,6 @@ define [
       
       test "Basic connection", () ->
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
@@ -62,7 +61,6 @@ define [
       
       test "Connection between wrong field types", () ->
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -90,7 +88,6 @@ define [
       
       test "Connection between wrong field types (children array)", () ->
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -107,7 +104,6 @@ define [
       
       test "Connection direction", () ->
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -123,7 +119,6 @@ define [
       
       test "Connection from input to anoter input", () ->
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         console.log "create node...."
         n1 = ng.create_node("Number")
@@ -139,7 +134,6 @@ define [
       
       test "Connection from and to the same node", () ->
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -155,7 +149,6 @@ define [
       test "Array connections", () ->
         # verify that the good amount of objects are created when having many inputs
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")

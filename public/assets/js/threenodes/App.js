@@ -15,8 +15,6 @@ ThreeNodes.fields = {
   types: {}
 };
 
-ThreeNodes.webgl_materials_node = [];
-
 ThreeNodes.svg = false;
 
 ThreeNodes.flash_sound_value = {
@@ -25,7 +23,7 @@ ThreeNodes.flash_sound_value = {
   hat: 0
 };
 
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/Injector', 'order!threenodes/utils/CommandMap', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
   "use strict";  ThreeNodes.events = _.extend({}, Backbone.Events);
   return ThreeNodes.App = (function() {
 
@@ -33,33 +31,24 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
       var _this = this;
       if (testing_mode == null) testing_mode = false;
       this.initTimeline = __bind(this.initTimeline, this);
+      console.log("ThreeNodes app init...");
       ThreeNodes.settings = {
         testing_mode: testing_mode,
         player_mode: false
       };
-      console.log("ThreeNodes app init...");
       this.current_scene = false;
       this.current_camera = false;
       this.current_renderer = false;
       this.effectScreen = false;
       this.renderModel = false;
       this.composer = false;
-      this.injector = new ThreeNodes.Injector(this);
-      this.commandMap = new ThreeNodes.CommandMap(this);
       this.url_handler = new ThreeNodes.UrlHandler();
-      this.url_handler.context = this;
-      this.injector.mapSingleton("NodeGraph", ThreeNodes.NodeGraph);
-      this.injector.mapSingleton("AppWebsocket", ThreeNodes.AppWebsocket);
-      this.injector.mapSingleton("UI", ThreeNodes.UI);
-      this.injector.mapSingleton("FileHandler", ThreeNodes.FileHandler);
       this.nodegraph = new ThreeNodes.NodeGraph([], {
         is_test: testing_mode
       });
-      this.nodegraph.context = this;
-      this.socket = this.injector.get("AppWebsocket");
+      this.socket = new ThreeNodes.AppWebsocket();
       this.webgl = new ThreeNodes.WebglBase();
-      this.file_handler = new ThreeNodes.FileHandler();
-      this.file_handler.context = this;
+      this.file_handler = new ThreeNodes.FileHandler(this.nodegraph);
       this.nodegraph.on("remove", function() {
         return _this.timelineView.selectAnims([]);
       });
@@ -67,10 +56,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         return _this.clearWorkspace();
       });
       if (testing_mode === false) {
-        this.ui = this.injector.get("UI", {
+        this.ui = new ThreeNodes.UI({
           el: $("body")
         });
         this.ui.on("render", this.nodegraph.render);
+        this.ui.on("renderConnections", this.nodegraph.renderAllConnections);
         this.initTimeline();
       } else {
         $("body").addClass("test-mode");

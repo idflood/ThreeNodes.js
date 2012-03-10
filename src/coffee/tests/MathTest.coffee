@@ -11,7 +11,6 @@ define [
       
       test "Basic math", () ->
         ThreeNodes.events.trigger("ClearWorkspace")
-        injector = app.injector
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")

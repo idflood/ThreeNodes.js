@@ -7,14 +7,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
 
     __extends(FileHandler, _super);
 
-    function FileHandler() {
+    function FileHandler(nodes) {
+      this.nodes = nodes;
       this.load_local_file_input_changed = __bind(this.load_local_file_input_changed, this);
       this.load_from_xml_data = __bind(this.load_from_xml_data, this);
       this.load_from_json_data = __bind(this.load_from_json_data, this);
       this.get_local_xml = __bind(this.get_local_xml, this);
       this.get_local_json = __bind(this.get_local_json, this);
       this.export_code = __bind(this.export_code, this);
-      this.save_local_file = __bind(this.save_local_file, this);      ThreeNodes.events.on("SaveFile", this.save_local_file);
+      this.save_local_file = __bind(this.save_local_file, this);
+      ThreeNodes.events.on("SaveFile", this.save_local_file);
       ThreeNodes.events.on("ExportCode", this.export_code);
       ThreeNodes.events.on("LoadFile", this.load_local_file_input_changed);
       ThreeNodes.events.on("LoadJSON", this.load_from_json_data);
@@ -29,8 +31,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
     };
 
     FileHandler.prototype.export_code = function() {
-      var bb, c, fileSaver, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
-      nodegraph = this.context.nodegraph;
+      var bb, c, fileSaver, node, res, _i, _j, _len, _len2, _ref, _ref2;
       res = "//\n";
       res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n";
       res += "//\n\n";
@@ -43,7 +44,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       res += "//\n";
       res += "// nodes\n";
       res += "//\n";
-      _ref = nodegraph.models;
+      _ref = this.nodes.models;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         res += node.toCode();
@@ -52,7 +53,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       res += "//\n";
       res += "// connections\n";
       res += "//\n\n";
-      _ref2 = nodegraph.connections.models;
+      _ref2 = this.nodes.connections.models;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         c = _ref2[_j];
         res += c.toCode();
@@ -67,14 +68,13 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
     };
 
     FileHandler.prototype.get_local_json = function() {
-      var nodegraph, res;
-      nodegraph = this.context.nodegraph;
+      var res;
       res = {
         uid: ThreeNodes.uid,
-        nodes: jQuery.map(nodegraph.models, function(n, i) {
+        nodes: jQuery.map(this.nodes.models, function(n, i) {
           return n.toJSON();
         }),
-        connections: jQuery.map(nodegraph.connections.models, function(c, i) {
+        connections: jQuery.map(this.nodes.connections.models, function(c, i) {
           return c.toJSON();
         })
       };
@@ -82,21 +82,20 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
     };
 
     FileHandler.prototype.get_local_xml = function() {
-      var c, node, nodegraph, res, _i, _j, _len, _len2, _ref, _ref2;
-      nodegraph = this.context.nodegraph;
+      var c, node, res, _i, _j, _len, _len2, _ref, _ref2;
       res = "";
       res += '<?xml version="1.0" encoding="UTF-8"?>\n';
       res += "<app>\n";
       res += "\t<uid last='" + ThreeNodes.uid + "' />\n";
       res += "\t<nodes>\n";
-      _ref = nodegraph.models;
+      _ref = this.nodes.models;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         res += node.toXML();
       }
       res += "\t</nodes>\n";
       res += "\t<connections>\n";
-      _ref2 = nodegraph.connections.models;
+      _ref2 = this.nodes.connections.models;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         c = _ref2[_j];
         res += c.toXML();
@@ -107,31 +106,30 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
     };
 
     FileHandler.prototype.load_from_json_data = function(txt) {
-      var connection, delay, loaded_data, n, node, nodegraph, _i, _j, _len, _len2, _ref, _ref2;
-      nodegraph = this.context.nodegraph;
+      var connection, delay, loaded_data, n, node, _i, _j, _len, _len2, _ref, _ref2,
+        _this = this;
       loaded_data = JSON.parse(txt);
       _ref = loaded_data.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        n = nodegraph.create_node(node.type, node.x, node.y, false, node);
+        n = this.nodes.create_node(node.type, node.x, node.y, false, node);
       }
       _ref2 = loaded_data.connections;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         connection = _ref2[_j];
-        nodegraph.createConnectionFromObject(connection);
+        this.nodes.createConnectionFromObject(connection);
       }
       ThreeNodes.uid = loaded_data.uid;
       delay = function(ms, func) {
         return setTimeout(func, ms);
       };
       return delay(1, function() {
-        return nodegraph.renderAllConnections();
+        return _this.nodes.renderAllConnections();
       });
     };
 
     FileHandler.prototype.load_from_xml_data = function(txt) {
-      var loaded_data, nodegraph;
-      nodegraph = this.context.nodegraph;
+      var loaded_data;
       loaded_data = $(txt);
       $("node", loaded_data).each(function() {
         var $this, n, nid, type, x, y;
@@ -140,7 +138,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         y = parseInt($this.attr("y"));
         nid = parseInt($this.attr("nid"));
         type = $this.attr("type");
-        return n = nodegraph.create_node(type, x, y, $this);
+        return n = this.nodes.create_node(type, x, y, $this);
       });
       $("connection", loaded_data).each(function() {
         var $this, c, cid, from, to;
@@ -150,16 +148,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         cid = parseInt($this.attr("id"));
         from = ThreeNodes.nodes.fields[from.toString()];
         to = ThreeNodes.nodes.fields[to.toString()];
-        c = new NodeConnection(from, to, cid);
-        return this.context.injector.applyContext(c);
+        return c = this.nodes.connections.create({
+          from_field: from,
+          to_field: to,
+          cid: cid
+        });
       });
       return ThreeNodes.uid = parseInt($("uid", loaded_data).attr("last"));
     };
 
     FileHandler.prototype.load_local_file_input_changed = function(e) {
-      var file, nodegraph, reader, self;
+      var file, reader, self;
       ThreeNodes.events.trigger("ClearWorkspace");
-      nodegraph = this.context.nodegraph;
       file = e.target.files[0];
       reader = new FileReader();
       self = this;

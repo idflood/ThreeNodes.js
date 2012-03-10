@@ -5,9 +5,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
   return NodeGraphSpeedTest = (function() {
 
     function NodeGraphSpeedTest(app) {
-      var filehandler, injector, n1, n2, ng, node_mult, rnd;
+      var filehandler, n1, n2, ng, node_mult, rnd;
       ng = app.nodegraph;
-      injector = app.injector;
       filehandler = app.file_handler;
       ThreeNodes.events.trigger("ClearWorkspace");
       n1 = ng.create_node("Number");

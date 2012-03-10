@@ -7,9 +7,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
     function NodeConnectionTest(app) {
       module("NodeConnection");
       test("Basic connection", function() {
-        var c1, c2, c3, injector, n1, n2, n3, n4, ng;
+        var c1, c2, c3, n1, n2, n3, n4, ng;
         ThreeNodes.events.trigger("ClearWorkspace");
-        injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("Number");
@@ -58,9 +57,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(n3.v_out.getValue(), 14, "The second connection is valid and propagated the value");
       });
       test("Connection between wrong field types", function() {
-        var c1, injector, n1, n2, ng, old_val;
+        var c1, n1, n2, ng, old_val;
         ThreeNodes.events.trigger("ClearWorkspace");
-        injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("ThreeMesh");
@@ -82,9 +80,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(n2.rack.getField("material").getValue().id, old_val.id, "Material field value should not change if wrong type is passed");
       });
       test("Connection between wrong field types (children array)", function() {
-        var c2, injector, n1, n3, ng;
+        var c2, n1, n3, ng;
         ThreeNodes.events.trigger("ClearWorkspace");
-        injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n3 = ng.create_node("Scene");
@@ -98,9 +95,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(n3.ob.children.length, 0, "Scene.children array is still empty");
       });
       test("Connection direction", function() {
-        var c1, injector, n1, n2, ng;
+        var c1, n1, n2, ng;
         ThreeNodes.events.trigger("ClearWorkspace");
-        injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("Number");
@@ -113,9 +109,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(n2.v_out.getValue(), 4, "Connection is created with good input/output order and the value has been propagated");
       });
       test("Connection from input to anoter input", function() {
-        var c1, injector, n1, n2, ng;
+        var c1, n1, n2, ng;
         ThreeNodes.events.trigger("ClearWorkspace");
-        injector = app.injector;
         ng = app.nodegraph;
         console.log("create node....");
         n1 = ng.create_node("Number");
@@ -128,9 +123,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(ng.connections.length, 0, "The connection has not been created since it is wrong");
       });
       test("Connection from and to the same node", function() {
-        var c1, injector, n1, ng;
+        var c1, n1, ng;
         ThreeNodes.events.trigger("ClearWorkspace");
-        injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         c1 = ng.connections.create({
@@ -141,9 +135,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         return equals(ng.connections.length, 0, "The connection has not been created since it is wrong");
       });
       test("Array connections", function() {
-        var c1, c2, c3, injector, meshNode, n1, n2, ng, node_merge, node_mult, node_vec, nvec1, nvec2;
+        var c1, c2, c3, meshNode, n1, n2, ng, node_merge, node_mult, node_vec, nvec1, nvec2;
         ThreeNodes.events.trigger("ClearWorkspace");
-        injector = app.injector;
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("Number");

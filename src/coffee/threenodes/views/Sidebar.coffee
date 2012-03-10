@@ -5,7 +5,8 @@ define [
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.Sidebar extends Backbone.View
-    onRegister: () =>
+    constructor: () ->
+      super
       @init_sidebar_tab_new_node()
       @init_sidebar_search()
       @init_sidebar_toggle()

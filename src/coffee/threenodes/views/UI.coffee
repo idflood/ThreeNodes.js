@@ -16,15 +16,13 @@ define [
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   "use strict"
   class ThreeNodes.UI extends Backbone.View
-    
-    onRegister: () =>
+    constructor: () ->
+      super
       ThreeNodes.events.on "OnUIResize", @on_ui_window_resize
       ThreeNodes.events.on "SetDisplayModeCommand", @setDisplayMode
       
       # trigger the url after the setDisplaymode event has been binded
       ThreeNodes.events.trigger "InitUrlHandler"
-      
-      injector = @context.injector
       
       # create the main ui
       ui_tmpl = _.template(_view_app_ui, {})
@@ -44,7 +42,7 @@ define [
       $menu_tmpl = $(menu_tmpl).prependTo("body")
       @menubar = new ThreeNodes.MenuBar
         el: $menu_tmpl
-      @menubar.context = @context
+      
       # redispatch menubar events
       self = this
       @menubar.trigger = (events) ->
@@ -54,8 +52,6 @@ define [
       # setup sidebar
       @sidebar = new ThreeNodes.Sidebar
         el: $("#sidebar")
-      @sidebar.context = @context
-      @sidebar.onRegister()
       
       @add_window_resize_handler()
       @startUI()
@@ -97,7 +93,7 @@ define [
       
       ThreeNodes.settings.player_mode = is_player
       if is_player == false
-        @context.nodegraph.renderAllConnections()
+        @trigger("renderConnections")
       return true
     
     setupMouseScroll: () =>
@@ -190,9 +186,7 @@ define [
       $("#sidebar").delay(delay_intro).show()
       $("#container-wrapper").delay(delay_intro).show()
       $("#sidebar-toggle").delay(delay_intro).show()
-      
-      nodegraph = @context.nodegraph
-      nodegraph.renderAllConnections()
+      @trigger("renderConnections")
       
     render: () =>
       @trigger("render")

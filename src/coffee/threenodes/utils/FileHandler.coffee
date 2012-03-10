@@ -8,7 +8,7 @@ define [
 ], ($, _, Backbone) ->
   "use strict"
   class ThreeNodes.FileHandler extends Backbone.Events
-    constructor: () ->
+    constructor: (@nodes) ->
       ThreeNodes.events.on "SaveFile", @save_local_file
       ThreeNodes.events.on "ExportCode", @export_code
       ThreeNodes.events.on "LoadFile", @load_local_file_input_changed
@@ -21,7 +21,6 @@ define [
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json")
     
     export_code: () =>
-      nodegraph = @context.nodegraph
       res = "//\n"
       res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
       res += "//\n\n"
@@ -35,7 +34,7 @@ define [
       res += "// nodes\n"
       res += "//\n"
       
-      for node in nodegraph.models
+      for node in @nodes.models
         res += node.toCode()
       
       res += "\n"
@@ -43,7 +42,7 @@ define [
       res += "// connections\n"
       res += "//\n\n"
       
-      for c in nodegraph.connections.models
+      for c in @nodes.connections.models
         res += c.toCode()
         
       res += "\n\n"
@@ -56,15 +55,13 @@ define [
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
       
     get_local_json: () =>
-      nodegraph = @context.nodegraph
       res = 
         uid: ThreeNodes.uid
-        nodes: jQuery.map(nodegraph.models, (n, i) -> n.toJSON())
-        connections: jQuery.map(nodegraph.connections.models, (c, i) -> c.toJSON())
+        nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
+        connections: jQuery.map(@nodes.connections.models, (c, i) -> c.toJSON())
       JSON.stringify(res)
     
     get_local_xml: () =>
-      nodegraph = @context.nodegraph
       res = ""
       res += '<?xml version="1.0" encoding="UTF-8"?>\n'
       res += ("<app>\n")
@@ -72,12 +69,12 @@ define [
       res += "\t<uid last='#{ThreeNodes.uid}' />\n"
     
       res += "\t<nodes>\n"
-      for node in nodegraph.models
+      for node in @nodes.models
         res += node.toXML()
       res += "\t</nodes>\n"
       
       res += "\t<connections>\n"
-      for c in nodegraph.connections.models
+      for c in @nodes.connections.models
         res += c.toXML()
       res += "\t</connections>\n"
       
@@ -85,20 +82,18 @@ define [
       res
     
     load_from_json_data: (txt) =>
-      nodegraph = @context.nodegraph
       loaded_data = JSON.parse(txt)
       for node in loaded_data.nodes
-        n = nodegraph.create_node(node.type, node.x, node.y, false, node)
+        n = @nodes.create_node(node.type, node.x, node.y, false, node)
       
       for connection in loaded_data.connections
-        nodegraph.createConnectionFromObject(connection)
+        @nodes.createConnectionFromObject(connection)
       
       ThreeNodes.uid = loaded_data.uid
       delay = (ms, func) -> setTimeout func, ms
-      delay 1, -> nodegraph.renderAllConnections()
+      delay 1, => @nodes.renderAllConnections()
     
     load_from_xml_data: (txt) =>
-      nodegraph = @context.nodegraph
       loaded_data = $(txt)
       
       $("node", loaded_data).each () ->
@@ -107,7 +102,7 @@ define [
         y = parseInt $this.attr("y")
         nid = parseInt $this.attr("nid")
         type = $this.attr("type")
-        n = nodegraph.create_node(type, x, y, $this)
+        n = @nodes.create_node(type, x, y, $this)
       
       $("connection", loaded_data).each () ->
         $this = $(this)
@@ -116,13 +111,15 @@ define [
         cid = parseInt $this.attr("id")
         from = ThreeNodes.nodes.fields[from.toString()]
         to = ThreeNodes.nodes.fields[to.toString()]
-        c = new NodeConnection(from, to, cid)
-        @context.injector.applyContext(c)
+        c = @nodes.connections.create
+          from_field: from
+          to_field: to
+          cid: cid
+        
       ThreeNodes.uid = parseInt $("uid", loaded_data).attr("last")
     
     load_local_file_input_changed: (e) =>
       ThreeNodes.events.trigger("ClearWorkspace")
-      nodegraph = @context.nodegraph
       file = e.target.files[0]
       reader = new FileReader()
       self = this

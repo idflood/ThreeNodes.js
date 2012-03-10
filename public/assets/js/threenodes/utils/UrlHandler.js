@@ -31,16 +31,14 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
     };
 
     UrlHandler.prototype.onExample = function(file, player_mode) {
-      var fh;
       if (player_mode == null) player_mode = false;
-      fh = this.context.file_handler;
       ThreeNodes.events.trigger("SetDisplayModeCommand", player_mode);
       ThreeNodes.events.trigger("ClearWorkspace");
       return $.ajax({
         url: "examples/" + file,
         dataType: 'text',
         success: function(data) {
-          return fh.load_from_json_data(data);
+          return ThreeNodes.events.trigger("LoadJSON", data);
         }
       });
     };
