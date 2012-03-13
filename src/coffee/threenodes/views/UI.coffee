@@ -7,6 +7,7 @@ define [
   "text!templates/app_ui.tmpl.html",
   'order!threenodes/views/Sidebar',
   'order!threenodes/views/MenuBar',
+  'order!threenodes/views/TreeView',
   "order!libs/three-extras/js/RequestAnimationFrame",
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
@@ -52,6 +53,9 @@ define [
       # setup sidebar
       @sidebar = new ThreeNodes.Sidebar
         el: $("#sidebar")
+      
+      @treeview = new ThreeNodes.TreeView
+        el: $("#tab-list")
       
       @add_window_resize_handler()
       @startUI()

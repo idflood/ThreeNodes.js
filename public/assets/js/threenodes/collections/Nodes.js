@@ -22,17 +22,26 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     }
 
     NodeGraph.prototype.initialize = function(models, options) {
-      var _this = this;
+      var self,
+        _this = this;
       this.types = false;
       this.connections = new ThreeNodes.ConnectionsCollection();
+      self = this;
       if (options.is_test === false) {
         this.connections.bind("add", function(connection) {
           var view;
-          return view = new ThreeNodes.ConnectionView({
+          view = new ThreeNodes.ConnectionView({
             model: connection
           });
+          return ThreeNodes.events.trigger("nodeslist:rebuild", self);
         });
       }
+      this.bind("remove", function(node) {
+        return ThreeNodes.events.trigger("nodeslist:rebuild", self);
+      });
+      this.connections.bind("remove", function(connection) {
+        return ThreeNodes.events.trigger("nodeslist:rebuild", self);
+      });
       this.bind("add", function(node) {
         var $tmpl, template, tmpl, view;
         template = ThreeNodes.NodeView.template;
@@ -42,7 +51,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           model: node,
           el: $tmpl
         });
-        return node.view = view;
+        node.view = view;
+        return ThreeNodes.events.trigger("nodeslist:rebuild", self);
       });
       this.bind("createConnection", function(field1, field2) {
         return _this.connections.create({

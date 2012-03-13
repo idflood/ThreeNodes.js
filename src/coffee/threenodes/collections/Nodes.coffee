@@ -23,11 +23,19 @@ define [
     initialize: (models, options) =>
       @types = false
       @connections = new ThreeNodes.ConnectionsCollection()
+      self = this
       
       if options.is_test == false
         @connections.bind "add", (connection) ->
           view = new ThreeNodes.ConnectionView
             model: connection
+          ThreeNodes.events.trigger "nodeslist:rebuild", self
+      
+      @bind "remove", (node) ->
+        ThreeNodes.events.trigger "nodeslist:rebuild", self
+      
+      @connections.bind "remove", (connection) ->
+        ThreeNodes.events.trigger "nodeslist:rebuild", self
       
       @bind "add", (node) ->
         template = ThreeNodes.NodeView.template
@@ -40,6 +48,8 @@ define [
         # used mainly in NodeView.make_draggable
         # it would be better without this
         node.view = view
+        
+        ThreeNodes.events.trigger "nodeslist:rebuild", self
             
       @bind "createConnection", (field1, field2) =>
         @connections.create
