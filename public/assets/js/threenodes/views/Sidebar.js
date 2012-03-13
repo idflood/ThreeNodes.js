@@ -145,10 +145,11 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
         activeClass: "ui-state-active",
         hoverClass: "ui-state-hover",
         drop: function(event, ui) {
-          var dx, dy, nodename;
+          var dx, dy, nodename, offset;
           nodename = ui.draggable.attr("rel");
-          dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10;
-          dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop();
+          offset = $("#container-wrapper").offset();
+          dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10;
+          dy = ui.position.top + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop() - offset.top;
           ThreeNodes.events.trigger("CreateNode", nodename, dx, dy);
           return $("#sidebar").show();
         }

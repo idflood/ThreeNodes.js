@@ -9,6 +9,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
 
     function AppTimeline() {
       this.update = __bind(this.update, this);
+      this.resize = __bind(this.resize, this);
       this.remove = __bind(this.remove, this);
       this.selectAnims = __bind(this.selectAnims, this);
       this.initialize = __bind(this.initialize, this);
@@ -17,8 +18,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
 
     AppTimeline.prototype.initialize = function(options) {
       var _this = this;
-      localStorage["timeline.js.settings.canvasHeight"] = 46 + 120;
+      AppTimeline.__super__.initialize.apply(this, arguments);
+      localStorage["timeline.js.settings.canvasHeight"] = this.$el.innerHeight();
       this.timeline = new Timeline({
+        element: this.el,
         displayOnlySelected: true,
         colorBackground: "#333",
         colorButtonBackground: "#222222",
@@ -73,8 +76,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       this.undelegateEvents();
       this.timeline.destroy();
       this.timeline = null;
-      this.time = null;
-      return AppTimeline.__super__.remove.apply(this, arguments);
+      return this.time = null;
+    };
+
+    AppTimeline.prototype.resize = function(height) {
+      if (this.timeline) {
+        this.timeline.canvasHeight = height;
+        this.timeline.tracksScrollY = 0;
+        this.timeline.tracksScrollThumbPos = 0;
+        return this.timeline.save();
+      }
     };
 
     AppTimeline.prototype.update = function() {

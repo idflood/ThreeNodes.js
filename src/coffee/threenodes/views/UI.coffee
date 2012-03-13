@@ -14,6 +14,7 @@ define [
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   "order!libs/jquery.transform2d",
   "order!libs/jquery-scrollview/jquery.scrollview",
+  "order!libs/jquery.layout-latest",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   "use strict"
   class ThreeNodes.UI extends Backbone.View
@@ -62,7 +63,35 @@ define [
       @on_ui_window_resize()
       @is_grabbing = false
       @setupMouseScroll()
-    
+      
+      $('body').layout
+        scrollToBookmarkOnLoad: false
+        center:
+          size: "100%"
+        north:
+          closable: false
+          resizable: false
+          slidable: false
+          showOverflowOnHover: true
+          size: 24
+          resizerClass: "ui-layout-resizer-hidden"
+          spacing_open: 0
+          spacing_closed: 0
+        west:
+          minSize: 220
+        south:
+          minSize: 48
+          size: 48
+          onopen: (name, pane_el, state, opt, layout_name) =>
+            @trigger("timelineResize", pane_el.innerHeight())
+            @on_ui_window_resize()
+          onclose: (name, pane_el, state, opt, layout_name) =>
+            @trigger("timelineResize", pane_el.innerHeight())
+            @on_ui_window_resize()
+          onresize: (name, pane_el, state, opt, layout_name) =>
+            @trigger("timelineResize", pane_el.innerHeight())
+      @trigger("timelineResize", 48)
+      
     startUI: () =>
       @init_context_menus()
       @init_bottom_toolbox()
@@ -200,15 +229,8 @@ define [
       h = $(window).height()
       timelinesize = parseInt(localStorage["timeline.js.settings.canvasHeight"])
       
-      $("#container-wrapper").css
-        width: w
-        height: h - 26 - timelinesize
-      
       toolbox_pos = timelinesize + 20
       $("#bottom-toolbox").attr("style", "bottom: #{toolbox_pos}px !important;")
-      
-      $("#sidebar").css
-        bottom: timelinesize
       
     animate: () =>
       @render()

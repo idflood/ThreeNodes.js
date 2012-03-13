@@ -96,12 +96,16 @@ define [
         @timelineView.off("stopSound", @nodegraph.stopSound)
         @timelineView.remove()
       
-      @timelineView = new ThreeNodes.AppTimeline()
+      $("#timeline").html("")
+      @timelineView = new ThreeNodes.AppTimeline
+        el: $("#timeline")
+      
       @nodegraph.timeline = @timelineView
       
       if @ui
         @ui.on("render", @timelineView.update)
         @ui.on("selectAnims", @timelineView.selectAnims)
+        @ui.on("timelineResize", @timelineView.resize)
       
       @timelineView.on("trackRebuild", @nodegraph.showNodesAnimation)
       @timelineView.on("startSound", @nodegraph.startSound)

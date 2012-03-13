@@ -85,11 +85,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         this.timelineView.off("stopSound", this.nodegraph.stopSound);
         this.timelineView.remove();
       }
-      this.timelineView = new ThreeNodes.AppTimeline();
+      $("#timeline").html("");
+      this.timelineView = new ThreeNodes.AppTimeline({
+        el: $("#timeline")
+      });
       this.nodegraph.timeline = this.timelineView;
       if (this.ui) {
         this.ui.on("render", this.timelineView.update);
         this.ui.on("selectAnims", this.timelineView.selectAnims);
+        this.ui.on("timelineResize", this.timelineView.resize);
       }
       this.timelineView.on("trackRebuild", this.nodegraph.showNodesAnimation);
       this.timelineView.on("startSound", this.nodegraph.startSound);

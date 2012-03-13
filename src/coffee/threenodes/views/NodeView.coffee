@@ -58,7 +58,8 @@ define [
     
     compute_node_position: () ->
       pos = $(@el).position()
-      @model.setPosition(pos.left, pos.top)
+      offset = $("#container-wrapper").offset()
+      @model.setPosition(pos.left + $("#container-wrapper").scrollLeft(), pos.top + $("#container-wrapper").scrollTop())
     
     remove: () =>
       $(".field", this.el).destroyContextMenu()
@@ -124,6 +125,7 @@ define [
             $(".node").removeClass("ui-selected")
           ThreeNodes.nodes_offset = $(this).offset()
         drag: (ev, ui) ->
+          
           dt = ui.position.top - ThreeNodes.nodes_offset.top
           dl = ui.position.left - ThreeNodes.nodes_offset.left
           ThreeNodes.selected_nodes.not(this).each () ->

@@ -58,7 +58,10 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       self = this;
       field = $field.data("object");
       get_path = function(start, end, offset) {
-        return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left) + " " + (end.top + offset.top);
+        var ofx, ofy;
+        ofx = $("#container-wrapper").scrollLeft();
+        ofy = $("#container-wrapper").scrollTop();
+        return "M" + (start.left + offset.left + ofx + 2) + " " + (start.top + offset.top + ofy + 2) + " L" + (end.left + offset.left + ofx) + " " + (end.top + offset.top + ofy);
       };
       highlight_possible_targets = function() {
         var target;

@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "text!templates/app_ui.tmpl.html", 'order!threenodes/views/Sidebar', 'order!threenodes/views/MenuBar', 'order!threenodes/views/TreeView', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "text!templates/app_ui.tmpl.html", 'order!threenodes/views/Sidebar', 'order!threenodes/views/MenuBar', 'order!threenodes/views/TreeView', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview", "order!libs/jquery.layout-latest"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) {
   "use strict";  return ThreeNodes.UI = (function(_super) {
 
     __extends(UI, _super);
@@ -24,7 +24,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.setupMouseScroll = __bind(this.setupMouseScroll, this);
       this.setDisplayMode = __bind(this.setDisplayMode, this);
       this.startUI = __bind(this.startUI, this);
-      var $menu_tmpl, menu_tmpl, self, ui_tmpl;
+      var $menu_tmpl, menu_tmpl, self, ui_tmpl,
+        _this = this;
       UI.__super__.constructor.apply(this, arguments);
       ThreeNodes.events.on("OnUIResize", this.on_ui_window_resize);
       ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
@@ -60,6 +61,41 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.on_ui_window_resize();
       this.is_grabbing = false;
       this.setupMouseScroll();
+      $('body').layout({
+        scrollToBookmarkOnLoad: false,
+        center: {
+          size: "100%"
+        },
+        north: {
+          closable: false,
+          resizable: false,
+          slidable: false,
+          showOverflowOnHover: true,
+          size: 24,
+          resizerClass: "ui-layout-resizer-hidden",
+          spacing_open: 0,
+          spacing_closed: 0
+        },
+        west: {
+          minSize: 220
+        },
+        south: {
+          minSize: 48,
+          size: 48,
+          onopen: function(name, pane_el, state, opt, layout_name) {
+            _this.trigger("timelineResize", pane_el.innerHeight());
+            return _this.on_ui_window_resize();
+          },
+          onclose: function(name, pane_el, state, opt, layout_name) {
+            _this.trigger("timelineResize", pane_el.innerHeight());
+            return _this.on_ui_window_resize();
+          },
+          onresize: function(name, pane_el, state, opt, layout_name) {
+            return _this.trigger("timelineResize", pane_el.innerHeight());
+          }
+        }
+      });
+      this.trigger("timelineResize", 48);
     }
 
     UI.prototype.startUI = function() {
@@ -242,15 +278,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       w = $(window).width();
       h = $(window).height();
       timelinesize = parseInt(localStorage["timeline.js.settings.canvasHeight"]);
-      $("#container-wrapper").css({
-        width: w,
-        height: h - 26 - timelinesize
-      });
       toolbox_pos = timelinesize + 20;
-      $("#bottom-toolbox").attr("style", "bottom: " + toolbox_pos + "px !important;");
-      return $("#sidebar").css({
-        bottom: timelinesize
-      });
+      return $("#bottom-toolbox").attr("style", "bottom: " + toolbox_pos + "px !important;");
     };
 
     UI.prototype.animate = function() {

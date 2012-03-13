@@ -24,29 +24,19 @@ body
   margin-top: 0
 
 #main-menu-bar
-  position: absolute
-  top: 0
-  left: 0
-  right: 0
-  z-index: 999
-
-#container, #sidebar
-  position: absolute
-  top: 0
-  left: 0
+  z-index: 999 !important
+  overflow: visible !important
+  +pie-clearfix
 
 #container
   transform-origin: 0 0
   -moz-transform-origin: 0 0
   -webkit-transform-origin: 0 0
 
-#sidebar, #container-wrapper
-  top: 25px
-
 #container-wrapper, #sidebar, #sidebar-toggle
   display: none
 
-#container-wrapper, #timeline-container, svg, div
+#container-wrapper, #timeline, svg, div
   -moz-user-select: none
   -webkit-user-select: none
 
@@ -68,12 +58,12 @@ $c: $background_color - #050505
   //z-index: 1
 
 #sidebar
-  width: 220px
   background: $background_color
-  +single-box-shadow(#222, -1px, 0, 10px)
-  border-right: 1px solid #373737
-  left: 0
-  //z-index: 10
+
+.ui-layout-resizer-west
+  border-right: 1px solid #3a3a3a
+.ui-layout-resizer-south
+  border-top: 1px solid #3a3a3a
 
 #bottom-toolbox
   position: absolute
@@ -87,13 +77,6 @@ $c: $background_color - #050505
   bottom: 0
   width: 100px
   z-index: 10
-#timeline-switcher
-  font-size: 10px
-  bottom: 0
-  right: 120px
-  text-align: right
-  position: absolute
-  width: 80px
 
 #display-mode-switch
   position: absolute
@@ -116,9 +99,12 @@ $c: $background_color - #050505
   display: none
   visibility: hidden
 
+.editor-mode
+  .ui-layout-resizer
+    visibility: visible !important
+
 .player-mode
-  #container-wrapper, #sidebar, #sidebar-toggle, #bottom-toolbox
-    display: none !important
+  #container-wrapper, #sidebar, #sidebar-toggle, #bottom-toolbox, .ui-layout-resizer
     visibility: hidden !important
   #webgl-window
     overflow: auto

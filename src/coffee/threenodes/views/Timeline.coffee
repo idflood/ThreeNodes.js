@@ -8,10 +8,12 @@ define [
   "use strict"
   class ThreeNodes.AppTimeline extends Backbone.View
     initialize: (options) =>
+      super
       # reset canvas height
-      localStorage["timeline.js.settings.canvasHeight"] = 46 + 120
+      localStorage["timeline.js.settings.canvasHeight"] = @$el.innerHeight()
       
       @timeline = new Timeline
+        element: @el
         displayOnlySelected: true
         colorBackground: "#333"
         colorButtonBackground: "#222222"
@@ -53,7 +55,14 @@ define [
       @timeline.destroy()
       @timeline = null
       @time = null
-      super
+      #super
+    
+    resize: (height) =>
+      if @timeline
+        @timeline.canvasHeight = height
+        @timeline.tracksScrollY = 0
+        @timeline.tracksScrollThumbPos = 0
+        @timeline.save()
     
     update: () =>
       n = Date.now()

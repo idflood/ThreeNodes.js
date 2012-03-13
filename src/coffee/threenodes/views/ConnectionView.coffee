@@ -50,11 +50,11 @@ define [
       o1
     
     get_path: () ->
-      container_y = parseFloat($("#container-wrapper").css("top"))
       f1 = @get_field_position(@model.from_field)
       f2 = @get_field_position(@model.to_field)
-      ofx = $("#container-wrapper").scrollLeft()
-      ofy = $("#container-wrapper").scrollTop() - container_y
+      offset = $("#container-wrapper").offset()
+      ofx = $("#container-wrapper").scrollLeft() - offset.left
+      ofy = $("#container-wrapper").scrollTop() - offset.top
       x1 = f1.left + ofx
       y1 = f1.top + ofy
       x4 = f2.left + ofx

@@ -68,12 +68,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     };
 
     ConnectionView.prototype.get_path = function() {
-      var container_y, diffx, diffy, f1, f2, min_diff, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
-      container_y = parseFloat($("#container-wrapper").css("top"));
+      var diffx, diffy, f1, f2, min_diff, offset, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
       f1 = this.get_field_position(this.model.from_field);
       f2 = this.get_field_position(this.model.to_field);
-      ofx = $("#container-wrapper").scrollLeft();
-      ofy = $("#container-wrapper").scrollTop() - container_y;
+      offset = $("#container-wrapper").offset();
+      ofx = $("#container-wrapper").scrollLeft() - offset.left;
+      ofy = $("#container-wrapper").scrollTop() - offset.top;
       x1 = f1.left + ofx;
       y1 = f1.top + ofy;
       x4 = f2.left + ofx;

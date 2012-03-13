@@ -94,7 +94,8 @@ define [
         hoverClass: "ui-state-hover"
         drop: (event, ui) ->
           nodename = ui.draggable.attr("rel")
-          dx = ui.position.left + $("#container-wrapper").scrollLeft() - 10
-          dy = ui.position.top - 10 + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop()
+          offset = $("#container-wrapper").offset()
+          dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
+          dy = ui.position.top + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop() - offset.top
           ThreeNodes.events.trigger("CreateNode", nodename, dx, dy)
           $("#sidebar").show()
