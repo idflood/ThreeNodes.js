@@ -97,7 +97,6 @@ define [
         $input.val(prev)
         
         apply_input_result = () ->
-          #self.options.name = $input.val()
           self.model.setName($input.val())
           $input.remove()
         

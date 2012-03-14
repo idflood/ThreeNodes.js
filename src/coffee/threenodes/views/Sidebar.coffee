@@ -61,11 +61,6 @@ define [
         for node in nodes_by_group[group]
           $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.nodes[node].node_name }</a></li>")
       
-      #for nt of ThreeNodes.nodes.types
-      #  $container.append("<h3>#{nt}</h3><ul id='nodetype-#{nt}'></ul>")
-      #  for node of ThreeNodes.nodes.types[nt]
-      #    $("#nodetype-#{nt}", $container).append("<li><a class='button' rel='#{nt}.#{node.toString()}' href='#'>#{ node.toString() }</a></li>")
-      
       $("a.button", $container).draggable
         revert: "valid"
         opacity: 0.7

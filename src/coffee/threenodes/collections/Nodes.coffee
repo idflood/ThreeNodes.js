@@ -65,9 +65,6 @@ define [
       @remove_all_nodes()
       $("#webgl-window canvas").remove()
       
-      # create a new timeline
-      #@trigger("resetTimeline")
-      
       return this
     
     create_node: (nodename, x, y, inXML = false, inJSON = false) =>

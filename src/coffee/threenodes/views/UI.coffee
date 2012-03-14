@@ -102,7 +102,6 @@ define [
       @makeSelectable()
     
     makeSelectable: () ->
-      #self = this
       $("#container").selectable
         filter: ".node"
         stop: (event, ui) =>
