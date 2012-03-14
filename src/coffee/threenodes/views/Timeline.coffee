@@ -44,11 +44,15 @@ define [
         onPlay: (time) => @trigger("startSound", time)
       Timeline.globalInstance = @timeline
       
+      ThreeNodes.events.on "nodeslist:remove", (node) =>
+        @selectAnims([])
+      
       @timeline.loop(-1)
       @time = 0
     
     selectAnims: (nodes) =>
-      @timeline.selectAnims(nodes)
+      if @timeline
+        @timeline.selectAnims(nodes)
     
     remove: () =>
       @undelegateEvents()

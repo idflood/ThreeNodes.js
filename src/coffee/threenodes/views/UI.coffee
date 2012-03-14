@@ -210,7 +210,6 @@ define [
       $("body > header").delay(delay_intro).hide()
       $("#sidebar").delay(delay_intro).show()
       $("#container-wrapper").delay(delay_intro).show()
-      $("#sidebar-toggle").delay(delay_intro).show()
       @trigger("renderConnections")
       
     render: () =>

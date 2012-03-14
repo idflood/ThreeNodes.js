@@ -38,51 +38,41 @@ define [
   
   class ThreeNodes.App
     constructor: (testing_mode = false) ->
-      console.log "ThreeNodes app init..."
       # save settings in a global object
       # if you have a more elegant way to handle this don't hesitate
       ThreeNodes.settings =
         testing_mode: testing_mode
         player_mode: false
       
-      @current_scene = false
-      @current_camera = false
-      @current_renderer = false
-      @effectScreen = false
-      @renderModel = false
-      @composer = false
-            
       @url_handler = new ThreeNodes.UrlHandler()
-      @nodegraph = new ThreeNodes.NodeGraph [],
-        is_test: testing_mode
-      
+      @nodegraph = new ThreeNodes.NodeGraph([], {is_test: testing_mode})
       @socket = new ThreeNodes.AppWebsocket()
       @webgl = new ThreeNodes.WebglBase()
       @file_handler = new ThreeNodes.FileHandler(@nodegraph)
             
-      @nodegraph.on "remove", () =>
-        @timelineView.selectAnims([])
+      ThreeNodes.events.on "ClearWorkspace", () => @clearWorkspace()
       
-      ThreeNodes.events.on "ClearWorkspace", () =>
-        @clearWorkspace()
-      
-      if testing_mode == false
-        @ui = new ThreeNodes.UI
-          el: $("body")
-        @ui.on("render", @nodegraph.render)
-        @ui.on("renderConnections", @nodegraph.renderAllConnections)
-        @initTimeline()
-      else
-        $("body").addClass "test-mode"
-        ThreeNodes.events.trigger "InitUrlHandler"
-        @initTimeline()
+      @initUI(testing_mode)
+      @initTimeline()
       
       # removing this would require to redirect path
       # for the node.js server and github page (if possible)
       # for simplicity disable pushState
       Backbone.history.start
         pushState: false
+      
       return true
+    
+    initUI: (testing_mode) =>
+      if testing_mode == false
+        @ui = new ThreeNodes.UI
+          el: $("body")
+        @ui.on("render", @nodegraph.render)
+        @ui.on("renderConnections", @nodegraph.renderAllConnections)
+      else
+        $("body").addClass "test-mode"
+        ThreeNodes.events.trigger "InitUrlHandler"
+      return this
     
     initTimeline: () =>
       $("#timeline-container, #keyEditDialog").remove()

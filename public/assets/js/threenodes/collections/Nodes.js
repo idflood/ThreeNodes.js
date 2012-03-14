@@ -37,7 +37,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         });
       }
       this.bind("remove", function(node) {
-        return ThreeNodes.events.trigger("nodeslist:rebuild", self);
+        ThreeNodes.events.trigger("nodeslist:rebuild", self);
+        return ThreeNodes.events.trigger("nodeslist:remove", node);
       });
       this.connections.bind("remove", function(connection) {
         return ThreeNodes.events.trigger("nodeslist:rebuild", self);

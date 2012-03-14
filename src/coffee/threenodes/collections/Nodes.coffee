@@ -33,6 +33,7 @@ define [
       
       @bind "remove", (node) ->
         ThreeNodes.events.trigger "nodeslist:rebuild", self
+        ThreeNodes.events.trigger "nodeslist:remove", node
       
       @connections.bind "remove", (connection) ->
         ThreeNodes.events.trigger "nodeslist:rebuild", self

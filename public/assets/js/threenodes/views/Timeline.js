@@ -64,12 +64,15 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         }
       });
       Timeline.globalInstance = this.timeline;
+      ThreeNodes.events.on("nodeslist:remove", function(node) {
+        return _this.selectAnims([]);
+      });
       this.timeline.loop(-1);
       return this.time = 0;
     };
 
     AppTimeline.prototype.selectAnims = function(nodes) {
-      return this.timeline.selectAnims(nodes);
+      if (this.timeline) return this.timeline.selectAnims(nodes);
     };
 
     AppTimeline.prototype.remove = function() {

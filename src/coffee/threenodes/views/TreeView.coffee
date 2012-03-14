@@ -11,7 +11,7 @@ define [
       @timeoutId = false
       ThreeNodes.events.on "ClearWorkspace", () =>
         @render(false)
-        
+      
       ThreeNodes.events.on "nodeslist:rebuild", (nodelist) =>
         if @timeoutId
           clearTimeout(@timeoutId)

@@ -255,7 +255,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       $("body > header").delay(delay_intro).hide();
       $("#sidebar").delay(delay_intro).show();
       $("#container-wrapper").delay(delay_intro).show();
-      $("#sidebar-toggle").delay(delay_intro).show();
       return this.trigger("renderConnections");
     };
 
