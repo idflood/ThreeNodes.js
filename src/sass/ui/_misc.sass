@@ -32,20 +32,5 @@
   canvas
     cursor: pointer
     
-#sidebar-toggle
-  $i: "toggle_black.png"
-  $p: 3px
-  height: image-height($i) + $p * 2
-  width: image-width($i) + $p * 2
-  background: image-url($i) $p $p no-repeat
-  position: absolute
-  top: 32px
-  left: 230px
-  cursor: pointer
-  z-index: 900
-  +rotate(45deg)
-  &.toggle-closed
-    +rotate(0deg)
-    
 #main_file_input_open
   @extend .visually-hidden

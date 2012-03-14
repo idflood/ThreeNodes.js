@@ -9,7 +9,6 @@ define [
       super
       @init_sidebar_tab_new_node()
       @init_sidebar_search()
-      @init_sidebar_toggle()
       @init_sidebar_tabs()
     
     init_sidebar_tabs: () =>
@@ -17,19 +16,6 @@ define [
         fx:
           opacity: 'toggle'
           duration: 100
-    
-    init_sidebar_toggle: () =>
-      $("#sidebar-toggle").click (e) =>
-        o = 10
-        if @$el.position().left < -20
-          $("#sidebar-toggle").removeClass("toggle-closed")
-          @$el.animate({left: 0}, { queue: false, duration: 140 }, "swing")
-          $("#sidebar-toggle").animate({left: 220 + o}, { queue: false, duration: 80 }, "swing")
-        else
-          $("#sidebar-toggle").addClass("toggle-closed")
-          @$el.animate({left: -220}, { queue: false, duration: 120 }, "swing")
-          $("#sidebar-toggle").animate({left: o}, { queue: false, duration: 180 }, "swing")
-      @
     
     filter_list_item: ($item, value) =>
       s = $.trim($("a", $item).html()).toLowerCase()

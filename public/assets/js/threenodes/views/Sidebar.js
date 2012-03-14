@@ -12,7 +12,6 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       this.init_sidebar_search = __bind(this.init_sidebar_search, this);
       this.filter_list = __bind(this.filter_list, this);
       this.filter_list_item = __bind(this.filter_list_item, this);
-      this.init_sidebar_toggle = __bind(this.init_sidebar_toggle, this);
       this.init_sidebar_tabs = __bind(this.init_sidebar_tabs, this);
       Sidebar.__super__.constructor.apply(this, arguments);
     }
@@ -21,7 +20,6 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       Sidebar.__super__.initialize.apply(this, arguments);
       this.init_sidebar_tab_new_node();
       this.init_sidebar_search();
-      this.init_sidebar_toggle();
       return this.init_sidebar_tabs();
     };
 
@@ -32,44 +30,6 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
           duration: 100
         }
       });
-    };
-
-    Sidebar.prototype.init_sidebar_toggle = function() {
-      var _this = this;
-      $("#sidebar-toggle").click(function(e) {
-        var o;
-        o = 10;
-        if (_this.$el.position().left < -20) {
-          $("#sidebar-toggle").removeClass("toggle-closed");
-          _this.$el.animate({
-            left: 0
-          }, {
-            queue: false,
-            duration: 140
-          }, "swing");
-          return $("#sidebar-toggle").animate({
-            left: 220 + o
-          }, {
-            queue: false,
-            duration: 80
-          }, "swing");
-        } else {
-          $("#sidebar-toggle").addClass("toggle-closed");
-          _this.$el.animate({
-            left: -220
-          }, {
-            queue: false,
-            duration: 120
-          }, "swing");
-          return $("#sidebar-toggle").animate({
-            left: o
-          }, {
-            queue: false,
-            duration: 180
-          }, "swing");
-        }
-      });
-      return this;
     };
 
     Sidebar.prototype.filter_list_item = function($item, value) {

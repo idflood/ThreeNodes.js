@@ -60,7 +60,6 @@ define [
       
       @add_window_resize_handler()
       @startUI()
-      @on_ui_window_resize()
       @is_grabbing = false
       @setupMouseScroll()
       
@@ -90,7 +89,9 @@ define [
             @on_ui_window_resize()
           onresize: (name, pane_el, state, opt, layout_name) =>
             @trigger("timelineResize", pane_el.innerHeight())
+            @on_ui_window_resize()
       @trigger("timelineResize", 48)
+      @on_ui_window_resize()
       
     startUI: () =>
       @init_context_menus()
@@ -180,7 +181,6 @@ define [
       $("body").append("<div id='bottom-toolbox'></div>")
       $container = $("#bottom-toolbox")
       @init_resize_slider($container)
-      #@init_timeline_switcher($container)
     
     init_resize_slider: ($container) =>
       $container.append("<div id='zoom-slider'></div>")
@@ -194,13 +194,6 @@ define [
         value: 100
         change: (event, ui) -> scale_graph(ui.value)
         slide: (event, ui) -> scale_graph(ui.value) 
-    
-    init_timeline_switcher: ($container) =>
-      $container.append("<div id='timeline-switcher'><a href='#'>Toggle timeline</a></div>")
-      $("#timeline-switcher a").click (e) =>
-        e.preventDefault()
-        $("body").toggleClass "hidden-timeline"
-        @on_ui_window_resize()
     
     init_context_menus: () =>
       menu_field_menu = _.template(_view_field_context_menu, {})
@@ -227,7 +220,7 @@ define [
     on_ui_window_resize: () =>
       w = $(window).width()
       h = $(window).height()
-      timelinesize = parseInt(localStorage["timeline.js.settings.canvasHeight"])
+      timelinesize = $("#timeline").innerHeight()
       
       toolbox_pos = timelinesize + 20
       $("#bottom-toolbox").attr("style", "bottom: #{toolbox_pos}px !important;")
