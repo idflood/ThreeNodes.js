@@ -1,3 +1,9 @@
+ThreeNodes.js is released under the MIT License.
+
+----------------------------------------------------------
+
+The MIT License
+
 Copyright 2011, David Mignot (the "Author")
 All rights reserved.
 
@@ -28,6 +34,8 @@ Contributors to this project agree to grant all rights to the
 copyright holder of the primary product. 
 Attribution is maintained in the source control history of the product.
 
+----------------------------------------------------------
+
 "Node.js" and "node" trademark Joyent, Inc. npm is not officially
 part of the Node.js project, and is neither owned by nor
 officially affiliated with Joyent, Inc.
@@ -36,32 +44,22 @@ Packages published in the npm registry are not part of npm
 itself, are the sole property of their respective maintainers,
 and are not covered by this license.
 
-This program uses "Three.js", Copyright (c) 2010-2011 three.js Authors
+----------------------------------------------------------
 
-This program uses "coffee-script", Copyright (c) 2011 Jeremy Ashkenas.
+ThreeNodes.js includes the following libraries which may have different licenses.
 
-This program uses "backbone.js", Copyright (c) 2010 Jeremy Ashkenas, DocumentCloud Inc.
-
-This program uses "compass", Copyright (c) 2009 Christopher M. Eppstein.
-
-This program uses "Raphaël", Copyright (c) 2008-2011 Dmitry Baranovskiy and Sencha Labs.
-
-This program uses "RequireJS", Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
-
-This program uses "jQuery", Copyright (c) 2011 John Resig, http://jquery.com/
-
-This program uses "jQuery Context Menu Plugin", Copyright (c) Cory S.N. LaViska.
-
-This program uses "Color picker", Copyright (c) Stefan Petre www.eyecon.ro
-
-This program uses "QUnit", Copyright (c) 2011 John Resig, Jörn Zaefferer
-
-This program uses "ScrollView", Copyright (c) 2009 Toshimitsu Takahashi
-
-This program uses "Tween.js", Copyright (c) 2010 sole http://soledadpenades.com
-
-This program uses "Sparks.js", Copyright (c) zz85 (http://github.com/zz85 http://www.lab4games.net/zz85/blog)
-
-This program uses Easing equations Copyright (c) 2001 Robert Penner http://robertpenner.com/easing/
-
-according to the terms of the MIT license.
+"Three.js", Copyright (c) 2010-2011 three.js Authors
+"coffee-script", Copyright (c) 2011 Jeremy Ashkenas.
+"backbone.js", Copyright (c) 2010 Jeremy Ashkenas, DocumentCloud Inc.
+"compass", Copyright (c) 2009 Christopher M. Eppstein.
+"Raphaël", Copyright (c) 2008-2011 Dmitry Baranovskiy and Sencha Labs.
+"RequireJS", Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+"jQuery", Copyright (c) 2011 John Resig, http://jquery.com/
+"jQuery Context Menu Plugin", Copyright (c) Cory S.N. LaViska.
+"Color picker", Copyright (c) Stefan Petre www.eyecon.ro
+"QUnit", Copyright (c) 2011 John Resig, Jörn Zaefferer
+"ScrollView", Copyright (c) 2009 Toshimitsu Takahashi
+"Tween.js", Copyright (c) 2010 sole http://soledadpenades.com
+"jQuery UI Layout Plug-in", Copyright (c) 2012 Fabrizio Balliano (http://www.fabrizioballiano.net) and Kevin Dalman (http://allpro.net)
+"Sparks.js", Copyright (c) zz85 (http://github.com/zz85 http://www.lab4games.net/zz85/blog)
+Easing equations Copyright (c) 2001 Robert Penner http://robertpenner.com/easing/
