@@ -28,7 +28,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       UI.__super__.constructor.apply(this, arguments);
       ThreeNodes.events.on("OnUIResize", this.on_ui_window_resize);
       ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
-      ThreeNodes.events.trigger("InitUrlHandler");
       ui_tmpl = _.template(_view_app_ui, {});
       $("#footer").before(ui_tmpl);
       this.svg = Raphael("graph", 4000, 4000);

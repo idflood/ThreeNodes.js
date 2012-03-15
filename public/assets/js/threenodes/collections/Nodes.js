@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
       this.render = __bind(this.render, this);
       this.create_node = __bind(this.create_node, this);
+      this.bindTimelineEvents = __bind(this.bindTimelineEvents, this);
       this.clearWorkspace = __bind(this.clearWorkspace, this);
       this.initialize = __bind(this.initialize, this);
       NodeGraph.__super__.constructor.apply(this, arguments);
@@ -63,7 +64,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
       ThreeNodes.events.on("RmoveSelectedNodes", this.removeSelectedNodes);
       ThreeNodes.events.on("CreateNode", this.create_node);
-      return ThreeNodes.events.on("ClearWorkspace", this.clearWorkspace);
+      ThreeNodes.events.on("ClearWorkspace", this.clearWorkspace);
+      return ThreeNodes.events.on("TimelineCreated", this.bindTimelineEvents);
     };
 
     NodeGraph.prototype.clearWorkspace = function() {
@@ -71,6 +73,18 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.remove_all_nodes();
       $("#webgl-window canvas").remove();
       return this;
+    };
+
+    NodeGraph.prototype.bindTimelineEvents = function(timeline) {
+      if (this.timeline) {
+        this.timeline.off("trackRebuild", this.showNodesAnimation);
+        this.timeline.off("startSound", this.startSound);
+        this.timeline.off("stopSound", this.stopSound);
+      }
+      this.timeline = timeline;
+      this.timeline.on("trackRebuild", this.showNodesAnimation);
+      this.timeline.on("startSound", this.startSound);
+      return this.timeline.on("stopSound", this.stopSound);
     };
 
     NodeGraph.prototype.create_node = function(nodename, x, y, inXML, inJSON) {

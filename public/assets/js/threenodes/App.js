@@ -63,37 +63,18 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         this.ui.on("renderConnections", this.nodegraph.renderAllConnections);
       } else {
         $("body").addClass("test-mode");
-        ThreeNodes.events.trigger("InitUrlHandler");
       }
       return this;
     };
 
     App.prototype.initTimeline = function() {
       $("#timeline-container, #keyEditDialog").remove();
-      if (this.ui && this.timelineView) {
-        this.ui.off("render", this.timelineView.update);
-        this.ui.off("selectAnims", this.timelineView.selectAnims);
-      }
-      if (this.timelineView) {
-        this.timelineView.off("trackRebuild", this.nodegraph.showNodesAnimation);
-        this.timelineView.off("startSound", this.nodegraph.startSound);
-        this.timelineView.off("stopSound", this.nodegraph.stopSound);
-        this.timelineView.remove();
-      }
-      $("#timeline").html("");
+      if (this.timelineView) this.timelineView.remove();
       this.timelineView = new ThreeNodes.AppTimeline({
-        el: $("#timeline")
+        el: $("#timeline"),
+        ui: this.ui
       });
-      this.nodegraph.timeline = this.timelineView;
-      if (this.ui) {
-        this.ui.on("render", this.timelineView.update);
-        this.ui.on("selectAnims", this.timelineView.selectAnims);
-        this.ui.on("timelineResize", this.timelineView.resize);
-      }
-      this.timelineView.on("trackRebuild", this.nodegraph.showNodesAnimation);
-      this.timelineView.on("startSound", this.nodegraph.startSound);
-      this.timelineView.on("stopSound", this.nodegraph.stopSound);
-      return ThreeNodes.events.trigger("OnUIResize");
+      return this;
     };
 
     App.prototype.clearWorkspace = function() {

@@ -60,6 +60,7 @@ define [
       ThreeNodes.events.on "RmoveSelectedNodes", @removeSelectedNodes
       ThreeNodes.events.on "CreateNode", @create_node
       ThreeNodes.events.on "ClearWorkspace", @clearWorkspace
+      ThreeNodes.events.on "TimelineCreated", @bindTimelineEvents
     
     clearWorkspace: () =>
       @remove_all_connections()
@@ -67,6 +68,17 @@ define [
       $("#webgl-window canvas").remove()
       
       return this
+    
+    bindTimelineEvents: (timeline) =>
+      if @timeline
+        @timeline.off("trackRebuild", @showNodesAnimation)
+        @timeline.off("startSound", @startSound)
+        @timeline.off("stopSound", @stopSound)
+      
+      @timeline = timeline
+      @timeline.on("trackRebuild", @showNodesAnimation)
+      @timeline.on("startSound", @startSound)
+      @timeline.on("stopSound", @stopSound)
     
     create_node: (nodename, x, y, inXML = false, inJSON = false) =>
       if !ThreeNodes.nodes[nodename]

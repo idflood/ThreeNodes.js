@@ -71,36 +71,17 @@ define [
         @ui.on("renderConnections", @nodegraph.renderAllConnections)
       else
         $("body").addClass "test-mode"
-        ThreeNodes.events.trigger "InitUrlHandler"
       return this
     
     initTimeline: () =>
       $("#timeline-container, #keyEditDialog").remove()
-      if @ui && @timelineView
-        @ui.off("render", @timelineView.update)
-        @ui.off("selectAnims", @timelineView.selectAnims)
+      if @timelineView then @timelineView.remove()
       
-      if @timelineView
-        @timelineView.off("trackRebuild", @nodegraph.showNodesAnimation)
-        @timelineView.off("startSound", @nodegraph.startSound)
-        @timelineView.off("stopSound", @nodegraph.stopSound)
-        @timelineView.remove()
-      
-      $("#timeline").html("")
       @timelineView = new ThreeNodes.AppTimeline
         el: $("#timeline")
+        ui: @ui
       
-      @nodegraph.timeline = @timelineView
-      
-      if @ui
-        @ui.on("render", @timelineView.update)
-        @ui.on("selectAnims", @timelineView.selectAnims)
-        @ui.on("timelineResize", @timelineView.resize)
-      
-      @timelineView.on("trackRebuild", @nodegraph.showNodesAnimation)
-      @timelineView.on("startSound", @nodegraph.startSound)
-      @timelineView.on("stopSound", @nodegraph.stopSound)
-      ThreeNodes.events.trigger("OnUIResize")
+      return this
     
     clearWorkspace: () ->
       @reset_global_variables()

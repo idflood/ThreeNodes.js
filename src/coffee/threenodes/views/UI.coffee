@@ -22,10 +22,7 @@ define [
       super
       ThreeNodes.events.on "OnUIResize", @on_ui_window_resize
       ThreeNodes.events.on "SetDisplayModeCommand", @setDisplayMode
-      
-      # trigger the url after the setDisplaymode event has been binded
-      ThreeNodes.events.trigger "InitUrlHandler"
-      
+            
       # create the main ui
       ui_tmpl = _.template(_view_app_ui, {})
       $("#footer").before(ui_tmpl)
