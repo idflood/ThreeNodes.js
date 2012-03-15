@@ -12,6 +12,7 @@
 Timeline.prototype.initGUI = function (parameters) {
   var self = this;
 
+  this.element = parameters.element !== undefined ? parameters.element : false;
   this.displayOnlySelected = parameters.displayOnlySelected !== undefined ? parameters.displayOnlySelected : false;
   this.trackLabelWidth = parameters.trackLabelWidth !== undefined ? parameters.trackLabelWidth : 108;
   this.trackLabelHeight = parameters.trackLabelHeight !== undefined ? parameters.trackLabelHeight : 20;
@@ -59,6 +60,44 @@ Timeline.prototype.initGUI = function (parameters) {
   this.initTracks();
   this.load();
 
+  this.buildDOMContainer();
+
+  this.canvas = document.createElement("canvas");
+  this.c = this.canvas.getContext("2d");
+  this.canvas.width = 0;
+  if (this.element != false) {
+    this.element.appendChild(this.canvas);
+  } else {
+    this.container.appendChild(this.canvas);
+  }
+
+  this.buildInputDialog();
+
+  var self = this;
+  this.onMouseClick = self.onMouseClick.bind(this);
+  this.onMouseDown = self.onMouseDown.bind(this);
+  this.onDocumentMouseMove = self.onDocumentMouseMove.bind(this);
+  this.onCanvasMouseMove = self.onCanvasMouseMove.bind(this);
+  this.onMouseUp = self.onMouseUp.bind(this);
+  this.onMouseDoubleClick = self.onMouseDoubleClick.bind(this);
+  this.onMouseWheel = self.onMouseWheel.bind(this);
+  
+  this.canvas.addEventListener('click', self.onMouseClick, false);
+  this.canvas.addEventListener('mousedown', self.onMouseDown, false);
+  document.body.addEventListener('mousemove', self.onDocumentMouseMove, false);
+  this.canvas.addEventListener('mousemove', self.onCanvasMouseMove, false);
+  document.body.addEventListener('mouseup', self.onMouseUp, false);
+  this.canvas.addEventListener('dblclick', self.onMouseDoubleClick, false);
+
+  // firefox use special DOMMouseScroll event
+  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+  this.canvas.addEventListener(mousewheel, self.onMouseWheel, false);
+}
+
+Timeline.prototype.buildDOMContainer = function () {
+  if (this.element) {
+    return this;
+  }
   this.container = document.createElement("div");
   this.container.id = "timeline-container"
   this.container.style.width = "100%";
@@ -101,34 +140,6 @@ Timeline.prototype.initGUI = function (parameters) {
     document.body.addEventListener("mouseup", mouseUp, false);
   }, false)
   document.body.appendChild(this.splitter);
-
-  this.canvas = document.createElement("canvas");
-  this.c = this.canvas.getContext("2d");
-  this.canvas.width = 0;
-  this.container.appendChild(this.canvas);
-
-
-  this.buildInputDialog();
-
-  var self = this;
-  this.onMouseClick = self.onMouseClick.bind(this);
-  this.onMouseDown = self.onMouseDown.bind(this);
-  this.onDocumentMouseMove = self.onDocumentMouseMove.bind(this);
-  this.onCanvasMouseMove = self.onCanvasMouseMove.bind(this);
-  this.onMouseUp = self.onMouseUp.bind(this);
-  this.onMouseDoubleClick = self.onMouseDoubleClick.bind(this);
-  this.onMouseWheel = self.onMouseWheel.bind(this);
-  
-  this.canvas.addEventListener('click', self.onMouseClick, false);
-  this.canvas.addEventListener('mousedown', self.onMouseDown, false);
-  document.body.addEventListener('mousemove', self.onDocumentMouseMove, false);
-  this.canvas.addEventListener('mousemove', self.onCanvasMouseMove, false);
-  document.body.addEventListener('mouseup', self.onMouseUp, false);
-  this.canvas.addEventListener('dblclick', self.onMouseDoubleClick, false);
-
-  // firefox use special DOMMouseScroll event
-  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-  this.canvas.addEventListener(mousewheel, self.onMouseWheel, false);
 }
 
 Timeline.prototype.removeGUI = function () {
@@ -149,6 +160,9 @@ Timeline.prototype.removeGUI = function () {
   }
   if (this.splitter) {
     document.body.removeChild(this.splitter);
+  }
+  if (this.element) {
+    delete this.element;
   }
   delete this.onGuiSave;
   //document.body.removeChild(this.container);

@@ -31,17 +31,11 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
       var _this = this;
       if (testing_mode == null) testing_mode = false;
       this.initTimeline = __bind(this.initTimeline, this);
-      console.log("ThreeNodes app init...");
+      this.initUI = __bind(this.initUI, this);
       ThreeNodes.settings = {
         testing_mode: testing_mode,
         player_mode: false
       };
-      this.current_scene = false;
-      this.current_camera = false;
-      this.current_renderer = false;
-      this.effectScreen = false;
-      this.renderModel = false;
-      this.composer = false;
       this.url_handler = new ThreeNodes.UrlHandler();
       this.nodegraph = new ThreeNodes.NodeGraph([], {
         is_test: testing_mode
@@ -49,52 +43,38 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
       this.socket = new ThreeNodes.AppWebsocket();
       this.webgl = new ThreeNodes.WebglBase();
       this.file_handler = new ThreeNodes.FileHandler(this.nodegraph);
-      this.nodegraph.on("remove", function() {
-        return _this.timelineView.selectAnims([]);
-      });
       ThreeNodes.events.on("ClearWorkspace", function() {
         return _this.clearWorkspace();
       });
-      if (testing_mode === false) {
-        this.ui = new ThreeNodes.UI({
-          el: $("body")
-        });
-        this.ui.on("render", this.nodegraph.render);
-        this.ui.on("renderConnections", this.nodegraph.renderAllConnections);
-        this.initTimeline();
-      } else {
-        $("body").addClass("test-mode");
-        ThreeNodes.events.trigger("InitUrlHandler");
-        this.initTimeline();
-      }
+      this.initUI(testing_mode);
+      this.initTimeline();
       Backbone.history.start({
         pushState: false
       });
       return true;
     }
 
+    App.prototype.initUI = function(testing_mode) {
+      if (testing_mode === false) {
+        this.ui = new ThreeNodes.UI({
+          el: $("body")
+        });
+        this.ui.on("render", this.nodegraph.render);
+        this.ui.on("renderConnections", this.nodegraph.renderAllConnections);
+      } else {
+        $("body").addClass("test-mode");
+      }
+      return this;
+    };
+
     App.prototype.initTimeline = function() {
       $("#timeline-container, #keyEditDialog").remove();
-      if (this.ui && this.timelineView) {
-        this.ui.off("render", this.timelineView.update);
-        this.ui.off("selectAnims", this.timelineView.selectAnims);
-      }
-      if (this.timelineView) {
-        this.timelineView.off("trackRebuild", this.nodegraph.showNodesAnimation);
-        this.timelineView.off("startSound", this.nodegraph.startSound);
-        this.timelineView.off("stopSound", this.nodegraph.stopSound);
-        this.timelineView.remove();
-      }
-      this.timelineView = new ThreeNodes.AppTimeline();
-      this.nodegraph.timeline = this.timelineView;
-      if (this.ui) {
-        this.ui.on("render", this.timelineView.update);
-        this.ui.on("selectAnims", this.timelineView.selectAnims);
-      }
-      this.timelineView.on("trackRebuild", this.nodegraph.showNodesAnimation);
-      this.timelineView.on("startSound", this.nodegraph.startSound);
-      this.timelineView.on("stopSound", this.nodegraph.stopSound);
-      return ThreeNodes.events.trigger("OnUIResize");
+      if (this.timelineView) this.timelineView.remove();
+      this.timelineView = new ThreeNodes.AppTimeline({
+        el: $("#timeline"),
+        ui: this.ui
+      });
+      return this;
     };
 
     App.prototype.clearWorkspace = function() {

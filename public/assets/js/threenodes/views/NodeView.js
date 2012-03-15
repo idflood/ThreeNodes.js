@@ -73,9 +73,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
     };
 
     NodeView.prototype.compute_node_position = function() {
-      var pos;
+      var offset, pos;
       pos = $(this.el).position();
-      return this.model.setPosition(pos.left, pos.top);
+      offset = $("#container-wrapper").offset();
+      return this.model.setPosition(pos.left + $("#container-wrapper").scrollLeft(), pos.top + $("#container-wrapper").scrollTop());
     };
 
     NodeView.prototype.remove = function() {
