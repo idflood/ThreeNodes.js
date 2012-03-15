@@ -15,6 +15,7 @@ define [
   'order!threenodes/nodes/Utils',
   'order!threenodes/nodes/Spread',
   'order!threenodes/nodes/Particle',
+  'order!threenodes/nodes/Group',
   'order!threenodes/collections/Connections',
 ], ($, _, Backbone) ->
   "use strict"

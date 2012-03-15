@@ -51,10 +51,12 @@ define [
       result = []
       nodes_by_group = {}
       for node of ThreeNodes.nodes
-        group_name = (ThreeNodes.nodes[node].group_name).replace(/\./g, "-")
-        if !nodes_by_group[group_name]
-          nodes_by_group[group_name] = []
-        nodes_by_group[group_name].push(node)
+        # don't show hidden nodes types (group_name = false)
+        if ThreeNodes.nodes[node].group_name
+          group_name = (ThreeNodes.nodes[node].group_name).replace(/\./g, "-")
+          if !nodes_by_group[group_name]
+            nodes_by_group[group_name] = []
+          nodes_by_group[group_name].push(node)
       
       for group of nodes_by_group
         $container.append("<h3>#{group}</h3><ul id='nodetype-#{group}'></ul>")

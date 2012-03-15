@@ -80,9 +80,11 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
       result = [];
       nodes_by_group = {};
       for (node in ThreeNodes.nodes) {
-        group_name = ThreeNodes.nodes[node].group_name.replace(/\./g, "-");
-        if (!nodes_by_group[group_name]) nodes_by_group[group_name] = [];
-        nodes_by_group[group_name].push(node);
+        if (ThreeNodes.nodes[node].group_name) {
+          group_name = ThreeNodes.nodes[node].group_name.replace(/\./g, "-");
+          if (!nodes_by_group[group_name]) nodes_by_group[group_name] = [];
+          nodes_by_group[group_name].push(node);
+        }
       }
       for (group in nodes_by_group) {
         $container.append("<h3>" + group + "</h3><ul id='nodetype-" + group + "'></ul>");
