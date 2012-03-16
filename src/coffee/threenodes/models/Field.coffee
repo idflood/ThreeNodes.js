@@ -70,7 +70,8 @@ define [
           prev_val = default_val
         new_val = prev_val
       
-      @set("value", new_val, {silent: true})
+      #@set("value", new_val, {silent: true})
+      @attributes["value"] = new_val
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
       if @attributes["is_output"] == true

@@ -63,7 +63,6 @@ define [
       @auto_evaluate = false
       @delays_output = false
       @dirty = true
-      @anim_obj = {}
       @is_animated = false
       @out_connections = []
       @value = false
@@ -167,11 +166,7 @@ define [
     
     getUpstreamNodes: () => @rack.getUpstreamNodes()
     getDownstreamNodes: () => @rack.getDownstreamNodes()
-    
-    update: () =>
-      # update node output values based on inputs
-      @compute()
-    
+        
     hasPropertyTrackAnim: () =>
       for propTrack in @anim.objectTrack.propertyTracks
         if propTrack.anims.length > 0

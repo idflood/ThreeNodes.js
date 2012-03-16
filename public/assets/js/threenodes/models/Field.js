@@ -112,9 +112,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         if (default_val !== null && default_val !== void 0) prev_val = default_val;
         new_val = prev_val;
       }
-      this.set("value", new_val, {
-        silent: true
-      });
+      this.attributes["value"] = new_val;
       for (hook in this.on_value_update_hooks) {
         this.on_value_update_hooks[hook](new_val);
       }

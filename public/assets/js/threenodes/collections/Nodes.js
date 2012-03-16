@@ -128,7 +128,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
         if (node.dirty || node.auto_evaluate) {
-          node.update();
+          node.compute();
           node.dirty = false;
           node.rack.setFieldInputUnchanged();
         }

@@ -28,7 +28,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       this.getAnimationDataToCode = __bind(this.getAnimationDataToCode, this);
       this.getAnimationData = __bind(this.getAnimationData, this);
       this.hasPropertyTrackAnim = __bind(this.hasPropertyTrackAnim, this);
-      this.update = __bind(this.update, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
       this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
       this.has_out_connection = __bind(this.has_out_connection, this);
@@ -116,7 +115,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       this.auto_evaluate = false;
       this.delays_output = false;
       this.dirty = true;
-      this.anim_obj = {};
       this.is_animated = false;
       this.out_connections = [];
       this.value = false;
@@ -246,10 +244,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
 
     NodeBase.prototype.getDownstreamNodes = function() {
       return this.rack.getDownstreamNodes();
-    };
-
-    NodeBase.prototype.update = function() {
-      return this.compute();
     };
 
     NodeBase.prototype.hasPropertyTrackAnim = function() {
