@@ -335,9 +335,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
 
     NodeBase.prototype.createAnimContainer = function() {
       var f, field, res;
-      res = anim("nid-" + this.get("nid"), this.rack.node_fields_by_name.inputs);
-      for (f in this.rack.node_fields_by_name.inputs) {
-        field = this.rack.node_fields_by_name.inputs[f];
+      res = anim("nid-" + this.get("nid"), this.rack.node_fields.inputs);
+      for (f in this.rack.node_fields.inputs) {
+        field = this.rack.node_fields.inputs[f];
         if (field.is_animation_property() === false) {
           this.disable_property_anim(field);
         }

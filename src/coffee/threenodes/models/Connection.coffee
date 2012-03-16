@@ -13,7 +13,6 @@ define [
     
     initialize: (options) =>
       @options = options
-      @node = @options.node
       if @get("cid") == -1
         @set({"cid": ThreeNodes.Utils.get_uid()})
       
@@ -35,7 +34,6 @@ define [
       @to_field.changed = true
       delete @from_field
       delete @to_field
-      delete @node
       
       @trigger "connection:removed", this
       @destroy()

@@ -25,7 +25,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     NodeGraph.prototype.initialize = function(models, options) {
       var self,
         _this = this;
-      this.types = false;
       this.connections = new ThreeNodes.ConnectionsCollection();
       self = this;
       if (options.is_test === false) {
@@ -142,15 +141,15 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     NodeGraph.prototype.createConnectionFromObject = function(connection) {
       var c, from, from_node, tmp, to, to_node;
       from_node = this.get_node(connection.from_node.toString());
-      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()];
+      from = from_node.rack.node_fields.outputs[connection.from.toString()];
       to_node = this.get_node(connection.to_node.toString());
-      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()];
+      to = to_node.rack.node_fields.inputs[connection.to.toString()];
       if (!from || !to) {
         tmp = from_node;
         from_node = to_node;
         to_node = tmp;
-        from = from_node.rack.node_fields_by_name.outputs[connection.to.toString()];
-        to = to_node.rack.node_fields_by_name.inputs[connection.from.toString()];
+        from = from_node.rack.node_fields.outputs[connection.to.toString()];
+        to = to_node.rack.node_fields.inputs[connection.from.toString()];
       }
       c = this.connections.create({
         from_field: from,

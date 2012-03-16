@@ -26,7 +26,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
 
     Connection.prototype.initialize = function(options) {
       this.options = options;
-      this.node = this.options.node;
       if (this.get("cid") === -1) {
         this.set({
           "cid": ThreeNodes.Utils.get_uid()
@@ -49,7 +48,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       this.to_field.changed = true;
       delete this.from_field;
       delete this.to_field;
-      delete this.node;
       this.trigger("connection:removed", this);
       this.destroy();
       return false;

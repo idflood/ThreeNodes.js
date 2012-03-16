@@ -33,10 +33,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.node = options.node;
       this.node_fields = {};
       this.node_fields.inputs = {};
-      this.node_fields.outputs = {};
-      this.node_fields_by_name = {};
-      this.node_fields_by_name.inputs = {};
-      return this.node_fields_by_name.outputs = {};
+      return this.node_fields.outputs = {};
     };
 
     NodeFieldsCollection.prototype.destroy = function() {
@@ -45,12 +42,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
         return field.remove();
       });
       this.node = false;
-      this.node_fields = {};
-      this.node_fields.inputs = {};
-      this.node_fields.outputs = {};
-      this.node_fields_by_name = {};
-      this.node_fields_by_name.inputs = {};
-      return this.node_fields_by_name.outputs = {};
+      return delete this.node_fields;
     };
 
     NodeFieldsCollection.prototype.load = function(json) {
@@ -62,7 +54,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       _ref = data["in"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
-        node_field = this.node_fields_by_name.inputs[f.name];
+        node_field = this.node_fields.inputs[f.name];
         if (node_field && f.val) node_field.setValue(f.val);
       }
       return true;
@@ -84,21 +76,21 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     NodeFieldsCollection.prototype.getField = function(key, is_out) {
       if (is_out == null) is_out = false;
       if (is_out === true) {
-        return this.node_fields_by_name.outputs[key];
+        return this.node_fields.outputs[key];
       } else {
-        return this.node_fields_by_name.inputs[key];
+        return this.node_fields.inputs[key];
       }
     };
 
     NodeFieldsCollection.prototype.setField = function(key, value) {
-      return this.node_fields_by_name.outputs[key].setValue(value);
+      return this.node_fields.outputs[key].setValue(value);
     };
 
     NodeFieldsCollection.prototype.getMaxInputSliceCount = function() {
-      var f, fid, res, val;
+      var f, fname, res, val;
       res = 1;
-      for (fid in this.node_fields.inputs) {
-        f = this.node_fields.inputs[fid];
+      for (fname in this.node_fields.inputs) {
+        f = this.node_fields.inputs[fname];
         val = f.attributes.value;
         if (val && $.type(val) === "array") if (val.length > res) res = val.length;
       }
@@ -106,10 +98,10 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.getUpstreamNodes = function() {
-      var c, f, fid, res, _i, _len, _ref;
+      var c, f, fname, res, _i, _len, _ref;
       res = [];
-      for (fid in this.node_fields.inputs) {
-        f = this.node_fields.inputs[fid];
+      for (fname in this.node_fields.inputs) {
+        f = this.node_fields.inputs[fname];
         _ref = f.connections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           c = _ref[_i];
@@ -120,12 +112,12 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.getDownstreamNodes = function() {
-      var c, f, fid, res, _i, _j, _len, _len2, _ref, _ref2;
+      var c, f, fname, res, _i, _j, _len, _len2, _ref, _ref2;
       res = [];
       _ref = this.node_fields.outputs;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        fid = _ref[_i];
-        f = this.node_fields.inputs[fid];
+        fname = _ref[_i];
+        f = this.node_fields.inputs[fname];
         _ref2 = f.connections;
         for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
           c = _ref2[_j];
@@ -136,12 +128,12 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.setFieldInputUnchanged = function() {
-      var f, fid, _i, _len, _ref, _results;
+      var f, fname, _i, _len, _ref, _results;
       _ref = this.node_fields.inputs;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        fid = _ref[_i];
-        f = this.node_fields.inputs[fid];
+        fname = _ref[_i];
+        f = this.node_fields.inputs[fname];
         _results.push(f.changed = false);
       }
       return _results;
@@ -151,12 +143,10 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       var fid;
       field.node = this.node;
       if (field.get("is_output") === false) {
-        this.node_fields.inputs["fid-" + field.get("fid")] = field;
-        this.node_fields_by_name.inputs[field.get("name")] = field;
+        this.node_fields.inputs[field.get("name")] = field;
         $(".inputs", this.node.main_view).append(field.render_button());
       } else {
-        this.node_fields.outputs["fid-" + field.get("fid")] = field;
-        this.node_fields_by_name.outputs[field.get("name")] = field;
+        this.node_fields.outputs[field.get("name")] = field;
         $(".outputs", this.node.main_view).append(field.render_button());
       }
       fid = field.get("fid");

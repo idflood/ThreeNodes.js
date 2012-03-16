@@ -11,21 +11,13 @@ define [
       @node_fields = {}
       @node_fields.inputs = {}
       @node_fields.outputs = {}
-      @node_fields_by_name = {}
-      @node_fields_by_name.inputs = {}
-      @node_fields_by_name.outputs = {}
     
     destroy: () =>
       @removeAllConnections()
       @each (field) ->
         field.remove()
       @node = false
-      @node_fields = {}
-      @node_fields.inputs = {}
-      @node_fields.outputs = {}
-      @node_fields_by_name = {}
-      @node_fields_by_name.inputs = {}
-      @node_fields_by_name.outputs = {}
+      delete @node_fields
       
     load: (json) =>
       if json
@@ -33,7 +25,7 @@ define [
     
     fromJSON: (data) =>
       for f in data.in
-        node_field = @node_fields_by_name.inputs[f.name]
+        node_field = @node_fields.inputs[f.name]
         if node_field && f.val
           node_field.setValue(f.val)
       true
@@ -46,17 +38,17 @@ define [
     
     getField: (key, is_out = false) =>
       if is_out == true
-        @node_fields_by_name.outputs[key]
+        @node_fields.outputs[key]
       else
-        @node_fields_by_name.inputs[key]
+        @node_fields.inputs[key]
     
     setField: (key, value) =>
-      @node_fields_by_name.outputs[key].setValue value
+      @node_fields.outputs[key].setValue value
     
     getMaxInputSliceCount: () =>
       res = 1
-      for fid of @node_fields.inputs
-        f = @node_fields.inputs[fid]
+      for fname of @node_fields.inputs
+        f = @node_fields.inputs[fname]
         val = f.attributes.value;
         if val && $.type(val) == "array"
           if val.length > res
@@ -66,34 +58,34 @@ define [
     
     getUpstreamNodes: () =>
       res = []
-      for fid of @node_fields.inputs
-        f = @node_fields.inputs[fid]
+      for fname of @node_fields.inputs
+        f = @node_fields.inputs[fname]
         for c in f.connections
           res[res.length] = c.from_field.node
       res
     
     getDownstreamNodes: () =>
       res = []
-      for fid in @node_fields.outputs
-        f = @node_fields.inputs[fid]
+      for fname in @node_fields.outputs
+        f = @node_fields.inputs[fname]
         for c in f.connections
           res[res.length] = c.to_field.node
       res
       
     setFieldInputUnchanged: () =>
-      for fid in @node_fields.inputs
-        f = @node_fields.inputs[fid]
+      for fname in @node_fields.inputs
+        f = @node_fields.inputs[fname]
         f.changed = false
     
     registerField: (field) =>
       field.node = @node
       if field.get("is_output") == false
-        @node_fields.inputs["fid-" + field.get("fid")] = field
-        @node_fields_by_name.inputs[field.get("name")] = field
+        #@node_fields.inputs["fid-" + field.get("fid")] = field
+        @node_fields.inputs[field.get("name")] = field
         $(".inputs", @node.main_view).append(field.render_button())
       else
-        @node_fields.outputs["fid-" + field.get("fid")] = field
-        @node_fields_by_name.outputs[field.get("name")] = field
+        #@node_fields.outputs["fid-" + field.get("fid")] = field
+        @node_fields.outputs[field.get("name")] = field
         $(".outputs", @node.main_view).append(field.render_button())
       
       fid = field.get("fid")

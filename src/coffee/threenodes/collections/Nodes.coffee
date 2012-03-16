@@ -21,7 +21,6 @@ define [
   class ThreeNodes.NodeGraph extends Backbone.Collection
     
     initialize: (models, options) =>
-      @types = false
       @connections = new ThreeNodes.ConnectionsCollection()
       self = this
       
@@ -123,16 +122,16 @@ define [
     
     createConnectionFromObject: (connection) =>
       from_node = @get_node(connection.from_node.toString())
-      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
+      from = from_node.rack.node_fields.outputs[connection.from.toString()]
       to_node = @get_node(connection.to_node.toString())
-      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
+      to = to_node.rack.node_fields.inputs[connection.to.toString()]
       # if a field is missing try to switch from/to
       if !from || !to
         tmp = from_node
         from_node = to_node
         to_node = tmp
-        from = from_node.rack.node_fields_by_name.outputs[connection.to.toString()]
-        to = to_node.rack.node_fields_by_name.inputs[connection.from.toString()]
+        from = from_node.rack.node_fields.outputs[connection.to.toString()]
+        to = to_node.rack.node_fields.inputs[connection.from.toString()]
       
       c = @connections.create
           from_field: from

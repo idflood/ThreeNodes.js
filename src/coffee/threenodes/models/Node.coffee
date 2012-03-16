@@ -228,10 +228,10 @@ define [
         @anim.enableProperty(field.get("name"))
     
     createAnimContainer: () =>
-      res = anim("nid-" + @get("nid"), @rack.node_fields_by_name.inputs)
+      res = anim("nid-" + @get("nid"), @rack.node_fields.inputs)
       # enable track animation only for number/boolean
-      for f of @rack.node_fields_by_name.inputs
-        field = @rack.node_fields_by_name.inputs[f]
+      for f of @rack.node_fields.inputs
+        field = @rack.node_fields.inputs[f]
         if field.is_animation_property() == false
           @disable_property_anim(field)
       return res
