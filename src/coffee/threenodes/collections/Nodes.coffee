@@ -80,17 +80,17 @@ define [
       @timeline.on("startSound", @startSound)
       @timeline.on("stopSound", @stopSound)
     
-    create_node: (nodename, x, y, inXML = false, inJSON = false) =>
-      if !ThreeNodes.nodes[nodename]
-        console.error("Node type doesn't exists: " + nodename)
-      n = new ThreeNodes.nodes[nodename]
-        x: x
-        y: y
-        timeline: @timeline
-        inXML: inXML
-        inJSON: inJSON
+    create_node: (options) =>
+      opt = options
+      if $.type(opt) == "string"
+        opt = {type: opt}
       
-      n.load(inXML, inJSON)
+      opt.timeline = @timeline
+      
+      if !ThreeNodes.nodes[opt.type]
+        console.error("Node type doesn't exists: " + opt.type)
+      
+      n = new ThreeNodes.nodes[opt.type](opt)
       @add(n)
       n
     

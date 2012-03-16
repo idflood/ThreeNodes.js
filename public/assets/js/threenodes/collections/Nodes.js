@@ -87,21 +87,19 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.timeline.on("stopSound", this.stopSound);
     };
 
-    NodeGraph.prototype.create_node = function(nodename, x, y, inXML, inJSON) {
-      var n;
-      if (inXML == null) inXML = false;
-      if (inJSON == null) inJSON = false;
-      if (!ThreeNodes.nodes[nodename]) {
-        console.error("Node type doesn't exists: " + nodename);
+    NodeGraph.prototype.create_node = function(options) {
+      var n, opt;
+      opt = options;
+      if ($.type(opt) === "string") {
+        opt = {
+          type: opt
+        };
       }
-      n = new ThreeNodes.nodes[nodename]({
-        x: x,
-        y: y,
-        timeline: this.timeline,
-        inXML: inXML,
-        inJSON: inJSON
-      });
-      n.load(inXML, inJSON);
+      opt.timeline = this.timeline;
+      if (!ThreeNodes.nodes[opt.type]) {
+        console.error("Node type doesn't exists: " + opt.type);
+      }
+      n = new ThreeNodes.nodes[opt.type](opt);
       this.add(n);
       return n;
     };

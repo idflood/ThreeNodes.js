@@ -17,17 +17,11 @@ define [
     @group_name = ''
             
     default:
-      nid: 0
+      nid: -1
       x: 0
       y: 0
       name: ""
     
-    load: (xml, json) =>
-      if xml
-        @fromXML(xml)
-      else if json
-        @fromJSON(json)
-      
     setNID: (nid) =>
       @set
         "nid": nid
@@ -43,40 +37,26 @@ define [
         "x": x
         "y": y
       @
-    
-    fromJSON: (data) =>
-      @set
-        "nid": data.nid
-        "name": if data.name then data.name else @get("name")
-        "x": data.x
-        "y": data.y
-      ThreeNodes.uid = @get("nid")
-      @
-    
-    fromXML: (data) =>
-      @set
-        "nid": parseInt @inXML.attr("nid")
-      ThreeNodes.uid = @get("nid")
-      @
-    
+        
     initialize: (options) =>
+      super
       @auto_evaluate = false
       @delays_output = false
       @dirty = true
       @is_animated = false
       @out_connections = []
       @value = false
-      @inXML = options.inXML
-      @inJSON = options.inJSON
       @apptimeline = options.timeline
-        
-      if @inXML == false && @inJSON == false
-        @setNID(ThreeNodes.Utils.get_uid())
-      @setName(@typename())
-      @load(@inXML, @inJSON)
+      @options = options
       
-      @rack = new ThreeNodes.NodeFieldsCollection [],
-        node: this
+      @setName(@typename())
+      
+      if !@get("nid")
+        @setNID(ThreeNodes.Utils.get_uid())
+      else
+        ThreeNodes.uid = @get("nid")
+      
+      @rack = new ThreeNodes.NodeFieldsCollection([], {node: this})
       @
       
     post_init: () =>
@@ -84,13 +64,13 @@ define [
       @set_fields()
       
       # load saved data after the fields have been set
-      @rack.load(@inXML, @inJSON)
+      @rack.load(@options.fields)
       
       # init animation for current fields
       @anim = @createAnimContainer()
       
       # load saved data
-      if @inJSON && @inJSON.anim != false
+      if @options.anim != false
         # load animation
         @loadAnimation()
             
@@ -109,12 +89,13 @@ define [
       delete @main_view
       delete @apptimeline
       delete @anim
+      delete @options
       @destroy()
     
     createConnection: (field1, field2) => @trigger("createConnection", field1, field2)
     
     loadAnimation: () =>
-      for propLabel, anims of @inJSON.anim
+      for propLabel, anims of @options.anim
         track = @anim.getPropertyTrack(propLabel)
         for propKey in anims
           track.keys.push
@@ -188,20 +169,7 @@ define [
             res[propTrack.propertyName].push(k)
             
       res
-    
-    getAnimationDataToCode: () =>
-      res = "false"
-      if !@anim || !@anim.objectTrack || !@anim.objectTrack.propertyTracks || @hasPropertyTrackAnim() == false
-        return res
-      if @anim != false
-        res = "{\n"
-        for propTrack in @anim.objectTrack.propertyTracks
-          res += "\t\t" + "'#{propTrack.propertyName}' : [\n"
-          for anim in propTrack.keys
-            res += "\t\t\t" + "{time: #{anim.time}, value: #{anim.value}, easing: '#{Timeline.easingFunctionToString(anim.easing)}'},\n"
-          res += "\t\t" + "],\n"
-        res += "\t}"
-    
+        
     toJSON: () =>
       res =
         nid: @get('nid')
@@ -212,22 +180,6 @@ define [
         y: @get('y')
         fields: @rack.toJSON()
       res
-    
-    toXML: () =>
-      pos = @main_view.position()
-      "\t\t\t<node nid='#{@nid}' type='#{@typename()}' x='#{pos.left}' y='#{pos.top}'>#{@rack.toXML()}</node>\n"
-    
-    toCode: () =>
-      res = "\n// node: #{@get('name')}\n"
-      res += "var node_#{@get('nid')}_data = {\n"
-      res += "\t" + "nid: #{@get('nid')},\n"
-      res += "\t" + "name: '#{@get('name')}',\n"
-      res += "\t" + "type: '#{@typename()}',\n"
-      res += "\t" + "fields: #{@rack.toCode()},\n"
-      res += "\t" + "anim: #{@getAnimationDataToCode()}\n"
-      res += "};\n"
-      res += "var node_#{@get('nid')} = nodegraph.create_node(\"#{@typename()}\", #{@get('x')}, #{@get('y')}, false, node_#{@get('nid')}_data);\n"
-      return res
     
     apply_fields_to_val: (afields, target, exceptions = [], index) =>
       for f of afields

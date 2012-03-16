@@ -208,9 +208,9 @@ define [
         # mesh should duplicate itself
         ThreeNodes.events.trigger("ClearWorkspace")
         meshNode = ng.create_node("ThreeMesh")
-        node_merge = ng.create_node("Merge", 0, 0)
-        nvec1 = ng.create_node("Vector3", 0, 0)
-        nvec2 = ng.create_node("Vector3", 0, 0)
+        node_merge = ng.create_node("Merge")
+        nvec1 = ng.create_node("Vector3")
+        nvec2 = ng.create_node("Vector3")
         c1 = ng.connections.create
           from_field: nvec1.rack.getField("xyz", true)
           to_field: node_merge.rack.getField("in0")

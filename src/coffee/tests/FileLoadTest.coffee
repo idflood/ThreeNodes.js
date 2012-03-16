@@ -15,7 +15,7 @@ define [
         ThreeNodes.events.trigger("ClearWorkspace")
         
         # test with two number nodes connected
-        n1 = ng.create_node("Number", 363, 113)
+        n1 = ng.create_node({type: "Number", x: 363, y: 113})
         n2 = ng.create_node("Number")
         c1 = ng.connections.create
           from_field: n1.v_out

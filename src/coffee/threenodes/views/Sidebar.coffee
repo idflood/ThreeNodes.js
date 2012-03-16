@@ -78,5 +78,5 @@ define [
           offset = $("#container-wrapper").offset()
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
           dy = ui.position.top + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop() - offset.top
-          ThreeNodes.events.trigger("CreateNode", nodename, dx, dy)
+          ThreeNodes.events.trigger("CreateNode", {type: nodename, x: dx, y: dy})
           $("#sidebar").show()

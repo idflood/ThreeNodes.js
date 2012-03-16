@@ -114,20 +114,6 @@ define [
       if val_type != "object" && val_type != "array"
         res.val = val
       res
-    
-    toCode: () =>
-      res = ""
-      val = @get("value")
-      val_type = jQuery.type(val)
-      if val_type != "object" && val_type != "array"
-        res = "\t\t{name: '#{@get('name')}', val: #{val}},\n"
-      else
-        res = "\t\t{name: '#{@get('name')}'},\n"
-      res
-    
-    toXML : () =>
-      val = @get("value")
-      "\t\t\t<field fid='#{@get('fid')}' val='#{val}'/>\n"
   
     render_connections: () =>
       for connection in @connections

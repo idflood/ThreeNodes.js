@@ -27,11 +27,22 @@ define [
       @node_fields_by_name.inputs = {}
       @node_fields_by_name.outputs = {}
       
-    load: (xml, json) =>
-      if xml
-        @fromXML(xml)
-      else if json
+    load: (json) =>
+      if json
         @fromJSON(json)
+    
+    fromJSON: (data) =>
+      for f in data.in
+        node_field = @node_fields_by_name.inputs[f.name]
+        if node_field && f.val
+          node_field.setValue(f.val)
+      true
+
+    toJSON: =>
+      res = 
+        in: jQuery.map(@node_fields.inputs, (f, i) -> f.toJSON())
+        out: jQuery.map(@node_fields.outputs, (f, i) -> f.toJSON()) 
+      res
     
     getField: (key, is_out = false) =>
       if is_out == true
@@ -89,48 +100,6 @@ define [
       @trigger("field:registered", this, $("#fid-#{fid}"))
       
       field
-    
-    fromJSON: (data) =>
-      for f in data.fields.in
-        node_field = @node_fields_by_name.inputs[f.name]
-        if node_field && f.val
-          node_field.setValue(f.val)
-      true
-    
-    fromXML: (data) =>
-      self = this
-      
-      $("in field", data).each () ->
-        f = self.node_fields.inputs["fid-" + $(this).attr("fid")]
-        field_val = $(this).attr("val")
-        if f && field_val != "[object Object]"
-          f.setValue(field_val)
-      true
-
-    toJSON: =>
-      res = 
-        in: jQuery.map(@node_fields.inputs, (f, i) -> f.toJSON())
-        out: jQuery.map(@node_fields.outputs, (f, i) -> f.toJSON()) 
-      res
-    
-    toCode: =>
-      res = "{'in': [\n"
-      for field of @node_fields.inputs
-        res += @node_fields.inputs[field].toCode()
-      res += "\t]}"
-      res
-    
-    toXML: =>
-      res = "\t\t<in>\n"
-      for f of @node_fields.inputs
-        res += @node_fields.inputs[f].toXML()
-      res += "\t\t</in>\n"
-      
-      res += "\t\t<out>\n"
-      for f of @node_fields.outputs
-        res += @node_fields.outputs[f].toXML()
-      res += "\t\t</out>\n"
-      res
     
     renderConnections: =>
       @invoke "render_connections"

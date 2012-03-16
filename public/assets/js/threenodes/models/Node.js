@@ -22,10 +22,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       this.get_cached_array = __bind(this.get_cached_array, this);
       this.create_field_connection = __bind(this.create_field_connection, this);
       this.apply_fields_to_val = __bind(this.apply_fields_to_val, this);
-      this.toCode = __bind(this.toCode, this);
-      this.toXML = __bind(this.toXML, this);
       this.toJSON = __bind(this.toJSON, this);
-      this.getAnimationDataToCode = __bind(this.getAnimationDataToCode, this);
       this.getAnimationData = __bind(this.getAnimationData, this);
       this.hasPropertyTrackAnim = __bind(this.hasPropertyTrackAnim, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
@@ -42,12 +39,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       this.typename = __bind(this.typename, this);
       this.post_init = __bind(this.post_init, this);
       this.initialize = __bind(this.initialize, this);
-      this.fromXML = __bind(this.fromXML, this);
-      this.fromJSON = __bind(this.fromJSON, this);
       this.setPosition = __bind(this.setPosition, this);
       this.setName = __bind(this.setName, this);
       this.setNID = __bind(this.setNID, this);
-      this.load = __bind(this.load, this);
       NodeBase.__super__.constructor.apply(this, arguments);
     }
 
@@ -56,18 +50,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
     NodeBase.group_name = '';
 
     NodeBase.prototype["default"] = {
-      nid: 0,
+      nid: -1,
       x: 0,
       y: 0,
       name: ""
-    };
-
-    NodeBase.prototype.load = function(xml, json) {
-      if (xml) {
-        return this.fromXML(xml);
-      } else if (json) {
-        return this.fromJSON(json);
-      }
     };
 
     NodeBase.prototype.setNID = function(nid) {
@@ -92,40 +78,22 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       return this;
     };
 
-    NodeBase.prototype.fromJSON = function(data) {
-      this.set({
-        "nid": data.nid,
-        "name": data.name ? data.name : this.get("name"),
-        "x": data.x,
-        "y": data.y
-      });
-      ThreeNodes.uid = this.get("nid");
-      return this;
-    };
-
-    NodeBase.prototype.fromXML = function(data) {
-      this.set({
-        "nid": parseInt(this.inXML.attr("nid"))
-      });
-      ThreeNodes.uid = this.get("nid");
-      return this;
-    };
-
     NodeBase.prototype.initialize = function(options) {
+      NodeBase.__super__.initialize.apply(this, arguments);
       this.auto_evaluate = false;
       this.delays_output = false;
       this.dirty = true;
       this.is_animated = false;
       this.out_connections = [];
       this.value = false;
-      this.inXML = options.inXML;
-      this.inJSON = options.inJSON;
       this.apptimeline = options.timeline;
-      if (this.inXML === false && this.inJSON === false) {
-        this.setNID(ThreeNodes.Utils.get_uid());
-      }
+      this.options = options;
       this.setName(this.typename());
-      this.load(this.inXML, this.inJSON);
+      if (!this.get("nid")) {
+        this.setNID(ThreeNodes.Utils.get_uid());
+      } else {
+        ThreeNodes.uid = this.get("nid");
+      }
       this.rack = new ThreeNodes.NodeFieldsCollection([], {
         node: this
       });
@@ -134,9 +102,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
 
     NodeBase.prototype.post_init = function() {
       this.set_fields();
-      this.rack.load(this.inXML, this.inJSON);
+      this.rack.load(this.options.fields);
       this.anim = this.createAnimContainer();
-      if (this.inJSON && this.inJSON.anim !== false) this.loadAnimation();
+      if (this.options.anim !== false) this.loadAnimation();
       this.showNodeAnimation();
       this.trigger("postInit");
       return this;
@@ -154,6 +122,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       delete this.main_view;
       delete this.apptimeline;
       delete this.anim;
+      delete this.options;
       return this.destroy();
     };
 
@@ -163,7 +132,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
 
     NodeBase.prototype.loadAnimation = function() {
       var anims, propKey, propLabel, track, _i, _len, _ref;
-      _ref = this.inJSON.anim;
+      _ref = this.options.anim;
       for (propLabel in _ref) {
         anims = _ref[propLabel];
         track = this.anim.getPropertyTrack(propLabel);
@@ -282,29 +251,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       return res;
     };
 
-    NodeBase.prototype.getAnimationDataToCode = function() {
-      var anim, propTrack, res, _i, _j, _len, _len2, _ref, _ref2;
-      res = "false";
-      if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
-        return res;
-      }
-      if (this.anim !== false) {
-        res = "{\n";
-        _ref = this.anim.objectTrack.propertyTracks;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          propTrack = _ref[_i];
-          res += "\t\t" + ("'" + propTrack.propertyName + "' : [\n");
-          _ref2 = propTrack.keys;
-          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-            anim = _ref2[_j];
-            res += "\t\t\t" + ("{time: " + anim.time + ", value: " + anim.value + ", easing: '" + (Timeline.easingFunctionToString(anim.easing)) + "'},\n");
-          }
-          res += "\t\t" + "],\n";
-        }
-        return res += "\t}";
-      }
-    };
-
     NodeBase.prototype.toJSON = function() {
       var res;
       res = {
@@ -316,26 +262,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
         y: this.get('y'),
         fields: this.rack.toJSON()
       };
-      return res;
-    };
-
-    NodeBase.prototype.toXML = function() {
-      var pos;
-      pos = this.main_view.position();
-      return "\t\t\t<node nid='" + this.nid + "' type='" + (this.typename()) + "' x='" + pos.left + "' y='" + pos.top + "'>" + (this.rack.toXML()) + "</node>\n";
-    };
-
-    NodeBase.prototype.toCode = function() {
-      var res;
-      res = "\n// node: " + (this.get('name')) + "\n";
-      res += "var node_" + (this.get('nid')) + "_data = {\n";
-      res += "\t" + ("nid: " + (this.get('nid')) + ",\n");
-      res += "\t" + ("name: '" + (this.get('name')) + "',\n");
-      res += "\t" + ("type: '" + (this.typename()) + "',\n");
-      res += "\t" + ("fields: " + (this.rack.toCode()) + ",\n");
-      res += "\t" + ("anim: " + (this.getAnimationDataToCode()) + "\n");
-      res += "};\n";
-      res += "var node_" + (this.get('nid')) + " = nodegraph.create_node(\"" + (this.typename()) + "\", " + (this.get('x')) + ", " + (this.get('y')) + ", false, node_" + (this.get('nid')) + "_data);\n";
       return res;
     };
 
