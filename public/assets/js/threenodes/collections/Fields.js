@@ -14,11 +14,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.addField = __bind(this.addField, this);
       this.removeAllConnections = __bind(this.removeAllConnections, this);
       this.renderConnections = __bind(this.renderConnections, this);
-      this.toXML = __bind(this.toXML, this);
-      this.toCode = __bind(this.toCode, this);
-      this.toJSON = __bind(this.toJSON, this);
-      this.fromXML = __bind(this.fromXML, this);
-      this.fromJSON = __bind(this.fromJSON, this);
       this.registerField = __bind(this.registerField, this);
       this.setFieldInputUnchanged = __bind(this.setFieldInputUnchanged, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
@@ -26,6 +21,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.getMaxInputSliceCount = __bind(this.getMaxInputSliceCount, this);
       this.setField = __bind(this.setField, this);
       this.getField = __bind(this.getField, this);
+      this.toJSON = __bind(this.toJSON, this);
+      this.fromJSON = __bind(this.fromJSON, this);
       this.load = __bind(this.load, this);
       this.destroy = __bind(this.destroy, this);
       this.initialize = __bind(this.initialize, this);
@@ -56,12 +53,32 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       return this.node_fields_by_name.outputs = {};
     };
 
-    NodeFieldsCollection.prototype.load = function(xml, json) {
-      if (xml) {
-        return this.fromXML(xml);
-      } else if (json) {
-        return this.fromJSON(json);
+    NodeFieldsCollection.prototype.load = function(json) {
+      if (json) return this.fromJSON(json);
+    };
+
+    NodeFieldsCollection.prototype.fromJSON = function(data) {
+      var f, node_field, _i, _len, _ref;
+      _ref = data["in"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        f = _ref[_i];
+        node_field = this.node_fields_by_name.inputs[f.name];
+        if (node_field && f.val) node_field.setValue(f.val);
       }
+      return true;
+    };
+
+    NodeFieldsCollection.prototype.toJSON = function() {
+      var res;
+      res = {
+        "in": jQuery.map(this.node_fields.inputs, function(f, i) {
+          return f.toJSON();
+        }),
+        out: jQuery.map(this.node_fields.outputs, function(f, i) {
+          return f.toJSON();
+        })
+      };
+      return res;
     };
 
     NodeFieldsCollection.prototype.getField = function(key, is_out) {
@@ -145,67 +162,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       fid = field.get("fid");
       this.trigger("field:registered", this, $("#fid-" + fid));
       return field;
-    };
-
-    NodeFieldsCollection.prototype.fromJSON = function(data) {
-      var f, node_field, _i, _len, _ref;
-      _ref = data.fields["in"];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        f = _ref[_i];
-        node_field = this.node_fields_by_name.inputs[f.name];
-        if (node_field && f.val) node_field.setValue(f.val);
-      }
-      return true;
-    };
-
-    NodeFieldsCollection.prototype.fromXML = function(data) {
-      var self;
-      self = this;
-      $("in field", data).each(function() {
-        var f, field_val;
-        f = self.node_fields.inputs["fid-" + $(this).attr("fid")];
-        field_val = $(this).attr("val");
-        if (f && field_val !== "[object Object]") return f.setValue(field_val);
-      });
-      return true;
-    };
-
-    NodeFieldsCollection.prototype.toJSON = function() {
-      var res;
-      res = {
-        "in": jQuery.map(this.node_fields.inputs, function(f, i) {
-          return f.toJSON();
-        }),
-        out: jQuery.map(this.node_fields.outputs, function(f, i) {
-          return f.toJSON();
-        })
-      };
-      return res;
-    };
-
-    NodeFieldsCollection.prototype.toCode = function() {
-      var field, res;
-      res = "{'in': [\n";
-      for (field in this.node_fields.inputs) {
-        res += this.node_fields.inputs[field].toCode();
-      }
-      res += "\t]}";
-      return res;
-    };
-
-    NodeFieldsCollection.prototype.toXML = function() {
-      var f, res;
-      res = "\t\t<in>\n";
-      for (f in this.node_fields.inputs) {
-        res += this.node_fields.inputs[f].toXML();
-      }
-      res += "\t\t</in>\n";
-      res += "\t\t<out>\n";
-      for (f in this.node_fields.outputs) {
-        res += this.node_fields.outputs[f].toXML();
-      }
-      res += "\t\t</out>\n";
-      return res;
     };
 
     NodeFieldsCollection.prototype.renderConnections = function() {

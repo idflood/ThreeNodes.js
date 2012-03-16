@@ -101,21 +101,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       return res;
     };
 
-    Connection.prototype.toXML = function() {
-      return "\t\t<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>\n";
-    };
-
-    Connection.prototype.toCode = function() {
-      var res;
-      res = "var connection_" + (this.get('cid')) + "_data = {\n";
-      res += "\t" + ("id: " + (this.get('cid')) + ",\n");
-      res += "\t" + ("from_node: " + (this.from_field.node.get('nid')) + ", from: '" + (this.from_field.get('name')) + "',\n");
-      res += "\t" + ("to_node: " + (this.to_field.node.get('nid')) + ", to: '" + (this.to_field.get('name')) + "'\n");
-      res += "};\n";
-      res += "var connection_" + this.cid + " = nodegraph.createConnectionFromObject(connection_" + (this.get('cid')) + "_data);\n";
-      return res;
-    };
-
     return Connection;
 
   })(Backbone.Model);

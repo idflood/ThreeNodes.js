@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/json2"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/utils/CodeExporter', "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/json2"], function($, _, Backbone) {
   "use strict";  return ThreeNodes.FileHandler = (function(_super) {
 
     __extends(FileHandler, _super);
@@ -31,44 +31,18 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
     };
 
     FileHandler.prototype.export_code = function() {
-      var bb, c, fileSaver, node, res, _i, _j, _len, _len2, _ref, _ref2;
-      res = "//\n";
-      res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n";
-      res += "//\n\n";
-      res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});";
-      res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone'], function(App) {";
-      res += "\n\n";
-      res += '"use strict";\n';
-      res += "var app = new App();\n";
-      res += "var nodegraph = app.nodegraph;\n\n";
-      res += "//\n";
-      res += "// nodes\n";
-      res += "//\n";
-      _ref = this.nodes.models;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        node = _ref[_i];
-        res += node.toCode();
-      }
-      res += "\n";
-      res += "//\n";
-      res += "// connections\n";
-      res += "//\n\n";
-      _ref2 = this.nodes.connections.models;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        c = _ref2[_j];
-        res += c.toCode();
-      }
-      res += "\n\n";
-      res += "// set player mode\n";
-      res += "ThreeNodes.events.trigger('SetDisplayModeCommand', true);\n";
-      res += "});";
+      var bb, exporter, fileSaver, json, res;
+      json = this.get_local_json(false);
+      exporter = new ThreeNodes.CodeExporter();
+      res = exporter.toCode(json);
       bb = new BlobBuilder();
       bb.append(res);
       return fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js");
     };
 
-    FileHandler.prototype.get_local_json = function() {
+    FileHandler.prototype.get_local_json = function(stringify) {
       var res;
+      if (stringify == null) stringify = true;
       res = {
         uid: ThreeNodes.uid,
         nodes: jQuery.map(this.nodes.models, function(n, i) {
@@ -78,7 +52,11 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
           return c.toJSON();
         })
       };
-      return JSON.stringify(res);
+      if (stringify) {
+        return JSON.stringify(res);
+      } else {
+        return res;
+      }
     };
 
     FileHandler.prototype.get_local_xml = function() {
@@ -112,7 +90,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
       _ref = loaded_data.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        n = this.nodes.create_node(node.type, node.x, node.y, false, node);
+        n = this.nodes.create_node(node);
       }
       _ref2 = loaded_data.connections;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
@@ -138,7 +116,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/BlobBuilder.min", "order
         y = parseInt($this.attr("y"));
         nid = parseInt($this.attr("nid"));
         type = $this.attr("type");
-        return n = this.nodes.create_node(type, x, y, $this);
+        return n = this.nodes.create_node($this);
       });
       $("connection", loaded_data).each(function() {
         var $this, c, cid, from, to;
