@@ -28,6 +28,8 @@ define [
       @model.bind 'change', @render
       @model.bind 'postInit', @postInit
       @model.bind 'remove', () => @remove()
+      @model.bind("node:computePosition", @compute_node_position)
+      @model.bind("node:renderConnections", @render_connections)
       @render()
       @model.post_init()
       @
@@ -53,10 +55,10 @@ define [
           field.remove_connections()
       return @
     
-    render_connections: () ->
+    render_connections: () =>
       @model.rack.renderConnections()
     
-    compute_node_position: () ->
+    compute_node_position: () =>
       pos = $(@el).position()
       offset = $("#container-wrapper").offset()
       @model.setPosition(pos.left + $("#container-wrapper").scrollLeft(), pos.top + $("#container-wrapper").scrollTop())
@@ -135,14 +137,17 @@ define [
             el.css
               top: dx
               left: dy
-            el.data("object").view.compute_node_position()
-            el.data("object").view.render_connections()
+            #el.data("object").view.compute_node_position()
+            #el.data("object").view.render_connections()
+            el.data("object").trigger("node:computePosition")
+            el.data("object").trigger("node:renderConnections")
             
           self.render_connections()
         stop: () ->
           ThreeNodes.selected_nodes.not(this).each () ->
             el = $(this).data("object")
-            el.view.render_connections()
+            #el.view.render_connections()
+            el.trigger("node:renderConnections")
           self.compute_node_position()
           self.render_connections()
       return @

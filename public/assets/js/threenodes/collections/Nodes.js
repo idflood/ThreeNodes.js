@@ -52,7 +52,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           model: node,
           el: $tmpl
         });
-        node.view = view;
         return ThreeNodes.events.trigger("nodeslist:rebuild", self);
       });
       this.bind("createConnection", function(field1, field2) {

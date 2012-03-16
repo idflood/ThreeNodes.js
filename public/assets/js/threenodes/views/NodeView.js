@@ -9,6 +9,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
 
     function NodeView() {
       this.remove = __bind(this.remove, this);
+      this.compute_node_position = __bind(this.compute_node_position, this);
+      this.render_connections = __bind(this.render_connections, this);
       this.render = __bind(this.render, this);
       this.postInit = __bind(this.postInit, this);
       NodeView.__super__.constructor.apply(this, arguments);
@@ -32,6 +34,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
       this.model.bind('remove', function() {
         return _this.remove();
       });
+      this.model.bind("node:computePosition", this.compute_node_position);
+      this.model.bind("node:renderConnections", this.render_connections);
       this.render();
       this.model.post_init();
       return this;
@@ -168,8 +172,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
               top: dx,
               left: dy
             });
-            el.data("object").view.compute_node_position();
-            return el.data("object").view.render_connections();
+            el.data("object").trigger("node:computePosition");
+            return el.data("object").trigger("node:renderConnections");
           });
           return self.render_connections();
         },
@@ -177,7 +181,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
           ThreeNodes.selected_nodes.not(this).each(function() {
             var el;
             el = $(this).data("object");
-            return el.view.render_connections();
+            return el.trigger("node:renderConnections");
           });
           self.compute_node_position();
           return self.render_connections();

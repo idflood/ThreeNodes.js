@@ -44,10 +44,6 @@ define [
         view = new ThreeNodes.NodeView
           model: node
           el: $tmpl
-        # keep a ref to the view in the model
-        # used mainly in NodeView.make_draggable
-        # it would be better without this
-        node.view = view
         
         ThreeNodes.events.trigger "nodeslist:rebuild", self
             

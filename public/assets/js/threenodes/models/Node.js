@@ -118,7 +118,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       if (this.anim) this.anim.destroy();
       this.rack.destroy();
       delete this.rack;
-      delete this.view;
       delete this.main_view;
       delete this.apptimeline;
       delete this.anim;

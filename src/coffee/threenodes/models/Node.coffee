@@ -85,7 +85,6 @@ define [
         @anim.destroy()
       @rack.destroy()
       delete @rack
-      delete @view
       delete @main_view
       delete @apptimeline
       delete @anim
