@@ -449,7 +449,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $target, f_in, id, self;
       self = this;
       $target = this.create_sidebar_container();
-      id = "side-field-checkbox-" + this.fid;
+      id = "side-field-checkbox-" + (this.get('fid'));
       $target.append("<div><input type='checkbox' id='" + id + "'/></div>");
       f_in = $("#" + id);
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {

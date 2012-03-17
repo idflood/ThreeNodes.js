@@ -131,23 +131,25 @@ define [
       
     get_geometry_cache: =>
       res = ""
-      if jQuery.type(@rack.getField('geometry').get("value")) == "array"
-        for f in @rack.getField('geometry').get("value")
+      current_val = @rack.getField('geometry').get("value")
+      if $.type(current_val) == "array"
+        for f in current_val
           res += f.id
       else
-        res = @rack.getField('geometry').get("value").id
+        res = current_val.id
       res
       
     get_material_cache: =>
       res = ""
-      if jQuery.type(@rack.getField('material').get("value")) == "array"
-        for f in @rack.getField('material').get("value")
+      current_val = @rack.getField('material').get("value")
+      if $.type(current_val) == "array"
+        for f in current_val
           res += f.id
       else
-        res = @rack.getField('material').get("value").id
+        res = current_val.id
       res
   
-  class ThreeNodes.nodes.ColladaLoader extends Object3DwithMeshAndMaterial
+  class ThreeNodes.nodes.ColladaLoader extends ThreeNodes.nodes.Object3D
     @node_name = 'ColladaLoader'
     @group_name = 'Three'
     
@@ -159,14 +161,21 @@ define [
       @ob = [new THREE.Object3D()]
       @last_slice_count = 1
       @file_url = @rack.getField('file_url').getValue(0)
+      @vars_shadow_options = ["castShadow", "receiveShadow"]
+      @shadow_cache = @create_cache_object(@vars_shadow_options)
       @compute()
     
     remove: () =>
       if @ob
         for item in @ob
           @deleteObjectAttributes(item)
-          
+      
+      delete @model_object
       super
+    
+    onModelLoaded: () =>
+      for subchild in @ob
+        subchild.add(@model_object)
     
     compute: =>
       needs_rebuild = false
@@ -175,12 +184,14 @@ define [
       if @last_slice_count != numItems
         needs_rebuild = true
         @last_slice_count = numItems
-            
+      
+      if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
+        needs_rebuild = true
+      
       if @file_url != new_url || needs_rebuild
         @ob = []
         for i in [0..numItems]
-          item = new THREE.Object3D()
-          @ob[i] = item
+          @ob[i] = new THREE.Object3D()
       
       if new_url && new_url != "" && new_url != @file_url
         loader = new THREE.ColladaLoader()
@@ -188,19 +199,42 @@ define [
         loader.load new_url, (collada) =>
           dae = collada.scene
           dae.updateMatrix()
-          for subchild in @ob
-            subchild.add(dae)
-          
+          #debugger
+          @model_object = dae
+          @onModelLoaded()
+      
+      cast = @rack.getField('castShadow').getValue()
+      receive = @rack.getField('receiveShadow').getValue()
+      applyShadowOptionsToSubMeshes = (childs) =>
+        if !childs || childs.length < 1
+          return false
+        for child in childs
+          if child.material
+            rebuild_shader = false
+            if child.material.castShadow != cast || child.material.receiveShadow != receive
+              rebuild_shader = true
+              child.material.castShadow = cast
+              child.material.receiveShadow = receive
+            if rebuild_shader == true
+              console.log "rebuild collada shader"
+              child.material.program = false
+              
+          if child.children && child.children.length > 0
+            applyShadowOptionsToSubMeshes(child.children)
+      
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material', 'file_url'], i)
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'file_url'], i)
+        if @ob[i].children.length > 0
+          # also apply some parameters to the imported object (shadow options for instance)
+          applyShadowOptionsToSubMeshes(@ob[i].children)
+          
       
       if needs_rebuild == true
         ThreeNodes.events.trigger("RebuildAllShaders")
       
       @file_url = new_url
+      @shadow_cache = @create_cache_object(@vars_shadow_options)
       @rack.setField("out", @ob)
-  
-  
   
   class ThreeNodes.nodes.ThreeMesh extends Object3DwithMeshAndMaterial
     @node_name = 'Mesh'
