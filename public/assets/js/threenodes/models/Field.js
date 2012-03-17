@@ -67,7 +67,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     NodeField.prototype.load = function(data) {
       var property;
-      if (!data) return;
+      if (!data && data !== false) return;
       if ($.type(data) !== "object") {
         this.setValue(data);
       } else {

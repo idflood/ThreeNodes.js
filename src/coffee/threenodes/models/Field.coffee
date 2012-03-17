@@ -28,7 +28,7 @@ define [
       super
     
     load: (data) =>
-      if !data
+      if !data && data != false
         return
       if $.type(data) != "object"
         @setValue(data)
