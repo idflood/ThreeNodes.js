@@ -27,6 +27,17 @@ define [
       
       super
     
+    load: (data) =>
+      if !data
+        return
+      if $.type(data) != "object"
+        @setValue(data)
+      else
+        # directly apply each object properties to the value
+        for property of data
+          @attributes.value[property] = data[property]
+      return this
+    
     initialize: (options) =>
       self = this
       @on_value_update_hooks = {}

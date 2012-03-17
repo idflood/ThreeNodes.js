@@ -33,6 +33,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.setFID = __bind(this.setFID, this);
       this.remove = __bind(this.remove, this);
       this.initialize = __bind(this.initialize, this);
+      this.load = __bind(this.load, this);
       this.set = __bind(this.set, this);
       this._validate = __bind(this._validate, this);
       this.sync = __bind(this.sync, this);
@@ -62,6 +63,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
         return this;
       }
       return NodeField.__super__.set.apply(this, arguments);
+    };
+
+    NodeField.prototype.load = function(data) {
+      var property;
+      if (!data) return;
+      if ($.type(data) !== "object") {
+        this.setValue(data);
+      } else {
+        for (property in data) {
+          this.attributes.value[property] = data[property];
+        }
+      }
+      return this;
     };
 
     NodeField.prototype.initialize = function(options) {
