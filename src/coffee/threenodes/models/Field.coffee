@@ -113,6 +113,10 @@ define [
       val_type = jQuery.type(val)
       if val_type != "object" && val_type != "array"
         res.val = val
+      # we may still need to save basic values
+      if val_type == "object"
+        if val.constructor == THREE.Vector2 || val.constructor == THREE.Vector3 || val.constructor == THREE.Vector4 || val.constructor == THREE.Color
+          res.val = val
       res
   
     render_connections: () =>

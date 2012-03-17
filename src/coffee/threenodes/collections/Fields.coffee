@@ -29,7 +29,12 @@ define [
       for f in data.in
         node_field = @node_fields.inputs[f.name]
         if node_field && f.val
-          node_field.setValue(f.val)
+          if $.type(f.val) != "object"
+            node_field.setValue(f.val)
+          else
+            # directly apply each object properties to the value
+            for property of f.val
+              node_field.attributes.value[property] = f.val[property]
       true
 
     toJSON: =>

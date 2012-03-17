@@ -46,13 +46,21 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.load = function(data) {
-      var f, node_field, _i, _len, _ref;
+      var f, node_field, property, _i, _len, _ref;
       if (!data || !data["in"]) return false;
       _ref = data["in"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
         node_field = this.node_fields.inputs[f.name];
-        if (node_field && f.val) node_field.setValue(f.val);
+        if (node_field && f.val) {
+          if ($.type(f.val) !== "object") {
+            node_field.setValue(f.val);
+          } else {
+            for (property in f.val) {
+              node_field.attributes.value[property] = f.val[property];
+            }
+          }
+        }
       }
       return true;
     };
