@@ -3,12 +3,17 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'order!threenodes/views/NodeFieldRackView', "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", 'order!threenodes/utils/Utils'], function($, _, Backbone, _view_node_template) {
-  "use strict";  ThreeNodes.NodeView = (function(_super) {
+  "use strict";
+  /* Node View
+  */  ThreeNodes.NodeView = (function(_super) {
 
     __extends(NodeView, _super);
 
     function NodeView() {
       this.remove = __bind(this.remove, this);
+      this.compute_node_position = __bind(this.compute_node_position, this);
+      this.render_connections = __bind(this.render_connections, this);
+      this.highlighAnimations = __bind(this.highlighAnimations, this);
       this.render = __bind(this.render, this);
       this.postInit = __bind(this.postInit, this);
       NodeView.__super__.constructor.apply(this, arguments);
@@ -18,40 +23,40 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
 
     NodeView.prototype.initialize = function() {
       var _this = this;
-      this.model.main_view = this.$el;
       this.make_draggable();
       this.init_el_click();
       this.init_title_click();
       this.rack_view = new ThreeNodes.NodeFieldRackView({
         node: this.model,
         collection: this.model.rack,
-        el: $(".options", this.el)
+        el: $(".options", this.el),
+        node_el: this.$el
       });
       this.model.bind('change', this.render);
       this.model.bind('postInit', this.postInit);
       this.model.bind('remove', function() {
         return _this.remove();
       });
+      this.model.bind("node:computePosition", this.compute_node_position);
+      this.model.bind("node:renderConnections", this.render_connections);
+      this.model.bind("node:showAnimations", this.highlighAnimations);
       this.render();
       this.model.post_init();
       return this;
     };
 
     NodeView.prototype.postInit = function() {
-      this.model.main_view = $(this.el);
-      $(this.el).data("object", this.model);
+      this.$el.data("object", this.model);
       return this.init_context_menu();
     };
 
     NodeView.prototype.render = function() {
-      var $el;
-      $el = $(this.el);
-      $el.css({
+      this.$el.css({
         left: parseInt(this.model.get("x")),
         top: parseInt(this.model.get("y"))
       });
-      $(".head span", $el).html(this.model.get("name"));
-      $(".head span", $el).show();
+      $(".head span", this.$el).text(this.model.get("name"));
+      $(".head span", this.$el).show();
       return this;
     };
 
@@ -66,6 +71,28 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
         }
       });
       return this;
+    };
+
+    NodeView.prototype.highlighAnimations = function() {
+      var $target, nodeAnimation, propTrack, _i, _len, _ref;
+      nodeAnimation = false;
+      _ref = this.model.anim.objectTrack.propertyTracks;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        propTrack = _ref[_i];
+        $target = $('.inputs .field-' + propTrack.name, this.$el);
+        if (propTrack.anims.length > 0) {
+          $target.addClass("has-animation");
+          nodeAnimation = true;
+        } else {
+          $target.removeClass("has-animation");
+        }
+      }
+      if (nodeAnimation === true) {
+        this.$el.addClass("node-has-animation");
+      } else {
+        this.$el.removeClass("node-has-animation");
+      }
+      return true;
     };
 
     NodeView.prototype.render_connections = function() {
@@ -168,8 +195,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
               top: dx,
               left: dy
             });
-            el.data("object").view.compute_node_position();
-            return el.data("object").view.render_connections();
+            el.data("object").trigger("node:computePosition");
+            return el.data("object").trigger("node:renderConnections");
           });
           return self.render_connections();
         },
@@ -177,7 +204,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
           ThreeNodes.selected_nodes.not(this).each(function() {
             var el;
             el = $(this).data("object");
-            return el.view.render_connections();
+            return el.trigger("node:renderConnections");
           });
           self.compute_node_position();
           return self.render_connections();

@@ -252,6 +252,90 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     return Object3DwithMeshAndMaterial;
 
   })(ThreeNodes.nodes.Object3D);
+  ThreeNodes.nodes.ColladaLoader = (function(_super) {
+
+    __extends(ColladaLoader, _super);
+
+    function ColladaLoader() {
+      this.compute = __bind(this.compute, this);
+      this.remove = __bind(this.remove, this);
+      this.set_fields = __bind(this.set_fields, this);
+      ColladaLoader.__super__.constructor.apply(this, arguments);
+    }
+
+    ColladaLoader.node_name = 'ColladaLoader';
+
+    ColladaLoader.group_name = 'Three';
+
+    ColladaLoader.prototype.set_fields = function() {
+      ColladaLoader.__super__.set_fields.apply(this, arguments);
+      this.rack.addFields({
+        inputs: {
+          "file_url": ""
+        }
+      });
+      this.ob = [new THREE.Object3D()];
+      this.last_slice_count = 1;
+      this.file_url = this.rack.getField('file_url').getValue(0);
+      return this.compute();
+    };
+
+    ColladaLoader.prototype.remove = function() {
+      var item, _i, _len, _ref;
+      if (this.ob) {
+        _ref = this.ob;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          this.deleteObjectAttributes(item);
+        }
+      }
+      return ColladaLoader.__super__.remove.apply(this, arguments);
+    };
+
+    ColladaLoader.prototype.compute = function() {
+      var i, item, loader, needs_rebuild, new_url, numItems,
+        _this = this;
+      needs_rebuild = false;
+      numItems = this.rack.getMaxInputSliceCount();
+      new_url = this.rack.getField('file_url').getValue();
+      if (this.last_slice_count !== numItems) {
+        needs_rebuild = true;
+        this.last_slice_count = numItems;
+      }
+      if (this.file_url !== new_url || needs_rebuild) {
+        this.ob = [];
+        for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+          item = new THREE.Object3D();
+          this.ob[i] = item;
+        }
+      }
+      if (new_url && new_url !== "" && new_url !== this.file_url) {
+        loader = new THREE.ColladaLoader();
+        loader.options.convertUpAxis = true;
+        loader.load(new_url, function(collada) {
+          var dae, subchild, _i, _len, _ref, _results;
+          dae = collada.scene;
+          dae.updateMatrix();
+          _ref = _this.ob;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            subchild = _ref[_i];
+            _results.push(subchild.add(dae));
+          }
+          return _results;
+        });
+      }
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material', 'file_url'], i);
+      }
+      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
+      this.file_url = new_url;
+      return this.rack.setField("out", this.ob);
+    };
+
+    return ColladaLoader;
+
+  })(Object3DwithMeshAndMaterial);
   ThreeNodes.nodes.ThreeMesh = (function(_super) {
 
     __extends(ThreeMesh, _super);

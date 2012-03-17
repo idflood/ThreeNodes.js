@@ -118,8 +118,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       if (this.anim) this.anim.destroy();
       this.rack.destroy();
       delete this.rack;
-      delete this.view;
-      delete this.main_view;
       delete this.apptimeline;
       delete this.anim;
       delete this.options;
@@ -151,25 +149,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
     };
 
     NodeBase.prototype.showNodeAnimation = function() {
-      var $target, nodeAnimation, propTrack, _i, _len, _ref;
-      nodeAnimation = false;
-      _ref = this.anim.objectTrack.propertyTracks;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        propTrack = _ref[_i];
-        $target = $('.inputs .field-' + propTrack.name, this.main_view);
-        if (propTrack.anims.length > 0) {
-          $target.addClass("has-animation");
-          nodeAnimation = true;
-        } else {
-          $target.removeClass("has-animation");
-        }
-      }
-      if (nodeAnimation === true) {
-        $(this.main_view).addClass("node-has-animation");
-      } else {
-        $(this.main_view).removeClass("node-has-animation");
-      }
-      return true;
+      return this.trigger("node:showAnimations");
     };
 
     NodeBase.prototype.add_count_input = function() {
@@ -335,9 +315,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
 
     NodeBase.prototype.createAnimContainer = function() {
       var f, field, res;
-      res = anim("nid-" + this.get("nid"), this.rack.node_fields_by_name.inputs);
-      for (f in this.rack.node_fields_by_name.inputs) {
-        field = this.rack.node_fields_by_name.inputs[f];
+      res = anim("nid-" + this.get("nid"), this.rack.node_fields.inputs);
+      for (f in this.rack.node_fields.inputs) {
+        field = this.rack.node_fields.inputs[f];
         if (field.is_animation_property() === false) {
           this.disable_property_anim(field);
         }
