@@ -147,6 +147,61 @@ define [
         res = @rack.getField('material').get("value").id
       res
   
+  class ThreeNodes.nodes.ColladaLoader extends Object3DwithMeshAndMaterial
+    @node_name = 'ColladaLoader'
+    @group_name = 'Three'
+    
+    set_fields: =>
+      super
+      @rack.addFields
+        inputs:
+          "file_url": ""
+      @ob = [new THREE.Object3D()]
+      @last_slice_count = 1
+      @file_url = @rack.getField('file_url').getValue(0)
+      @compute()
+    
+    remove: () =>
+      if @ob
+        for item in @ob
+          @deleteObjectAttributes(item)
+          
+      super
+    
+    compute: =>
+      needs_rebuild = false
+      numItems = @rack.getMaxInputSliceCount()
+      new_url = @rack.getField('file_url').getValue()
+      if @last_slice_count != numItems
+        needs_rebuild = true
+        @last_slice_count = numItems
+            
+      if @file_url != new_url || needs_rebuild
+        @ob = []
+        for i in [0..numItems]
+          item = new THREE.Object3D()
+          @ob[i] = item
+      
+      if new_url && new_url != "" && new_url != @file_url
+        loader = new THREE.ColladaLoader()
+        loader.options.convertUpAxis = true
+        loader.load new_url, (collada) =>
+          dae = collada.scene
+          dae.updateMatrix()
+          for subchild in @ob
+            subchild.add(dae)
+          
+      for i in [0..numItems]
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material', 'file_url'], i)
+      
+      if needs_rebuild == true
+        ThreeNodes.events.trigger("RebuildAllShaders")
+      
+      @file_url = new_url
+      @rack.setField("out", @ob)
+  
+  
+  
   class ThreeNodes.nodes.ThreeMesh extends Object3DwithMeshAndMaterial
     @node_name = 'Mesh'
     @group_name = 'Three'
