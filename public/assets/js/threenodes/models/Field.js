@@ -13,6 +13,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.link_textfield_to_subval = __bind(this.link_textfield_to_subval, this);
       this.link_textfield_to_val = __bind(this.link_textfield_to_val, this);
       this.create_textfield = __bind(this.create_textfield, this);
+      this.add_textfield_slider = __bind(this.add_textfield_slider, this);
       this.create_sidebar_container = __bind(this.create_sidebar_container, this);
       this.on_value_changed = __bind(this.on_value_changed, this);
       this.remove_connections = __bind(this.remove_connections, this);
@@ -243,52 +244,59 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $cont, $target;
       if (name == null) name = this.get("name");
       $cont = $("#tab-attribute");
-      $cont.append("<div id='side-field-" + this.get("fid") + "'></div>");
+      $cont.append("<div id='side-field-" + this.get("fid") + "' class='field-wrapper'></div>");
       $target = $("#side-field-" + (this.get('fid')));
       $target.append("<h3>" + name + "</h3>");
       return $target;
     };
 
-    NodeField.prototype.create_textfield = function($target, id, type) {
-      var $el, create_slider, on_slider_change, remove_slider,
+    NodeField.prototype.add_textfield_slider = function($el) {
+      var $parent, create_slider, on_slider_change, remove_slider,
         _this = this;
+      $parent = $el.parent();
+      on_slider_change = function(e, ui) {
+        var press;
+        $el.val(ui.value);
+        press = jQuery.Event("keypress");
+        press.which = 13;
+        return $el.trigger(press);
+      };
+      remove_slider = function() {
+        return $(".slider-container", $parent).remove();
+      };
+      create_slider = function() {
+        var current_val, diff, min_diff;
+        remove_slider();
+        $parent.append('<div class="slider-container"><div class="slider"></div></div>');
+        current_val = parseFloat($el.val());
+        min_diff = 0.5;
+        diff = Math.max(min_diff, Math.abs(current_val * 4));
+        $(".slider-container", $parent).append("<span class='min'>" + ((current_val - diff).toFixed(2)) + "</span>");
+        $(".slider-container", $parent).append("<span class='max'>" + ((current_val + diff).toFixed(2)) + "</span>");
+        return $(".slider", $parent).slider({
+          min: current_val - diff,
+          max: current_val + diff,
+          value: current_val,
+          step: 0.01,
+          change: on_slider_change,
+          slide: on_slider_change
+        });
+      };
+      $el.focus(function(e) {
+        return create_slider();
+      });
+      return create_slider();
+    };
+
+    NodeField.prototype.create_textfield = function($target, id, type, link_to_val) {
+      var $el;
       if (type == null) type = "float";
+      if (link_to_val == null) link_to_val = true;
       $target.append("<div class='input-container'><input type='text' id='" + id + "' class='field-" + type + "' /></div>");
       $el = $("#" + id);
-      if (type === "float") {
+      if (type === "float" && link_to_val === true) {
         $el.val(this.getValue());
-        on_slider_change = function(e, ui) {
-          var press;
-          $el.val(ui.value);
-          press = jQuery.Event("keypress");
-          press.which = 13;
-          return $el.trigger(press);
-        };
-        remove_slider = function() {
-          return $(".slider-container", $el.parent()).remove();
-        };
-        create_slider = function() {
-          var current_val, diff, min_diff;
-          remove_slider();
-          $el.parent().append('<div class="slider-container"><div class="slider"></div></div>');
-          current_val = parseFloat($el.val());
-          min_diff = 0.5;
-          diff = Math.max(min_diff, Math.abs(current_val * 4));
-          $(".slider-container", $el.parent()).append("<span class='min'>" + ((current_val - diff).toFixed(2)) + "</span>");
-          $(".slider-container", $el.parent()).append("<span class='max'>" + ((current_val + diff).toFixed(2)) + "</span>");
-          return $(".slider", $target).slider({
-            min: current_val - diff,
-            max: current_val + diff,
-            value: current_val,
-            step: 0.01,
-            change: on_slider_change,
-            slide: on_slider_change
-          });
-        };
-        $el.focus(function(e) {
-          return create_slider();
-        });
-        create_slider();
+        this.add_textfield_slider($el);
       }
       return $el;
     };
@@ -315,10 +323,14 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       this.on_value_update_hooks["update_sidebar_textfield_" + subval] = function(v) {
         return f_input.val(v[subval]);
       };
-      f_input.val(this.get("value")[subval]);
+      f_input.val(self.getValue()[subval]);
       f_input.keypress(function(e) {
         if (e.which === 13) {
-          self.attributes.value[subval] = $(this).val();
+          if ($.type(self.attributes.value) === "array") {
+            self.attributes.value[0][subval] = $(this).val();
+          } else {
+            self.attributes.value[subval] = $(this).val();
+          }
           return $(this).blur();
         }
       });
@@ -337,8 +349,9 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $target, f_in;
       if (type == null) type = "float";
       $target = this.create_sidebar_container(subval);
-      f_in = this.create_textfield($target, "side-field-txt-input-" + subval + "-" + (this.get('fid')), type);
-      return this.link_textfield_to_subval(f_in, subval);
+      f_in = this.create_textfield($target, "side-field-txt-input-" + subval + "-" + (this.get('fid')), type, false);
+      this.link_textfield_to_subval(f_in, subval);
+      if (type === "float") return this.add_textfield_slider(f_in);
     };
 
     return NodeField;

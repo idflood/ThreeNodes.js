@@ -168,45 +168,49 @@ define [
     
     create_sidebar_container: (name = @get("name")) =>
       $cont = $("#tab-attribute")
-      $cont.append("<div id='side-field-" + @get("fid") + "'></div>")
+      $cont.append("<div id='side-field-" + @get("fid") + "' class='field-wrapper'></div>")
       $target = $("#side-field-#{@get('fid')}")
       $target.append("<h3>#{name}</h3>")
       return $target
     
-    create_textfield: ($target, id, type = "float") =>
+    add_textfield_slider: ($el) =>
+      $parent = $el.parent()
+      on_slider_change = (e, ui) ->
+        $el.val(ui.value)
+        # simulate a keypress to apply value
+        press = jQuery.Event("keypress")
+        press.which = 13
+        $el.trigger(press)
+      remove_slider = () ->
+        $(".slider-container", $parent).remove()
+      create_slider = () ->
+        remove_slider()
+        $parent.append('<div class="slider-container"><div class="slider"></div></div>')
+        current_val = parseFloat($el.val())
+        min_diff = 0.5
+        diff = Math.max(min_diff, Math.abs(current_val * 4))
+        $(".slider-container", $parent).append("<span class='min'>#{(current_val - diff).toFixed(2)}</span>")
+        $(".slider-container", $parent).append("<span class='max'>#{(current_val + diff).toFixed(2)}</span>")
+        
+        $(".slider", $parent).slider
+          min: current_val - diff
+          max: current_val + diff
+          value: current_val
+          step: 0.01
+          change: on_slider_change
+          slide: on_slider_change
+      # recreate slider on focus
+      $el.focus (e) =>
+        create_slider()
+      # create first slider
+      create_slider()
+    
+    create_textfield: ($target, id, type = "float", link_to_val = true) =>
       $target.append("<div class='input-container'><input type='text' id='#{id}' class='field-#{type}' /></div>")
       $el = $("#" + id)
-      if type == "float"
+      if type == "float" && link_to_val == true
         $el.val(@getValue())
-        on_slider_change = (e, ui) ->
-          $el.val(ui.value)
-          # simulate a keypress to apply value
-          press = jQuery.Event("keypress")
-          press.which = 13
-          $el.trigger(press)
-        remove_slider = () ->
-          $(".slider-container", $el.parent()).remove()
-        create_slider = () ->
-          remove_slider()
-          $el.parent().append('<div class="slider-container"><div class="slider"></div></div>')
-          current_val = parseFloat($el.val())
-          min_diff = 0.5
-          diff = Math.max(min_diff, Math.abs(current_val * 4))
-          $(".slider-container", $el.parent()).append("<span class='min'>#{(current_val - diff).toFixed(2)}</span>")
-          $(".slider-container", $el.parent()).append("<span class='max'>#{(current_val + diff).toFixed(2)}</span>")
-          
-          $(".slider", $target).slider
-            min: current_val - diff
-            max: current_val + diff
-            value: current_val
-            step: 0.01
-            change: on_slider_change
-            slide: on_slider_change
-        # recreate slider on focus
-        $el.focus (e) =>
-          create_slider()
-        # create first slider
-        create_slider()
+        @add_textfield_slider($el)
       return $el
     
     link_textfield_to_val: (f_input) =>
@@ -222,12 +226,17 @@ define [
     
     link_textfield_to_subval: (f_input, subval) =>
       self = this
+      
       @on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
         f_input.val(v[subval])
-      f_input.val(@get("value")[subval])
+      
+      f_input.val(self.getValue()[subval])
       f_input.keypress (e) ->
         if e.which == 13
-          self.attributes.value[subval] = $(this).val()
+          if $.type(self.attributes.value) == "array"
+            self.attributes.value[0][subval] = $(this).val()
+          else
+            self.attributes.value[subval] = $(this).val()
           $(this).blur()
       f_input
   
@@ -238,8 +247,10 @@ define [
     
     create_subval_textinput: (subval, type = "float") =>
       $target = @create_sidebar_container(subval)
-      f_in = @create_textfield($target, "side-field-txt-input-#{subval}-#{@get('fid')}", type)
+      f_in = @create_textfield($target, "side-field-txt-input-#{subval}-#{@get('fid')}", type, false)
       @link_textfield_to_subval(f_in, subval)
+      if type == "float"
+        @add_textfield_slider(f_in)
   
   class ThreeNodes.fields.types.Any extends ThreeNodes.NodeField
     compute_value : (val) =>

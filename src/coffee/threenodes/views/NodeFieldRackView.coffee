@@ -6,38 +6,44 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone) ->
   "use strict"
+  ### Fields View ###
   
   class ThreeNodes.NodeFieldRackView extends Backbone.View
+    # Save some options in variables and bind events
     initialize: (options) ->
+      super
       @node = options.node
-      @collection.bind "renderSidebar", () =>
-        @renderSidebar()
-      @collection.bind "addCenterTextfield", (field) =>
-        @addCenterTextfield(field)
-      @collection.bind "field:registered", (model, el) =>
-        @add_field_listener(el)
+      @node_el = options.node_el
+      
+      @collection.bind("addCenterTextfield", (field) => @addCenterTextfield(field))
+      @collection.bind("add", (field) => @onFieldCreated(field))
     
+    # Create the field dom element and add events to it
+    onFieldCreated: (field) =>
+      target = if field.get("is_output") == false then ".inputs" else ".outputs"
+      $(target, @$el).append(field.render_button())
+      el = $("#fid-#{field.get('fid')}")
+      @add_field_listener(el)
+    
+    # Unbind events, destroy jquery-ui widgets, remove dom elements
+    # and delete variables
     remove: () =>
       @undelegateEvents()
+      
       $(".inner-field", $(@el)).each () ->
         if $(this).data("droppable")
           $(this).droppable("destroy")
       $(".inner-field", $(@el)).each () ->
         if $(this).data("draggable")
           $(this).draggable("destroy")
-      # remove elements which may have events attached
+      
+      # Remove elements which may have events attached
       $(".inner-field", $(@el)).remove()
       $(".field", $(@el)).remove()
       $("input", $(@el)).remove()
       delete @collection
+      delete @node_el
       super
-    
-    renderSidebar: () =>
-      $target = $("#tab-attribute")
-      $target.html("");
-      for f of @collection.node_fields.inputs
-        @collection.node_fields.inputs[f].render_sidebar()
-      true
     
     add_field_listener: ($field) ->
       self = this
@@ -77,7 +83,7 @@ define [
           if ThreeNodes.svg_connecting_line
             pos = $("span", event.target).position()
             ThreeNodes.svg_connecting_line.attr
-              path: get_path(pos, ui.position, self.options.node.main_view.position())
+              path: get_path(pos, ui.position, self.node_el.position())
             return true
       
       accept_class = ".outputs .inner-field"
@@ -96,7 +102,7 @@ define [
       return this
     
     addCenterTextfield: (field) =>
-      $(".options .center", @options.node.main_view).append("<div><input type='text' id='f-txt-input-#{field.get('fid')}' /></div>")
+      $(".center", @$el).append("<div><input type='text' id='f-txt-input-#{field.get('fid')}' /></div>")
       f_in = $("#f-txt-input-#{field.get('fid')}")
       field.on_value_update_hooks.update_center_textfield = (v) ->
         if v != null

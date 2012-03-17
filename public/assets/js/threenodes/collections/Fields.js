@@ -3,7 +3,9 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, Backbone) {
-  "use strict";  return ThreeNodes.NodeFieldsCollection = (function(_super) {
+  "use strict";
+  /* Fields Collection
+  */  return ThreeNodes.NodeFieldsCollection = (function(_super) {
 
     __extends(NodeFieldsCollection, _super);
 
@@ -14,7 +16,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.addField = __bind(this.addField, this);
       this.removeAllConnections = __bind(this.removeAllConnections, this);
       this.renderConnections = __bind(this.renderConnections, this);
-      this.registerField = __bind(this.registerField, this);
       this.setFieldInputUnchanged = __bind(this.setFieldInputUnchanged, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
       this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
@@ -22,7 +23,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.setField = __bind(this.setField, this);
       this.getField = __bind(this.getField, this);
       this.toJSON = __bind(this.toJSON, this);
-      this.fromJSON = __bind(this.fromJSON, this);
       this.load = __bind(this.load, this);
       this.destroy = __bind(this.destroy, this);
       this.initialize = __bind(this.initialize, this);
@@ -41,16 +41,13 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.each(function(field) {
         return field.remove();
       });
-      this.node = false;
+      delete this.node;
       return delete this.node_fields;
     };
 
-    NodeFieldsCollection.prototype.load = function(json) {
-      if (json) return this.fromJSON(json);
-    };
-
-    NodeFieldsCollection.prototype.fromJSON = function(data) {
+    NodeFieldsCollection.prototype.load = function(data) {
       var f, node_field, _i, _len, _ref;
+      if (!data || !data["in"]) return false;
       _ref = data["in"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
@@ -61,8 +58,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.toJSON = function() {
-      var res;
-      res = {
+      var data;
+      data = {
         "in": jQuery.map(this.node_fields.inputs, function(f, i) {
           return f.toJSON();
         }),
@@ -70,16 +67,14 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
           return f.toJSON();
         })
       };
-      return res;
+      return data;
     };
 
     NodeFieldsCollection.prototype.getField = function(key, is_out) {
+      var target;
       if (is_out == null) is_out = false;
-      if (is_out === true) {
-        return this.node_fields.outputs[key];
-      } else {
-        return this.node_fields.inputs[key];
-      }
+      target = is_out === true ? "outputs" : "inputs";
+      return this.node_fields[target][key];
     };
 
     NodeFieldsCollection.prototype.setField = function(key, value) {
@@ -87,14 +82,16 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.getMaxInputSliceCount = function() {
-      var f, fname, res, val;
-      res = 1;
+      var f, fname, result, val;
+      result = 1;
       for (fname in this.node_fields.inputs) {
         f = this.node_fields.inputs[fname];
         val = f.attributes.value;
-        if (val && $.type(val) === "array") if (val.length > res) res = val.length;
+        if (val && $.type(val) === "array") {
+          if (val.length > result) result = val.length;
+        }
       }
-      return res - 1;
+      return result - 1;
     };
 
     NodeFieldsCollection.prototype.getUpstreamNodes = function() {
@@ -139,38 +136,21 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       return _results;
     };
 
-    NodeFieldsCollection.prototype.registerField = function(field) {
-      var fid;
-      field.node = this.node;
-      if (field.get("is_output") === false) {
-        this.node_fields.inputs[field.get("name")] = field;
-        $(".inputs", this.node.main_view).append(field.render_button());
-      } else {
-        this.node_fields.outputs[field.get("name")] = field;
-        $(".outputs", this.node.main_view).append(field.render_button());
-      }
-      fid = field.get("fid");
-      this.trigger("field:registered", this, $("#fid-" + fid));
-      return field;
-    };
-
     NodeFieldsCollection.prototype.renderConnections = function() {
-      this.invoke("render_connections");
-      return this;
+      return this.invoke("render_connections");
     };
 
     NodeFieldsCollection.prototype.removeAllConnections = function() {
-      this.invoke("remove_connections");
-      return this;
+      return this.invoke("remove_connections");
     };
 
     NodeFieldsCollection.prototype.addField = function(name, value, direction) {
-      var f, field_is_out;
+      var f, field, field_is_out, target;
       if (direction == null) direction = "inputs";
       f = false;
       field_is_out = direction !== "inputs";
       if ($.type(value) !== "object") value = this.getFieldValueObject(value);
-      f = new ThreeNodes.fields.types[value.type]({
+      field = new ThreeNodes.fields.types[value.type]({
         name: name,
         value: value.val,
         possibilities: value.values,
@@ -178,9 +158,10 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
         is_output: field_is_out,
         "default": value["default"]
       });
-      this.registerField(f);
-      this.add(f);
-      return f;
+      target = field.get("is_output") === false ? "inputs" : "outputs";
+      this.node_fields[target][field.get("name")] = field;
+      this.add(field);
+      return field;
     };
 
     NodeFieldsCollection.prototype.addFields = function(fields_array) {

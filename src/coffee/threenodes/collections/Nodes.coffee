@@ -58,8 +58,8 @@ define [
       ThreeNodes.events.on "TimelineCreated", @bindTimelineEvents
     
     clearWorkspace: () =>
-      @remove_all_connections()
-      @remove_all_nodes()
+      @removeAllConnections()
+      @removeAll()
       $("#webgl-window canvas").remove()
       
       return this
@@ -117,9 +117,9 @@ define [
       true
     
     createConnectionFromObject: (connection) =>
-      from_node = @get_node(connection.from_node.toString())
+      from_node = @getNodeByNid(connection.from_node.toString())
       from = from_node.rack.node_fields.outputs[connection.from.toString()]
-      to_node = @get_node(connection.to_node.toString())
+      to_node = @getNodeByNid(connection.to_node.toString())
       to = to_node.rack.node_fields.inputs[connection.to.toString()]
       # if a field is missing try to switch from/to
       if !from || !to
@@ -147,7 +147,7 @@ define [
     removeConnection: (c) ->
       @connections.remove(c)
     
-    get_node: (nid) =>
+    getNodeByNid: (nid) =>
       for node in @models
         if node.get("nid").toString() == nid
           return node
@@ -169,13 +169,13 @@ define [
           node.stopSound()
       @
     
-    remove_all_nodes: () ->
+    removeAll: () ->
       $("#tab-attribute").html("")
       models = @models.concat()
       _.invoke models, "remove"
       @reset([])
       true
     
-    remove_all_connections: () ->
+    removeAllConnections: () ->
       @connections.removeAll()
       

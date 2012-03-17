@@ -32,8 +32,7 @@ define [
 ], ($, _, Backbone) ->
   "use strict"
   
-  # use a global event dispatcher instead of the context/commandMap thing
-  # it may be removed if all commands are converted to backbone class (event)
+  # use a global event dispatcher (would be better without it)
   ThreeNodes.events = _.extend({}, Backbone.Events)
   
   class ThreeNodes.App
@@ -55,9 +54,11 @@ define [
       @initUI(testing_mode)
       @initTimeline()
       
-      # removing this would require to redirect path
+      # Start the url handling
+      
+      # Enabling the pushState method would require to redirect path
       # for the node.js server and github page (if possible)
-      # for simplicity disable pushState
+      # for simplicity we disable it
       Backbone.history.start
         pushState: false
       
@@ -89,5 +90,4 @@ define [
     
     reset_global_variables: () ->
       ThreeNodes.uid = 0
-      @nodegraph.node_connections = []
       ThreeNodes.selected_nodes = $([])

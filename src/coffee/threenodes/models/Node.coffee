@@ -85,13 +85,13 @@ define [
         @anim.destroy()
       @rack.destroy()
       delete @rack
-      delete @main_view
       delete @apptimeline
       delete @anim
       delete @options
       @destroy()
     
-    createConnection: (field1, field2) => @trigger("createConnection", field1, field2)
+    createConnection: (field1, field2) =>
+      @trigger("createConnection", field1, field2)
     
     loadAnimation: () =>
       for propLabel, anims of @options.anim
@@ -106,19 +106,7 @@ define [
       true
     
     showNodeAnimation: () =>
-      nodeAnimation = false
-      for propTrack in @anim.objectTrack.propertyTracks
-        $target = $('.inputs .field-' + propTrack.name , @main_view)
-        if propTrack.anims.length > 0
-          $target.addClass "has-animation"
-          nodeAnimation = true
-        else
-          $target.removeClass "has-animation"
-      if nodeAnimation == true
-        $(@main_view).addClass "node-has-animation"
-      else
-        $(@main_view).removeClass "node-has-animation"
-      true
+      @trigger("node:showAnimations")
     
     add_count_input : () =>
       @rack.addFields

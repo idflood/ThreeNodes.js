@@ -84,7 +84,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
 
     App.prototype.reset_global_variables = function() {
       ThreeNodes.uid = 0;
-      this.nodegraph.node_connections = [];
       return ThreeNodes.selected_nodes = $([]);
     };
 
