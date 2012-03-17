@@ -129,7 +129,6 @@ define [
     
     init_preview: () =>
       el = $("#nid-#{@get('nid')}")
-      console.log el
       $(".center", el).append("<div class='color_preview'></div>")
       col = @rack.getField("rgb", true).getValue(0)
       self = this

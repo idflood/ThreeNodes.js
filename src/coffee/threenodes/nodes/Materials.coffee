@@ -121,6 +121,7 @@ define [
       @rack.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
+          "ambient": {type: "Color", val: new THREE.Color(0x050505)}
           "map": {type: "Any", val: false}
           "reflectivity": 1
           "refractionRatio": 0.98

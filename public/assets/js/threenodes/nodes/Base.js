@@ -240,7 +240,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
     Color.prototype.init_preview = function() {
       var col, el, self;
       el = $("#nid-" + (this.get('nid')));
-      console.log(el);
       $(".center", el).append("<div class='color_preview'></div>");
       col = this.rack.getField("rgb", true).getValue(0);
       self = this;
