@@ -159,7 +159,6 @@ define [
         inputs:
           "file_url": ""
       @ob = [new THREE.Object3D()]
-      @last_slice_count = 1
       @file_url = @rack.getField('file_url').getValue(0)
       @vars_shadow_options = ["castShadow", "receiveShadow"]
       @shadow_cache = @create_cache_object(@vars_shadow_options)
@@ -179,55 +178,57 @@ define [
     
     compute: =>
       needs_rebuild = false
-      numItems = @rack.getMaxInputSliceCount()
+      #numItems = @rack.getMaxInputSliceCount()
+      numItems = 0
       new_url = @rack.getField('file_url').getValue()
-      if @last_slice_count != numItems
-        needs_rebuild = true
-        @last_slice_count = numItems
+      #if @last_slice_count != numItems
+      #  needs_rebuild = true
+      #  @last_slice_count = numItems
       
-      if @input_value_has_changed(@vars_shadow_options, @shadow_cache)
-        needs_rebuild = true
+      cast = @rack.getField('castShadow').getValue()
+      receive = @rack.getField('receiveShadow').getValue()
       
-      if @file_url != new_url || needs_rebuild
+      
+      if new_url != "" && @file_url != new_url
         @ob = []
         for i in [0..numItems]
           @ob[i] = new THREE.Object3D()
-      
-      if new_url && new_url != "" && new_url != @file_url
         loader = new THREE.ColladaLoader()
         loader.options.convertUpAxis = true
         loader.load new_url, (collada) =>
           dae = collada.scene
           dae.updateMatrix()
-          #debugger
           @model_object = dae
           @onModelLoaded()
+          applyShadowOptionsToSubMeshes(@model_object)
       
-      cast = @rack.getField('castShadow').getValue()
-      receive = @rack.getField('receiveShadow').getValue()
-      applyShadowOptionsToSubMeshes = (childs) =>
-        if !childs || childs.length < 1
+      applyShadowOptionsToSubMeshes = (obj) =>
+        if !obj
           return false
-        for child in childs
-          if child.material
-            rebuild_shader = false
-            if child.material.castShadow != cast || child.material.receiveShadow != receive
-              rebuild_shader = true
-              child.material.castShadow = cast
-              child.material.receiveShadow = receive
-            if rebuild_shader == true
-              console.log "rebuild collada shader"
-              child.material.program = false
-              
-          if child.children && child.children.length > 0
-            applyShadowOptionsToSubMeshes(child.children)
+        
+        obj.castShadow = cast
+        obj.receiveShadow = receive
+        
+        if obj.material
+          rebuild_shader = false
+          if obj.material.castShadow != cast || obj.material.receiveShadow != receive
+            rebuild_shader = true
+            obj.material.castShadow = cast
+            obj.material.receiveShadow = receive
+          if rebuild_shader == true
+            obj.material.program = false
+        if obj.children && obj.children.length > 0
+          for child in obj.children
+            applyShadowOptionsToSubMeshes(child)
       
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'file_url'], i)
-        if @ob[i].children.length > 0
-          # also apply some parameters to the imported object (shadow options for instance)
-          applyShadowOptionsToSubMeshes(@ob[i].children)
-          
+        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'file_url', 'castShadow', 'receiveShadow'], i)
+        @ob[i].castShadow = cast
+        @ob[i].receiveShadow = receive
+      
+      if @model_object && @input_value_has_changed(@vars_shadow_options, @shadow_cache)
+        needs_rebuild = true
+        applyShadowOptionsToSubMeshes(@model_object)
       
       if needs_rebuild == true
         ThreeNodes.events.trigger("RebuildAllShaders")
