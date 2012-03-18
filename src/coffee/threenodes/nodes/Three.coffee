@@ -188,7 +188,6 @@ define [
       cast = @rack.getField('castShadow').getValue()
       receive = @rack.getField('receiveShadow').getValue()
       
-      
       if new_url != "" && @file_url != new_url
         @ob = []
         for i in [0..numItems]

@@ -49,6 +49,13 @@ define [
           "intensity": 1
           "distance": 0
           "castShadow": false
+          "shadowCameraNear": 50
+          "shadowCameraFar": 5000
+          "shadowCameraFov": 50
+          "shadowBias": 0
+          "shadowDarkness": 0.5
+          "shadowMapWidth": 512
+          "shadowMapHeight": 512
         outputs:
           "out": {type: "Any", val: @ob}
     
