@@ -43,6 +43,9 @@ define [
         when "rebuild all shaders"
           ThreeNodes.events.trigger("RebuildAllShaders")
           true
+        when "group selected nodes"
+          ThreeNodes.events.trigger("GroupSelectedNodes")
+          true
         when "remove selected node(s)"
           ThreeNodes.events.trigger("RmoveSelectedNodes")
           true
