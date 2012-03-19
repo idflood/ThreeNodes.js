@@ -11,6 +11,9 @@ define [
     @node_name = 'Group'
     @group_name = false
     
+    initialize: () ->
+      # a group contains a sub-nodegraph (nodes)
+    
     set_fields: =>
       super
       

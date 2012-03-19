@@ -17,6 +17,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     Group.group_name = false;
 
+    Group.prototype.initialize = function() {};
+
     Group.prototype.set_fields = function() {
       return Group.__super__.set_fields.apply(this, arguments);
     };
