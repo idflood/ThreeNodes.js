@@ -1,5 +1,7 @@
 #sidebar
-  overflow: auto
+  overflow-y: auto
+  overflow-x: hidden
+  
   h3
     @extend .mono-font
     color: #eee
@@ -51,14 +53,23 @@
       background: #222
 
 #tab-attribute
+  h2
+    margin: 0
+    font-size: 14px
+    font-weight: bold
+    border-bottom: 1px solid #444
+    padding-bottom: 3px
+    color: #eee
   h3
     margin-left: 0
     margin-top: 5px
+  .field-wrapper
+    padding-bottom: 8px
 
 #node_filter
   padding: 5px 10px
   background: #2a2a2a
-  width: 90%
+  width: 93% !important
   border-radius: 5px
   margin-bottom: 5px
   outline: 0

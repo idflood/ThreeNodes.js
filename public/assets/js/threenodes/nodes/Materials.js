@@ -206,6 +206,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
             type: "Color",
             val: new THREE.Color(0xff0000)
           },
+          "ambient": {
+            type: "Color",
+            val: new THREE.Color(0x050505)
+          },
           "map": {
             type: "Any",
             val: false

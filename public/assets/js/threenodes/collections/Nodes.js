@@ -11,11 +11,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.stopSound = __bind(this.stopSound, this);
       this.startSound = __bind(this.startSound, this);
       this.showNodesAnimation = __bind(this.showNodesAnimation, this);
-      this.get_node = __bind(this.get_node, this);
+      this.getNodeByNid = __bind(this.getNodeByNid, this);
       this.renderAllConnections = __bind(this.renderAllConnections, this);
       this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
       this.render = __bind(this.render, this);
       this.create_node = __bind(this.create_node, this);
+      this.bindTimelineEvents = __bind(this.bindTimelineEvents, this);
       this.clearWorkspace = __bind(this.clearWorkspace, this);
       this.initialize = __bind(this.initialize, this);
       NodeGraph.__super__.constructor.apply(this, arguments);
@@ -24,7 +25,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     NodeGraph.prototype.initialize = function(models, options) {
       var self,
         _this = this;
-      this.types = false;
       this.connections = new ThreeNodes.ConnectionsCollection();
       self = this;
       if (options.is_test === false) {
@@ -52,7 +52,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           model: node,
           el: $tmpl
         });
-        node.view = view;
         return ThreeNodes.events.trigger("nodeslist:rebuild", self);
       });
       this.bind("createConnection", function(field1, field2) {
@@ -63,31 +62,42 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       });
       ThreeNodes.events.on("RmoveSelectedNodes", this.removeSelectedNodes);
       ThreeNodes.events.on("CreateNode", this.create_node);
-      return ThreeNodes.events.on("ClearWorkspace", this.clearWorkspace);
+      ThreeNodes.events.on("ClearWorkspace", this.clearWorkspace);
+      return ThreeNodes.events.on("TimelineCreated", this.bindTimelineEvents);
     };
 
     NodeGraph.prototype.clearWorkspace = function() {
-      this.remove_all_connections();
-      this.remove_all_nodes();
+      this.removeAllConnections();
+      this.removeAll();
       $("#webgl-window canvas").remove();
       return this;
     };
 
-    NodeGraph.prototype.create_node = function(nodename, x, y, inXML, inJSON) {
-      var n;
-      if (inXML == null) inXML = false;
-      if (inJSON == null) inJSON = false;
-      if (!ThreeNodes.nodes[nodename]) {
-        console.error("Node type doesn't exists: " + nodename);
+    NodeGraph.prototype.bindTimelineEvents = function(timeline) {
+      if (this.timeline) {
+        this.timeline.off("trackRebuild", this.showNodesAnimation);
+        this.timeline.off("startSound", this.startSound);
+        this.timeline.off("stopSound", this.stopSound);
       }
-      n = new ThreeNodes.nodes[nodename]({
-        x: x,
-        y: y,
-        timeline: this.timeline,
-        inXML: inXML,
-        inJSON: inJSON
-      });
-      n.load(inXML, inJSON);
+      this.timeline = timeline;
+      this.timeline.on("trackRebuild", this.showNodesAnimation);
+      this.timeline.on("startSound", this.startSound);
+      return this.timeline.on("stopSound", this.stopSound);
+    };
+
+    NodeGraph.prototype.create_node = function(options) {
+      var n, opt;
+      opt = options;
+      if ($.type(opt) === "string") {
+        opt = {
+          type: opt
+        };
+      }
+      opt.timeline = this.timeline;
+      if (!ThreeNodes.nodes[opt.type]) {
+        console.error("Node type doesn't exists: " + opt.type);
+      }
+      n = new ThreeNodes.nodes[opt.type](opt);
       this.add(n);
       return n;
     };
@@ -114,7 +124,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           }
         }
         if (node.dirty || node.auto_evaluate) {
-          node.update();
+          node.compute();
           node.dirty = false;
           node.rack.setFieldInputUnchanged();
         }
@@ -129,16 +139,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     NodeGraph.prototype.createConnectionFromObject = function(connection) {
       var c, from, from_node, tmp, to, to_node;
-      from_node = this.get_node(connection.from_node.toString());
-      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()];
-      to_node = this.get_node(connection.to_node.toString());
-      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()];
+      from_node = this.getNodeByNid(connection.from_node.toString());
+      from = from_node.rack.node_fields.outputs[connection.from.toString()];
+      to_node = this.getNodeByNid(connection.to_node.toString());
+      to = to_node.rack.node_fields.inputs[connection.to.toString()];
       if (!from || !to) {
         tmp = from_node;
         from_node = to_node;
         to_node = tmp;
-        from = from_node.rack.node_fields_by_name.outputs[connection.to.toString()];
-        to = to_node.rack.node_fields_by_name.inputs[connection.from.toString()];
+        from = from_node.rack.node_fields.outputs[connection.to.toString()];
+        to = to_node.rack.node_fields.inputs[connection.from.toString()];
       }
       c = this.connections.create({
         from_field: from,
@@ -163,7 +173,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this.connections.remove(c);
     };
 
-    NodeGraph.prototype.get_node = function(nid) {
+    NodeGraph.prototype.getNodeByNid = function(nid) {
       var node, _i, _len, _ref;
       _ref = this.models;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -192,7 +202,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return this;
     };
 
-    NodeGraph.prototype.remove_all_nodes = function() {
+    NodeGraph.prototype.removeAll = function() {
       var models;
       $("#tab-attribute").html("");
       models = this.models.concat();
@@ -201,7 +211,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return true;
     };
 
-    NodeGraph.prototype.remove_all_connections = function() {
+    NodeGraph.prototype.removeAllConnections = function() {
       return this.connections.removeAll();
     };
 

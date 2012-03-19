@@ -4,6 +4,7 @@ define [
   'order!threenodes/models/Field',
 ], (_, Backbone) ->
   "use strict"
+  ### Fields Collection ###
   
   class ThreeNodes.NodeFieldsCollection extends Backbone.Collection
     initialize: (models, options) =>
@@ -11,141 +12,82 @@ define [
       @node_fields = {}
       @node_fields.inputs = {}
       @node_fields.outputs = {}
-      @node_fields_by_name = {}
-      @node_fields_by_name.inputs = {}
-      @node_fields_by_name.outputs = {}
     
+    # Remove connections, fields and delete variables
     destroy: () =>
       @removeAllConnections()
       @each (field) ->
         field.remove()
-      @node = false
-      @node_fields = {}
-      @node_fields.inputs = {}
-      @node_fields.outputs = {}
-      @node_fields_by_name = {}
-      @node_fields_by_name.inputs = {}
-      @node_fields_by_name.outputs = {}
+      delete @node
+      delete @node_fields
+    
+    # Load saved fields values
+    load: (data) =>
+      if !data || !data.in
+        return false
       
-    load: (xml, json) =>
-      if xml
-        @fromXML(xml)
-      else if json
-        @fromJSON(json)
+      for f in data.in
+        node_field = @node_fields.inputs[f.name]
+        if node_field then node_field.load(f.val)
+      true
+
+    toJSON: =>
+      data = 
+        in: jQuery.map(@node_fields.inputs, (f, i) -> f.toJSON())
+        out: jQuery.map(@node_fields.outputs, (f, i) -> f.toJSON()) 
+      return data
     
     getField: (key, is_out = false) =>
-      if is_out == true
-        @node_fields_by_name.outputs[key]
-      else
-        @node_fields_by_name.inputs[key]
+      target = if is_out == true then "outputs" else "inputs"
+      return @node_fields[target][key]
     
     setField: (key, value) =>
-      @node_fields_by_name.outputs[key].setValue value
+      @node_fields.outputs[key].setValue(value)
     
     getMaxInputSliceCount: () =>
-      res = 1
-      for fid of @node_fields.inputs
-        f = @node_fields.inputs[fid]
-        val = f.attributes.value;
+      result = 1
+      for fname of @node_fields.inputs
+        f = @node_fields.inputs[fname]
+        val = f.attributes.value
         if val && $.type(val) == "array"
-          if val.length > res
-            res = val.length
+          if val.length > result
+            result = val.length
       # start with 0
-      res - 1
+      return result - 1
     
     getUpstreamNodes: () =>
       res = []
-      for fid of @node_fields.inputs
-        f = @node_fields.inputs[fid]
+      for fname of @node_fields.inputs
+        f = @node_fields.inputs[fname]
         for c in f.connections
           res[res.length] = c.from_field.node
       res
     
     getDownstreamNodes: () =>
       res = []
-      for fid in @node_fields.outputs
-        f = @node_fields.inputs[fid]
+      for fname in @node_fields.outputs
+        f = @node_fields.inputs[fname]
         for c in f.connections
           res[res.length] = c.to_field.node
       res
       
     setFieldInputUnchanged: () =>
-      for fid in @node_fields.inputs
-        f = @node_fields.inputs[fid]
+      for fname in @node_fields.inputs
+        f = @node_fields.inputs[fname]
         f.changed = false
-    
-    registerField: (field) =>
-      field.node = @node
-      if field.get("is_output") == false
-        @node_fields.inputs["fid-" + field.get("fid")] = field
-        @node_fields_by_name.inputs[field.get("name")] = field
-        $(".inputs", @node.main_view).append(field.render_button())
-      else
-        @node_fields.outputs["fid-" + field.get("fid")] = field
-        @node_fields_by_name.outputs[field.get("name")] = field
-        $(".outputs", @node.main_view).append(field.render_button())
-      
-      fid = field.get("fid")
-      @trigger("field:registered", this, $("#fid-#{fid}"))
-      
-      field
-    
-    fromJSON: (data) =>
-      for f in data.fields.in
-        node_field = @node_fields_by_name.inputs[f.name]
-        if node_field && f.val
-          node_field.setValue(f.val)
-      true
-    
-    fromXML: (data) =>
-      self = this
-      
-      $("in field", data).each () ->
-        f = self.node_fields.inputs["fid-" + $(this).attr("fid")]
-        field_val = $(this).attr("val")
-        if f && field_val != "[object Object]"
-          f.setValue(field_val)
-      true
-
-    toJSON: =>
-      res = 
-        in: jQuery.map(@node_fields.inputs, (f, i) -> f.toJSON())
-        out: jQuery.map(@node_fields.outputs, (f, i) -> f.toJSON()) 
-      res
-    
-    toCode: =>
-      res = "{'in': [\n"
-      for field of @node_fields.inputs
-        res += @node_fields.inputs[field].toCode()
-      res += "\t]}"
-      res
-    
-    toXML: =>
-      res = "\t\t<in>\n"
-      for f of @node_fields.inputs
-        res += @node_fields.inputs[f].toXML()
-      res += "\t\t</in>\n"
-      
-      res += "\t\t<out>\n"
-      for f of @node_fields.outputs
-        res += @node_fields.outputs[f].toXML()
-      res += "\t\t</out>\n"
-      res
     
     renderConnections: =>
       @invoke "render_connections"
-      @
     
     removeAllConnections: =>
       @invoke "remove_connections"
-      @
     
     addField: (name, value, direction = "inputs") =>
       f = false
       field_is_out = (direction != "inputs")
       if $.type(value) != "object"
         value = @getFieldValueObject(value)
-      f = new ThreeNodes.fields.types[value.type]
+      field = new ThreeNodes.fields.types[value.type]
         name: name
         value: value.val
         possibilities: value.values
@@ -153,9 +95,11 @@ define [
         is_output: field_is_out
         default: value.default
       
-      @registerField(f)
-      @add(f)
-      f
+      target = if field.get("is_output") == false then "inputs" else "outputs"
+      @node_fields[target][field.get("name")] = field
+      
+      @add(field)
+      field
       
     addFields: (fields_array) =>
       for dir of fields_array

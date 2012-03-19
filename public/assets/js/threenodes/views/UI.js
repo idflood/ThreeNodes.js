@@ -2,8 +2,10 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "text!templates/app_ui.tmpl.html", 'order!threenodes/views/Sidebar', 'order!threenodes/views/MenuBar', 'order!threenodes/views/TreeView', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview", "order!libs/jquery.layout-latest"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) {
-  "use strict";  return ThreeNodes.UI = (function(_super) {
+define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.tmpl.html", "text!templates/node_context_menu.tmpl.html", "text!templates/app_ui.tmpl.html", 'order!threenodes/views/Sidebar', 'order!threenodes/views/MenuBar', "order!libs/three-extras/js/RequestAnimationFrame", "order!libs/raphael-min", "order!libs/jquery.contextMenu", "order!libs/jquery-ui/js/jquery-ui-1.9m6.min", "order!libs/jquery.transform2d", "order!libs/jquery-scrollview/jquery.scrollview", "order!libs/jquery.layout-latest"], function($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) {
+  "use strict";
+  /* UI View
+  */  return ThreeNodes.UI = (function(_super) {
 
     __extends(UI, _super);
 
@@ -12,7 +14,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.on_ui_window_resize = __bind(this.on_ui_window_resize, this);
       this.render = __bind(this.render, this);
       this.show_application = __bind(this.show_application, this);
-      this.add_window_resize_handler = __bind(this.add_window_resize_handler, this);
       this.init_context_menus = __bind(this.init_context_menus, this);
       this.init_resize_slider = __bind(this.init_resize_slider, this);
       this.init_bottom_toolbox = __bind(this.init_bottom_toolbox, this);
@@ -22,15 +23,20 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.stropgrab = __bind(this.stropgrab, this);
       this.setupMouseScroll = __bind(this.setupMouseScroll, this);
       this.setDisplayMode = __bind(this.setDisplayMode, this);
-      this.startUI = __bind(this.startUI, this);
-      var $menu_tmpl, menu_tmpl, self, ui_tmpl,
-        _this = this;
+      this.initLayout = __bind(this.initLayout, this);
+      this.initMenubar = __bind(this.initMenubar, this);
       UI.__super__.constructor.apply(this, arguments);
+    }
+
+    UI.prototype.initialize = function(options) {
+      var ui_tmpl;
+      UI.__super__.initialize.apply(this, arguments);
+      this.is_grabbing = false;
       ThreeNodes.events.on("OnUIResize", this.on_ui_window_resize);
       ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
-      ThreeNodes.events.trigger("InitUrlHandler");
+      $(window).resize(this.on_ui_window_resize);
       ui_tmpl = _.template(_view_app_ui, {});
-      $("#footer").before(ui_tmpl);
+      this.$el.append(ui_tmpl);
       this.svg = Raphael("graph", 4000, 4000);
       ThreeNodes.svg = this.svg;
       ThreeNodes.svg_connecting_line = this.svg.path("M0 -20 L0 -20").attr({
@@ -39,6 +45,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         fill: "none",
         opacity: 0
       });
+      this.sidebar = new ThreeNodes.Sidebar({
+        el: $("#sidebar")
+      });
+      this.initMenubar();
+      this.initLayout();
+      this.show_application();
+      this.on_ui_window_resize();
+      return this.animate();
+    };
+
+    UI.prototype.initMenubar = function() {
+      var $menu_tmpl, menu_tmpl, self;
       menu_tmpl = _.template(ThreeNodes.MenuBar.template, {});
       $menu_tmpl = $(menu_tmpl).prependTo("body");
       this.menubar = new ThreeNodes.MenuBar({
@@ -49,16 +67,16 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         Backbone.events.prototype.trigger.call(this);
         return self.trigger(events);
       };
-      this.sidebar = new ThreeNodes.Sidebar({
-        el: $("#sidebar")
-      });
-      this.treeview = new ThreeNodes.TreeView({
-        el: $("#tab-list")
-      });
-      this.add_window_resize_handler();
-      this.startUI();
-      this.is_grabbing = false;
+      return this;
+    };
+
+    UI.prototype.initLayout = function() {
+      var _this = this;
+      this.makeSelectable();
       this.setupMouseScroll();
+      this.init_context_menus();
+      this.init_bottom_toolbox();
+      this.init_display_mode_switch();
       $('body').layout({
         scrollToBookmarkOnLoad: false,
         center: {
@@ -95,16 +113,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         }
       });
       this.trigger("timelineResize", 48);
-      this.on_ui_window_resize();
-    }
-
-    UI.prototype.startUI = function() {
-      this.init_context_menus();
-      this.init_bottom_toolbox();
-      this.init_display_mode_switch();
-      this.animate();
-      this.show_application();
-      return this.makeSelectable();
+      return this;
     };
 
     UI.prototype.makeSelectable = function() {
@@ -112,16 +121,19 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       $("#container").selectable({
         filter: ".node",
         stop: function(event, ui) {
-          var $selected, nodes;
+          var $selected, anims, nodes;
           $selected = $(".node.ui-selected");
           nodes = [];
+          anims = [];
           $selected.each(function() {
             var ob;
             ob = $(this).data("object");
-            ob.anim.objectTrack.name = $(".head span", ob.main_view).html();
-            return nodes.push(ob.anim);
+            ob.anim.objectTrack.name = ob.get("name");
+            anims.push(ob.anim);
+            return nodes.push(ob);
           });
-          return _this.trigger("selectAnims", nodes);
+          _this.sidebar.renderNodesAttributes(nodes);
+          return _this.trigger("selectAnims", anims);
         }
       });
       return this;
@@ -242,11 +254,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       $("body").append(menu_field_menu);
       node_menu = _.template(_view_node_context_menu, {});
       return $("body").append(node_menu);
-    };
-
-    UI.prototype.add_window_resize_handler = function() {
-      $(window).resize(this.on_ui_window_resize);
-      return this.on_ui_window_resize();
     };
 
     UI.prototype.show_application = function() {

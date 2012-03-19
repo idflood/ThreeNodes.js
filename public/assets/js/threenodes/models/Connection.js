@@ -26,7 +26,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
 
     Connection.prototype.initialize = function(options) {
       this.options = options;
-      this.node = this.options.node;
       if (this.get("cid") === -1) {
         this.set({
           "cid": ThreeNodes.Utils.get_uid()
@@ -49,7 +48,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
       this.to_field.changed = true;
       delete this.from_field;
       delete this.to_field;
-      delete this.node;
       this.trigger("connection:removed", this);
       this.destroy();
       return false;
@@ -98,21 +96,6 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
         to_node: this.to_field.node.get("nid"),
         to: this.to_field.get("name")
       };
-      return res;
-    };
-
-    Connection.prototype.toXML = function() {
-      return "\t\t<connection id='" + this.cid + "' from='" + this.from_field.fid + "' to='" + this.to_field.fid + "'/>\n";
-    };
-
-    Connection.prototype.toCode = function() {
-      var res;
-      res = "var connection_" + (this.get('cid')) + "_data = {\n";
-      res += "\t" + ("id: " + (this.get('cid')) + ",\n");
-      res += "\t" + ("from_node: " + (this.from_field.node.get('nid')) + ", from: '" + (this.from_field.get('name')) + "',\n");
-      res += "\t" + ("to_node: " + (this.to_field.node.get('nid')) + ", to: '" + (this.to_field.get('name')) + "'\n");
-      res += "};\n";
-      res += "var connection_" + this.cid + " = nodegraph.createConnectionFromObject(connection_" + (this.get('cid')) + "_data);\n";
       return res;
     };
 

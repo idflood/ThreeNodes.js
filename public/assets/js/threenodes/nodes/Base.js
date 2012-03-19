@@ -238,11 +238,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
     Color.group_name = 'Base';
 
     Color.prototype.init_preview = function() {
-      var col, self;
-      $(".center", this.main_view).append("<div class='color_preview'></div>");
+      var col, el, self;
+      el = $("#nid-" + (this.get('nid')));
+      $(".center", el).append("<div class='color_preview'></div>");
       col = this.rack.getField("rgb", true).getValue(0);
       self = this;
-      $(".color_preview", this.main_view).ColorPicker({
+      $(".color_preview", el).ColorPicker({
         color: {
           r: col.r * 255,
           g: col.g * 255,
@@ -255,14 +256,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
         }
       });
       return self.rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = function(v) {
-        return $(".color_preview", self.main_view).css({
+        return $(".color_preview", el).css({
           background: v[0].getContextStyle()
         });
       };
     };
 
     Color.prototype.remove = function() {
-      $(".color_preview", this.main_view).each(function() {
+      var el;
+      el = $("#nid-" + (this.get('nid')));
+      $(".color_preview", el).each(function() {
         var cal, picker;
         if ($(this).data('colorpickerId')) {
           cal = $('#' + $(this).data('colorpickerId'));
@@ -271,8 +274,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
           return cal.remove();
         }
       });
-      $(".color_preview", this.main_view).unbind();
-      $(".color_preview", this.main_view).remove();
+      $(".color_preview", el).unbind();
+      $(".color_preview", el).remove();
       return Color.__super__.remove.apply(this, arguments);
     };
 

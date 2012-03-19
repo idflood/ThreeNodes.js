@@ -1,6 +1,6 @@
 {
   "name": "ThreeNodes.js",
-  "version": "0.0.2",
+  "version": "0.1.1",
   "author": "David Mignot (http://idflood.com)",
   "repository": "git://github.com/idflood/ThreeNodes.js",
   "dependencies": {

@@ -22,7 +22,6 @@ define [
   class ThreeNodes.NodeGraph extends Backbone.Collection
     
     initialize: (models, options) =>
-      @types = false
       @connections = new ThreeNodes.ConnectionsCollection()
       self = this
       
@@ -46,10 +45,6 @@ define [
         view = new ThreeNodes.NodeView
           model: node
           el: $tmpl
-        # keep a ref to the view in the model
-        # used mainly in NodeView.make_draggable
-        # it would be better without this
-        node.view = view
         
         ThreeNodes.events.trigger "nodeslist:rebuild", self
             
@@ -61,25 +56,37 @@ define [
       ThreeNodes.events.on "RmoveSelectedNodes", @removeSelectedNodes
       ThreeNodes.events.on "CreateNode", @create_node
       ThreeNodes.events.on "ClearWorkspace", @clearWorkspace
+      ThreeNodes.events.on "TimelineCreated", @bindTimelineEvents
     
     clearWorkspace: () =>
-      @remove_all_connections()
-      @remove_all_nodes()
+      @removeAllConnections()
+      @removeAll()
       $("#webgl-window canvas").remove()
       
       return this
     
-    create_node: (nodename, x, y, inXML = false, inJSON = false) =>
-      if !ThreeNodes.nodes[nodename]
-        console.error("Node type doesn't exists: " + nodename)
-      n = new ThreeNodes.nodes[nodename]
-        x: x
-        y: y
-        timeline: @timeline
-        inXML: inXML
-        inJSON: inJSON
+    bindTimelineEvents: (timeline) =>
+      if @timeline
+        @timeline.off("trackRebuild", @showNodesAnimation)
+        @timeline.off("startSound", @startSound)
+        @timeline.off("stopSound", @stopSound)
       
-      n.load(inXML, inJSON)
+      @timeline = timeline
+      @timeline.on("trackRebuild", @showNodesAnimation)
+      @timeline.on("startSound", @startSound)
+      @timeline.on("stopSound", @stopSound)
+    
+    create_node: (options) =>
+      opt = options
+      if $.type(opt) == "string"
+        opt = {type: opt}
+      
+      opt.timeline = @timeline
+      
+      if !ThreeNodes.nodes[opt.type]
+        console.error("Node type doesn't exists: " + opt.type)
+      
+      n = new ThreeNodes.nodes[opt.type](opt)
       @add(n)
       n
     
@@ -98,7 +105,7 @@ define [
           if invalidNodes[upnode.attributes["nid"]] && !upnode.delays_output
             evaluateSubGraph(upnode)
         if node.dirty || node.auto_evaluate
-          node.update()
+          node.compute()
           node.dirty = false
           node.rack.setFieldInputUnchanged()
         
@@ -111,17 +118,17 @@ define [
       true
     
     createConnectionFromObject: (connection) =>
-      from_node = @get_node(connection.from_node.toString())
-      from = from_node.rack.node_fields_by_name.outputs[connection.from.toString()]
-      to_node = @get_node(connection.to_node.toString())
-      to = to_node.rack.node_fields_by_name.inputs[connection.to.toString()]
+      from_node = @getNodeByNid(connection.from_node.toString())
+      from = from_node.rack.node_fields.outputs[connection.from.toString()]
+      to_node = @getNodeByNid(connection.to_node.toString())
+      to = to_node.rack.node_fields.inputs[connection.to.toString()]
       # if a field is missing try to switch from/to
       if !from || !to
         tmp = from_node
         from_node = to_node
         to_node = tmp
-        from = from_node.rack.node_fields_by_name.outputs[connection.to.toString()]
-        to = to_node.rack.node_fields_by_name.inputs[connection.from.toString()]
+        from = from_node.rack.node_fields.outputs[connection.to.toString()]
+        to = to_node.rack.node_fields.inputs[connection.from.toString()]
       
       c = @connections.create
           from_field: from
@@ -141,7 +148,7 @@ define [
     removeConnection: (c) ->
       @connections.remove(c)
     
-    get_node: (nid) =>
+    getNodeByNid: (nid) =>
       for node in @models
         if node.get("nid").toString() == nid
           return node
@@ -163,13 +170,13 @@ define [
           node.stopSound()
       @
     
-    remove_all_nodes: () ->
+    removeAll: () ->
       $("#tab-attribute").html("")
       models = @models.concat()
       _.invoke models, "remove"
       @reset([])
       true
     
-    remove_all_connections: () ->
+    removeAllConnections: () ->
       @connections.removeAll()
       

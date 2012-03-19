@@ -376,14 +376,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     MathMin.prototype.set_fields = function() {
       MathMin.__super__.set_fields.apply(this, arguments);
-      this.v_factor = this.rack.addField("in2", {
+      return this.v_factor = this.rack.addField("in2", {
         type: "Float",
         val: 0
       });
-      return this.anim_obj = {
-        "in": 0,
-        in2: 0
-      };
     };
 
     MathMin.prototype.process_val = function(num, numb, i) {
@@ -409,14 +405,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     MathMax.prototype.set_fields = function() {
       MathMax.__super__.set_fields.apply(this, arguments);
-      this.v_factor = this.rack.addField("in2", {
+      return this.v_factor = this.rack.addField("in2", {
         type: "Float",
         val: 0
       });
-      return this.anim_obj = {
-        "in": 0,
-        in2: 0
-      };
     };
 
     MathMax.prototype.process_val = function(num, numb, i) {

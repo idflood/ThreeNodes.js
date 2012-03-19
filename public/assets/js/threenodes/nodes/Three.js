@@ -220,36 +220,156 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     Object3DwithMeshAndMaterial.prototype.get_geometry_cache = function() {
-      var f, res, _i, _len, _ref;
+      var current_val, f, res, _i, _len;
       res = "";
-      if (jQuery.type(this.rack.getField('geometry').get("value")) === "array") {
-        _ref = this.rack.getField('geometry').get("value");
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          f = _ref[_i];
+      current_val = this.rack.getField('geometry').get("value");
+      if ($.type(current_val) === "array") {
+        for (_i = 0, _len = current_val.length; _i < _len; _i++) {
+          f = current_val[_i];
           res += f.id;
         }
       } else {
-        res = this.rack.getField('geometry').get("value").id;
+        res = current_val.id;
       }
       return res;
     };
 
     Object3DwithMeshAndMaterial.prototype.get_material_cache = function() {
-      var f, res, _i, _len, _ref;
+      var current_val, f, res, _i, _len;
       res = "";
-      if (jQuery.type(this.rack.getField('material').get("value")) === "array") {
-        _ref = this.rack.getField('material').get("value");
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          f = _ref[_i];
+      current_val = this.rack.getField('material').get("value");
+      if ($.type(current_val) === "array") {
+        for (_i = 0, _len = current_val.length; _i < _len; _i++) {
+          f = current_val[_i];
           res += f.id;
         }
       } else {
-        res = this.rack.getField('material').get("value").id;
+        res = current_val.id;
       }
       return res;
     };
 
     return Object3DwithMeshAndMaterial;
+
+  })(ThreeNodes.nodes.Object3D);
+  ThreeNodes.nodes.ColladaLoader = (function(_super) {
+
+    __extends(ColladaLoader, _super);
+
+    function ColladaLoader() {
+      this.compute = __bind(this.compute, this);
+      this.onModelLoaded = __bind(this.onModelLoaded, this);
+      this.remove = __bind(this.remove, this);
+      this.set_fields = __bind(this.set_fields, this);
+      ColladaLoader.__super__.constructor.apply(this, arguments);
+    }
+
+    ColladaLoader.node_name = 'ColladaLoader';
+
+    ColladaLoader.group_name = 'Three';
+
+    ColladaLoader.prototype.set_fields = function() {
+      ColladaLoader.__super__.set_fields.apply(this, arguments);
+      this.rack.addFields({
+        inputs: {
+          "file_url": ""
+        }
+      });
+      this.ob = [new THREE.Object3D()];
+      this.file_url = this.rack.getField('file_url').getValue(0);
+      this.vars_shadow_options = ["castShadow", "receiveShadow"];
+      this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
+      return this.compute();
+    };
+
+    ColladaLoader.prototype.remove = function() {
+      var item, _i, _len, _ref;
+      if (this.ob) {
+        _ref = this.ob;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          this.deleteObjectAttributes(item);
+        }
+      }
+      delete this.model_object;
+      return ColladaLoader.__super__.remove.apply(this, arguments);
+    };
+
+    ColladaLoader.prototype.onModelLoaded = function() {
+      var subchild, _i, _len, _ref, _results;
+      _ref = this.ob;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        subchild = _ref[_i];
+        _results.push(subchild.add(this.model_object));
+      }
+      return _results;
+    };
+
+    ColladaLoader.prototype.compute = function() {
+      var applyShadowOptionsToSubMeshes, cast, i, loader, needs_rebuild, new_url, numItems, receive,
+        _this = this;
+      needs_rebuild = false;
+      numItems = 0;
+      new_url = this.rack.getField('file_url').getValue();
+      cast = this.rack.getField('castShadow').getValue();
+      receive = this.rack.getField('receiveShadow').getValue();
+      if (new_url !== "" && this.file_url !== new_url) {
+        this.ob = [];
+        for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+          this.ob[i] = new THREE.Object3D();
+        }
+        loader = new THREE.ColladaLoader();
+        loader.options.convertUpAxis = true;
+        loader.load(new_url, function(collada) {
+          var dae;
+          dae = collada.scene;
+          dae.updateMatrix();
+          _this.model_object = dae;
+          _this.onModelLoaded();
+          return applyShadowOptionsToSubMeshes(_this.model_object);
+        });
+      }
+      applyShadowOptionsToSubMeshes = function(obj) {
+        var child, rebuild_shader, _i, _len, _ref, _results;
+        if (!obj) return false;
+        obj.castShadow = cast;
+        obj.receiveShadow = receive;
+        if (obj.material) {
+          rebuild_shader = false;
+          if (obj.material.castShadow !== cast ||  obj.material.receiveShadow !== receive) {
+            rebuild_shader = true;
+            obj.material.castShadow = cast;
+            obj.material.receiveShadow = receive;
+          }
+          if (rebuild_shader === true) obj.material.program = false;
+        }
+        if (obj.children && obj.children.length > 0) {
+          _ref = obj.children;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            child = _ref[_i];
+            _results.push(applyShadowOptionsToSubMeshes(child));
+          }
+          return _results;
+        }
+      };
+      for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
+        this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'file_url', 'castShadow', 'receiveShadow'], i);
+        this.ob[i].castShadow = cast;
+        this.ob[i].receiveShadow = receive;
+      }
+      if (this.model_object && this.input_value_has_changed(this.vars_shadow_options, this.shadow_cache)) {
+        needs_rebuild = true;
+        applyShadowOptionsToSubMeshes(this.model_object);
+      }
+      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
+      this.file_url = new_url;
+      this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
+      return this.rack.setField("out", this.ob);
+    };
+
+    return ColladaLoader;
 
   })(ThreeNodes.nodes.Object3D);
   ThreeNodes.nodes.ThreeMesh = (function(_super) {

@@ -13,7 +13,6 @@ define [
     
     initialize: (options) =>
       @options = options
-      @node = @options.node
       if @get("cid") == -1
         @set({"cid": ThreeNodes.Utils.get_uid()})
       
@@ -35,7 +34,6 @@ define [
       @to_field.changed = true
       delete @from_field
       delete @to_field
-      delete @node
       
       @trigger "connection:removed", this
       @destroy()
@@ -83,14 +81,3 @@ define [
         to: @to_field.get("name")
       res
     
-    toXML: () ->
-      "\t\t<connection id='#{@cid}' from='#{@from_field.fid}' to='#{@to_field.fid}'/>\n"
-    
-    toCode: () ->
-      res = "var connection_#{@get('cid')}_data = {\n"
-      res += "\t" + "id: #{@get('cid')},\n"
-      res += "\t" + "from_node: #{@from_field.node.get('nid')}, from: '#{@from_field.get('name')}',\n"
-      res += "\t" + "to_node: #{@to_field.node.get('nid')}, to: '#{@to_field.get('name')}'\n"
-      res += "};\n"
-      res += "var connection_#{@cid} = nodegraph.createConnectionFromObject(connection_#{@get('cid')}_data);\n"
-      res

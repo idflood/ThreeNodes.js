@@ -11,6 +11,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       this.update = __bind(this.update, this);
       this.resize = __bind(this.resize, this);
       this.remove = __bind(this.remove, this);
+      this.onNodeRemove = __bind(this.onNodeRemove, this);
       this.selectAnims = __bind(this.selectAnims, this);
       this.initialize = __bind(this.initialize, this);
       AppTimeline.__super__.constructor.apply(this, arguments);
@@ -20,6 +21,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
       var _this = this;
       AppTimeline.__super__.initialize.apply(this, arguments);
       localStorage["timeline.js.settings.canvasHeight"] = this.$el.innerHeight();
+      this.$el.html("");
       this.timeline = new Timeline({
         element: this.el,
         displayOnlySelected: true,
@@ -64,21 +66,38 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         }
       });
       Timeline.globalInstance = this.timeline;
-      ThreeNodes.events.on("nodeslist:remove", function(node) {
-        return _this.selectAnims([]);
-      });
       this.timeline.loop(-1);
-      return this.time = 0;
+      this.time = 0;
+      if (options.ui) {
+        this.ui = options.ui;
+        this.ui.on("render", this.update);
+        this.ui.on("selectAnims", this.selectAnims);
+        this.ui.on("timelineResize", this.resize);
+      }
+      ThreeNodes.events.on("nodeslist:remove", this.onNodeRemove);
+      ThreeNodes.events.trigger("TimelineCreated", this);
+      return ThreeNodes.events.trigger("OnUIResize");
     };
 
     AppTimeline.prototype.selectAnims = function(nodes) {
       if (this.timeline) return this.timeline.selectAnims(nodes);
     };
 
+    AppTimeline.prototype.onNodeRemove = function(node) {
+      return this.selectAnims([]);
+    };
+
     AppTimeline.prototype.remove = function() {
+      ThreeNodes.events.off("nodeslist:remove", this.onNodeRemove);
       this.undelegateEvents();
+      if (this.ui) {
+        this.ui.off("render", this.update);
+        this.ui.off("selectAnims", this.selectAnims);
+        this.ui.off("timelineResize", this.resize);
+        delete this.ui;
+      }
       this.timeline.destroy();
-      this.timeline = null;
+      delete this.timeline;
       return this.time = null;
     };
 

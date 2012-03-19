@@ -7,7 +7,6 @@ define [
   "text!templates/app_ui.tmpl.html",
   'order!threenodes/views/Sidebar',
   'order!threenodes/views/MenuBar',
-  'order!threenodes/views/TreeView',
   "order!libs/three-extras/js/RequestAnimationFrame",
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
@@ -17,20 +16,24 @@ define [
   "order!libs/jquery.layout-latest",
 ], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   "use strict"
+  ### UI View ###
+  
   class ThreeNodes.UI extends Backbone.View
-    constructor: () ->
+    initialize: (options) ->
       super
+      
+      @is_grabbing = false
+      
+      # Bind events
       ThreeNodes.events.on "OnUIResize", @on_ui_window_resize
       ThreeNodes.events.on "SetDisplayModeCommand", @setDisplayMode
-      
-      # trigger the url after the setDisplaymode event has been binded
-      ThreeNodes.events.trigger "InitUrlHandler"
-      
-      # create the main ui
+      $(window).resize(@on_ui_window_resize)
+            
+      # Create the ui dom elements from template
       ui_tmpl = _.template(_view_app_ui, {})
-      $("#footer").before(ui_tmpl)
+      @$el.append(ui_tmpl)
       
-      # setup SVG for drawing connections
+      # Setup SVG for drawing connections
       @svg = Raphael("graph", 4000, 4000)
       ThreeNodes.svg = @svg
       ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
@@ -39,29 +42,41 @@ define [
         fill: "none"
         opacity: 0
       
-      # setup menubar
+      # Setup the sidebar and menu subviews
+      @sidebar = new ThreeNodes.Sidebar({el: $("#sidebar")})
+      @initMenubar()
+      
+      # Set the layout and show application
+      @initLayout()
+      @show_application()
+      
+      # Fire the first resize event
+      @on_ui_window_resize()
+      
+      # Start main render loop
+      @animate()
+    
+    # Setup menubar
+    initMenubar: () =>
       menu_tmpl = _.template(ThreeNodes.MenuBar.template, {})
       $menu_tmpl = $(menu_tmpl).prependTo("body")
       @menubar = new ThreeNodes.MenuBar
         el: $menu_tmpl
       
-      # redispatch menubar events
+      # Redispatch menubar events
       self = this
       @menubar.trigger = (events) ->
         Backbone.events.prototype.trigger.call(this)
         self.trigger(events)
-      
-      # setup sidebar
-      @sidebar = new ThreeNodes.Sidebar
-        el: $("#sidebar")
-      
-      @treeview = new ThreeNodes.TreeView
-        el: $("#tab-list")
-      
-      @add_window_resize_handler()
-      @startUI()
-      @is_grabbing = false
+      return this
+        
+    # Setup layout
+    initLayout: () =>
+      @makeSelectable()
       @setupMouseScroll()
+      @init_context_menus()
+      @init_bottom_toolbox()
+      @init_display_mode_switch()
       
       $('body').layout
         scrollToBookmarkOnLoad: false
@@ -90,16 +105,10 @@ define [
           onresize: (name, pane_el, state, opt, layout_name) =>
             @trigger("timelineResize", pane_el.innerHeight())
             @on_ui_window_resize()
-      @trigger("timelineResize", 48)
-      @on_ui_window_resize()
       
-    startUI: () =>
-      @init_context_menus()
-      @init_bottom_toolbox()
-      @init_display_mode_switch()
-      @animate()
-      @show_application()
-      @makeSelectable()
+      # Set timeline height
+      @trigger("timelineResize", 48)
+      return this
     
     makeSelectable: () ->
       $("#container").selectable
@@ -107,11 +116,14 @@ define [
         stop: (event, ui) =>
           $selected = $(".node.ui-selected")
           nodes = []
+          anims = []
           $selected.each () ->
             ob = $(this).data("object")
-            ob.anim.objectTrack.name = $(".head span", ob.main_view).html()
-            nodes.push(ob.anim)
-          @trigger("selectAnims", nodes)
+            ob.anim.objectTrack.name = ob.get("name")
+            anims.push(ob.anim)
+            nodes.push(ob)
+          @sidebar.renderNodesAttributes(nodes)
+          @trigger("selectAnims", anims)
       return @
     
     setDisplayMode: (is_player = false) =>
@@ -200,10 +212,6 @@ define [
       
       node_menu = _.template(_view_node_context_menu, {})
       $("body").append(node_menu)
-    
-    add_window_resize_handler: () =>
-      $(window).resize @on_ui_window_resize
-      @on_ui_window_resize()
     
     show_application: () =>
       delay_intro = 500

@@ -154,7 +154,7 @@ define [
     set_fields: =>
       super
       @v_factor = @rack.addField("in2", {type: "Float", val: 0})
-      @anim_obj = {in: 0, in2: 0}
+      
     process_val: (num, numb, i) =>
       Math.min(num, numb)
   
@@ -165,7 +165,7 @@ define [
     set_fields: =>
       super
       @v_factor = @rack.addField("in2", {type: "Float", val: 0})
-      @anim_obj = {in: 0, in2: 0}
+      
     process_val: (num, numb, i) =>
       Math.max(num, numb)
       

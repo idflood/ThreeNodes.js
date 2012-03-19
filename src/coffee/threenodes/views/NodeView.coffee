@@ -9,13 +9,12 @@ define [
   'order!threenodes/utils/Utils',
 ], ($, _, Backbone, _view_node_template) ->
   "use strict"
+  ### Node View ###
   
   class ThreeNodes.NodeView extends Backbone.View
     @template = _view_node_template
         
     initialize: () ->
-      @model.main_view = @$el
-      
       @make_draggable()
       @init_el_click()
       @init_title_click()
@@ -24,26 +23,28 @@ define [
         node: @model
         collection: @model.rack
         el: $(".options", @el)
+        node_el: @$el
       
-      @model.bind 'change', @render
-      @model.bind 'postInit', @postInit
-      @model.bind 'remove', () => @remove()
+      @model.bind('change', @render)
+      @model.bind('postInit', @postInit)
+      @model.bind('remove', () => @remove())
+      @model.bind("node:computePosition", @compute_node_position)
+      @model.bind("node:renderConnections", @render_connections)
+      @model.bind("node:showAnimations", @highlighAnimations)
       @render()
       @model.post_init()
       @
     
     postInit: () =>
-      @model.main_view = $(@el)
-      $(@el).data("object", @model)
+      @$el.data("object", @model)
       @init_context_menu()
     
     render: () =>
-      $el = $(@el)
-      $el.css
+      @$el.css
         left: parseInt @model.get("x")
         top: parseInt @model.get("y")
-      $(".head span", $el).html(@model.get("name"))
-      $(".head span", $el).show()
+      $(".head span", @$el).text(@model.get("name"))
+      $(".head span", @$el).show()
       @
     
     init_context_menu: () ->
@@ -53,10 +54,25 @@ define [
           field.remove_connections()
       return @
     
-    render_connections: () ->
+    highlighAnimations: () =>
+      nodeAnimation = false
+      for propTrack in @model.anim.objectTrack.propertyTracks
+        $target = $('.inputs .field-' + propTrack.name , @$el)
+        if propTrack.anims.length > 0
+          $target.addClass "has-animation"
+          nodeAnimation = true
+        else
+          $target.removeClass "has-animation"
+      if nodeAnimation == true
+        @$el.addClass "node-has-animation"
+      else
+        @$el.removeClass "node-has-animation"
+      true
+    
+    render_connections: () =>
       @model.rack.renderConnections()
     
-    compute_node_position: () ->
+    compute_node_position: () =>
       pos = $(@el).position()
       offset = $("#container-wrapper").offset()
       @model.setPosition(pos.left + $("#container-wrapper").scrollLeft(), pos.top + $("#container-wrapper").scrollTop())
@@ -135,14 +151,14 @@ define [
             el.css
               top: dx
               left: dy
-            el.data("object").view.compute_node_position()
-            el.data("object").view.render_connections()
+            el.data("object").trigger("node:computePosition")
+            el.data("object").trigger("node:renderConnections")
             
           self.render_connections()
         stop: () ->
           ThreeNodes.selected_nodes.not(this).each () ->
             el = $(this).data("object")
-            el.view.render_connections()
+            el.trigger("node:renderConnections")
           self.compute_node_position()
           self.render_connections()
       return @

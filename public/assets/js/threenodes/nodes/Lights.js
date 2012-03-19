@@ -92,7 +92,14 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           },
           "intensity": 1,
           "distance": 0,
-          "castShadow": false
+          "castShadow": false,
+          "shadowCameraNear": 50,
+          "shadowCameraFar": 5000,
+          "shadowCameraFov": 50,
+          "shadowBias": 0,
+          "shadowDarkness": 0.5,
+          "shadowMapWidth": 512,
+          "shadowMapHeight": 512
         },
         outputs: {
           "out": {

@@ -2,6 +2,7 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
+  'order!threenodes/utils/CodeExporter',
   "order!libs/BlobBuilder.min",
   "order!libs/FileSaver.min",
   "order!libs/json2",
@@ -21,45 +22,24 @@ define [
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json")
     
     export_code: () =>
-      res = "//\n"
-      res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
-      res += "//\n\n"
-      res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});"
-      res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone'], function(App) {"
-      res += "\n\n"
-      res += '"use strict";\n'
-      res += "var app = new App();\n"
-      res += "var nodegraph = app.nodegraph;\n\n"
-      res += "//\n"
-      res += "// nodes\n"
-      res += "//\n"
-      
-      for node in @nodes.models
-        res += node.toCode()
-      
-      res += "\n"
-      res += "//\n"
-      res += "// connections\n"
-      res += "//\n\n"
-      
-      for c in @nodes.connections.models
-        res += c.toCode()
-        
-      res += "\n\n"
-      res += "// set player mode\n"
-      res += "ThreeNodes.events.trigger('SetDisplayModeCommand', true);\n"
-      res += "});"
+      # get the json export and convert it to code
+      json = @get_local_json(false)
+      exporter = new ThreeNodes.CodeExporter()
+      res = exporter.toCode(json)
       
       bb = new BlobBuilder()
       bb.append(res)
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
       
-    get_local_json: () =>
+    get_local_json: (stringify = true) =>
       res = 
         uid: ThreeNodes.uid
         nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
         connections: jQuery.map(@nodes.connections.models, (c, i) -> c.toJSON())
-      JSON.stringify(res)
+      if stringify
+        return JSON.stringify(res)
+      else
+        return res
     
     get_local_xml: () =>
       res = ""
@@ -84,7 +64,7 @@ define [
     load_from_json_data: (txt) =>
       loaded_data = JSON.parse(txt)
       for node in loaded_data.nodes
-        n = @nodes.create_node(node.type, node.x, node.y, false, node)
+        n = @nodes.create_node(node)
       
       for connection in loaded_data.connections
         @nodes.createConnectionFromObject(connection)
@@ -102,7 +82,7 @@ define [
         y = parseInt $this.attr("y")
         nid = parseInt $this.attr("nid")
         type = $this.attr("type")
-        n = @nodes.create_node(type, x, y, $this)
+        n = @nodes.create_node($this)
       
       $("connection", loaded_data).each () ->
         $this = $(this)

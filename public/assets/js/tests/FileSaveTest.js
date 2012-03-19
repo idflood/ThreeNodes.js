@@ -11,8 +11,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
         ng = app.nodegraph;
         filehandler = app.file_handler;
         ThreeNodes.events.trigger("ClearWorkspace");
-        n1 = ng.create_node("Number", 363, 113);
-        n2 = ng.create_node("Number", 123, 456);
+        n1 = ng.create_node({
+          type: "Number",
+          x: 363,
+          y: 113
+        });
+        n2 = ng.create_node({
+          type: "Number",
+          x: 123,
+          y: 456
+        });
         c1 = ng.connections.create({
           from_field: n1.v_out,
           to_field: n2.v_in
