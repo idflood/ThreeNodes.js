@@ -10,7 +10,7 @@ define [
       module "Math nodes"
       
       test "Basic math", () ->
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")

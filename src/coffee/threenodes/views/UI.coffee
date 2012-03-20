@@ -25,8 +25,6 @@ define [
       @is_grabbing = false
       
       # Bind events
-      ThreeNodes.events.on "OnUIResize", @on_ui_window_resize
-      ThreeNodes.events.on "SetDisplayModeCommand", @setDisplayMode
       $(window).resize(@on_ui_window_resize)
             
       # Create the ui dom elements from template
@@ -56,6 +54,17 @@ define [
       # Start main render loop
       @animate()
     
+    onNodeListRebuild: (nodegraph) =>
+      if @timeoutId
+        clearTimeout(@timeoutId)
+      # add a little delay since the event is fired multiple time on file load
+      onTimeOut = () =>
+        @sidebar.render(nodegraph)
+      @timeoutId = setTimeout(onTimeOut, 10)
+    
+    clearWorkspace: () =>
+      @sidebar.clearWorkspace()
+    
     # Setup menubar
     initMenubar: () =>
       menu_tmpl = _.template(ThreeNodes.MenuBar.template, {})
@@ -63,11 +72,6 @@ define [
       @menubar = new ThreeNodes.MenuBar
         el: $menu_tmpl
       
-      # Redispatch menubar events
-      self = this
-      @menubar.trigger = (events) ->
-        Backbone.events.prototype.trigger.call(this)
-        self.trigger(events)
       return this
         
     # Setup layout

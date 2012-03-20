@@ -37,8 +37,6 @@ define [
       ThreeNodes.Webgl.composer = @composer
       ThreeNodes.Webgl.renderModel = @renderModel
       ThreeNodes.Webgl.effectScreen = @effectScreen
-      
-      ThreeNodes.events.on "ExportImage", @exportImage
     
     exportImage: (fname) =>
       canvas = @current_renderer.domElement

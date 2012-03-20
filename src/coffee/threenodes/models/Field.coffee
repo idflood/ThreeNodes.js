@@ -50,7 +50,8 @@ define [
     remove: () =>
       delete @on_value_update_hooks
       delete @node
-      delete @connections
+      delete @connectionsca
+      @destroy()
     
     setFID: (fid) =>
       @set("fid", fid)

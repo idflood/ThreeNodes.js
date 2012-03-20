@@ -18,10 +18,12 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
     }
 
     AppTimeline.prototype.initialize = function(options) {
-      var _this = this;
+      var self,
+        _this = this;
       AppTimeline.__super__.initialize.apply(this, arguments);
       localStorage["timeline.js.settings.canvasHeight"] = this.$el.innerHeight();
       this.$el.html("");
+      self = this;
       this.timeline = new Timeline({
         element: this.el,
         displayOnlySelected: true,
@@ -38,7 +40,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         colorTrackBottomLine: "#555",
         colorPropertyLabel: "#999",
         onGuiSave: function() {
-          return ThreeNodes.events.trigger("OnUIResize");
+          return self.trigger("OnUIResize");
         },
         setPropertyValue: function(propertyAnim, t) {
           return propertyAnim.target[propertyAnim.propertyName].setValue(t);
@@ -74,9 +76,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         this.ui.on("selectAnims", this.selectAnims);
         this.ui.on("timelineResize", this.resize);
       }
-      ThreeNodes.events.on("nodeslist:remove", this.onNodeRemove);
-      ThreeNodes.events.trigger("TimelineCreated", this);
-      return ThreeNodes.events.trigger("OnUIResize");
+      return this.trigger("OnUIResize");
     };
 
     AppTimeline.prototype.selectAnims = function(nodes) {
@@ -88,7 +88,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
     };
 
     AppTimeline.prototype.remove = function() {
-      ThreeNodes.events.off("nodeslist:remove", this.onNodeRemove);
       this.undelegateEvents();
       if (this.ui) {
         this.ui.off("render", this.update);

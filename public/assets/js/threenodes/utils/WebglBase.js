@@ -23,7 +23,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/Three", "order!libs/thre
       ThreeNodes.Webgl.composer = this.composer;
       ThreeNodes.Webgl.renderModel = this.renderModel;
       ThreeNodes.Webgl.effectScreen = this.effectScreen;
-      ThreeNodes.events.on("ExportImage", this.exportImage);
     }
 
     WebglBase.prototype.exportImage = function(fname) {

@@ -8,13 +8,10 @@ define [
   "order!libs/json2",
 ], ($, _, Backbone) ->
   "use strict"
-  class ThreeNodes.FileHandler extends Backbone.Events
+  class ThreeNodes.FileHandler
     constructor: (@nodes) ->
-      ThreeNodes.events.on "SaveFile", @save_local_file
-      ThreeNodes.events.on "ExportCode", @export_code
-      ThreeNodes.events.on "LoadFile", @load_local_file_input_changed
-      ThreeNodes.events.on "LoadJSON", @load_from_json_data
-    
+      _.extend(FileHandler::, Backbone.Events)
+      
     save_local_file: () =>
       bb = new BlobBuilder()
       result_string = @get_local_json()
@@ -98,8 +95,8 @@ define [
         
       ThreeNodes.uid = parseInt $("uid", loaded_data).attr("last")
     
-    load_local_file_input_changed: (e) =>
-      ThreeNodes.events.trigger("ClearWorkspace")
+    load_local_file: (e) =>
+      @trigger("ClearWorkspace")
       file = e.target.files[0]
       reader = new FileReader()
       self = this

@@ -8,7 +8,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       var filehandler, n1, n2, ng, node_mult, rnd;
       ng = app.nodegraph;
       filehandler = app.file_handler;
-      ThreeNodes.events.trigger("ClearWorkspace");
+      app.clearWorkspace();
       n1 = ng.create_node("Number");
       n2 = ng.create_node("Vector3");
       rnd = ng.create_node("Random");

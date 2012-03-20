@@ -1,25 +1,18 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = Object.prototype.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/utils/CodeExporter', "order!libs/BlobBuilder.min", "order!libs/FileSaver.min", "order!libs/json2"], function($, _, Backbone) {
-  "use strict";  return ThreeNodes.FileHandler = (function(_super) {
-
-    __extends(FileHandler, _super);
+  "use strict";  return ThreeNodes.FileHandler = (function() {
 
     function FileHandler(nodes) {
       this.nodes = nodes;
-      this.load_local_file_input_changed = __bind(this.load_local_file_input_changed, this);
+      this.load_local_file = __bind(this.load_local_file, this);
       this.load_from_xml_data = __bind(this.load_from_xml_data, this);
       this.load_from_json_data = __bind(this.load_from_json_data, this);
       this.get_local_xml = __bind(this.get_local_xml, this);
       this.get_local_json = __bind(this.get_local_json, this);
       this.export_code = __bind(this.export_code, this);
       this.save_local_file = __bind(this.save_local_file, this);
-      ThreeNodes.events.on("SaveFile", this.save_local_file);
-      ThreeNodes.events.on("ExportCode", this.export_code);
-      ThreeNodes.events.on("LoadFile", this.load_local_file_input_changed);
-      ThreeNodes.events.on("LoadJSON", this.load_from_json_data);
+      _.extend(FileHandler.prototype, Backbone.Events);
     }
 
     FileHandler.prototype.save_local_file = function() {
@@ -135,9 +128,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/utils/CodeExporter
       return ThreeNodes.uid = parseInt($("uid", loaded_data).attr("last"));
     };
 
-    FileHandler.prototype.load_local_file_input_changed = function(e) {
+    FileHandler.prototype.load_local_file = function(e) {
       var file, reader, self;
-      ThreeNodes.events.trigger("ClearWorkspace");
+      this.trigger("ClearWorkspace");
       file = e.target.files[0];
       reader = new FileReader();
       self = this;
@@ -151,5 +144,5 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/utils/CodeExporter
 
     return FileHandler;
 
-  })(Backbone.Events);
+  })();
 });

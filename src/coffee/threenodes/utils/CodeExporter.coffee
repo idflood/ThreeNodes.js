@@ -32,7 +32,7 @@ define [
         
       res += "\n\n"
       res += "// set player mode\n"
-      res += "ThreeNodes.events.trigger('SetDisplayModeCommand', true);\n"
+      res += "app.setDisplayMode('SetDisplayModeCommand', true);\n"
       res += "});"
       return res
     

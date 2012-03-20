@@ -111,7 +111,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         if (child instanceof THREE.Light === true) {
           if (ind === -1) {
             this.ob.add(child);
-            _results.push(ThreeNodes.events.trigger("RebuildAllShaders"));
+            _results.push(this.trigger("RebuildAllShaders"));
           } else {
             _results.push(void 0);
           }
@@ -363,7 +363,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         needs_rebuild = true;
         applyShadowOptionsToSubMeshes(this.model_object);
       }
-      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
+      if (needs_rebuild === true) this.trigger("RebuildAllShaders");
       this.file_url = new_url;
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       return this.rack.setField("out", this.ob);
@@ -447,7 +447,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
         this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
-      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
+      if (needs_rebuild === true) this.trigger("RebuildAllShaders");
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();
@@ -524,7 +524,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       for (i = 0; 0 <= numItems ? i <= numItems : i >= numItems; 0 <= numItems ? i++ : i--) {
         this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob[i], ['children', 'geometry', 'material'], i);
       }
-      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
+      if (needs_rebuild === true) this.trigger("RebuildAllShaders");
       this.shadow_cache = this.create_cache_object(this.vars_shadow_options);
       this.geometry_cache = this.get_geometry_cache();
       this.material_cache = this.get_material_cache();

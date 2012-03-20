@@ -16,6 +16,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/views/TreeView'], 
       this.filter_list_item = __bind(this.filter_list_item, this);
       this.renderNodesAttributes = __bind(this.renderNodesAttributes, this);
       this.initTabs = __bind(this.initTabs, this);
+      this.clearWorkspace = __bind(this.clearWorkspace, this);
       this.initTreeView = __bind(this.initTreeView, this);
       Sidebar.__super__.constructor.apply(this, arguments);
     }
@@ -33,6 +34,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/views/TreeView'], 
         el: $("#tab-list")
       });
       return this;
+    };
+
+    Sidebar.prototype.clearWorkspace = function() {
+      return this.treeview.render(false);
     };
 
     Sidebar.prototype.initTabs = function() {
@@ -130,6 +135,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/views/TreeView'], 
         scroll: false,
         containment: "document"
       });
+      self = this;
       $("#container").droppable({
         accept: "#tab-new a.button",
         activeClass: "ui-state-active",
@@ -140,7 +146,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/views/TreeView'], 
           offset = $("#container-wrapper").offset();
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10;
           dy = ui.position.top + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop() - offset.top;
-          ThreeNodes.events.trigger("CreateNode", {
+          self.trigger("CreateNode", {
             type: nodename,
             x: dx,
             y: dy

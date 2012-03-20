@@ -8,7 +8,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       module("Math nodes");
       test("Basic math", function() {
         var c1, n1, n2, n2_out, ng, node_mult;
-        ThreeNodes.events.trigger("ClearWorkspace");
+        app.clearWorkspace();
         ng = app.nodegraph;
         n1 = ng.create_node("Number");
         n2 = ng.create_node("Vector3");

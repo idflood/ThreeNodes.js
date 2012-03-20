@@ -117,7 +117,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
 
     SpotLight.prototype.compute = function() {
       if (this.rack.getField("castShadow").getValue() !== this.ob.castShadow) {
-        ThreeNodes.events.trigger("RebuildAllShaders");
+        this.trigger("RebuildAllShaders");
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob);
       return this.rack.setField("out", this.ob);

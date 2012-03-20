@@ -12,19 +12,20 @@ define [
       "play/example/:file": "onPlayExample"
     
     onDefault: () =>
-      ThreeNodes.events.trigger("SetDisplayModeCommand", false)
+      @trigger("SetDisplayModeCommand", false)
     
     onPlay: () =>
-      ThreeNodes.events.trigger("SetDisplayModeCommand", true)
+      @trigger("SetDisplayModeCommand", true)
     
     onExample: (file, player_mode = false) =>
-      ThreeNodes.events.trigger("SetDisplayModeCommand", player_mode)
-      ThreeNodes.events.trigger("ClearWorkspace")
+      self = this
+      @trigger("SetDisplayModeCommand", player_mode)
+      @trigger("ClearWorkspace")
       $.ajax
         url: "examples/#{file}"
         dataType: 'text'
         success: (data) ->
-          ThreeNodes.events.trigger("LoadJSON", data)
+          self.trigger("LoadJSON", data)
     
     onPlayExample: (file) =>
       @onExample(file, true)

@@ -26,7 +26,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
         return self.on_link_click(event, this, url);
       });
       return $("#main_file_input_open").change(function(e) {
-        return ThreeNodes.events.trigger("LoadFile", e);
+        return _this.trigger("LoadFile", e);
       });
     };
 
@@ -35,31 +35,31 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
       is_exception = (function() {
         switch ($(link).text().toLowerCase()) {
           case "new":
-            ThreeNodes.events.trigger("ClearWorkspace");
+            this.trigger("ClearWorkspace");
             Backbone.history.navigate("", false);
             return true;
           case "open":
             $("#main_file_input_open").click();
             return true;
           case "save":
-            ThreeNodes.events.trigger("SaveFile");
+            this.trigger("SaveFile");
             return true;
           case "export to code":
-            ThreeNodes.events.trigger("ExportCode");
+            this.trigger("ExportCode");
             return true;
           case "export image":
-            ThreeNodes.events.trigger("ExportImage", "exported-image.png");
+            this.trigger("ExportImage", "exported-image.png");
             return true;
           case "rebuild all shaders":
-            ThreeNodes.events.trigger("RebuildAllShaders");
+            this.trigger("RebuildAllShaders");
             return true;
           case "remove selected node(s)":
-            ThreeNodes.events.trigger("RmoveSelectedNodes");
+            this.trigger("RmoveSelectedNodes");
             return true;
           default:
             return false;
         }
-      })();
+      }).call(this);
       if (is_exception === true) {
         event.preventDefault();
         return true;

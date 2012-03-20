@@ -73,7 +73,7 @@ define [
         if child instanceof THREE.Light == true
           if ind == -1
             @ob.add(child)
-            ThreeNodes.events.trigger("RebuildAllShaders")
+            @trigger("RebuildAllShaders")
         else
           if ind == -1
             #console.log "scene add child"
@@ -230,7 +230,7 @@ define [
         applyShadowOptionsToSubMeshes(@model_object)
       
       if needs_rebuild == true
-        ThreeNodes.events.trigger("RebuildAllShaders")
+        @trigger("RebuildAllShaders")
       
       @file_url = new_url
       @shadow_cache = @create_cache_object(@vars_shadow_options)
@@ -287,7 +287,7 @@ define [
         @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
-        ThreeNodes.events.trigger("RebuildAllShaders")
+        @trigger("RebuildAllShaders")
       
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       @geometry_cache = @get_geometry_cache()
@@ -341,7 +341,7 @@ define [
         @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
-        ThreeNodes.events.trigger("RebuildAllShaders")
+        @trigger("RebuildAllShaders")
       
       @shadow_cache = @create_cache_object(@vars_shadow_options)
       @geometry_cache = @get_geometry_cache()

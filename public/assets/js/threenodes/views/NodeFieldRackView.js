@@ -50,6 +50,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       $("input", $(this.el)).remove();
       delete this.collection;
       delete this.node_el;
+      delete this.node;
       return NodeFieldRackView.__super__.remove.apply(this, arguments);
     };
 

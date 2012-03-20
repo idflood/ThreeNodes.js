@@ -93,7 +93,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.remove = function() {
       delete this.on_value_update_hooks;
       delete this.node;
-      return delete this.connections;
+      delete this.connectionsca;
+      return this.destroy();
     };
 
     NodeField.prototype.setFID = function(fid) {

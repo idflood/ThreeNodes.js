@@ -43,6 +43,7 @@ define [
       $("input", $(@el)).remove()
       delete @collection
       delete @node_el
+      delete @node
       super
     
     add_field_listener: ($field) ->

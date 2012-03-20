@@ -27,21 +27,34 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         _this = this;
       this.connections = new ThreeNodes.ConnectionsCollection();
       self = this;
+      this.materials = [];
       if (options.is_test === false) {
         this.connections.bind("add", function(connection) {
           var view;
           view = new ThreeNodes.ConnectionView({
             model: connection
           });
-          return ThreeNodes.events.trigger("nodeslist:rebuild", self);
+          return self.trigger("nodeslist:rebuild", self);
         });
       }
       this.bind("remove", function(node) {
-        ThreeNodes.events.trigger("nodeslist:rebuild", self);
-        return ThreeNodes.events.trigger("nodeslist:remove", node);
+        var indx;
+        indx = _this.materials.indexOf(node);
+        if (indx !== -1) _this.materials.splice(indx, 1);
+        return self.trigger("nodeslist:rebuild", self);
+      });
+      this.bind("RebuildAllShaders", function() {
+        var node, _i, _len, _ref, _results;
+        _ref = _this.materials;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          _results.push(node.rebuildShader());
+        }
+        return _results;
       });
       this.connections.bind("remove", function(connection) {
-        return ThreeNodes.events.trigger("nodeslist:rebuild", self);
+        return self.trigger("nodeslist:rebuild", self);
       });
       this.bind("add", function(node) {
         var $tmpl, template, tmpl, view;
@@ -52,24 +65,24 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
           model: node,
           el: $tmpl
         });
-        return ThreeNodes.events.trigger("nodeslist:rebuild", self);
+        if (node.is_material && node.is_material === true) {
+          this.materials.push(node);
+        }
+        return self.trigger("nodeslist:rebuild", self);
       });
-      this.bind("createConnection", function(field1, field2) {
+      return this.bind("createConnection", function(field1, field2) {
         return _this.connections.create({
           from_field: field1,
           to_field: field2
         });
       });
-      ThreeNodes.events.on("RmoveSelectedNodes", this.removeSelectedNodes);
-      ThreeNodes.events.on("CreateNode", this.create_node);
-      ThreeNodes.events.on("ClearWorkspace", this.clearWorkspace);
-      return ThreeNodes.events.on("TimelineCreated", this.bindTimelineEvents);
     };
 
     NodeGraph.prototype.clearWorkspace = function() {
       this.removeAllConnections();
       this.removeAll();
       $("#webgl-window canvas").remove();
+      this.materials = [];
       return this;
     };
 
@@ -79,6 +92,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         this.timeline.off("startSound", this.startSound);
         this.timeline.off("stopSound", this.stopSound);
       }
+      console.log("binding timeline");
       this.timeline = timeline;
       this.timeline.on("trackRebuild", this.showNodesAnimation);
       this.timeline.on("startSound", this.startSound);
@@ -189,6 +203,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.startSound = function(time) {
+      console.log("start sound");
       this.each(function(node) {
         if (node.playSound instanceof Function) return node.playSound(time);
       });

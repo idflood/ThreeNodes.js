@@ -24,12 +24,12 @@ ThreeNodes.flash_sound_value = {
 };
 
 define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
-  "use strict";  ThreeNodes.events = _.extend({}, Backbone.Events);
-  return ThreeNodes.App = (function() {
+  "use strict";  return ThreeNodes.App = (function() {
 
     function App(testing_mode) {
       var _this = this;
       if (testing_mode == null) testing_mode = false;
+      this.setDisplayMode = __bind(this.setDisplayMode, this);
       this.initTimeline = __bind(this.initTimeline, this);
       this.initUI = __bind(this.initUI, this);
       ThreeNodes.settings = {
@@ -43,9 +43,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
       this.socket = new ThreeNodes.AppWebsocket();
       this.webgl = new ThreeNodes.WebglBase();
       this.file_handler = new ThreeNodes.FileHandler(this.nodegraph);
-      ThreeNodes.events.on("ClearWorkspace", function() {
+      this.file_handler.on("ClearWorkspace", function() {
         return _this.clearWorkspace();
       });
+      this.url_handler.on("ClearWorkspace", function() {
+        return _this.clearWorkspace();
+      });
+      this.url_handler.on("LoadJSON", this.file_handler.load_from_json_data);
       this.initUI(testing_mode);
       this.initTimeline();
       Backbone.history.start({
@@ -61,6 +65,16 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         });
         this.ui.on("render", this.nodegraph.render);
         this.ui.on("renderConnections", this.nodegraph.renderAllConnections);
+        this.ui.menubar.on("RmoveSelectedNodes", this.nodegraph.removeSelectedNodes);
+        this.ui.menubar.on("ClearWorkspace", this.nodegraph.clearWorkspace);
+        this.ui.menubar.on("SaveFile", this.file_handler.save_local_file);
+        this.ui.menubar.on("ExportCode", this.file_handler.export_code);
+        this.ui.menubar.on("LoadJSON", this.file_handler.load_from_json_data);
+        this.ui.menubar.on("LoadFile", this.file_handler.load_local_file);
+        this.ui.menubar.on("ExportImage", this.webgl.exportImage);
+        this.ui.sidebar.on("CreateNode", this.nodegraph.create_node);
+        this.nodegraph.on("nodeslist:rebuild", this.ui.onNodeListRebuild);
+        this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
       } else {
         $("body").addClass("test-mode");
       }
@@ -69,16 +83,32 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
 
     App.prototype.initTimeline = function() {
       $("#timeline-container, #keyEditDialog").remove();
-      if (this.timelineView) this.timelineView.remove();
+      if (this.timelineView) {
+        this.nodegraph.off("remove", this.timelineView.onNodeRemove);
+        this.timelineView.remove();
+        if (this.ui) {
+          this.timelineView.off("TimelineCreated", this.ui.on_ui_window_resize);
+        }
+      }
       this.timelineView = new ThreeNodes.AppTimeline({
         el: $("#timeline"),
         ui: this.ui
       });
+      this.nodegraph.bindTimelineEvents(this.timelineView);
+      this.nodegraph.on("remove", this.timelineView.onNodeRemove);
+      if (this.ui) this.ui.on_ui_window_resize();
       return this;
     };
 
+    App.prototype.setDisplayMode = function(is_player) {
+      if (is_player == null) is_player = false;
+      if (this.ui) return this.ui.setDisplayMode(is_player);
+    };
+
     App.prototype.clearWorkspace = function() {
+      this.nodegraph.clearWorkspace();
       this.reset_global_variables();
+      if (this.ui) this.ui.clearWorkspace();
       return this.initTimeline();
     };
 

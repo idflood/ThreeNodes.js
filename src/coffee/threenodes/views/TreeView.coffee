@@ -9,16 +9,7 @@ define [
     initialize: (options) ->
       super
       @timeoutId = false
-      ThreeNodes.events.on "ClearWorkspace", () =>
-        @render(false)
       
-      ThreeNodes.events.on "nodeslist:rebuild", (nodelist) =>
-        if @timeoutId
-          clearTimeout(@timeoutId)
-        # add a little delay since the event is fired multiple time on file load
-        onTimeOut = () =>
-          @render(nodelist)
-        @timeoutId = setTimeout(onTimeOut, 10)
     
     render: (nodelist) =>
       if @$el.data("tree")

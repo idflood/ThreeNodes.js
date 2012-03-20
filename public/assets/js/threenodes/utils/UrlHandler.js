@@ -23,22 +23,24 @@ define(['jQuery', 'Underscore', 'Backbone'], function($, _, Backbone) {
     };
 
     UrlHandler.prototype.onDefault = function() {
-      return ThreeNodes.events.trigger("SetDisplayModeCommand", false);
+      return this.trigger("SetDisplayModeCommand", false);
     };
 
     UrlHandler.prototype.onPlay = function() {
-      return ThreeNodes.events.trigger("SetDisplayModeCommand", true);
+      return this.trigger("SetDisplayModeCommand", true);
     };
 
     UrlHandler.prototype.onExample = function(file, player_mode) {
+      var self;
       if (player_mode == null) player_mode = false;
-      ThreeNodes.events.trigger("SetDisplayModeCommand", player_mode);
-      ThreeNodes.events.trigger("ClearWorkspace");
+      self = this;
+      this.trigger("SetDisplayModeCommand", player_mode);
+      this.trigger("ClearWorkspace");
       return $.ajax({
         url: "examples/" + file,
         dataType: 'text',
         success: function(data) {
-          return ThreeNodes.events.trigger("LoadJSON", data);
+          return self.trigger("LoadJSON", data);
         }
       });
     };

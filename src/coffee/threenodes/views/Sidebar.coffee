@@ -20,6 +20,9 @@ define [
         el: $("#tab-list")
       return this
     
+    clearWorkspace: () =>
+      @treeview.render(false)
+    
     initTabs: () =>
       @$el.tabs
         fx:
@@ -101,6 +104,7 @@ define [
         scroll: false
         containment: "document"
       
+      self = this
       # Setup the drop area for the draggables created above
       $("#container").droppable
         accept: "#tab-new a.button"
@@ -111,6 +115,6 @@ define [
           offset = $("#container-wrapper").offset()
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
           dy = ui.position.top + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop() - offset.top
-          ThreeNodes.events.trigger("CreateNode", {type: nodename, x: dx, y: dy})
+          self.trigger("CreateNode", {type: nodename, x: dx, y: dy})
           $("#sidebar").show()
       return this
