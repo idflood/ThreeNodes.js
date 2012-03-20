@@ -9,7 +9,6 @@ define [
     initialize: (options) ->
       super
       @timeoutId = false
-      
     
     render: (nodelist) =>
       if @$el.data("tree")

@@ -20,6 +20,9 @@ define [
         el: $("#tab-list")
       return this
     
+    render: (nodes) =>
+      if @treeview then @treeview.render(nodes)
+    
     clearWorkspace: () =>
       @treeview.render(false)
     

@@ -17,6 +17,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/views/TreeView'], 
       this.renderNodesAttributes = __bind(this.renderNodesAttributes, this);
       this.initTabs = __bind(this.initTabs, this);
       this.clearWorkspace = __bind(this.clearWorkspace, this);
+      this.render = __bind(this.render, this);
       this.initTreeView = __bind(this.initTreeView, this);
       Sidebar.__super__.constructor.apply(this, arguments);
     }
@@ -34,6 +35,10 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/views/TreeView'], 
         el: $("#tab-list")
       });
       return this;
+    };
+
+    Sidebar.prototype.render = function(nodes) {
+      if (this.treeview) return this.treeview.render(nodes);
     };
 
     Sidebar.prototype.clearWorkspace = function() {
