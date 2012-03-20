@@ -14,7 +14,6 @@ define [
       @material_class = false
       @last_slice_count = -1
       @is_material = true
-      ThreeNodes.events.on "RebuildAllShaders", @rebuildShader
       @rack.addFields
         inputs:
           "opacity": 1
@@ -39,14 +38,13 @@ define [
         return @
       if $.type(@ob) == "array"
         for sub_material in @ob
-          console.log sub_material
+          console.log "rebuilding submaterial"
           sub_material.program = false
       else
         @ob.program = false
       @
     
     remove: () =>
-      ThreeNodes.events.off "RebuildAllShaders", @rebuildShader
       delete @ob
       delete @material_cache
       delete @material_class

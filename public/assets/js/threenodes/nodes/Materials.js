@@ -22,7 +22,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.material_class = false;
       this.last_slice_count = -1;
       this.is_material = true;
-      ThreeNodes.events.on("RebuildAllShaders", this.rebuildShader);
       return this.rack.addFields({
         inputs: {
           "opacity": 1,
@@ -54,7 +53,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         _ref = this.ob;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           sub_material = _ref[_i];
-          console.log(sub_material);
+          console.log("rebuilding submaterial");
           sub_material.program = false;
         }
       } else {
@@ -64,7 +63,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeMaterialBase.prototype.remove = function() {
-      ThreeNodes.events.off("RebuildAllShaders", this.rebuildShader);
       delete this.ob;
       delete this.material_cache;
       delete this.material_class;

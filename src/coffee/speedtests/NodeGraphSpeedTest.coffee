@@ -9,7 +9,7 @@ define [
     constructor: (app) ->
       ng = app.nodegraph
       filehandler = app.file_handler
-      ThreeNodes.events.trigger("ClearWorkspace")
+      app.clearWorkspace()
       
       n1 = ng.create_node("Number")
       n2 = ng.create_node("Vector3")

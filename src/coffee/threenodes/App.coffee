@@ -32,9 +32,6 @@ define [
 ], ($, _, Backbone) ->
   "use strict"
   
-  # use a global event dispatcher (would be better without it)
-  ThreeNodes.events = _.extend({}, Backbone.Events)
-  
   class ThreeNodes.App
     constructor: (testing_mode = false) ->
       # save settings in a global object
@@ -48,8 +45,10 @@ define [
       @socket = new ThreeNodes.AppWebsocket()
       @webgl = new ThreeNodes.WebglBase()
       @file_handler = new ThreeNodes.FileHandler(@nodegraph)
-            
-      ThreeNodes.events.on "ClearWorkspace", () => @clearWorkspace()
+      
+      @file_handler.on("ClearWorkspace", () => @clearWorkspace())
+      @url_handler.on("ClearWorkspace", () => @clearWorkspace())
+      @url_handler.on("LoadJSON", @file_handler.load_from_json_data)
       
       @initUI(testing_mode)
       @initTimeline()
@@ -70,22 +69,44 @@ define [
           el: $("body")
         @ui.on("render", @nodegraph.render)
         @ui.on("renderConnections", @nodegraph.renderAllConnections)
+        @ui.menubar.on("RmoveSelectedNodes", @nodegraph.removeSelectedNodes)
+        @ui.menubar.on("ClearWorkspace", @clearWorkspace)
+        @ui.menubar.on("SaveFile", @file_handler.save_local_file)
+        @ui.menubar.on("ExportCode", @file_handler.export_code)
+        @ui.menubar.on("LoadJSON", @file_handler.load_from_json_data)
+        @ui.menubar.on("LoadFile", @file_handler.load_local_file)
+        @ui.menubar.on("ExportImage", @webgl.exportImage)
+        @ui.sidebar.on("CreateNode", @nodegraph.create_node)
+        @nodegraph.on("nodeslist:rebuild", @ui.onNodeListRebuild)
+        @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
       else
         $("body").addClass "test-mode"
       return this
     
     initTimeline: () =>
-      $("#timeline-container, #keyEditDialog").remove()
-      if @timelineView then @timelineView.remove()
       
+      $("#timeline-container, #keyEditDialog").remove()
+      if @timelineView
+        @nodegraph.off("remove", @timelineView.onNodeRemove)
+        @timelineView.remove()
+        if @ui
+          @timelineView.off("TimelineCreated", @ui.on_ui_window_resize)
       @timelineView = new ThreeNodes.AppTimeline
         el: $("#timeline")
         ui: @ui
-      
+      @nodegraph.bindTimelineEvents(@timelineView)
+      @nodegraph.on("remove", @timelineView.onNodeRemove)
+      if @ui
+        @ui.on_ui_window_resize()
       return this
     
-    clearWorkspace: () ->
+    setDisplayMode: (is_player = false) =>
+      if @ui then @ui.setDisplayMode(is_player)
+    
+    clearWorkspace: () =>
+      @nodegraph.clearWorkspace()
       @reset_global_variables()
+      if @ui then @ui.clearWorkspace()
       @initTimeline()
     
     reset_global_variables: () ->

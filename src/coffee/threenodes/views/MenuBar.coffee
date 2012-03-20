@@ -20,34 +20,34 @@ define [
         self.on_link_click(event, this, url)
       
       $("#main_file_input_open").change (e) =>
-        ThreeNodes.events.trigger("LoadFile", e)
+        @trigger("LoadFile", e)
     
     on_link_click: (event, link, url) =>
       is_exception = switch $(link).text().toLowerCase()
         when "new"
-          ThreeNodes.events.trigger("ClearWorkspace")
+          @trigger("ClearWorkspace")
           Backbone.history.navigate("", false)
           true
         when "open"
           $("#main_file_input_open").click()
           true
         when "save"
-          ThreeNodes.events.trigger("SaveFile")
+          @trigger("SaveFile")
           true
         when "export to code"
-          ThreeNodes.events.trigger("ExportCode")
+          @trigger("ExportCode")
           true
         when "export image"
-          ThreeNodes.events.trigger("ExportImage", "exported-image.png")
+          @trigger("ExportImage", "exported-image.png")
           true
         when "rebuild all shaders"
-          ThreeNodes.events.trigger("RebuildAllShaders")
+          @trigger("RebuildAllShaders")
           true
         when "group selected nodes"
           ThreeNodes.events.trigger("GroupSelectedNodes")
           true
         when "remove selected node(s)"
-          ThreeNodes.events.trigger("RmoveSelectedNodes")
+          @trigger("RmoveSelectedNodes")
           true
         else false
       

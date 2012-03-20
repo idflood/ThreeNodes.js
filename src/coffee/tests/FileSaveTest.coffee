@@ -12,7 +12,7 @@ define [
       test "JSON save", () ->
         ng = app.nodegraph
         filehandler = app.file_handler
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         
         # test with two number nodes connected
         n1 = ng.create_node({type: "Number", x: 363, y: 113})
@@ -44,7 +44,7 @@ define [
         equals _c1.to, c1.to_field.get("name"), "Connection1.to_field saved"
         
         # save a scene connected to webglrenderer
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("WebGLRenderer")
         c1 = ng.connections.create
@@ -59,7 +59,7 @@ define [
         
         # test for possible circular reference in json
         # appear when saving an object inside an array, the mesh in the merge array for this example
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")
         n3 = ng.create_node("ThreeMesh")

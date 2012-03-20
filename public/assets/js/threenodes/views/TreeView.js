@@ -13,20 +13,8 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/tree.jquery"], function(
     }
 
     TreeView.prototype.initialize = function(options) {
-      var _this = this;
       TreeView.__super__.initialize.apply(this, arguments);
-      this.timeoutId = false;
-      ThreeNodes.events.on("ClearWorkspace", function() {
-        return _this.render(false);
-      });
-      return ThreeNodes.events.on("nodeslist:rebuild", function(nodelist) {
-        var onTimeOut;
-        if (_this.timeoutId) clearTimeout(_this.timeoutId);
-        onTimeOut = function() {
-          return _this.render(nodelist);
-        };
-        return _this.timeoutId = setTimeout(onTimeOut, 10);
-      });
+      return this.timeoutId = false;
     };
 
     TreeView.prototype.render = function(nodelist) {

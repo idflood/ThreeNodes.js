@@ -16,8 +16,8 @@ define [
     # Remove connections, fields and delete variables
     destroy: () =>
       @removeAllConnections()
-      @each (field) ->
-        field.remove()
+      while @models.length > 0
+        @models[0].remove()
       delete @node
       delete @node_fields
     

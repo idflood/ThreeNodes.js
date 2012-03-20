@@ -71,7 +71,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         this.material_cache = this.rack.getField('material').getValue().id;
       }
       this.apply_fields_to_val(this.rack.node_fields.inputs, this.ob, ['children', 'geometry', 'material']);
-      if (needs_rebuild === true) ThreeNodes.events.trigger("RebuildAllShaders");
+      if (needs_rebuild === true) this.trigger("RebuildAllShaders");
       return this.rack.setField("out", this.ob);
     };
 

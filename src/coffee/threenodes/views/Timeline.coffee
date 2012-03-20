@@ -13,7 +13,7 @@ define [
       localStorage["timeline.js.settings.canvasHeight"] = @$el.innerHeight()
       
       @$el.html("")
-      
+      self = this
       @timeline = new Timeline
         element: @el
         displayOnlySelected: true
@@ -30,7 +30,7 @@ define [
         colorTrackBottomLine: "#555"
         colorPropertyLabel: "#999"
         onGuiSave: () =>
-          ThreeNodes.events.trigger "OnUIResize"
+          self.trigger "OnUIResize"
         setPropertyValue: (propertyAnim, t) ->
           propertyAnim.target[propertyAnim.propertyName].setValue(t)
         applyPropertyValue: (propertyAnim, t) ->
@@ -46,6 +46,7 @@ define [
         onPlay: (time) => @trigger("startSound", time)
       
       Timeline.globalInstance = @timeline
+      console.log "new timeline"
       @timeline.loop(-1)
       @time = 0
       
@@ -55,10 +56,7 @@ define [
         @ui.on("selectAnims", @selectAnims)
         @ui.on("timelineResize", @resize)
       
-      ThreeNodes.events.on("nodeslist:remove", @onNodeRemove)
-      
-      ThreeNodes.events.trigger "TimelineCreated", this
-      ThreeNodes.events.trigger("OnUIResize")
+      @trigger("OnUIResize")
     
     selectAnims: (nodes) =>
       if @timeline
@@ -68,7 +66,6 @@ define [
       @selectAnims([])
     
     remove: () =>
-      ThreeNodes.events.off("nodeslist:remove", @onNodeRemove)
       @undelegateEvents()
       
       if @ui

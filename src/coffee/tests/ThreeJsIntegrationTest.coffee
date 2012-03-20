@@ -11,7 +11,7 @@ define [
       
       test "Scene node children", () ->
         ng = app.nodegraph
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")
         n3 = ng.create_node("ThreeMesh")
@@ -65,7 +65,7 @@ define [
         
       test "Camera -> object3d -> merge -> scene connection test (children array)", () ->
         ng = app.nodegraph
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")

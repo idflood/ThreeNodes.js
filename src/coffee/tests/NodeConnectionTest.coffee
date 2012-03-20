@@ -10,7 +10,7 @@ define [
       module "NodeConnection"
       
       test "Basic connection", () ->
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
@@ -60,7 +60,7 @@ define [
         equals n3.v_out.getValue(), 14, "The second connection is valid and propagated the value"
       
       test "Connection between wrong field types", () ->
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -87,7 +87,7 @@ define [
         equals n2.rack.getField("material").getValue().id, old_val.id, "Material field value should not change if wrong type is passed"
       
       test "Connection between wrong field types (children array)", () ->
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -103,7 +103,7 @@ define [
         equals n3.ob.children.length, 0, "Scene.children array is still empty"
       
       test "Connection direction", () ->
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -118,7 +118,7 @@ define [
         equals n2.v_out.getValue(), 4, "Connection is created with good input/output order and the value has been propagated"
       
       test "Connection from input to anoter input", () ->
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         console.log "create node...."
         n1 = ng.create_node("Number")
@@ -133,7 +133,7 @@ define [
         equals ng.connections.length, 0, "The connection has not been created since it is wrong"
       
       test "Connection from and to the same node", () ->
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -148,7 +148,7 @@ define [
       
       test "Array connections", () ->
         # verify that the good amount of objects are created when having many inputs
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         ng = app.nodegraph
         
         n1 = ng.create_node("Number")
@@ -181,7 +181,7 @@ define [
         equals node_mult.v_out.getValue(1), 6, "2nd mult output equals 6"
         
         # verify Vector3 support spreads
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
         node_vec = ng.create_node("Vector3")
@@ -206,7 +206,7 @@ define [
         equals node_vec.rack.getField("xyz", true).getValue(1).y, 7, "2nd y value"
         console.log node_vec.rack.getField("xyz", true)
         # mesh should duplicate itself
-        ThreeNodes.events.trigger("ClearWorkspace")
+        app.clearWorkspace()
         meshNode = ng.create_node("ThreeMesh")
         node_merge = ng.create_node("Merge")
         nvec1 = ng.create_node("Vector3")

@@ -65,7 +65,7 @@ define [
     
     compute: =>
       if @rack.getField("castShadow").getValue() != @ob.castShadow
-        ThreeNodes.events.trigger("RebuildAllShaders")
+        @trigger("RebuildAllShaders")
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
   

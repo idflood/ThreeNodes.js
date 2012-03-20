@@ -9,7 +9,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       test("Scene node children", function() {
         var c1, c2, c3, c4, mesh, meshNode, n1, n2, n3, n4, n5, ng;
         ng = app.nodegraph;
-        ThreeNodes.events.trigger("ClearWorkspace");
+        app.clearWorkspace();
         n1 = ng.create_node("Scene");
         n2 = ng.create_node("Merge");
         n3 = ng.create_node("ThreeMesh");
@@ -59,7 +59,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/qunit-git"], function($,
       test("Camera -> object3d -> merge -> scene connection test (children array)", function() {
         var n1, n2, ng, node_camera, node_object3d, node_webgl;
         ng = app.nodegraph;
-        ThreeNodes.events.trigger("ClearWorkspace");
+        app.clearWorkspace();
         n1 = ng.create_node("Scene");
         n2 = ng.create_node("Merge");
         node_object3d = ng.create_node("Object3D");

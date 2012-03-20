@@ -24,19 +24,27 @@ define [
     initialize: (models, options) =>
       @connections = new ThreeNodes.ConnectionsCollection()
       self = this
+      # save material nodes in an array so they can be quickly rebuild
+      @materials = []
       
       if options.is_test == false
         @connections.bind "add", (connection) ->
           view = new ThreeNodes.ConnectionView
             model: connection
-          ThreeNodes.events.trigger "nodeslist:rebuild", self
+          self.trigger "nodeslist:rebuild", self
       
-      @bind "remove", (node) ->
-        ThreeNodes.events.trigger "nodeslist:rebuild", self
-        ThreeNodes.events.trigger "nodeslist:remove", node
+      @bind "remove", (node) =>
+        indx = @materials.indexOf(node)
+        if indx != -1
+          @materials.splice(indx, 1)
+        self.trigger "nodeslist:rebuild", self
+      
+      @bind "RebuildAllShaders", () =>
+        for node in @materials
+          node.rebuildShader()
       
       @connections.bind "remove", (connection) ->
-        ThreeNodes.events.trigger "nodeslist:rebuild", self
+        self.trigger "nodeslist:rebuild", self
       
       @bind "add", (node) ->
         template = ThreeNodes.NodeView.template
@@ -46,23 +54,21 @@ define [
           model: node
           el: $tmpl
         
-        ThreeNodes.events.trigger "nodeslist:rebuild", self
+        if node.is_material && node.is_material == true
+          @materials.push(node)
+        
+        self.trigger "nodeslist:rebuild", self
             
       @bind "createConnection", (field1, field2) =>
         @connections.create
           from_field: field1
           to_field: field2
-      
-      ThreeNodes.events.on "RmoveSelectedNodes", @removeSelectedNodes
-      ThreeNodes.events.on "CreateNode", @create_node
-      ThreeNodes.events.on "ClearWorkspace", @clearWorkspace
-      ThreeNodes.events.on "TimelineCreated", @bindTimelineEvents
     
     clearWorkspace: () =>
       @removeAllConnections()
       @removeAll()
       $("#webgl-window canvas").remove()
-      
+      @materials = []
       return this
     
     bindTimelineEvents: (timeline) =>
@@ -70,7 +76,7 @@ define [
         @timeline.off("trackRebuild", @showNodesAnimation)
         @timeline.off("startSound", @startSound)
         @timeline.off("stopSound", @stopSound)
-      
+      console.log "binding timeline"
       @timeline = timeline
       @timeline.on("trackRebuild", @showNodesAnimation)
       @timeline.on("startSound", @startSound)

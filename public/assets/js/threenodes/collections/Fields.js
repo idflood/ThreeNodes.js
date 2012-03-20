@@ -38,9 +38,9 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
 
     NodeFieldsCollection.prototype.destroy = function() {
       this.removeAllConnections();
-      this.each(function(field) {
-        return field.remove();
-      });
+      while (this.models.length > 0) {
+        this.models[0].remove();
+      }
       delete this.node;
       return delete this.node_fields;
     };

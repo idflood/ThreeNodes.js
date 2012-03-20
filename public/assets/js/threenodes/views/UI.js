@@ -25,6 +25,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.setDisplayMode = __bind(this.setDisplayMode, this);
       this.initLayout = __bind(this.initLayout, this);
       this.initMenubar = __bind(this.initMenubar, this);
+      this.clearWorkspace = __bind(this.clearWorkspace, this);
+      this.onNodeListRebuild = __bind(this.onNodeListRebuild, this);
       UI.__super__.constructor.apply(this, arguments);
     }
 
@@ -32,8 +34,6 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       var ui_tmpl;
       UI.__super__.initialize.apply(this, arguments);
       this.is_grabbing = false;
-      ThreeNodes.events.on("OnUIResize", this.on_ui_window_resize);
-      ThreeNodes.events.on("SetDisplayModeCommand", this.setDisplayMode);
       $(window).resize(this.on_ui_window_resize);
       ui_tmpl = _.template(_view_app_ui, {});
       this.$el.append(ui_tmpl);
@@ -55,18 +55,27 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       return this.animate();
     };
 
+    UI.prototype.onNodeListRebuild = function(nodegraph) {
+      var onTimeOut,
+        _this = this;
+      if (this.timeoutId) clearTimeout(this.timeoutId);
+      onTimeOut = function() {
+        return _this.sidebar.render(nodegraph);
+      };
+      return this.timeoutId = setTimeout(onTimeOut, 10);
+    };
+
+    UI.prototype.clearWorkspace = function() {
+      return this.sidebar.clearWorkspace();
+    };
+
     UI.prototype.initMenubar = function() {
-      var $menu_tmpl, menu_tmpl, self;
+      var $menu_tmpl, menu_tmpl;
       menu_tmpl = _.template(ThreeNodes.MenuBar.template, {});
       $menu_tmpl = $(menu_tmpl).prependTo("body");
       this.menubar = new ThreeNodes.MenuBar({
         el: $menu_tmpl
       });
-      self = this;
-      this.menubar.trigger = function(events) {
-        Backbone.events.prototype.trigger.call(this);
-        return self.trigger(events);
-      };
       return this;
     };
 

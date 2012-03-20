@@ -54,7 +54,7 @@ define [
       @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
       
       if needs_rebuild == true
-        ThreeNodes.events.trigger("RebuildAllShaders")
+        @trigger("RebuildAllShaders")
       
       @rack.setField("out", @ob)
   
