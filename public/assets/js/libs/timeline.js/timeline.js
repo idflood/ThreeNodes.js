@@ -114,18 +114,21 @@ Timeline.prototype.update = function (dt) {
 
   if (this.loopMode !== 0) {
     var animationEnd = this.findAnimationEnd();
-    if (this.time > animationEnd) {
-      this.loopCount++;
-      this.time = 0;
-      this.onPlay(0);
-    }
-    if (this.loopMode == -1) {
-      //loop infinitely
-    }
-    else {
-      if (this.loopCount >= this.loopMode) {
-        this.playing = false;
-        this.onStop();
+    // don't loop if there is no animation
+    if (animationEnd != 0) {
+      if (this.time > animationEnd) {
+        this.loopCount++;
+        this.time = 0;
+        this.onPlay(0);
+      }
+      if (this.loopMode == -1) {
+        //loop infinitely
+      }
+      else {
+        if (this.loopCount >= this.loopMode) {
+          this.playing = false;
+          this.onStop();
+        }
       }
     }
   }

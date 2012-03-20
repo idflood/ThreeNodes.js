@@ -203,7 +203,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.startSound = function(time) {
-      console.log("start sound");
       this.each(function(node) {
         if (node.playSound instanceof Function) return node.playSound(time);
       });

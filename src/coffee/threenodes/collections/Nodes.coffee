@@ -164,7 +164,6 @@ define [
       @
     
     startSound: (time) =>
-      console.log "start sound"
       @each (node) ->
         if node.playSound instanceof Function
           node.playSound(time)
