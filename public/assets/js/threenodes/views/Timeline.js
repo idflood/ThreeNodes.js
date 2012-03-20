@@ -68,6 +68,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/timeline.js/timeline", "
         }
       });
       Timeline.globalInstance = this.timeline;
+      console.log("new timeline");
       this.timeline.loop(-1);
       this.time = 0;
       if (options.ui) {

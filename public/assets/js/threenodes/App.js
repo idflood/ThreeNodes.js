@@ -29,6 +29,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
     function App(testing_mode) {
       var _this = this;
       if (testing_mode == null) testing_mode = false;
+      this.clearWorkspace = __bind(this.clearWorkspace, this);
       this.setDisplayMode = __bind(this.setDisplayMode, this);
       this.initTimeline = __bind(this.initTimeline, this);
       this.initUI = __bind(this.initUI, this);
@@ -66,7 +67,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         this.ui.on("render", this.nodegraph.render);
         this.ui.on("renderConnections", this.nodegraph.renderAllConnections);
         this.ui.menubar.on("RmoveSelectedNodes", this.nodegraph.removeSelectedNodes);
-        this.ui.menubar.on("ClearWorkspace", this.nodegraph.clearWorkspace);
+        this.ui.menubar.on("ClearWorkspace", this.clearWorkspace);
         this.ui.menubar.on("SaveFile", this.file_handler.save_local_file);
         this.ui.menubar.on("ExportCode", this.file_handler.export_code);
         this.ui.menubar.on("LoadJSON", this.file_handler.load_from_json_data);

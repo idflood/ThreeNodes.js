@@ -70,7 +70,7 @@ define [
         @ui.on("render", @nodegraph.render)
         @ui.on("renderConnections", @nodegraph.renderAllConnections)
         @ui.menubar.on("RmoveSelectedNodes", @nodegraph.removeSelectedNodes)
-        @ui.menubar.on("ClearWorkspace", @nodegraph.clearWorkspace)
+        @ui.menubar.on("ClearWorkspace", @clearWorkspace)
         @ui.menubar.on("SaveFile", @file_handler.save_local_file)
         @ui.menubar.on("ExportCode", @file_handler.export_code)
         @ui.menubar.on("LoadJSON", @file_handler.load_from_json_data)
@@ -103,7 +103,7 @@ define [
     setDisplayMode: (is_player = false) =>
       if @ui then @ui.setDisplayMode(is_player)
     
-    clearWorkspace: () ->
+    clearWorkspace: () =>
       @nodegraph.clearWorkspace()
       @reset_global_variables()
       if @ui then @ui.clearWorkspace()
