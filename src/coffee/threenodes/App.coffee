@@ -76,6 +76,7 @@ define [
         @ui.menubar.on("LoadJSON", @file_handler.load_from_json_data)
         @ui.menubar.on("LoadFile", @file_handler.load_local_file)
         @ui.menubar.on("ExportImage", @webgl.exportImage)
+        @ui.menubar.on("GroupSelectedNodes", @nodegraph.onGroupSelected)
         @ui.sidebar.on("CreateNode", @nodegraph.create_node)
         @nodegraph.on("nodeslist:rebuild", @ui.onNodeListRebuild)
         @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
@@ -84,7 +85,6 @@ define [
       return this
     
     initTimeline: () =>
-      
       $("#timeline-container, #keyEditDialog").remove()
       if @timelineView
         @nodegraph.off("remove", @timelineView.onNodeRemove)

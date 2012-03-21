@@ -54,7 +54,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
             this.trigger("RebuildAllShaders");
             return true;
           case "group selected nodes":
-            ThreeNodes.events.trigger("GroupSelectedNodes");
+            this.trigger("GroupSelectedNodes");
             return true;
           case "remove selected node(s)":
             this.trigger("RmoveSelectedNodes");

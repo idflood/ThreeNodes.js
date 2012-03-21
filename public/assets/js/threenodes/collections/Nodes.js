@@ -12,6 +12,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.startSound = __bind(this.startSound, this);
       this.showNodesAnimation = __bind(this.showNodesAnimation, this);
       this.getNodeByNid = __bind(this.getNodeByNid, this);
+      this.onGroupSelected = __bind(this.onGroupSelected, this);
       this.renderAllConnections = __bind(this.renderAllConnections, this);
       this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
       this.render = __bind(this.render, this);
@@ -181,6 +182,13 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         return $(this).data("object").remove();
       });
       return true;
+    };
+
+    NodeGraph.prototype.onGroupSelected = function() {
+      var definition;
+      return definition = new ThreeNodes.GroupDefinition({
+        fromSelectedNodes: true
+      });
     };
 
     NodeGraph.prototype.removeConnection = function(c) {

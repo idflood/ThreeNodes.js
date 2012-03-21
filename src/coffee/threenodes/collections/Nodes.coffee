@@ -151,6 +151,22 @@ define [
         $(this).data("object").remove()
       return true
     
+    onGroupSelected: () =>
+      # create a new GroupDefinition from the selected nodes and connections
+      definition = new ThreeNodes.GroupDefinition
+        fromSelectedNodes: true
+      # save the connection going out or in the group of nodes
+      # the connections have one extenal node linked to one selected node
+      
+      # get the average position of selected nodes
+      
+      # remove selected nodes
+      
+      # create a ThreeNodes.nodes.Group
+      
+      # recreate the external connections
+      
+      
     removeConnection: (c) ->
       @connections.remove(c)
     

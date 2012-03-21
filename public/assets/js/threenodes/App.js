@@ -73,6 +73,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         this.ui.menubar.on("LoadJSON", this.file_handler.load_from_json_data);
         this.ui.menubar.on("LoadFile", this.file_handler.load_local_file);
         this.ui.menubar.on("ExportImage", this.webgl.exportImage);
+        this.ui.menubar.on("GroupSelectedNodes", this.nodegraph.onGroupSelected);
         this.ui.sidebar.on("CreateNode", this.nodegraph.create_node);
         this.nodegraph.on("nodeslist:rebuild", this.ui.onNodeListRebuild);
         this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
