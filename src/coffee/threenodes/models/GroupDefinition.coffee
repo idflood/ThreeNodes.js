@@ -7,8 +7,8 @@ define [
   
   class ThreeNodes.GroupDefinition extends Backbone.Model
     defaults:
-      "nodes": {}
-      "conncections": {}
+      "nodes": []
+      "connections": []
       "name": "Group"
     
     sync: () =>
@@ -19,14 +19,11 @@ define [
     
     initialize: (options) =>
       @internal_uid = 0
-      if options.fromSelectedNodes && options.fromSelectedNodes == true
-        @fromSelectedNodes()
+      if options.fromSelectedNodes && options.fromSelectedNodes != false
+        @fromSelectedNodes(options.fromSelectedNodes)
     
-    fromSelectedNodes: () =>
-      selected_nodes = []
-      $(".node.ui-selected").each () ->
-        selected_nodes.push($(this).data("object"))
-      external_connections = []
+    fromSelectedNodes: (selected_nodes) =>
+      internal_connections = []
       for node in selected_nodes
         # check each node fields
         for field in node.rack.models
@@ -34,15 +31,15 @@ define [
           for connection in field.connections
             indx1 = selected_nodes.indexOf(connection.from_field.node)
             indx2 = selected_nodes.indexOf(connection.to_field.node)
-            # if from or out is external add it
-            if indx1 == -1 || indx2 == -1
+            # if "from" AND "out" are internal add it
+            if indx1 != -1 && indx2 != -1
               # don't add it twice
-              already_exists = external_connections.indexOf(connection)
+              already_exists = internal_connections.indexOf(connection)
               if already_exists == -1
-                external_connections.push(connection)
+                internal_connections.push(connection)
       data =
         nodes: jQuery.map(selected_nodes, (n, i) -> n.toJSON())
-        connections: jQuery.map(external_connections, (c, i) -> c.toJSON())
+        connections: jQuery.map(internal_connections, (c, i) -> c.toJSON())
       console.log data
     
     remove: =>

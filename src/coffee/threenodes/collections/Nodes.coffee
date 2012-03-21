@@ -152,19 +152,69 @@ define [
       return true
     
     onGroupSelected: () =>
-      # create a new GroupDefinition from the selected nodes and connections
-      definition = new ThreeNodes.GroupDefinition
-        fromSelectedNodes: true
-      # save the connection going out or in the group of nodes
+      # Get the average position of selected nodes
+      min_x = 0
+      min_y = 0
+      max_x = 0
+      max_y = 0
+      
+      # Selected nodes jquery selector
+      $selected = $(".node.ui-selected")
+      
+      # Stop directly if there is no node selected
+      if $selected.length < 1
+        return false
+      
+      # Get selected nodes
+      selected_nodes = []
+      $selected.each () ->
+        node = $(this).data("object")
+        # get the x/y node min and max to place the new node at the center
+        min_x = Math.min(min_x, node.get("x"))
+        max_x = Math.max(max_x, node.get("x"))
+        min_y = Math.min(min_y, node.get("y"))
+        max_y = Math.max(max_y, node.get("y"))
+        
+        # add the node model to the selected array
+        selected_nodes.push(node)
+      
+      # compute the center node position
+      dx = min_x + (max_x - min_x) / 2
+      dy = min_y + (max_y - min_y) / 2
+      
+      # Create a new GroupDefinition from the selected nodes and connections
+      group_def = new ThreeNodes.GroupDefinition
+        fromSelectedNodes: selected_nodes
+      
+      # Save the connection going out or in the group of nodes
       # the connections have one extenal node linked to one selected node
+      external_connections = []
+      for node in selected_nodes
+        # check each node fields
+        for field in node.rack.models
+          # loop each connections since we can have multiple out connections
+          for connection in field.connections
+            indx1 = selected_nodes.indexOf(connection.from_field.node)
+            indx2 = selected_nodes.indexOf(connection.to_field.node)
+            # if "from" OR "out" is external add it
+            if indx1 == -1 || indx2 == -1
+              # don't add it twice
+              already_exists = external_connections.indexOf(connection)
+              if already_exists == -1
+                external_connections.push(connection)
+                
+      # remove the nodes
+      for node in selected_nodes
+        node.remove()
       
-      # get the average position of selected nodes
+      # Create a ThreeNodes.nodes.Group
+      grp = @create_node
+        type: "Group"
+        definition: group_def
+        x: dx
+        y: dy
       
-      # remove selected nodes
-      
-      # create a ThreeNodes.nodes.Group
-      
-      # recreate the external connections
+      # Recreate the external connections
       
       
     removeConnection: (c) ->

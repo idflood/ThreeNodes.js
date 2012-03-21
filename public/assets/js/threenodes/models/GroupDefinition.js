@@ -17,8 +17,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
     }
 
     GroupDefinition.prototype.defaults = {
-      "nodes": {},
-      "conncections": {},
+      "nodes": [],
+      "connections": [],
       "name": "Group"
     };
 
@@ -31,18 +31,14 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
 
     GroupDefinition.prototype.initialize = function(options) {
       this.internal_uid = 0;
-      if (options.fromSelectedNodes && options.fromSelectedNodes === true) {
-        return this.fromSelectedNodes();
+      if (options.fromSelectedNodes && options.fromSelectedNodes !== false) {
+        return this.fromSelectedNodes(options.fromSelectedNodes);
       }
     };
 
-    GroupDefinition.prototype.fromSelectedNodes = function() {
-      var already_exists, connection, data, external_connections, field, indx1, indx2, node, selected_nodes, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
-      selected_nodes = [];
-      $(".node.ui-selected").each(function() {
-        return selected_nodes.push($(this).data("object"));
-      });
-      external_connections = [];
+    GroupDefinition.prototype.fromSelectedNodes = function(selected_nodes) {
+      var already_exists, connection, data, field, indx1, indx2, internal_connections, node, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
+      internal_connections = [];
       for (_i = 0, _len = selected_nodes.length; _i < _len; _i++) {
         node = selected_nodes[_i];
         _ref = node.rack.models;
@@ -53,9 +49,9 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
             connection = _ref2[_k];
             indx1 = selected_nodes.indexOf(connection.from_field.node);
             indx2 = selected_nodes.indexOf(connection.to_field.node);
-            if (indx1 === -1 || indx2 === -1) {
-              already_exists = external_connections.indexOf(connection);
-              if (already_exists === -1) external_connections.push(connection);
+            if (indx1 !== -1 && indx2 !== -1) {
+              already_exists = internal_connections.indexOf(connection);
+              if (already_exists === -1) internal_connections.push(connection);
             }
           }
         }
@@ -64,7 +60,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
         nodes: jQuery.map(selected_nodes, function(n, i) {
           return n.toJSON();
         }),
-        connections: jQuery.map(external_connections, function(c, i) {
+        connections: jQuery.map(internal_connections, function(c, i) {
           return c.toJSON();
         })
       };

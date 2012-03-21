@@ -185,9 +185,55 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.onGroupSelected = function() {
-      var definition;
-      return definition = new ThreeNodes.GroupDefinition({
-        fromSelectedNodes: true
+      var $selected, already_exists, connection, dx, dy, external_connections, field, group_def, grp, indx1, indx2, max_x, max_y, min_x, min_y, node, selected_nodes, _i, _j, _k, _l, _len, _len2, _len3, _len4, _ref, _ref2;
+      min_x = 0;
+      min_y = 0;
+      max_x = 0;
+      max_y = 0;
+      $selected = $(".node.ui-selected");
+      if ($selected.length < 1) return false;
+      selected_nodes = [];
+      $selected.each(function() {
+        var node;
+        node = $(this).data("object");
+        min_x = Math.min(min_x, node.get("x"));
+        max_x = Math.max(max_x, node.get("x"));
+        min_y = Math.min(min_y, node.get("y"));
+        max_y = Math.max(max_y, node.get("y"));
+        return selected_nodes.push(node);
+      });
+      dx = min_x + (max_x - min_x) / 2;
+      dy = min_y + (max_y - min_y) / 2;
+      group_def = new ThreeNodes.GroupDefinition({
+        fromSelectedNodes: selected_nodes
+      });
+      external_connections = [];
+      for (_i = 0, _len = selected_nodes.length; _i < _len; _i++) {
+        node = selected_nodes[_i];
+        _ref = node.rack.models;
+        for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
+          field = _ref[_j];
+          _ref2 = field.connections;
+          for (_k = 0, _len3 = _ref2.length; _k < _len3; _k++) {
+            connection = _ref2[_k];
+            indx1 = selected_nodes.indexOf(connection.from_field.node);
+            indx2 = selected_nodes.indexOf(connection.to_field.node);
+            if (indx1 === -1 || indx2 === -1) {
+              already_exists = external_connections.indexOf(connection);
+              if (already_exists === -1) external_connections.push(connection);
+            }
+          }
+        }
+      }
+      for (_l = 0, _len4 = selected_nodes.length; _l < _len4; _l++) {
+        node = selected_nodes[_l];
+        node.remove();
+      }
+      return grp = this.create_node({
+        type: "Group",
+        definition: group_def,
+        x: dx,
+        y: dy
       });
     };
 
