@@ -267,7 +267,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       if (ThreeNodes.field_click_1 === false) {
         ThreeNodes.field_click_1 = field;
         return $(".inputs .field").filter(function() {
-          return $(this).parent().parent().parent().attr("id") !== ("nid-" + f.nid);
+          return $(this).parent().parent().parent().data("nid") !== f.nid;
         }).addClass("field-possible-target");
       } else {
         field_click_2 = field;

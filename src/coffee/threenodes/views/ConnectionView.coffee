@@ -44,12 +44,7 @@ define [
       diff = 3
       o1.top += diff
       o1.left += diff
-      if o1.left == diff && o1.top == diff
-        o1 = $("#nid-#{field.node.get('nid')}").offset()
-        o1.top += $("#nid-#{field.node.get('nid')}").outerHeight() / 2 + 3
-        if field.get("is_output") == true
-          o1.left += $("#nid-#{field.node.get('nid')}").outerWidth() - 2
-      o1
+      return o1
     
     get_path: () ->
       f1 = @get_field_position(@model.from_field)

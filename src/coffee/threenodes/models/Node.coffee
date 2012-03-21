@@ -180,7 +180,7 @@ define [
       if ThreeNodes.field_click_1 == false
         ThreeNodes.field_click_1 = field
         $(".inputs .field").filter () ->
-          $(this).parent().parent().parent().attr("id") != "nid-#{f.nid}"
+          $(this).parent().parent().parent().data("nid") != f.nid
         .addClass "field-possible-target"
       else
         field_click_2 = field

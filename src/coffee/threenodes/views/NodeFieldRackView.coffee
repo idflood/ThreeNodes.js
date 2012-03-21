@@ -16,6 +16,7 @@ define [
       @node_el = options.node_el
       
       @collection.bind("addCenterTextfield", (field) => @addCenterTextfield(field))
+      @collection.bind("addCustomHtml", @addCustomHtml)
       @collection.bind("add", (field) => @onFieldCreated(field))
     
     # Create the field dom element and add events to it
@@ -58,7 +59,9 @@ define [
         if field.get("is_output") == true
           target = ".inputs .field"
         $(target).filter () ->
-          $(this).parent().parent().parent().attr("id") != "nid-#{self.nid}"
+          console.log $(this).parent().parent().parent().data("nid")
+          console.log self.node.get("nid")
+          $(this).parent().parent().parent().data("nid") != self.node.get("nid")
         .addClass "field-possible-target"
       
       $(".inner-field", $field).draggable
@@ -99,6 +102,10 @@ define [
           field2 = origin.data("object")
           self.node.createConnection(field, field2)
       
+      return this
+    
+    addCustomHtml: ($element, target = ".center") =>
+      $element.appendTo($(target, @$el))
       return this
     
     addCenterTextfield: (field) =>

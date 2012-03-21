@@ -13,6 +13,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
       this.remove = __bind(this.remove, this);
       this.compute_node_position = __bind(this.compute_node_position, this);
       this.render_connections = __bind(this.render_connections, this);
+      this.addSelectedClass = __bind(this.addSelectedClass, this);
       this.highlighAnimations = __bind(this.highlighAnimations, this);
       this.render = __bind(this.render, this);
       this.postInit = __bind(this.postInit, this);
@@ -40,6 +41,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
       this.model.bind("node:computePosition", this.compute_node_position);
       this.model.bind("node:renderConnections", this.render_connections);
       this.model.bind("node:showAnimations", this.highlighAnimations);
+      this.model.bind("node:addSelectedClass", this.addSelectedClass);
       this.render();
       this.model.post_init();
       return this;
@@ -93,6 +95,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node.tmpl.html", 'or
         this.$el.removeClass("node-has-animation");
       }
       return true;
+    };
+
+    NodeView.prototype.addSelectedClass = function() {
+      return this.$el.addClass("ui-selected");
     };
 
     NodeView.prototype.render_connections = function() {
