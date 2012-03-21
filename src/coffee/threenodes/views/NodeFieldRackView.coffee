@@ -21,8 +21,7 @@ define [
     # Create the field dom element and add events to it
     onFieldCreated: (field) =>
       target = if field.get("is_output") == false then ".inputs" else ".outputs"
-      $(target, @$el).append(field.render_button())
-      el = $("#fid-#{field.get('fid')}")
+      el = $(field.render_button()).appendTo($(target, @$el))
       @add_field_listener(el)
     
     # Unbind events, destroy jquery-ui widgets, remove dom elements
@@ -103,8 +102,8 @@ define [
       return this
     
     addCenterTextfield: (field) =>
-      $(".center", @$el).append("<div><input type='text' id='f-txt-input-#{field.get('fid')}' /></div>")
-      f_in = $("#f-txt-input-#{field.get('fid')}")
+      container = $("<div><input type='text' data-fid='#{field.get('fid')}' /></div>").appendTo($(".center", @$el))
+      f_in = $("input", container)
       field.on_value_update_hooks.update_center_textfield = (v) ->
         if v != null
           f_in.val(v.toString())

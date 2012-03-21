@@ -93,7 +93,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
     NodeField.prototype.remove = function() {
       delete this.on_value_update_hooks;
       delete this.node;
-      delete this.connectionsca;
+      delete this.connections;
+      delete this.button;
       return this.destroy();
     };
 
@@ -216,6 +217,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       });
       el = $(el);
       el.data("object", this);
+      this.button = el;
       return el;
     };
 
@@ -264,8 +266,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $cont, $target;
       if (name == null) name = this.get("name");
       $cont = $("#tab-attribute");
-      $cont.append("<div id='side-field-" + this.get("fid") + "' class='field-wrapper'></div>");
-      $target = $("#side-field-" + (this.get('fid')));
+      $target = $("<div data-fid='" + this.get("fid") + "' class='field-wrapper'></div>").appendTo($cont);
       $target.append("<h3>" + name + "</h3>");
       return $target;
     };
@@ -308,12 +309,12 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       return create_slider();
     };
 
-    NodeField.prototype.create_textfield = function($target, id, type, link_to_val) {
-      var $el;
+    NodeField.prototype.create_textfield = function($target, type, link_to_val) {
+      var $el, container;
       if (type == null) type = "float";
       if (link_to_val == null) link_to_val = true;
-      $target.append("<div class='input-container'><input type='text' id='" + id + "' class='field-" + type + "' /></div>");
-      $el = $("#" + id);
+      container = $("<div class='input-container'><input type='text' class='field-" + type + "' /></div>").appendTo($target);
+      $el = $("input", container);
       if (type === "float" && link_to_val === true) {
         $el.val(this.getValue());
         this.add_textfield_slider($el);
@@ -369,7 +370,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $target, f_in;
       if (type == null) type = "float";
       $target = this.create_sidebar_container(subval);
-      f_in = this.create_textfield($target, "side-field-txt-input-" + subval + "-" + (this.get('fid')), type, false);
+      f_in = this.create_textfield($target, type, false);
       this.link_textfield_to_subval(f_in, subval);
       if (type === "float") return this.add_textfield_slider(f_in);
     };
@@ -500,7 +501,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       var $target, f_in, self;
       self = this;
       $target = this.create_sidebar_container();
-      f_in = this.create_textfield($target, "side-field-txt-input-" + (this.get('fid')), "string");
+      f_in = this.create_textfield($target, "string");
       this.on_value_update_hooks.update_sidebar_textfield = function(v) {
         return f_in.val(v.toString());
       };
@@ -563,7 +564,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
 
     Float.prototype.create_sidebar_input = function($target) {
       var f_in;
-      f_in = this.create_textfield($target, "side-field-txt-input-" + (this.get('name')));
+      f_in = this.create_textfield($target);
       return this.link_textfield_to_val(f_in);
     };
 

@@ -32,8 +32,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     NodeFieldRackView.prototype.onFieldCreated = function(field) {
       var el, target;
       target = field.get("is_output") === false ? ".inputs" : ".outputs";
-      $(target, this.$el).append(field.render_button());
-      el = $("#fid-" + (field.get('fid')));
+      el = $(field.render_button()).appendTo($(target, this.$el));
       return this.add_field_listener(el);
     };
 
@@ -128,9 +127,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     };
 
     NodeFieldRackView.prototype.addCenterTextfield = function(field) {
-      var f_in;
-      $(".center", this.$el).append("<div><input type='text' id='f-txt-input-" + (field.get('fid')) + "' /></div>");
-      f_in = $("#f-txt-input-" + (field.get('fid')));
+      var container, f_in;
+      container = $("<div><input type='text' data-fid='" + (field.get('fid')) + "' /></div>").appendTo($(".center", this.$el));
+      f_in = $("input", container);
       field.on_value_update_hooks.update_center_textfield = function(v) {
         if (v !== null) return f_in.val(v.toString());
       };

@@ -50,7 +50,8 @@ define [
     remove: () =>
       delete @on_value_update_hooks
       delete @node
-      delete @connectionsca
+      delete @connections
+      delete @button
       @destroy()
     
     setFID: (fid) =>
@@ -148,6 +149,7 @@ define [
         name: @get("name")
       el = $(el)
       el.data("object", this)
+      @button = el
       el
       
     compute_value : (val) =>
@@ -184,8 +186,7 @@ define [
     
     create_sidebar_container: (name = @get("name")) =>
       $cont = $("#tab-attribute")
-      $cont.append("<div id='side-field-" + @get("fid") + "' class='field-wrapper'></div>")
-      $target = $("#side-field-#{@get('fid')}")
+      $target = $("<div data-fid='" + @get("fid") + "' class='field-wrapper'></div>").appendTo($cont)
       $target.append("<h3>#{name}</h3>")
       return $target
     
@@ -221,9 +222,9 @@ define [
       # create first slider
       create_slider()
     
-    create_textfield: ($target, id, type = "float", link_to_val = true) =>
-      $target.append("<div class='input-container'><input type='text' id='#{id}' class='field-#{type}' /></div>")
-      $el = $("#" + id)
+    create_textfield: ($target, type = "float", link_to_val = true) =>
+      container = $("<div class='input-container'><input type='text' class='field-#{type}' /></div>").appendTo($target)
+      $el = $("input", container)
       if type == "float" && link_to_val == true
         $el.val(@getValue())
         @add_textfield_slider($el)
@@ -263,7 +264,7 @@ define [
     
     create_subval_textinput: (subval, type = "float") =>
       $target = @create_sidebar_container(subval)
-      f_in = @create_textfield($target, "side-field-txt-input-#{subval}-#{@get('fid')}", type, false)
+      f_in = @create_textfield($target, type, false)
       @link_textfield_to_subval(f_in, subval)
       if type == "float"
         @add_textfield_slider(f_in)
@@ -328,7 +329,7 @@ define [
     render_sidebar: =>
       self = this
       $target = @create_sidebar_container()
-      f_in = @create_textfield($target, "side-field-txt-input-#{@get('fid')}", "string")
+      f_in = @create_textfield($target, "string")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_in.val(v.toString())
       f_in.val(@getValue())
@@ -361,7 +362,7 @@ define [
       return true
     
     create_sidebar_input: ($target) =>
-      f_in = @create_textfield($target, "side-field-txt-input-#{@get('name')}")
+      f_in = @create_textfield($target)
       @link_textfield_to_val(f_in)
           
     render_sidebar: =>
