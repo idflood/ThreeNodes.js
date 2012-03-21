@@ -11,6 +11,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
 
     function NodeFieldRackView() {
       this.addCenterTextfield = __bind(this.addCenterTextfield, this);
+      this.addCustomHtml = __bind(this.addCustomHtml, this);
       this.remove = __bind(this.remove, this);
       this.onFieldCreated = __bind(this.onFieldCreated, this);
       NodeFieldRackView.__super__.constructor.apply(this, arguments);
@@ -24,6 +25,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       this.collection.bind("addCenterTextfield", function(field) {
         return _this.addCenterTextfield(field);
       });
+      this.collection.bind("addCustomHtml", this.addCustomHtml);
       return this.collection.bind("add", function(field) {
         return _this.onFieldCreated(field);
       });
@@ -32,8 +34,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
     NodeFieldRackView.prototype.onFieldCreated = function(field) {
       var el, target;
       target = field.get("is_output") === false ? ".inputs" : ".outputs";
-      $(target, this.$el).append(field.render_button());
-      el = $("#fid-" + (field.get('fid')));
+      el = $(field.render_button()).appendTo($(target, this.$el));
       return this.add_field_listener(el);
     };
 
@@ -69,7 +70,9 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
         target = ".outputs .field";
         if (field.get("is_output") === true) target = ".inputs .field";
         return $(target).filter(function() {
-          return $(this).parent().parent().parent().attr("id") !== ("nid-" + self.nid);
+          console.log($(this).parent().parent().parent().data("nid"));
+          console.log(self.node.get("nid"));
+          return $(this).parent().parent().parent().data("nid") !== self.node.get("nid");
         }).addClass("field-possible-target");
       };
       $(".inner-field", $field).draggable({
@@ -127,10 +130,16 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
       return this;
     };
 
+    NodeFieldRackView.prototype.addCustomHtml = function($element, target) {
+      if (target == null) target = ".center";
+      $element.appendTo($(target, this.$el));
+      return this;
+    };
+
     NodeFieldRackView.prototype.addCenterTextfield = function(field) {
-      var f_in;
-      $(".center", this.$el).append("<div><input type='text' id='f-txt-input-" + (field.get('fid')) + "' /></div>");
-      f_in = $("#f-txt-input-" + (field.get('fid')));
+      var container, f_in;
+      container = $("<div><input type='text' data-fid='" + (field.get('fid')) + "' /></div>").appendTo($(".center", this.$el));
+      f_in = $("input", container);
       field.on_value_update_hooks.update_center_textfield = function(v) {
         if (v !== null) return f_in.val(v.toString());
       };

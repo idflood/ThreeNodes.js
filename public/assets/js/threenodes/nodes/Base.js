@@ -238,34 +238,32 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
     Color.group_name = 'Base';
 
     Color.prototype.init_preview = function() {
-      var col, el, self;
-      el = $("#nid-" + (this.get('nid')));
-      $(".center", el).append("<div class='color_preview'></div>");
+      var col,
+        _this = this;
+      this.$picker_el = $("<div class='color_preview'></div>");
       col = this.rack.getField("rgb", true).getValue(0);
-      self = this;
-      $(".color_preview", el).ColorPicker({
+      this.$picker_el.ColorPicker({
         color: {
           r: col.r * 255,
           g: col.g * 255,
           b: col.b * 255
         },
         onChange: function(hsb, hex, rgb) {
-          self.rack.getField("r").setValue(rgb.r / 255);
-          self.rack.getField("g").setValue(rgb.g / 255);
-          return self.rack.getField("b").setValue(rgb.b / 255);
+          _this.rack.getField("r").setValue(rgb.r / 255);
+          _this.rack.getField("g").setValue(rgb.g / 255);
+          return _this.rack.getField("b").setValue(rgb.b / 255);
         }
       });
-      return self.rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = function(v) {
-        return $(".color_preview", el).css({
+      this.rack.trigger("addCustomHtml", this.$picker_el, ".center");
+      return this.rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = function(v) {
+        return _this.$picker_el.css({
           background: v[0].getContextStyle()
         });
       };
     };
 
     Color.prototype.remove = function() {
-      var el;
-      el = $("#nid-" + (this.get('nid')));
-      $(".color_preview", el).each(function() {
+      this.$picker_el.each(function() {
         var cal, picker;
         if ($(this).data('colorpickerId')) {
           cal = $('#' + $(this).data('colorpickerId'));
@@ -274,8 +272,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', "ord
           return cal.remove();
         }
       });
-      $(".color_preview", el).unbind();
-      $(".color_preview", el).remove();
+      this.$picker_el.unbind();
+      this.$picker_el.remove();
+      delete this.$picker_el;
       return Color.__super__.remove.apply(this, arguments);
     };
 

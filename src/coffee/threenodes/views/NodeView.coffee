@@ -31,6 +31,7 @@ define [
       @model.bind("node:computePosition", @compute_node_position)
       @model.bind("node:renderConnections", @render_connections)
       @model.bind("node:showAnimations", @highlighAnimations)
+      @model.bind("node:addSelectedClass", @addSelectedClass)
       @render()
       @model.post_init()
       @
@@ -68,6 +69,9 @@ define [
       else
         @$el.removeClass "node-has-animation"
       true
+    
+    addSelectedClass: () =>
+      @$el.addClass("ui-selected")
     
     render_connections: () =>
       @model.rack.renderConnections()

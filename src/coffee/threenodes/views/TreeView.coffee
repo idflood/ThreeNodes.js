@@ -45,7 +45,7 @@ define [
       @$el.bind "tree.click", (e) =>
         node = e.node.model
         $( ".node" ).removeClass("ui-selected")
-        $("#nid-" + node.get("nid")).addClass("ui-selected")
+        node.trigger("node:addSelectedClass")
         selectable = $("#container").data("selectable")
         selectable.refresh()
         selectable._mouseStop(null)

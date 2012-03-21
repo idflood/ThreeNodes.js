@@ -59,7 +59,7 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/tree.jquery"], function(
         var selectable;
         node = e.node.model;
         $(".node").removeClass("ui-selected");
-        $("#nid-" + node.get("nid")).addClass("ui-selected");
+        node.trigger("node:addSelectedClass");
         selectable = $("#container").data("selectable");
         selectable.refresh();
         return selectable._mouseStop(null);

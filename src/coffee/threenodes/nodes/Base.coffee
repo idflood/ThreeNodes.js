@@ -128,25 +128,24 @@ define [
     @group_name = 'Base'
     
     init_preview: () =>
-      el = $("#nid-#{@get('nid')}")
-      $(".center", el).append("<div class='color_preview'></div>")
+      @$picker_el = $("<div class='color_preview'></div>")
       col = @rack.getField("rgb", true).getValue(0)
-      self = this
-      $(".color_preview", el).ColorPicker
+      @$picker_el.ColorPicker
         color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
-        onChange: (hsb, hex, rgb) ->
-          self.rack.getField("r").setValue(rgb.r / 255)
-          self.rack.getField("g").setValue(rgb.g / 255)
-          self.rack.getField("b").setValue(rgb.b / 255)
+        onChange: (hsb, hex, rgb) =>
+          @rack.getField("r").setValue(rgb.r / 255)
+          @rack.getField("g").setValue(rgb.g / 255)
+          @rack.getField("b").setValue(rgb.b / 255)
+      
+      @rack.trigger("addCustomHtml", @$picker_el, ".center")
       
       # on output value change set preview color
-      self.rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) ->
-        $(".color_preview", el).css
+      @rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>
+        @$picker_el.css
           background: v[0].getContextStyle()
     
     remove: () =>
-      el = $("#nid-#{@get('nid')}")
-      $(".color_preview", el).each () ->
+      @$picker_el.each () ->
         if $(this).data('colorpickerId')
           cal = $('#' + $(this).data('colorpickerId'))
           picker = cal.data('colorpicker')
@@ -154,8 +153,9 @@ define [
             delete picker.onChange
           # remove colorpicker dom element
           cal.remove()
-      $(".color_preview", el).unbind()
-      $(".color_preview", el).remove()
+      @$picker_el.unbind()
+      @$picker_el.remove()
+      delete @$picker_el
       super
     
     set_fields: =>
