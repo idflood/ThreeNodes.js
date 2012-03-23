@@ -10,21 +10,44 @@ define [
   class ThreeNodes.nodes.Group extends ThreeNodes.NodeBase
     @node_name = 'Group'
     @group_name = false
-    
-    initialize: (options) ->
+        
+    initialize: (options) =>
       super
       @definition = options.definition
+      
       # a group contains a sub-nodegraph (nodes)
       @subgraph = new ThreeNodes.NodeGraph([], ThreeNodes.settings.testing_mode)
       for node in @definition.get("nodes")
         n = @subgraph.create_node(node)
+        #n.set_fields()
+        n.post_init()
       
       for connection in @definition.get("connections")
         @subgraph.createConnectionFromObject(connection)
-      @renderNestedFields()
-    
-    renderNestedFields: () =>
+        
+    set_fields: =>
       # todo ...
+      for node in @subgraph.models
+        
+        if node.rack.hasUnconnectedInputs() == true
+          res = $("<div class='subnodes fields-node-#{node.get('nid')}'></div>")
+          res.append("<h3>#{node.get('name')}</h3>")
+          console.log node.rack.node_fields
+          for name, field of node.rack.node_fields.inputs
+            field_el = field.render_button()
+            console.log "k"
+            console.log field_el
+            res.append(field_el)
+          @rack.trigger("addCustomHtml", res, ".inputs")
+        
+        
+        if node.rack.hasUnconnectedOutputs() == true
+          res = $("<div class='subnodes fields-node-#{node.get('nid')}'></div>")
+          res.append("<h3>#{node.get('name')}</h3>")
+          for name, field of node.rack.node_fields.outputs
+            field_el = field.render_button()
+            res.append(field_el)
+          @rack.trigger("addCustomHtml", res, ".outputs")
     
     remove: () =>
       if @subgraph
@@ -34,10 +57,6 @@ define [
       delete @definition
       super
     
-    set_fields: =>
-      super
-      
-  
     compute: =>
       if @subgraph then @subgraph.render()
       return this

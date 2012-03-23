@@ -37,10 +37,9 @@ define [
               already_exists = internal_connections.indexOf(connection)
               if already_exists == -1
                 internal_connections.push(connection)
-      data =
-        nodes: jQuery.map(selected_nodes, (n, i) -> n.toJSON())
-        connections: jQuery.map(internal_connections, (c, i) -> c.toJSON())
-      console.log data
+      @attributes.nodes = jQuery.map(selected_nodes, (n, i) -> n.toJSON())
+      @attributes.connections = jQuery.map(internal_connections, (c, i) -> c.toJSON())
+      #console.log data
     
     remove: =>
       super

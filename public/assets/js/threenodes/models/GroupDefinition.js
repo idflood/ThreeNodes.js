@@ -37,7 +37,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
     };
 
     GroupDefinition.prototype.fromSelectedNodes = function(selected_nodes) {
-      var already_exists, connection, data, field, indx1, indx2, internal_connections, node, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
+      var already_exists, connection, field, indx1, indx2, internal_connections, node, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
       internal_connections = [];
       for (_i = 0, _len = selected_nodes.length; _i < _len; _i++) {
         node = selected_nodes[_i];
@@ -56,15 +56,12 @@ define(['Underscore', 'Backbone', 'order!threenodes/utils/Utils'], function(_, B
           }
         }
       }
-      data = {
-        nodes: jQuery.map(selected_nodes, function(n, i) {
-          return n.toJSON();
-        }),
-        connections: jQuery.map(internal_connections, function(c, i) {
-          return c.toJSON();
-        })
-      };
-      return console.log(data);
+      this.attributes.nodes = jQuery.map(selected_nodes, function(n, i) {
+        return n.toJSON();
+      });
+      return this.attributes.connections = jQuery.map(internal_connections, function(c, i) {
+        return c.toJSON();
+      });
     };
 
     GroupDefinition.prototype.remove = function() {

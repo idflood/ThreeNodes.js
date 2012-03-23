@@ -3,7 +3,6 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/models/Node',
-  'order!threenodes/views/NodeView',
   'order!threenodes/nodes/Base',
   'order!threenodes/nodes/Conditional',
   'order!threenodes/nodes/Geometry',
@@ -27,11 +26,8 @@ define [
       # save material nodes in an array so they can be quickly rebuild
       @materials = []
       
-      if options.is_test == false
-        @connections.bind "add", (connection) ->
-          view = new ThreeNodes.ConnectionView
-            model: connection
-          self.trigger "nodeslist:rebuild", self
+      @connections.bind "add", (connection) ->
+        self.trigger "nodeslist:rebuild", self
       
       @bind "remove", (node) =>
         indx = @materials.indexOf(node)
@@ -47,13 +43,6 @@ define [
         self.trigger "nodeslist:rebuild", self
       
       @bind "add", (node) ->
-        template = ThreeNodes.NodeView.template
-        tmpl = _.template(template, node)
-        $tmpl = $(tmpl).appendTo("#container")
-        view = new ThreeNodes.NodeView
-          model: node
-          el: $tmpl
-        
         if node.is_material && node.is_material == true
           @materials.push(node)
         

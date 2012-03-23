@@ -46,8 +46,7 @@ define [
     
     getMaxInputSliceCount: () =>
       result = 1
-      for fname of @node_fields.inputs
-        f = @node_fields.inputs[fname]
+      for fname, f of @node_fields.inputs
         val = f.attributes.value
         if val && $.type(val) == "array"
           if val.length > result
@@ -57,19 +56,33 @@ define [
     
     getUpstreamNodes: () =>
       res = []
-      for fname of @node_fields.inputs
-        f = @node_fields.inputs[fname]
+      for fname, f of @node_fields.inputs
         for c in f.connections
           res[res.length] = c.from_field.node
       res
     
     getDownstreamNodes: () =>
       res = []
-      for fname in @node_fields.outputs
+      for fname, f in @node_fields.outputs
         f = @node_fields.inputs[fname]
         for c in f.connections
           res[res.length] = c.to_field.node
       res
+    
+    hasUnconnectedInputs: () =>
+      for fname, f of @node_fields.inputs
+        if f.connections.length == 0
+          return true
+      return false
+    
+    hasUnconnectedOutputs: () =>
+      for fname, f of @node_fields.outputs
+        if f.connections.length == 0
+          return true
+      return false
+    
+    hasUnconnectedFields: () =>
+      return hasUnconnectedInputs() || hasUnconnectedOutputs()
       
     setFieldInputUnchanged: () =>
       for fname in @node_fields.inputs

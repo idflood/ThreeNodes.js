@@ -23,7 +23,7 @@ ThreeNodes.flash_sound_value = {
   hat: 0
 };
 
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/views/NodeView', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
   "use strict";  return ThreeNodes.App = (function() {
 
     function App(testing_mode) {
@@ -41,6 +41,24 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
       this.nodegraph = new ThreeNodes.NodeGraph([], {
         is_test: testing_mode
       });
+      this.nodegraph.bind("add", function(node) {
+        var $tmpl, template, tmpl, view;
+        template = ThreeNodes.NodeView.template;
+        tmpl = _.template(template, node);
+        $tmpl = $(tmpl).appendTo("#container");
+        return view = new ThreeNodes.NodeView({
+          model: node,
+          el: $tmpl
+        });
+      });
+      if (testing_mode === false) {
+        this.nodegraph.connections.bind("add", function(connection) {
+          var view;
+          return view = new ThreeNodes.ConnectionView({
+            model: connection
+          });
+        });
+      }
       this.socket = new ThreeNodes.AppWebsocket();
       this.webgl = new ThreeNodes.WebglBase();
       this.file_handler = new ThreeNodes.FileHandler(this.nodegraph);

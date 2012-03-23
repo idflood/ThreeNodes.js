@@ -25,6 +25,7 @@ define [
   'order!threenodes/collections/Nodes',
   'order!threenodes/views/UI',
   'order!threenodes/views/Timeline',
+  'order!threenodes/views/NodeView',
   'order!threenodes/utils/AppWebsocket',
   'order!threenodes/utils/FileHandler',
   'order!threenodes/utils/UrlHandler',
@@ -42,6 +43,19 @@ define [
       
       @url_handler = new ThreeNodes.UrlHandler()
       @nodegraph = new ThreeNodes.NodeGraph([], {is_test: testing_mode})
+      @nodegraph.bind "add", (node) ->
+        template = ThreeNodes.NodeView.template
+        tmpl = _.template(template, node)
+        $tmpl = $(tmpl).appendTo("#container")
+        view = new ThreeNodes.NodeView
+          model: node
+          el: $tmpl
+      
+      if testing_mode == false
+        @nodegraph.connections.bind "add", (connection) ->
+          view = new ThreeNodes.ConnectionView
+            model: connection
+      
       @socket = new ThreeNodes.AppWebsocket()
       @webgl = new ThreeNodes.WebglBase()
       @file_handler = new ThreeNodes.FileHandler(@nodegraph)

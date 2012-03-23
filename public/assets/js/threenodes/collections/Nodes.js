@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'order!threenodes/views/NodeView', 'order!threenodes/nodes/Base', 'order!threenodes/nodes/Conditional', 'order!threenodes/nodes/Geometry', 'order!threenodes/nodes/Lights', 'order!threenodes/nodes/Materials', 'order!threenodes/nodes/Math', 'order!threenodes/nodes/PostProcessing', 'order!threenodes/nodes/Three', 'order!threenodes/nodes/Utils', 'order!threenodes/nodes/Spread', 'order!threenodes/nodes/Particle', 'order!threenodes/nodes/Group', 'order!threenodes/collections/Connections'], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'order!threenodes/nodes/Base', 'order!threenodes/nodes/Conditional', 'order!threenodes/nodes/Geometry', 'order!threenodes/nodes/Lights', 'order!threenodes/nodes/Materials', 'order!threenodes/nodes/Math', 'order!threenodes/nodes/PostProcessing', 'order!threenodes/nodes/Three', 'order!threenodes/nodes/Utils', 'order!threenodes/nodes/Spread', 'order!threenodes/nodes/Particle', 'order!threenodes/nodes/Group', 'order!threenodes/collections/Connections'], function($, _, Backbone) {
   "use strict";  return ThreeNodes.NodeGraph = (function(_super) {
 
     __extends(NodeGraph, _super);
@@ -29,15 +29,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.connections = new ThreeNodes.ConnectionsCollection();
       self = this;
       this.materials = [];
-      if (options.is_test === false) {
-        this.connections.bind("add", function(connection) {
-          var view;
-          view = new ThreeNodes.ConnectionView({
-            model: connection
-          });
-          return self.trigger("nodeslist:rebuild", self);
-        });
-      }
+      this.connections.bind("add", function(connection) {
+        return self.trigger("nodeslist:rebuild", self);
+      });
       this.bind("remove", function(node) {
         var indx;
         indx = _this.materials.indexOf(node);
@@ -58,14 +52,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         return self.trigger("nodeslist:rebuild", self);
       });
       this.bind("add", function(node) {
-        var $tmpl, template, tmpl, view;
-        template = ThreeNodes.NodeView.template;
-        tmpl = _.template(template, node);
-        $tmpl = $(tmpl).appendTo("#container");
-        view = new ThreeNodes.NodeView({
-          model: node,
-          el: $tmpl
-        });
         if (node.is_material && node.is_material === true) {
           this.materials.push(node);
         }

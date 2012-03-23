@@ -17,6 +17,9 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.removeAllConnections = __bind(this.removeAllConnections, this);
       this.renderConnections = __bind(this.renderConnections, this);
       this.setFieldInputUnchanged = __bind(this.setFieldInputUnchanged, this);
+      this.hasUnconnectedFields = __bind(this.hasUnconnectedFields, this);
+      this.hasUnconnectedOutputs = __bind(this.hasUnconnectedOutputs, this);
+      this.hasUnconnectedInputs = __bind(this.hasUnconnectedInputs, this);
       this.getDownstreamNodes = __bind(this.getDownstreamNodes, this);
       this.getUpstreamNodes = __bind(this.getUpstreamNodes, this);
       this.getMaxInputSliceCount = __bind(this.getMaxInputSliceCount, this);
@@ -82,10 +85,11 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.getMaxInputSliceCount = function() {
-      var f, fname, result, val;
+      var f, fname, result, val, _ref;
       result = 1;
-      for (fname in this.node_fields.inputs) {
-        f = this.node_fields.inputs[fname];
+      _ref = this.node_fields.inputs;
+      for (fname in _ref) {
+        f = _ref[fname];
         val = f.attributes.value;
         if (val && $.type(val) === "array") {
           if (val.length > result) result = val.length;
@@ -95,13 +99,14 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.getUpstreamNodes = function() {
-      var c, f, fname, res, _i, _len, _ref;
+      var c, f, fname, res, _i, _len, _ref, _ref2;
       res = [];
-      for (fname in this.node_fields.inputs) {
-        f = this.node_fields.inputs[fname];
-        _ref = f.connections;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          c = _ref[_i];
+      _ref = this.node_fields.inputs;
+      for (fname in _ref) {
+        f = _ref[fname];
+        _ref2 = f.connections;
+        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+          c = _ref2[_i];
           res[res.length] = c.from_field.node;
         }
       }
@@ -109,19 +114,43 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.getDownstreamNodes = function() {
-      var c, f, fname, res, _i, _j, _len, _len2, _ref, _ref2;
+      var c, f, fname, res, _i, _len, _len2, _ref, _ref2;
       res = [];
       _ref = this.node_fields.outputs;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        fname = _ref[_i];
+      for (f = 0, _len = _ref.length; f < _len; f++) {
+        fname = _ref[f];
         f = this.node_fields.inputs[fname];
         _ref2 = f.connections;
-        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-          c = _ref2[_j];
+        for (_i = 0, _len2 = _ref2.length; _i < _len2; _i++) {
+          c = _ref2[_i];
           res[res.length] = c.to_field.node;
         }
       }
       return res;
+    };
+
+    NodeFieldsCollection.prototype.hasUnconnectedInputs = function() {
+      var f, fname, _ref;
+      _ref = this.node_fields.inputs;
+      for (fname in _ref) {
+        f = _ref[fname];
+        if (f.connections.length === 0) return true;
+      }
+      return false;
+    };
+
+    NodeFieldsCollection.prototype.hasUnconnectedOutputs = function() {
+      var f, fname, _ref;
+      _ref = this.node_fields.outputs;
+      for (fname in _ref) {
+        f = _ref[fname];
+        if (f.connections.length === 0) return true;
+      }
+      return false;
+    };
+
+    NodeFieldsCollection.prototype.hasUnconnectedFields = function() {
+      return hasUnconnectedInputs() || hasUnconnectedOutputs();
     };
 
     NodeFieldsCollection.prototype.setFieldInputUnchanged = function() {
