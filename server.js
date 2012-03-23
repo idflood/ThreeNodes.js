@@ -1,5 +1,5 @@
 var connect = require('connect');
-var sys = require('sys');
+var sys = require('util');
 var exec = require('child_process').exec;
 var watch = require('watch');
 
