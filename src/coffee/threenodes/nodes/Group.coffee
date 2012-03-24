@@ -13,6 +13,7 @@ define [
         
     initialize: (options) =>
       super
+      @auto_evaluate = true
       @definition = options.definition
       
       # A group contains a sub-nodegraph (nodes)

@@ -22,6 +22,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     Group.prototype.initialize = function(options) {
       var connection, n, node, _i, _j, _len, _len2, _ref, _ref2, _results;
       Group.__super__.initialize.apply(this, arguments);
+      this.auto_evaluate = true;
       this.definition = options.definition;
       this.subgraph = new ThreeNodes.NodeGraph([], ThreeNodes.settings.testing_mode);
       _ref = this.definition.get("nodes");
