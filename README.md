@@ -20,7 +20,7 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 ## Development setup
 This will automatically compile coffescript files to javascript, sass to css and haml to html.
 
-1. install node.js 0.4.x (http://nodejs.org/)
+1. install node.js 0.6.x (http://nodejs.org/)
 2. install npm (https://github.com/isaacs/npm)
 3. install compass/coffeescript (http://compass-style.org/ and http://jashkenas.github.com/coffee-script/)
 4. cd in ThreeNodes
