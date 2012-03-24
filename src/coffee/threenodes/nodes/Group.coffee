@@ -43,7 +43,7 @@ define [
       if !@subgraph then return false
       # Since we are using proxy fields the upstream nodes are 'automatically' handled.
       # For inputs we simply need to copy value from fields to subfield (proxy->field)
-      # For outputs we copy sufield value to the field (field->proxy)
+      # For outputs we copy subfield value to the field (field->proxy)
       # The value propagation is directly handled in field.setValue
       @subgraph.render()
       return this

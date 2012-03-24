@@ -178,6 +178,7 @@ define [
       # Save the connection going out or in the group of nodes
       # the connections have one extenal node linked to one selected node
       external_connections = []
+      external_objects = []
       for node in selected_nodes
         # check each node fields
         for field in node.rack.models
@@ -191,6 +192,9 @@ define [
               already_exists = external_connections.indexOf(connection)
               if already_exists == -1
                 external_connections.push(connection)
+                connection_description = connection.toJSON()
+                connection_description.to_subfield = (indx1 == -1)
+                external_objects.push(connection_description)
                 
       # remove the nodes
       for node in selected_nodes
@@ -204,14 +208,25 @@ define [
         y: dy
       
       # Recreate the external connections
-      
-      
+      for connection in external_objects
+        if connection.to_subfield
+          from = @getNodeByNid(connection.from_node).rack.getField(connection.from, true)
+          to = grp.rack.getField(connection.to + "-" + connection.to_node)
+        else
+          from = grp.rack.getField(connection.from + "-" + connection.from_node, true)
+          to = @getNodeByNid(connection.to_node).rack.getField(connection.to)
+        
+        c = @connections.create
+          from_field: from
+          to_field: to
+      return this
+    
     removeConnection: (c) ->
       @connections.remove(c)
     
     getNodeByNid: (nid) =>
       for node in @models
-        if node.get("nid").toString() == nid
+        if node.get("nid").toString() == nid.toString()
           return node
       return false
     

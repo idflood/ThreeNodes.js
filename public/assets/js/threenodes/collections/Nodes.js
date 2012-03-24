@@ -171,7 +171,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     NodeGraph.prototype.onGroupSelected = function() {
-      var $selected, already_exists, connection, dx, dy, external_connections, field, group_def, grp, indx1, indx2, max_x, max_y, min_x, min_y, node, selected_nodes, _i, _j, _k, _l, _len, _len2, _len3, _len4, _ref, _ref2;
+      var $selected, already_exists, c, connection, connection_description, dx, dy, external_connections, external_objects, field, from, group_def, grp, indx1, indx2, max_x, max_y, min_x, min_y, node, selected_nodes, to, _i, _j, _k, _l, _len, _len2, _len3, _len4, _len5, _m, _ref, _ref2;
       min_x = 0;
       min_y = 0;
       max_x = 0;
@@ -194,6 +194,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         fromSelectedNodes: selected_nodes
       });
       external_connections = [];
+      external_objects = [];
       for (_i = 0, _len = selected_nodes.length; _i < _len; _i++) {
         node = selected_nodes[_i];
         _ref = node.rack.models;
@@ -206,7 +207,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
             indx2 = selected_nodes.indexOf(connection.to_field.node);
             if (indx1 === -1 || indx2 === -1) {
               already_exists = external_connections.indexOf(connection);
-              if (already_exists === -1) external_connections.push(connection);
+              if (already_exists === -1) {
+                external_connections.push(connection);
+                connection_description = connection.toJSON();
+                connection_description.to_subfield = indx1 === -1;
+                external_objects.push(connection_description);
+              }
             }
           }
         }
@@ -215,12 +221,27 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         node = selected_nodes[_l];
         node.remove();
       }
-      return grp = this.create_node({
+      grp = this.create_node({
         type: "Group",
         definition: group_def,
         x: dx,
         y: dy
       });
+      for (_m = 0, _len5 = external_objects.length; _m < _len5; _m++) {
+        connection = external_objects[_m];
+        if (connection.to_subfield) {
+          from = this.getNodeByNid(connection.from_node).rack.getField(connection.from, true);
+          to = grp.rack.getField(connection.to + "-" + connection.to_node);
+        } else {
+          from = grp.rack.getField(connection.from + "-" + connection.from_node, true);
+          to = this.getNodeByNid(connection.to_node).rack.getField(connection.to);
+        }
+        c = this.connections.create({
+          from_field: from,
+          to_field: to
+        });
+      }
+      return this;
     };
 
     NodeGraph.prototype.removeConnection = function(c) {
@@ -232,7 +253,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       _ref = this.models;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        if (node.get("nid").toString() === nid) return node;
+        if (node.get("nid").toString() === nid.toString()) return node;
       }
       return false;
     };
