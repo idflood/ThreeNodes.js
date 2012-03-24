@@ -70,8 +70,6 @@ define(['jQuery', 'Underscore', 'Backbone', "order!libs/jquery-ui/js/jquery-ui-1
         target = ".outputs .field";
         if (field.get("is_output") === true) target = ".inputs .field";
         return $(target).filter(function() {
-          console.log($(this).parent().parent().parent().data("nid"));
-          console.log(self.node.get("nid"));
           return $(this).parent().parent().parent().data("nid") !== self.node.get("nid");
         }).addClass("field-possible-target");
       };

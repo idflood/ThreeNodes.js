@@ -188,8 +188,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
         max_y = Math.max(max_y, node.get("y"));
         return selected_nodes.push(node);
       });
-      dx = min_x + (max_x - min_x) / 2;
-      dy = min_y + (max_y - min_y) / 2;
+      dx = (min_x + max_x) / 2;
+      dy = (min_y + max_y) / 2;
       group_def = new ThreeNodes.GroupDefinition({
         fromSelectedNodes: selected_nodes
       });

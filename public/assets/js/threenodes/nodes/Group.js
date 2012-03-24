@@ -40,40 +40,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     Group.prototype.set_fields = function() {
-      var field, field_el, name, node, res, _i, _len, _ref, _ref2, _ref3, _results;
-      _ref = this.subgraph.models;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        node = _ref[_i];
-        if (node.rack.hasUnconnectedInputs() === true) {
-          res = $("<div class='subnodes fields-node-" + (node.get('nid')) + "'></div>");
-          res.append("<h3>" + (node.get('name')) + "</h3>");
-          console.log(node.rack.node_fields);
-          _ref2 = node.rack.node_fields.inputs;
-          for (name in _ref2) {
-            field = _ref2[name];
-            field_el = field.render_button();
-            console.log("k");
-            console.log(field_el);
-            res.append(field_el);
-          }
-          this.rack.trigger("addCustomHtml", res, ".inputs");
-        }
-        if (node.rack.hasUnconnectedOutputs() === true) {
-          res = $("<div class='subnodes fields-node-" + (node.get('nid')) + "'></div>");
-          res.append("<h3>" + (node.get('name')) + "</h3>");
-          _ref3 = node.rack.node_fields.outputs;
-          for (name in _ref3) {
-            field = _ref3[name];
-            field_el = field.render_button();
-            res.append(field_el);
-          }
-          _results.push(this.rack.trigger("addCustomHtml", res, ".outputs"));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
+      this.rack.createNodesProxyFields(this.subgraph.models);
+      return this;
     };
 
     Group.prototype.remove = function() {
@@ -86,7 +54,27 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     Group.prototype.compute = function() {
-      if (this.subgraph) this.subgraph.render();
+      var name, node, proxyfield, subfield, _i, _len, _ref, _ref2, _ref3;
+      if (!this.subgraph) return false;
+      console.log("up");
+      _ref = this.rack.node_fields.inputs;
+      for (name in _ref) {
+        proxyfield = _ref[name];
+        console.log(proxyfield);
+        if (proxyfield.subfield) {
+          proxyfield.subfield.setValue(proxyfield.attributes.value);
+        }
+      }
+      this.subgraph.render();
+      _ref2 = this.subgraph.models;
+      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+        node = _ref2[_i];
+        _ref3 = node.rack.node_fields.outputs;
+        for (name in _ref3) {
+          subfield = _ref3[name];
+          if (subfield.proxy) subfield.proxy.setValue(subfield.attributes.value);
+        }
+      }
       return this;
     };
 

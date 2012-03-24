@@ -168,8 +168,8 @@ define [
         selected_nodes.push(node)
       
       # compute the center node position
-      dx = min_x + (max_x - min_x) / 2
-      dy = min_y + (max_y - min_y) / 2
+      dx = (min_x + max_x) / 2
+      dy = (min_y + max_y) / 2
       
       # Create a new GroupDefinition from the selected nodes and connections
       group_def = new ThreeNodes.GroupDefinition

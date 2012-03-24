@@ -17,7 +17,7 @@ define [
     
     sync: () =>
     _validate: (attrs, options) => return true
-    
+        
     # override the backbone set method if the key is "value"
     # this is one of the most called function so this needs to be fast
     set: (key, value, options = {}) =>
@@ -42,6 +42,8 @@ define [
       self = this
       @on_value_update_hooks = {}
       @node = options.node
+      @subfield = options.subfield
+      @proxy = false
       @changed = true
       @connections = []
       if @get("fid") == -1
@@ -52,6 +54,8 @@ define [
       delete @node
       delete @connections
       delete @button
+      delete @proxy
+      delete @subfield
       @destroy()
     
     setFID: (fid) =>
@@ -90,7 +94,15 @@ define [
       if @attributes["is_output"] == true
         for connection in @connections
           connection.to_field.setValue(new_val)
-      true
+      
+      # Handle relation between field and subfields (for grouping)
+      #if @subfield && @attributes["is_output"] == false
+      #  # propagate the value to the subfield
+      #  @subfield.setValue(new_val)
+      #else if @proxy && @attributes["is_output"] == true
+      #  # propagate the value to the proxy field
+      #  @proxy.setValue(new_val)
+      return true
   
     getValue: (index = 0) =>
       val = @attributes["value"]

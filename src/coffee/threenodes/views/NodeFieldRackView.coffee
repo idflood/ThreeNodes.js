@@ -59,8 +59,6 @@ define [
         if field.get("is_output") == true
           target = ".inputs .field"
         $(target).filter () ->
-          console.log $(this).parent().parent().parent().data("nid")
-          console.log self.node.get("nid")
           $(this).parent().parent().parent().data("nid") != self.node.get("nid")
         .addClass "field-possible-target"
       

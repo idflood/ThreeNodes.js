@@ -95,6 +95,36 @@ define [
     removeAllConnections: =>
       @invoke "remove_connections"
     
+    cloneSubField: (field) =>
+      options = 
+        type: field.constructor.name
+        value: field.attributes.value
+        possibilities: field.get("values")
+        node: @node
+        default: field.get("default")
+        subfield: field
+      direction = if field.get("is_output") then "outputs" else "inputs"
+      proxy_field = @addField(field.get('name'), options, direction)
+      field.proxy = proxy_field
+    
+    createNodesProxyFields: (nodes) =>
+      if $.type(nodes) != "array"
+        @createNodesProxyFields([nodes])
+        return this
+      
+      setSubfields = (node, direction = "inputs") =>
+        @trigger("addCustomHtml", $("<h3>#{node.get('name')}</h3>"), "." + direction)
+        for name, field of node.rack.node_fields[direction]
+          # We hide subfields inputs with internal connection
+          if field.connections.length == 0 || field.attributes.is_output == true
+            @cloneSubField(field)
+      
+      for node in nodes
+        if node.rack.hasUnconnectedInputs() == true then setSubfields(node, "inputs")
+        # We want to be able to retrieve all outputs
+        setSubfields(node, "outputs")
+      return this
+    
     addField: (name, value, direction = "inputs") =>
       f = false
       field_is_out = (direction != "inputs")
@@ -107,6 +137,7 @@ define [
         node: @node
         is_output: field_is_out
         default: value.default
+        subfield: value.subfield
       
       target = if field.get("is_output") == false then "inputs" else "outputs"
       @node_fields[target][field.get("name")] = field

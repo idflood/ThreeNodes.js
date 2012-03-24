@@ -14,6 +14,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       this.render_sidebar = __bind(this.render_sidebar, this);
       this.addFields = __bind(this.addFields, this);
       this.addField = __bind(this.addField, this);
+      this.createNodesProxyFields = __bind(this.createNodesProxyFields, this);
+      this.cloneSubField = __bind(this.cloneSubField, this);
       this.removeAllConnections = __bind(this.removeAllConnections, this);
       this.renderConnections = __bind(this.renderConnections, this);
       this.setFieldInputUnchanged = __bind(this.setFieldInputUnchanged, this);
@@ -173,6 +175,54 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       return this.invoke("remove_connections");
     };
 
+    NodeFieldsCollection.prototype.cloneSubField = function(field) {
+      var direction, options, proxy_field;
+      options = {
+        type: field.constructor.name,
+        value: field.attributes.value,
+        possibilities: field.get("values"),
+        node: this.node,
+        "default": field.get("default"),
+        subfield: field
+      };
+      direction = field.get("is_output") ? "outputs" : "inputs";
+      proxy_field = this.addField(field.get('name'), options, direction);
+      return field.proxy = proxy_field;
+    };
+
+    NodeFieldsCollection.prototype.createNodesProxyFields = function(nodes) {
+      var node, setSubfields, _i, _len,
+        _this = this;
+      if ($.type(nodes) !== "array") {
+        this.createNodesProxyFields([nodes]);
+        return this;
+      }
+      setSubfields = function(node, direction) {
+        var field, name, _ref, _results;
+        if (direction == null) direction = "inputs";
+        _this.trigger("addCustomHtml", $("<h3>" + (node.get('name')) + "</h3>"), "." + direction);
+        _ref = node.rack.node_fields[direction];
+        _results = [];
+        for (name in _ref) {
+          field = _ref[name];
+          if (field.connections.length === 0 || field.attributes.is_output === true) {
+            _results.push(_this.cloneSubField(field));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+      for (_i = 0, _len = nodes.length; _i < _len; _i++) {
+        node = nodes[_i];
+        if (node.rack.hasUnconnectedInputs() === true) {
+          setSubfields(node, "inputs");
+        }
+        setSubfields(node, "outputs");
+      }
+      return this;
+    };
+
     NodeFieldsCollection.prototype.addField = function(name, value, direction) {
       var f, field, field_is_out, target;
       if (direction == null) direction = "inputs";
@@ -185,7 +235,8 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
         possibilities: value.values,
         node: this.node,
         is_output: field_is_out,
-        "default": value["default"]
+        "default": value["default"],
+        subfield: value.subfield
       });
       target = field.get("is_output") === false ? "inputs" : "outputs";
       this.node_fields[target][field.get("name")] = field;

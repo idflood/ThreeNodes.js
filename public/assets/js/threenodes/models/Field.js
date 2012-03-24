@@ -83,6 +83,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       self = this;
       this.on_value_update_hooks = {};
       this.node = options.node;
+      this.subfield = options.subfield;
+      this.proxy = false;
       this.changed = true;
       this.connections = [];
       if (this.get("fid") === -1) {
@@ -95,6 +97,8 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
       delete this.node;
       delete this.connections;
       delete this.button;
+      delete this.proxy;
+      delete this.subfield;
       return this.destroy();
     };
 
