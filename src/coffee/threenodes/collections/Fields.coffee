@@ -105,7 +105,14 @@ define [
         subfield: field
       direction = if field.get("is_output") then "outputs" else "inputs"
       proxy_field = @addField(field.get('name'), options, direction)
+      # Save a reference of the proxy field in the subfield
       field.proxy = proxy_field
+      
+      # set the initial value of input proxy
+      if field.get("is_output") == false
+        proxy_field.setValue(field.attributes.value)
+      
+      return proxy_field
     
     createNodesProxyFields: (nodes) =>
       if $.type(nodes) != "array"

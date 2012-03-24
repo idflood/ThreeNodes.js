@@ -187,7 +187,11 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
       };
       direction = field.get("is_output") ? "outputs" : "inputs";
       proxy_field = this.addField(field.get('name'), options, direction);
-      return field.proxy = proxy_field;
+      field.proxy = proxy_field;
+      if (field.get("is_output") === false) {
+        proxy_field.setValue(field.attributes.value);
+      }
+      return proxy_field;
     };
 
     NodeFieldsCollection.prototype.createNodesProxyFields = function(nodes) {

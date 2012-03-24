@@ -13,7 +13,12 @@ define [
         
     initialize: (options) =>
       super
+      # Set auto evaluate to true since we want to be sure to update subnodes
+      # There could be no incoming connection but an auto evaluated subnode,
+      # if we don't evaluate the group the subnode will never update
       @auto_evaluate = true
+      
+      # Save the group definition reference
       @definition = options.definition
       
       # A group contains a sub-nodegraph (nodes)
