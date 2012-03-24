@@ -49,7 +49,7 @@ define [
       @apptimeline = options.timeline
       @options = options
       
-      if @get('name') == ''
+      if !@get('name') || @get('name') == ''
         @setName(@typename())
       
       if !@get("nid")

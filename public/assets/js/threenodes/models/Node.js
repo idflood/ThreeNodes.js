@@ -88,7 +88,9 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Fields
       this.value = false;
       this.apptimeline = options.timeline;
       this.options = options;
-      if (this.get('name') === '') this.setName(this.typename());
+      if (!this.get('name') || this.get('name') === '') {
+        this.setName(this.typename());
+      }
       if (!this.get("nid")) {
         this.setNID(ThreeNodes.Utils.get_uid());
       } else {
