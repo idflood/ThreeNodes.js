@@ -49,7 +49,8 @@ define [
       @apptimeline = options.timeline
       @options = options
       
-      @setName(@typename())
+      if @get('name') == ''
+        @setName(@typename())
       
       if !@get("nid")
         @setNID(ThreeNodes.Utils.get_uid())
