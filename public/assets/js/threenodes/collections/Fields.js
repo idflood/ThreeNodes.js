@@ -224,7 +224,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
     };
 
     NodeFieldsCollection.prototype.addField = function(name, value, direction) {
-      var f, field, field_is_out, target;
+      var f, field, field_index, field_is_out, target;
       if (direction == null) direction = "inputs";
       f = false;
       field_is_out = direction !== "inputs";
@@ -239,7 +239,9 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Field'], function(_, 
         subfield: value.subfield
       });
       target = field.get("is_output") === false ? "inputs" : "outputs";
-      this.node_fields[target][field.get("name")] = field;
+      field_index = field.get("name");
+      if (field.subfield) field_index += "-" + field.subfield.node.get("nid");
+      this.node_fields[target][field_index] = field;
       this.add(field);
       return field;
     };

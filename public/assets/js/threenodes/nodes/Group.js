@@ -54,27 +54,8 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
     };
 
     Group.prototype.compute = function() {
-      var name, node, proxyfield, subfield, _i, _len, _ref, _ref2, _ref3;
       if (!this.subgraph) return false;
-      console.log("up");
-      _ref = this.rack.node_fields.inputs;
-      for (name in _ref) {
-        proxyfield = _ref[name];
-        console.log(proxyfield);
-        if (proxyfield.subfield) {
-          proxyfield.subfield.setValue(proxyfield.attributes.value);
-        }
-      }
       this.subgraph.render();
-      _ref2 = this.subgraph.models;
-      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-        node = _ref2[_i];
-        _ref3 = node.rack.node_fields.outputs;
-        for (name in _ref3) {
-          subfield = _ref3[name];
-          if (subfield.proxy) subfield.proxy.setValue(subfield.attributes.value);
-        }
-      }
       return this;
     };
 

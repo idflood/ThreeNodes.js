@@ -44,23 +44,7 @@ define [
       # Since we are using proxy fields the upstream nodes are 'automatically' handled.
       # For inputs we simply need to copy value from fields to subfield (proxy->field)
       # For outputs we copy sufield value to the field (field->proxy)
-      console.log "up"
-      # Apply each input proxy to the subfield
-      for name, proxyfield of @rack.node_fields.inputs
-        console.log proxyfield
-        if proxyfield.subfield
-          
-          proxyfield.subfield.setValue(proxyfield.attributes.value)
-      
-      # Render the subgraph
+      # The value propagation is directly handled in field.setValue
       @subgraph.render()
-      
-      #console.log @subgraph.models
-      #return this
-      for node in @subgraph.models
-        # Apply each outputs field to the proxy
-        for name, subfield of node.rack.node_fields.outputs
-          if subfield.proxy
-            subfield.proxy.setValue(subfield.attributes.value)
       return this
   

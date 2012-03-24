@@ -140,7 +140,11 @@ define [
         subfield: value.subfield
       
       target = if field.get("is_output") == false then "inputs" else "outputs"
-      @node_fields[target][field.get("name")] = field
+      field_index = field.get("name")
+      if field.subfield
+        # In group nodes we want to have a unique field index
+        field_index += "-" + field.subfield.node.get("nid")
+      @node_fields[target][field_index] = field
       
       @add(field)
       field

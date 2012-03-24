@@ -96,12 +96,12 @@ define [
           connection.to_field.setValue(new_val)
       
       # Handle relation between field and subfields (for grouping)
-      #if @subfield && @attributes["is_output"] == false
-      #  # propagate the value to the subfield
-      #  @subfield.setValue(new_val)
-      #else if @proxy && @attributes["is_output"] == true
-      #  # propagate the value to the proxy field
-      #  @proxy.setValue(new_val)
+      if @subfield && @attributes["is_output"] == false
+        # propagate the value to the subfield
+        @subfield.setValue(new_val)
+      else if @proxy && @attributes["is_output"] == true
+        # propagate the value to the proxy field
+        @proxy.setValue(new_val)
       return true
   
     getValue: (index = 0) =>

@@ -142,6 +142,11 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/node_field_input.tmp
           connection.to_field.setValue(new_val);
         }
       }
+      if (this.subfield && this.attributes["is_output"] === false) {
+        this.subfield.setValue(new_val);
+      } else if (this.proxy && this.attributes["is_output"] === true) {
+        this.proxy.setValue(new_val);
+      }
       return true;
     };
 
