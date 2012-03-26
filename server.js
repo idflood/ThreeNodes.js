@@ -38,14 +38,7 @@ function watchDirectoryAndRecompile(dir, callback) {
   });
 }
 
-connect.createServer(
-    connect.static(__dirname + '/public', { maxAge: 0 })
-  , function(req, res) {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/html');
-    res.end('404')
-  }
-).listen(8042);
+connect().use(connect.static(__dirname + '/public')).listen(8042);
 
 watchDirectoryAndRecompile("src/sass", compile_sass);
 watchDirectoryAndRecompile("src/haml", compile_haml);
