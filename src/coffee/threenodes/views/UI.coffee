@@ -72,6 +72,10 @@ define [
       @menubar = new ThreeNodes.MenuBar
         el: $menu_tmpl
       
+      @menubar.on "ToggleAttributes", () => if @layout then @layout.toggle("west")
+      @menubar.on "ToggleLibrary", () => if @layout then @layout.toggle("east")
+      @menubar.on "ToggleTimeline", () => if @layout then @layout.toggle("south")
+      
       return this
         
     # Setup layout
@@ -82,7 +86,7 @@ define [
       @init_bottom_toolbox()
       @init_display_mode_switch()
       
-      $('body').layout
+      @layout = $('body').layout
         scrollToBookmarkOnLoad: false
         center:
           size: "100%"
@@ -95,6 +99,9 @@ define [
           resizerClass: "ui-layout-resizer-hidden"
           spacing_open: 0
           spacing_closed: 0
+        east:
+          minSize: 220
+          initClosed: true
         west:
           minSize: 220
         south:

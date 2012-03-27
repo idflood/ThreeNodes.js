@@ -23,36 +23,20 @@ define [
         @trigger("LoadFile", e)
     
     on_link_click: (event, link, url) =>
-      is_exception = switch $(link).text().toLowerCase()
-        when "new"
-          @trigger("ClearWorkspace")
-          Backbone.history.navigate("", false)
-          true
-        when "open"
-          $("#main_file_input_open").click()
-          true
-        when "save"
-          @trigger("SaveFile")
-          true
-        when "export to code"
-          @trigger("ExportCode")
-          true
-        when "export image"
-          @trigger("ExportImage", "exported-image.png")
-          true
-        when "rebuild all shaders"
-          @trigger("RebuildAllShaders")
-          true
-        when "group selected nodes"
-          @trigger("GroupSelectedNodes")
-          true
-        when "remove selected node(s)"
-          @trigger("RmoveSelectedNodes")
-          true
-        else false
+      data_event = $(link).data("event")
+      data_attr = $(link).data("eventData")
       
-      if is_exception == true
-        event.preventDefault()
+      if data_event
+        #event.preventDefault()
+        
+        @trigger(data_event, data_attr)
+        
+        # exceptions and special event handling
+        switch data_event
+          when "ClearWorkspace"
+            Backbone.history.navigate("", false)
+          when "OpenFile"
+            $("#main_file_input_open").click()
         return true
       
       # sends "normal" urls to the router

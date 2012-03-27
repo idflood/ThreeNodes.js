@@ -70,11 +70,21 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
     };
 
     UI.prototype.initMenubar = function() {
-      var $menu_tmpl, menu_tmpl;
+      var $menu_tmpl, menu_tmpl,
+        _this = this;
       menu_tmpl = _.template(ThreeNodes.MenuBar.template, {});
       $menu_tmpl = $(menu_tmpl).prependTo("body");
       this.menubar = new ThreeNodes.MenuBar({
         el: $menu_tmpl
+      });
+      this.menubar.on("ToggleAttributes", function() {
+        if (_this.layout) return _this.layout.toggle("west");
+      });
+      this.menubar.on("ToggleLibrary", function() {
+        if (_this.layout) return _this.layout.toggle("east");
+      });
+      this.menubar.on("ToggleTimeline", function() {
+        if (_this.layout) return _this.layout.toggle("south");
       });
       return this;
     };
@@ -86,7 +96,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.init_context_menus();
       this.init_bottom_toolbox();
       this.init_display_mode_switch();
-      $('body').layout({
+      this.layout = $('body').layout({
         scrollToBookmarkOnLoad: false,
         center: {
           size: "100%"
@@ -100,6 +110,10 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
           resizerClass: "ui-layout-resizer-hidden",
           spacing_open: 0,
           spacing_closed: 0
+        },
+        east: {
+          minSize: 220,
+          initClosed: true
         },
         west: {
           minSize: 220

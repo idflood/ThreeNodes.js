@@ -31,40 +31,18 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/app_menubar.tmpl.htm
     };
 
     MenuBar.prototype.on_link_click = function(event, link, url) {
-      var is_exception;
-      is_exception = (function() {
-        switch ($(link).text().toLowerCase()) {
-          case "new":
-            this.trigger("ClearWorkspace");
+      var data_attr, data_event;
+      data_event = $(link).data("event");
+      data_attr = $(link).data("eventData");
+      if (data_event) {
+        this.trigger(data_event, data_attr);
+        switch (data_event) {
+          case "ClearWorkspace":
             Backbone.history.navigate("", false);
-            return true;
-          case "open":
+            break;
+          case "OpenFile":
             $("#main_file_input_open").click();
-            return true;
-          case "save":
-            this.trigger("SaveFile");
-            return true;
-          case "export to code":
-            this.trigger("ExportCode");
-            return true;
-          case "export image":
-            this.trigger("ExportImage", "exported-image.png");
-            return true;
-          case "rebuild all shaders":
-            this.trigger("RebuildAllShaders");
-            return true;
-          case "group selected nodes":
-            this.trigger("GroupSelectedNodes");
-            return true;
-          case "remove selected node(s)":
-            this.trigger("RmoveSelectedNodes");
-            return true;
-          default:
-            return false;
         }
-      }).call(this);
-      if (is_exception === true) {
-        event.preventDefault();
         return true;
       }
       return true;

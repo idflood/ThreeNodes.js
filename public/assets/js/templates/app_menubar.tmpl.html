@@ -2,19 +2,27 @@
   <li>
     <a href="#File">File</a>
     <ul>
-      <li><a href="#New_file">New</a></li>
-      <li><a href="#Open_file">Open</a></li>
-      <li><a href="#Save_file">Save</a></li>
-      <li><a href="#Export_to_code">Export to code</a></li>
-      <li><a href="#Export_image">Export image</a></li>
+      <li><a href="#NewFile" data-event="ClearWorkspace">New</a></li>
+      <li><a href="#OpenFile" data-event="OpenFile">Open</a></li>
+      <li><a href="#SaveFile" data-event="SaveFile">Save</a></li>
+      <li><a href="#ExportCode" data-event="ExportCode">Export to code</a></li>
+      <li><a href="#ExportImage" data-event="ExportImage" data-eventData="exported-image.png">Export image</a></li>
     </ul>
   </li>
   <li>
     <a href="#Edit">Edit</a>
     <ul>
-      <li><a href="#Group_nodes">Group selected nodes</a></li>
-      <li><a href="#Remove_nodes">Remove selected node(s)</a></li>
-      <li><a href="#Rebuild_shaders">Rebuild all shaders</a></li>
+      <li><a href="#GroupSelectedNodes" data-event="GroupSelectedNodes">Group selected nodes</a></li>
+      <li><a href="#RmoveSelectedNodes" data-event="RmoveSelectedNodes">Remove selected node(s)</a></li>
+      <li><a href="#RebuildAllShaders" data-event="RebuildAllShaders">Rebuild all shaders</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#View">View</a>
+    <ul>
+      <li><a href="#Attributes" data-event="ToggleAttributes">Attributes</a></li>
+      <li><a href="#Library" data-event="ToggleLibrary">Library</a></li>
+      <li><a href="#Timeline" data-event="ToggleTimeline">Timeline</a></li>
     </ul>
   </li>
   <li class="expanded">
