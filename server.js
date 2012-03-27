@@ -1,7 +1,7 @@
-var connect = require('connect');
 var sys = require('util');
 var exec = require('child_process').exec;
 var watch = require('watch');
+var express = require('express');
 
 var first_pass_sass = false;
 
@@ -9,16 +9,19 @@ function puts(error, stdout, stderr) { console.log(stdout) }
 
 function compile_sass() {
   exec("compass compile", puts);
+  console.log("compile_sass done");
 }
 
 function compile_haml() {
   exec("haml src/haml/index.haml public/index.html", puts);
   exec("haml src/haml/test.haml public/test.html", puts);
   exec("haml src/haml/speedtest.haml public/speedtest.html", puts);
+  console.log("compile_haml done");
 }
 
 function compile_coffee() {
   exec("cake build", puts);
+  console.log("compile_coffee done");
 }
 
 function watchDirectoryAndRecompile(dir, callback) {
@@ -38,7 +41,10 @@ function watchDirectoryAndRecompile(dir, callback) {
   });
 }
 
-connect().use(connect.static(__dirname + '/public')).listen(8042);
+var app = express.createServer();
+app.use(app.router);
+app.use(express.static(__dirname + '/public'));
+app.listen(8042);
 
 watchDirectoryAndRecompile("src/sass", compile_sass);
 watchDirectoryAndRecompile("src/haml", compile_haml);
