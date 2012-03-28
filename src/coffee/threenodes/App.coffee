@@ -23,6 +23,7 @@ define [
   'Underscore',
   'Backbone',
   'order!threenodes/collections/Nodes',
+  'order!threenodes/collections/GroupDefinitions',
   'order!threenodes/views/UI',
   'order!threenodes/views/Timeline',
   'order!threenodes/views/NodeView',
@@ -42,6 +43,7 @@ define [
         player_mode: false
       
       @url_handler = new ThreeNodes.UrlHandler()
+      @group_definitions = new ThreeNodes.GroupDefinitions([])
       @nodegraph = new ThreeNodes.NodeGraph([], {is_test: testing_mode})
       @nodegraph.bind "add", (node) ->
         template = ThreeNodes.NodeView.template
@@ -50,6 +52,8 @@ define [
         view = new ThreeNodes.NodeView
           model: node
           el: $tmpl
+      
+      @group_definitions.bind "definition:created", @nodegraph.createGroup
       
       if testing_mode == false
         @nodegraph.connections.bind "add", (connection) ->
@@ -90,7 +94,7 @@ define [
         @ui.menubar.on("LoadJSON", @file_handler.load_from_json_data)
         @ui.menubar.on("LoadFile", @file_handler.load_local_file)
         @ui.menubar.on("ExportImage", @webgl.exportImage)
-        @ui.menubar.on("GroupSelectedNodes", @nodegraph.onGroupSelected)
+        @ui.menubar.on("GroupSelectedNodes", @group_definitions.groupSelectedNodes)
         @ui.sidebar.on("CreateNode", @nodegraph.create_node)
         @nodegraph.on("nodeslist:rebuild", @ui.onNodeListRebuild)
         @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
@@ -113,6 +117,7 @@ define [
       if @ui
         @ui.on_ui_window_resize()
       return this
+    
     
     setDisplayMode: (is_player = false) =>
       if @ui then @ui.setDisplayMode(is_player)

@@ -12,7 +12,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       this.startSound = __bind(this.startSound, this);
       this.showNodesAnimation = __bind(this.showNodesAnimation, this);
       this.getNodeByNid = __bind(this.getNodeByNid, this);
-      this.onGroupSelected = __bind(this.onGroupSelected, this);
+      this.createGroup = __bind(this.createGroup, this);
       this.renderAllConnections = __bind(this.renderAllConnections, this);
       this.createConnectionFromObject = __bind(this.createConnectionFromObject, this);
       this.render = __bind(this.render, this);
@@ -170,65 +170,12 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/models/Node', 'ord
       return true;
     };
 
-    NodeGraph.prototype.onGroupSelected = function() {
-      var $selected, already_exists, c, connection, connection_description, dx, dy, external_connections, external_objects, field, from, group_def, grp, indx1, indx2, max_x, max_y, min_x, min_y, node, selected_nodes, to, _i, _j, _k, _l, _len, _len2, _len3, _len4, _len5, _m, _ref, _ref2;
-      min_x = 0;
-      min_y = 0;
-      max_x = 0;
-      max_y = 0;
-      $selected = $(".node.ui-selected");
-      if ($selected.length < 1) return false;
-      selected_nodes = [];
-      $selected.each(function() {
-        var node;
-        node = $(this).data("object");
-        min_x = Math.min(min_x, node.get("x"));
-        max_x = Math.max(max_x, node.get("x"));
-        min_y = Math.min(min_y, node.get("y"));
-        max_y = Math.max(max_y, node.get("y"));
-        return selected_nodes.push(node);
-      });
-      dx = (min_x + max_x) / 2;
-      dy = (min_y + max_y) / 2;
-      group_def = new ThreeNodes.GroupDefinition({
-        fromSelectedNodes: selected_nodes
-      });
-      external_connections = [];
-      external_objects = [];
-      for (_i = 0, _len = selected_nodes.length; _i < _len; _i++) {
-        node = selected_nodes[_i];
-        _ref = node.rack.models;
-        for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
-          field = _ref[_j];
-          _ref2 = field.connections;
-          for (_k = 0, _len3 = _ref2.length; _k < _len3; _k++) {
-            connection = _ref2[_k];
-            indx1 = selected_nodes.indexOf(connection.from_field.node);
-            indx2 = selected_nodes.indexOf(connection.to_field.node);
-            if (indx1 === -1 || indx2 === -1) {
-              already_exists = external_connections.indexOf(connection);
-              if (already_exists === -1) {
-                external_connections.push(connection);
-                connection_description = connection.toJSON();
-                connection_description.to_subfield = indx1 === -1;
-                external_objects.push(connection_description);
-              }
-            }
-          }
-        }
-      }
-      for (_l = 0, _len4 = selected_nodes.length; _l < _len4; _l++) {
-        node = selected_nodes[_l];
-        node.remove();
-      }
-      grp = this.create_node({
-        type: "Group",
-        definition: group_def,
-        x: dx,
-        y: dy
-      });
-      for (_m = 0, _len5 = external_objects.length; _m < _len5; _m++) {
-        connection = external_objects[_m];
+    NodeGraph.prototype.createGroup = function(model, external_objects) {
+      var c, connection, from, grp, to, _i, _len;
+      if (external_objects == null) external_objects = [];
+      grp = this.create_node(model);
+      for (_i = 0, _len = external_objects.length; _i < _len; _i++) {
+        connection = external_objects[_i];
         if (connection.to_subfield) {
           from = this.getNodeByNid(connection.from_node).rack.getField(connection.from, true);
           to = grp.rack.getField(connection.to + "-" + connection.to_node);
