@@ -3,6 +3,7 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/views/TreeView',
+  "order!libs/jquery.layout-latest",
 ], ($, _, Backbone) ->
   "use strict"
   ### Sidebar View ###
@@ -14,6 +15,18 @@ define [
       @initSearch()
       @initTabs()
       @initTreeView()
+      @layout = @$el.layout
+        scrollToBookmarkOnLoad: false
+        north:
+          closable: false
+          resizable: false
+          slidable: false
+          #size: 24
+          resizerClass: "ui-layout-resizer-hidden"
+          spacing_open: 0
+          spacing_closed: 0
+        center:
+          size: "100%"
     
     initTreeView: () =>
       @treeview = new ThreeNodes.TreeView

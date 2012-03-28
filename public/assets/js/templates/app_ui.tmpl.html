@@ -4,16 +4,18 @@
   </div>
 </div>
 <div id='sidebar' class="ui-layout-west">
-  <ul>
+  <ul class="ui-layout-north">
     <li><a href='#tab-new'>New</a></li>
-    <li><a href='#tab-attribute'>Attribute</a></li>
+    <li><a href='#tab-attribute'>Attributes</a></li>
     <li><a href='#tab-list'>List</a></li>
   </ul>
-  <div id='tab-attribute'></div>
-  <div id='tab-new'>
-    <input id='node_filter' name='search-node' placeholder='Search' type='input' />
+  <div class="container ui-layout-center">
+    <div id='tab-attribute'></div>
+    <div id='tab-new'>
+      <input id='node_filter' name='search-node' placeholder='Search' type='input' />
+    </div>
+    <div id='tab-list'></div>
   </div>
-  <div id='tab-list'></div>
 </div>
 <div id="library" class="ui-layout-east"></div>
 <div id="timeline" class="ui-layout-south"></div>

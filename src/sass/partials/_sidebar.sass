@@ -1,16 +1,19 @@
 #sidebar
-  overflow-y: auto
-  overflow-x: hidden
+  overflow: hidden
+  .container
+    overflow-y: auto
+    overflow-x: hidden
+    padding: 0
   
   h3
-    @extend .mono-font
     color: #eee
     font-size: 10px
     margin-top: 20px
     margin-bottom: 5px
     margin-left: 10px
     font-weight: bold
-    letter-spacing: -1px
+    letter-spacing: 0
+    text-transform: uppercase
   
   ul
     +no-bullets
@@ -27,19 +30,33 @@
     display: block
   
   .ui-tabs-nav
-    @extend .mono-font
+    //@extend .mono-font
     +reset-box-model
+    background: #2a2a2a
+    //margin-left: -5px
     
-    li a
-      padding: .2em 5px
+    li
+      display: inline
+      float: left
+      padding: 2px
+      margin: 0
+      background: #2a2a2a
+      border-right: 1px solid #333
+      
+      a
+        padding: .2em 5px
+      &.ui-tabs-active
+        background: #333
+        a
+          color: #eee
+      &:first-child
+        padding-left: 6px
   
-  .ui-tabs-panel
-    padding: 0.5em
-  &.ui-widget-content
-    padding: 0
-    padding-top: 18px
 
 #tab-new
+  position: relative
+  padding-top: 14px
+  
   li
     border-top: 1px solid #444
     &:first-child
@@ -53,6 +70,7 @@
       background: #222
 
 #tab-attribute
+  padding: 5px
   h2
     margin: 0
     font-size: 14px
@@ -67,23 +85,15 @@
     padding-bottom: 8px
 
 #node_filter
+  position: absolute
+  left: 2px
+  right: 4px
+  top: 5px
+  
   padding: 5px 10px
   background: #2a2a2a
-  width: 93% !important
   border-radius: 5px
-  margin-bottom: 5px
   outline: 0
-
-.ui-tabs-nav
-  +inline-block-list
-  
-#sidebar .ui-tabs-nav
-  margin: 0 7px 7px
-  li
-    padding: 1px 2px
-    margin: 0
-    background: #222
-    +border-radius(4px)
 
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a
   cursor: text
