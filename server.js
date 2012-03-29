@@ -43,7 +43,33 @@ function watchDirectoryAndRecompile(dir, callback) {
 
 var app = express.createServer();
 app.use(app.router);
+app.use(express.methodOverride());
+app.use(express.bodyParser());
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 app.use(express.static(__dirname + '/public'));
+
+// Routes
+app.get('/', function(req, res){
+  res.render('index', { layout: false});
+});
+
+app.get('/code_export_example', function(req, res){
+  res.render('code_export_example', { layout: false});
+});
+
+app.get('/speedtest', function(req, res){
+  res.render('speedtest', { layout: false});
+});
+
+app.get('/test', function(req, res){
+  res.render('test', { layout: false});
+});
+
+// app.get('/compositions', function(req, res) {
+//   res.sendfile('public/index.html');
+// });
+
 app.listen(8042);
 
 watchDirectoryAndRecompile("src/sass", compile_sass);
