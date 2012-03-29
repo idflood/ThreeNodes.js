@@ -26,6 +26,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       this.initLayout = __bind(this.initLayout, this);
       this.initMenubar = __bind(this.initMenubar, this);
       this.clearWorkspace = __bind(this.clearWorkspace, this);
+      this.initDrop = __bind(this.initDrop, this);
       this.onNodeListRebuild = __bind(this.onNodeListRebuild, this);
       UI.__super__.constructor.apply(this, arguments);
     }
@@ -50,6 +51,7 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
       });
       this.initMenubar();
       this.initLayout();
+      this.initDrop();
       this.show_application();
       this.on_ui_window_resize();
       return this.animate();
@@ -63,6 +65,39 @@ define(['jQuery', 'Underscore', 'Backbone', "text!templates/field_context_menu.t
         return _this.sidebar.render(nodegraph);
       };
       return this.timeoutId = setTimeout(onTimeOut, 10);
+    };
+
+    UI.prototype.initDrop = function() {
+      var self;
+      self = this;
+      $("#container").droppable({
+        accept: "#tab-new a.button, #library .definition",
+        activeClass: "ui-state-active",
+        hoverClass: "ui-state-hover",
+        drop: function(event, ui) {
+          var container, definition, dx, dy, nodename, offset;
+          offset = $("#container-wrapper").offset();
+          definition = false;
+          if (ui.draggable.hasClass("definition")) {
+            nodename = "Group";
+            container = $("#library");
+            definition = ui.draggable.data("model");
+          } else {
+            nodename = ui.draggable.attr("rel");
+            container = $("#sidebar");
+          }
+          dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10;
+          dy = ui.position.top + $("#container-wrapper").scrollTop() - container.scrollTop() - offset.top;
+          self.trigger("CreateNode", {
+            type: nodename,
+            x: dx,
+            y: dy,
+            definition: definition
+          });
+          return $("#sidebar").show();
+        }
+      });
+      return this;
     };
 
     UI.prototype.clearWorkspace = function() {

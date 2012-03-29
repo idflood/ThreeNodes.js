@@ -62,6 +62,7 @@ define(['Underscore', 'Backbone', 'order!threenodes/models/Connection', 'order!t
       group_def = new ThreeNodes.GroupDefinition({
         fromSelectedNodes: selected_nodes
       });
+      this.add(group_def);
       external_connections = [];
       external_objects = [];
       for (_i = 0, _len = selected_nodes.length; _i < _len; _i++) {

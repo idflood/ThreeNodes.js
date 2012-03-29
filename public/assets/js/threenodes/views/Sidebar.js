@@ -156,25 +156,6 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/views/TreeView', "
         scroll: false,
         containment: "document"
       });
-      self = this;
-      $("#container").droppable({
-        accept: "#tab-new a.button",
-        activeClass: "ui-state-active",
-        hoverClass: "ui-state-hover",
-        drop: function(event, ui) {
-          var dx, dy, nodename, offset;
-          nodename = ui.draggable.attr("rel");
-          offset = $("#container-wrapper").offset();
-          dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10;
-          dy = ui.position.top + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop() - offset.top;
-          self.trigger("CreateNode", {
-            type: nodename,
-            x: dx,
-            y: dy
-          });
-          return $("#sidebar").show();
-        }
-      });
       return this;
     };
 

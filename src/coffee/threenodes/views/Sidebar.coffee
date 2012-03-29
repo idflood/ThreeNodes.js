@@ -122,17 +122,4 @@ define [
         scroll: false
         containment: "document"
       
-      self = this
-      # Setup the drop area for the draggables created above
-      $("#container").droppable
-        accept: "#tab-new a.button"
-        activeClass: "ui-state-active"
-        hoverClass: "ui-state-hover"
-        drop: (event, ui) ->
-          nodename = ui.draggable.attr("rel")
-          offset = $("#container-wrapper").offset()
-          dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
-          dy = ui.position.top + $("#container-wrapper").scrollTop() - $("#sidebar").scrollTop() - offset.top
-          self.trigger("CreateNode", {type: nodename, x: dx, y: dy})
-          $("#sidebar").show()
       return this

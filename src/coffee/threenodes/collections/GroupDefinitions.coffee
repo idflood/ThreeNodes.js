@@ -60,6 +60,7 @@ define [
       # Create a new GroupDefinition from the selected nodes and connections
       group_def = new ThreeNodes.GroupDefinition
         fromSelectedNodes: selected_nodes
+      @add(group_def)
       
       # Save the connection going out or in the group of nodes
       # the connections have one extenal node linked to one selected node
@@ -93,6 +94,7 @@ define [
         x: dx
         y: dy
       @trigger("definition:created", model, external_objects)
+      
       return this
     
     removeAll: () =>

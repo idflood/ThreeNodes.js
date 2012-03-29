@@ -46,6 +46,7 @@ define [
       
       # Set the layout and show application
       @initLayout()
+      @initDrop()
       @show_application()
       
       # Fire the first resize event
@@ -61,6 +62,32 @@ define [
       onTimeOut = () =>
         @sidebar.render(nodegraph)
       @timeoutId = setTimeout(onTimeOut, 10)
+    
+    initDrop: () =>
+      self = this
+      # Setup the drop area for the draggables created above
+      $("#container").droppable
+        accept: "#tab-new a.button, #library .definition"
+        activeClass: "ui-state-active"
+        hoverClass: "ui-state-hover"
+        drop: (event, ui) ->
+          offset = $("#container-wrapper").offset()
+          definition = false
+          
+          if ui.draggable.hasClass("definition")
+            nodename = "Group"
+            container =  $("#library")
+            definition = ui.draggable.data("model")
+          else
+            nodename = ui.draggable.attr("rel")
+            container =  $("#sidebar")
+          
+          dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
+          dy = ui.position.top + $("#container-wrapper").scrollTop() - container.scrollTop() - offset.top
+          self.trigger("CreateNode", {type: nodename, x: dx, y: dy, definition: definition})
+          $("#sidebar").show()
+      
+      return this
     
     clearWorkspace: () =>
       @sidebar.clearWorkspace()

@@ -23,7 +23,7 @@ ThreeNodes.flash_sound_value = {
   hat: 0
 };
 
-define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/collections/GroupDefinitions', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/views/NodeView', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
+define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes', 'order!threenodes/collections/GroupDefinitions', 'order!threenodes/views/UI', 'order!threenodes/views/Timeline', 'order!threenodes/views/NodeView', 'order!threenodes/views/GroupDefinitionView', 'order!threenodes/utils/AppWebsocket', 'order!threenodes/utils/FileHandler', 'order!threenodes/utils/UrlHandler', "order!threenodes/utils/WebglBase"], function($, _, Backbone) {
   "use strict";  return ThreeNodes.App = (function() {
 
     function App(testing_mode) {
@@ -53,6 +53,17 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         });
       });
       this.group_definitions.bind("definition:created", this.nodegraph.createGroup);
+      this.group_definitions.bind("add", function(definition) {
+        var $tmpl, template, tmpl, view;
+        template = ThreeNodes.GroupDefinitionView.template;
+        tmpl = _.template(template, definition);
+        $tmpl = $(tmpl).appendTo("#library");
+        view = new ThreeNodes.GroupDefinitionView({
+          model: definition,
+          el: $tmpl
+        });
+        return view.render();
+      });
       if (testing_mode === false) {
         this.nodegraph.connections.bind("add", function(connection) {
           var view;
@@ -94,7 +105,7 @@ define(['jQuery', 'Underscore', 'Backbone', 'order!threenodes/collections/Nodes'
         this.ui.menubar.on("LoadFile", this.file_handler.load_local_file);
         this.ui.menubar.on("ExportImage", this.webgl.exportImage);
         this.ui.menubar.on("GroupSelectedNodes", this.group_definitions.groupSelectedNodes);
-        this.ui.sidebar.on("CreateNode", this.nodegraph.create_node);
+        this.ui.on("CreateNode", this.nodegraph.create_node);
         this.nodegraph.on("nodeslist:rebuild", this.ui.onNodeListRebuild);
         this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
       } else {

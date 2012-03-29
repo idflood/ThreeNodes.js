@@ -27,6 +27,7 @@ define [
   'order!threenodes/views/UI',
   'order!threenodes/views/Timeline',
   'order!threenodes/views/NodeView',
+  'order!threenodes/views/GroupDefinitionView',
   'order!threenodes/utils/AppWebsocket',
   'order!threenodes/utils/FileHandler',
   'order!threenodes/utils/UrlHandler',
@@ -54,6 +55,15 @@ define [
           el: $tmpl
       
       @group_definitions.bind "definition:created", @nodegraph.createGroup
+      @group_definitions.bind "add", (definition) ->
+        template = ThreeNodes.GroupDefinitionView.template
+        tmpl = _.template(template, definition)
+        $tmpl = $(tmpl).appendTo("#library")
+        
+        view = new ThreeNodes.GroupDefinitionView
+          model: definition
+          el: $tmpl
+        view.render()
       
       if testing_mode == false
         @nodegraph.connections.bind "add", (connection) ->
@@ -95,7 +105,7 @@ define [
         @ui.menubar.on("LoadFile", @file_handler.load_local_file)
         @ui.menubar.on("ExportImage", @webgl.exportImage)
         @ui.menubar.on("GroupSelectedNodes", @group_definitions.groupSelectedNodes)
-        @ui.sidebar.on("CreateNode", @nodegraph.create_node)
+        @ui.on("CreateNode", @nodegraph.create_node)
         @nodegraph.on("nodeslist:rebuild", @ui.onNodeListRebuild)
         @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
       else
