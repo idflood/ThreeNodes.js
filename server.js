@@ -12,13 +12,6 @@ function compile_sass() {
   console.log("compile_sass done");
 }
 
-function compile_haml() {
-  exec("haml src/haml/index.haml public/index.html", puts);
-  exec("haml src/haml/test.haml public/test.html", puts);
-  exec("haml src/haml/speedtest.haml public/speedtest.html", puts);
-  console.log("compile_haml done");
-}
-
 function compile_coffee() {
   exec("cake build", puts);
   console.log("compile_coffee done");
@@ -73,7 +66,6 @@ app.get('/test', function(req, res){
 app.listen(8042);
 
 watchDirectoryAndRecompile("src/sass", compile_sass);
-watchDirectoryAndRecompile("src/haml", compile_haml);
 watchDirectoryAndRecompile("src/coffee", compile_coffee);
 
 console.log("ready: http://localhost:8042/");
