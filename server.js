@@ -7,6 +7,7 @@ var watch = require('watch');
 var express = require('express');
 var coffee = require('coffee-script');
 var stylus = require('stylus');
+var nib = require('nib');
 
 function puts(error, stdout, stderr) { console.log(stdout) }
 
@@ -27,14 +28,14 @@ app.use(express.bodyParser());
 app.set('views', __dirname + '/src/views');
 app.set('view engine', 'jade');
 app.use(stylus.middleware({
-  debug: true,
   src: __dirname + '/src',
   dest: __dirname + '/public',
   compile: function(str, path) {
     return stylus(str)
       .set('filename', path)
       .set('warn', true)
-      .set('compress', false);
+      .set('compress', false)
+      .use(nib());
   }
 }));
 
