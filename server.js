@@ -1,9 +1,12 @@
 var sys = require('util');
+var fs = require('fs');
+var path = require('path');
+var url = require('url');
 var exec = require('child_process').exec;
 var watch = require('watch');
 var express = require('express');
-
-var first_pass_sass = false;
+var coffee = require('coffee-script');
+var stylus = require('stylus');
 
 function puts(error, stdout, stderr) { console.log(stdout) }
 
@@ -17,32 +20,57 @@ function compile_coffee() {
   console.log("compile_coffee done");
 }
 
-function watchDirectoryAndRecompile(dir, callback) {
-  watch.watchTree(dir, {'ignoreDotFiles' : true}, function (f, curr, prev) {
-    if (typeof f == "object" && prev === null && curr === null) {
-      // Finished walking the tree
-    } else if (prev === null) {
-      // f is a new file
-      callback();
-    } else if (curr.nlink === 0) {
-      // f was removed
-      callback();
-    } else {
-      // f was changed
-      callback();
-    }
-  });
-}
-
 var app = express.createServer();
 app.use(app.router);
 app.use(express.methodOverride());
 app.use(express.bodyParser());
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/src/views');
 app.set('view engine', 'jade');
+app.use(stylus.middleware({
+  debug: true,
+  src: __dirname + '/src',
+  dest: __dirname + '/public',
+  compile: function(str, path) {
+    return stylus(str)
+      .set('filename', path)
+      .set('warn', true)
+      .set('compress', false);
+  }
+}));
+
 app.use(express.static(__dirname + '/public'));
 
 // Routes
+
+// process coffeescript files if needed
+app.get('/assets/js/*.js', function(req, res){
+  var file = req.params[0];
+  path.exists('src/coffee/' + file + '.coffee', function(exists){
+    if (exists) {
+      // compile the source if there is one
+      res.header('Content-Type', 'application/x-javascript');
+      var cs = fs.readFileSync('src/coffee/' + file + '.coffee', 'utf8');
+      res.send(coffee.compile(cs, {bare: true}));
+    }
+    else {
+      // try to locate a static file
+      path.exists('public/assets/js/' + file + '.js', function(exists_static){
+        if (exists_static) {
+          // return the rendered content
+          res.header('Content-Type', 'application/x-javascript');
+          var cs = fs.readFileSync('public/assets/js/' + file + '.js', 'utf8');
+          res.send(cs);
+        }
+        else {
+          // 404 error
+          res.send('Cannot GET ' + '/public/assets/js/' + file + '.js', 404);
+        }
+      });
+    }
+  });
+});
+
+
 app.get('/', function(req, res){
   res.render('index', { layout: false});
 });
@@ -65,7 +93,7 @@ app.get('/test', function(req, res){
 
 app.listen(8042);
 
-watchDirectoryAndRecompile("src/sass", compile_sass);
-watchDirectoryAndRecompile("src/coffee", compile_coffee);
+//watchDirectoryAndRecompile("src/sass", compile_sass);
+//watchDirectoryAndRecompile("src/coffee", compile_coffee);
 
 console.log("ready: http://localhost:8042/");
