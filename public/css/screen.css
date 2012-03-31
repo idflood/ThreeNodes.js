@@ -749,6 +749,9 @@ slide_height: 0.8em .ui-slider-handle,
 #webgl-window canvas {
   cursor: pointer;
 }
+.player-mode #webgl-window canvas {
+  margin: auto;
+}
 #sidebar ul.tree {
   list-style: none outside;
   margin-bottom: 0;

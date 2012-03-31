@@ -544,7 +544,10 @@ define [
       @preview_mode = false
       @creating_popup = true
       
-      @win = window.open('', 'win' + @nid, "width=800,height=600,scrollbars=false,location=false,status=false,menubar=false")
+      w = @rack.getField('width').getValue()
+      h = @rack.getField('height').getValue()
+      
+      @win = window.open('', 'win' + @nid, "width=#{w},height=#{h},scrollbars=false,location=false,status=false,menubar=false")
       $("body", $(@win.document)).append( @ob.domElement )
       $("*", $(@win.document)).css
         padding: 0
@@ -591,8 +594,10 @@ define [
       if dw != @width || dh != @height || force_refresh
         @ob.setSize(dw, dh)
         if @win && @win != false
+          console.log "..."
           # todo: implement the same with ".innerWidth =" and ".innerHeight =" when chrome support this
-          @win.resizeTo(dw, dh + 52)
+          # resize to beacame buggy on some chrome versions
+          #@win.resizeTo(dw, dh + 52)
       @width = dw
       @height = dh
     
