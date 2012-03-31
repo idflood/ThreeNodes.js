@@ -1,85 +1,10 @@
-$field-label-padding: 4px
-$field-button-size: 4px
+field-label-padding = 4px
+field-button-size = 4px
 
-$c: 100
+_c = 100
 .connection
-  stroke: rgb($c, $c, $c)
+  stroke: rgb(_c, _c, _c)
   stroke-width: 1
-
-.node
-  position: absolute !important
-  background: $node_color
-  padding: 4px
-  +clearfix
-  min-width: 80px
-  +border-radius(8px)
-  @extend .ratio-50-50
-  
-  &.ui-selecting
-    background: $node_color - #050505
-    border: 1px solid $node_color + #222
-    
-  &.ui-selected
-    background: $node_color + #050505
-    border: 1px solid $node_color + #333
-  
-  .options
-    +clearfix
-    width: 100%
-    .warning
-      padding-top: 7px
-  
-  .inner-field
-    background: transparent
-    cursor: pointer
-    display: inline-block
-  
-    span
-      display: inline-block
-      width: $field-button-size
-      height: $field-button-size
-      background: #555
-      +border-radius($field-button-size)
-  
-    &:hover
-      color: #fff
-      span
-        background: #fff
-  
-  .field-possible-target .inner-field, .inner-field.ui-state-hover
-    color: #aaa
-    span
-      background: #ccc
-  
-  .inner-field.ui-state-hover
-    color: $main_color
-    span
-      background: $main_color
-  
-  .inputs, .outputs
-    @extend .inline-float
-    color: #777
-    & > div
-      height: 12px
-  
-  .inputs, .outputs, .center
-    & > div
-      display: inline-block
-      width: 100%
-      vertical-align: middle
-  
-  .inputs .inner-field span
-    margin-right: $field-label-padding
-  .outputs .inner-field span
-    margin-left: $field-label-padding
-
-//$animation_color: $main_color
-$animation_color: #f00
-.node-has-animation
-  +box-shadow($animation_color 0 0 1px inset)
-
-.has-animation
-  color: $animation_color
 
 // utility classes
 .width-80
@@ -122,6 +47,83 @@ $animation_color: #f00
     visibility: hidden
   .outputs
     width: 100%
+
+.node
+  position: absolute !important
+  background: node_color
+  padding: 4px
+  clearfix()
+  min-width: 80px
+  border-radius(8px)
+  @extend .ratio-50-50
+  
+  &.ui-selecting
+    background: node_color - #050505
+    border: 1px solid node_color + #222
+    
+  &.ui-selected
+    background: node_color + #050505
+    border: 1px solid node_color + #333
+  
+  .options
+    clearfix()
+    width: 100%
+    .warning
+      padding-top: 7px
+  
+  .inner-field
+    background: transparent
+    cursor: pointer
+    display: inline-block
+  
+    span
+      display: inline-block
+      width: field-button-size
+      height: field-button-size
+      background: #555
+      border-radius(field-button-size)
+  
+    &:hover
+      color: #fff
+      span
+        background: #fff
+  
+  .field-possible-target .inner-field, .inner-field.ui-state-hover
+    color: #aaa
+    span
+      background: #ccc
+  
+  .inner-field.ui-state-hover
+    color: main_color
+    span
+      background: main_color
+  
+  .inputs, .outputs
+    @extend .inline-float
+    color: #777
+    & > div
+      height: 12px
+  
+  .inputs, .outputs, .center
+    & > div
+      display: inline-block
+      width: 100%
+      vertical-align: middle
+  
+  .inputs .inner-field span
+    margin-right: field-label-padding
+  .outputs .inner-field span
+    margin-left: field-label-padding
+
+//animation_color: $main_color
+animation_color = #f00
+.node-has-animation
+  box-shadow(animation_color 0 0 1px inset)
+
+.has-animation
+  color: animation_color
+
+
 
 // base
 .node-Number
@@ -197,10 +199,10 @@ $animation_color: #f00
   .center
     @extend .inline-float
     width: 30%
-  $s: 17px
+  _s = 17px
   .center .color_preview
-    width: $s
-    height: $s
+    width: _s
+    height: _s
     border: 1px solid #444
     margin-top: 6px
     margin-left: 2px

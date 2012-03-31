@@ -1,15 +1,17 @@
-$a: #aaa
-$b: #fff
+c1 = #aaa
+c2 =  #fff
+
+
+@import 'blueprint/typography'
 
 .mono-font
-  font-family: $mono
-  
+  font-family: mono
+
 body
-  +blueprint-typography(true)
   color: #999
   a, .ui-widget-content a
     text-decoration: none
-    +link-colors($a, $b, $a, $a, $b)
+    link-colors(c1, c2, c1, c1, c2)
   
   h2, h3
     color: #aaa

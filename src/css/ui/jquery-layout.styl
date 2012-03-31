@@ -11,63 +11,42 @@
  * and MIT (http://www.opensource.org/licenses/mit-license.php) licenses.
  *
  * Last Updated: 2010-02-10
-
-/*
- *  PANES & CONTENT-DIVs
+ */
 
 .ui-layout-pane
   border: 1px solid #333
-  //padding: 10px
   overflow: auto
-  /* DO NOT add scrolling (or padding) to 'panes' that have a content-div,
-   * otherwise you may get double-scrollbars - on the pane AND on the content-div
-   * - use ui-layout-wrapper class if pane has a content-div
-   * - use ui-layout-container if pane has an inner-layout
-
-/* (scrolling) content-div inside pane allows for fixed header(s) and/or footer(s)
 
 .ui-layout-content
   padding: 10px
   position: relative
-  /* contain floated or positioned elements
   overflow: auto
-  /* add scrolling to content-div
-
-/*
- *  RESIZER-BARS
 
 .ui-layout-resizer
-  /* all 'resizer-bars'
   background: #444
   border: 1px solid #222
   border-width: 0
 
-$hover: #555
-$limit: #eee
-$toggler_normal: #666
-$toggler_hover: #ddd
+_hover = #555
+_limit = #eee
+_toggler_normal = #666
+_toggler_hover = #ddd
 .ui-layout-resizer-open-hover
-  background: $hover
+  background: _hover
 
 .ui-layout-resizer-dragging
-  background: $hover
-  /* CLONED resizer being dragged
+  background: _hover
   border: 1px solid #222
 
 .ui-layout-resizer-dragging-limit, .ui-layout-resizer-closed-hover
-  background: $limit
+  background: _limit
 
 
 .ui-layout-resizer-sliding
-  /* resizer when pane is 'slid open'
-  +opacity(0.1)
+  opacity(0.1)
 
 .ui-layout-resizer-sliding-hover
-  /* sliding resizer - hover
-  +opacity(1)
-
-/* sliding resizer - add 'outside-border' to resizer on-hover 
- * this sample illustrates how to target specific panes and states
+  opacity(1)
 
 .ui-layout-resizer-north-sliding-hover
   border-bottom-width: 1px
@@ -81,38 +60,27 @@ $toggler_hover: #ddd
 .ui-layout-resizer-east-sliding-hover
   border-left-width: 1px
 
-/*
- *  TOGGLER-BUTTONS
 
 .ui-layout-toggler
-  border: 1px solid $toggler_normal
-  /* match pane-border
-  background-color: $toggler_normal
+  border: 1px solid _toggler_normal
+  background-color: _toggler_normal
 
 .ui-layout-resizer-hover .ui-layout-toggler
-  background-color: $toggler_hover
-  +opacity(0.5)
+  background-color: _toggler_hover
+  opacity(0.5)
 
 .ui-layout-toggler-hover, .ui-layout-resizer-hover .ui-layout-toggler-hover
-  /* need specificity when IS resizable
-  background-color: $toggler_hover
-  +opacity(1)
+  background-color: _toggler_hover
+  opacity(1)
 
 .ui-layout-toggler-north, .ui-layout-toggler-south
   border-width: 0 1px
-  /* left/right borders
 
 .ui-layout-toggler-west, .ui-layout-toggler-east
   border-width: 1px 0
-  /* top/bottom borders
-
-/* hide the toggler-button when the pane is 'slid open'
 
 .ui-layout-resizer-sliding.ui-layout-toggler
   display: none
-
-/*
- *  style the text we put INSIDE the togglers
 
 .ui-layout-toggler .content
   color: #666
@@ -120,12 +88,7 @@ $toggler_hover: #ddd
   font-weight: bold
   width: 100%
   padding-bottom: 0.35ex
-  /* to 'vertically center' text inside text-span
 
-/*
- *  PANE-MASKS
- *  these styles are hard-coded on mask elems, but are also 
- *  included here as !important to ensure will overrides any generic styles
 
 .ui-layout-mask
   border: none !important
@@ -134,10 +97,8 @@ $toggler_hover: #ddd
   overflow: hidden !important
   position: absolute !important
   opacity: 0 !important
-  filter: Alpha(Opacity = "0") !important
 
 .ui-layout-mask-inside-pane
-  /* masks always inside pane EXCEPT when pane is an iframe
   top: 0 !important
   left: 0 !important
   width: 100% !important

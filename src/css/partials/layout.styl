@@ -1,32 +1,17 @@
-.hidden-element
-  display: none
-
-.visually-hidden
-  position: absolute
-  top: -9999px
-  left: -9999px
-
-.relative
-  position: relative
-
-.inline-float
-  display: inline
-  float: left
-
 html, body
   height: 100%
   overflow: hidden
 
 body
   @extend .relative
-  background-color: $background_color
+  background-color: background_color
   overflow: hidden
   margin-top: 0
 
 #main-menu-bar
+  clearfix()
   z-index: 999 !important
   overflow: visible !important
-  +pie-clearfix
 
 #container
   transform-origin: 0 0
@@ -40,13 +25,13 @@ body
   -moz-user-select: none
   -webkit-user-select: none
 
-$c: $background_color - #050505
+_c = background_color - #050505
 #container
   width: 4000px
   height: 4000px
   
   &.ui-state-active, &.ui-state-hover
-    background: $c
+    background: _c
     border: 0
     padding: 0
 
@@ -58,7 +43,7 @@ $c: $background_color - #050505
   //z-index: 1
 
 #sidebar
-  background: $background_color
+  background: background_color
 
 .ui-layout-resizer-west
   border-right: 1px solid #3a3a3a
@@ -90,7 +75,7 @@ $c: $background_color - #050505
   font-size: 9px
   text-transform: uppercase
   letter-spacing: 1px
-  +single-transition("background, color", 300ms)
+  //single-transition("background, color", 300ms)
   &:hover
     background: #efefef
     color: #333

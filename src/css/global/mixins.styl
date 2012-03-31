@@ -1,0 +1,63 @@
+link-colors(_normal, _hover, _active, _visited, _focus)
+  color: _normal
+  
+  if _visited
+    &:visited
+      color: _visited
+  if _focus
+    &:focus
+      color: _focus
+  if _hover
+    &:hover
+      color: _hover
+  if _active
+    &:active
+      color: _active
+
+inline-block()
+  display: -moz-inline-box
+  -moz-box-orient: vertical
+  display: inline-block
+  vertical-align: middle
+
+no-bullet()
+  list-style-image: none
+  list-style-type: none
+  margin-left: 0
+
+no-bullets()
+  list-style: none
+  li
+    no-bullet()
+
+inline-block-list-container()
+  horizontal-list-container()
+
+inline-block-list-item(_padding = false)
+  no-bullet()
+  inline-block()
+  white-space: no-wrap
+  if _padding
+    padding-left: _padding
+    padding-right: _padding
+
+inline-block-list(_padding = false)
+  inline-block-list-container()
+  li
+    inline-block-list-item(_padding)
+
+
+.relative
+  position: relative
+
+.visually-hidden
+  position: absolute
+  top: -9999px
+  left: -9999px
+
+.hidden-element
+  display: none
+
+.inline-float
+  display: inline !important
+  float: left
