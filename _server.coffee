@@ -28,23 +28,24 @@ if is_build
   
   # Remove previous build
   wrench.rmdirSyncRecursive('output_static', true)
-  # Create root and css directories
-  wrench.mkdirSyncRecursive('output_static/css', 0777)
+  # Create root directory
+  wrench.mkdirSyncRecursive('output_static', 0777)
   # Copy public assets
   wrench.copyDirSyncRecursive('public/assets', 'output_static/assets')
+  wrench.copyDirSyncRecursive('public/scripts', 'output_static/scripts')
   wrench.copyDirSyncRecursive('public/examples', 'output_static/examples')
-  wrench.copyDirSyncRecursive('src/html/templates', 'output_static/assets/js/templates')
+  wrench.copyDirSyncRecursive('views/templates', 'output_static/scripts/templates')
     
   # Copy the development css to the output_static dir
   # todo: use the node.js stylus module with compress option
-  wrench.copyDirSyncRecursive('public/css', 'output_static/css')
+  wrench.copyDirSyncRecursive('public/stylesheets', 'output_static/stylesheets')
   
   # Compile jade to html
   console.log "Compiling jade files..."
-  exec_and_log 'jade src/html/ --out output_static/', () ->
+  exec_and_log 'jade views/ --out output_static/', () ->
     # Compile coffeescript to js
-    console.log "Compiling coffeescript and jade files..."
-    exec_and_log 'coffee -b -o output_static/assets/js/ -c src/js/'
+    console.log "Compiling coffeescript files..."
+    exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/'
     
     console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
     process.exit()
@@ -57,7 +58,7 @@ else
   app.use app.router
   app.use express.methodOverride()
   app.use express.bodyParser()
-  app.set "views", __dirname + "/src/html"
+  app.set "views", __dirname + "/views"
   app.set "view engine", "jade"
   
   # Configure the stylus middleware (.styl -> .css)
@@ -71,11 +72,11 @@ else
   app.use express.static(__dirname + "/public")
   
   # Serve on the fly compiled js or existing js if there is no .coffee
-  app.get "/assets/js/*.js", (req, res) ->
+  app.get "/scripts/*.js", (req, res) ->
     file = req.params[0]
     compile_coffee = () ->
       res.header("Content-Type", "application/x-javascript")
-      cs = fs.readFileSync("src/js/" + file + ".coffee", "utf8")
+      cs = fs.readFileSync("src/scripts/" + file + ".coffee", "utf8")
       try
         js = coffee.compile(cs, {bare: true})
         res.send(js)
@@ -86,30 +87,30 @@ else
         return compileErr
     
     return_static = () ->
-      path.exists "public/assets/js/" + file + ".js", (exists) ->
+      path.exists "public/scripts/" + file + ".js", (exists) ->
         if exists
           res.header("Content-Type", "application/x-javascript")
-          cs = fs.readFileSync("public/assets/js/" + file + ".js", "utf8")
+          cs = fs.readFileSync("public/scripts/" + file + ".js", "utf8")
           res.send(cs)
         else
-          res.send("Cannot GET " + "/public/assets/js/" + file + ".js", 404)
+          res.send("Cannot GET " + "/public/scripts/" + file + ".js", 404)
     
-    path.exists "src/js/" + file + ".coffee", (exists) ->
+    path.exists "src/scripts/" + file + ".coffee", (exists) ->
       if exists
         compile_coffee()
       else
         return_static()
   
   # Pseudo link for js templates (src/html/templates -> assets/js/templates/)
-  app.get "/assets/js/templates/*", (req, res) ->
+  app.get "/scripts/templates/*", (req, res) ->
     file = req.params[0]
-    path.exists "src/html/templates/" + file, (exists) ->
+    path.exists "views/templates/" + file, (exists) ->
       if exists
         res.header("Content-Type", "text/html")
-        cs = fs.readFileSync("src/html/templates/" + file, "utf8")
+        cs = fs.readFileSync("views/templates/" + file, "utf8")
         res.send(cs)
       else
-        res.send("Cannot GET " + "/assets/js/templates/" + file, 404)
+        res.send("Cannot GET " + "/scripts/templates/" + file, 404)
   
   # Setup html routes
   app.get "/", (req, res) ->
