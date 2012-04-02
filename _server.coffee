@@ -76,7 +76,14 @@ else
     compile_coffee = () ->
       res.header("Content-Type", "application/x-javascript")
       cs = fs.readFileSync("src/js/" + file + ".coffee", "utf8")
-      res.send(coffee.compile(cs, {bare: true}))
+      try
+        js = coffee.compile(cs, {bare: true})
+        res.send(js)
+      catch compileErr
+        console.log "##################################"
+        console.log "Error in file: " + file + ".coffee"
+        console.log compileErr
+        return compileErr
     
     return_static = () ->
       path.exists "public/assets/js/" + file + ".js", (exists) ->
