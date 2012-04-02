@@ -9,6 +9,7 @@ coffee = require("coffee-script")
 stylus = require("stylus")
 nib = require("nib")
 wrench = require("wrench")
+requirejs = require('requirejs')
 
 is_build = (process.argv[2] == "build")
 
@@ -45,10 +46,22 @@ if is_build
   exec_and_log 'jade views/ --out output_static/', () ->
     # Compile coffeescript to js
     console.log "Compiling coffeescript files..."
-    exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/'
-    
-    console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
-    process.exit()
+    exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/', () ->
+      # console.log "Starting to optimize the javascripts..."
+      # optimize the js
+      config =
+        baseUrl: 'output_static/scripts/'
+        paths:
+          jQuery: "libs/jquery-1.6.4.min"
+          Underscore: "libs/underscore-min"
+          Backbone: "libs/backbone"
+        #optimize: 'none'
+        name: 'threenodes/App'
+        out: 'output_static/scripts/threenodes/App.js'
+      #requirejs.optimize config, (buildResponse) ->
+      #  console.log "Optimization complete!"
+      console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
+      process.exit()
 
 else
   # development environment
