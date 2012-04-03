@@ -2,9 +2,9 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
+  'order!threenodes/utils/Rc4Random',
   'order!threenodes/models/Node',
-  'order!threenodes/utils/Utils',
-], ($, _, Backbone) ->
+], ($, _, Backbone, Rc4Random) ->
   "use strict"
   class ThreeNodes.nodes.RandomSpread extends ThreeNodes.NodeBase
     @node_name = 'RandomSpread'
@@ -38,7 +38,7 @@ define [
       needs_rebuild = false
       if @seed != @rack.getField("seed").get("value") || @count != parseInt(@rack.getField("count").getValue(0)) || @width != @rack.getField("width").get("value") || @offset != @rack.getField("offset").get("value")
         @seed = @rack.getField("seed").get("value")
-        @rnd = new ThreeNodes.Utils.Rc4Random(@seed.toString())
+        @rnd = new Rc4Random(@seed.toString())
         
         @value = []
         @width = @rack.getField("width").getValue(0)
