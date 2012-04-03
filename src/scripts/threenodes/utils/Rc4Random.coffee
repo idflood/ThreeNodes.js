@@ -5,7 +5,7 @@ define [
 ], ($, _, Backbone) ->
   "use strict"
   
-  class ThreeNodes.Utils.Rc4Random
+  class ThreeNodes.Rc4Random
     # Rc4Random function taken from http://www.webdeveloper.com/forum/showthread.php?t=140572
     constructor: (seed) ->
       @keySchedule = []

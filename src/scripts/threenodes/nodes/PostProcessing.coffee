@@ -2,9 +2,9 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  'order!threenodes/models/Node',
   'order!threenodes/utils/Utils',
-], ($, _, Backbone) ->
+  'order!threenodes/models/Node',
+], ($, _, Backbone, Utils) ->
   "use strict"
   class ThreeNodes.nodes.BloomPass extends ThreeNodes.NodeBase
     @node_name = 'Bloom'
@@ -30,7 +30,7 @@ define [
     
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
-      if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
+      if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
       false
@@ -64,7 +64,7 @@ define [
     
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
-      if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
+      if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
       false
@@ -98,7 +98,7 @@ define [
     
     value_has_changed: (vals) =>
       newvals = @get_cached_array vals
-      if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
+      if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
       false

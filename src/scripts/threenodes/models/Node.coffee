@@ -2,9 +2,9 @@ define [
   'jQuery',
   'Underscore', 
   'Backbone',
-  'order!threenodes/collections/Fields',
   'order!threenodes/utils/Utils',
-], ($, _, Backbone) ->
+  'order!threenodes/collections/Fields',
+], ($, _, Backbone, Utils) ->
   "use strict"
   ThreeNodes.field_click_1 = false
   ThreeNodes.selected_nodes = $([])
@@ -52,7 +52,7 @@ define [
       @setName(@typename())
       
       if !@get("nid")
-        @setNID(ThreeNodes.Utils.get_uid())
+        @setNID(Utils.get_uid())
       else
         ThreeNodes.uid = @get("nid")
       

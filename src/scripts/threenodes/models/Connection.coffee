@@ -2,7 +2,7 @@ define [
   'Underscore', 
   'Backbone',
   'order!threenodes/utils/Utils',
-], (_, Backbone) ->
+], (_, Backbone, Utils) ->
   "use strict"
   
   class ThreeNodes.Connection extends Backbone.Model
@@ -14,7 +14,7 @@ define [
     initialize: (options) =>
       @options = options
       if @get("cid") == -1
-        @set({"cid": ThreeNodes.Utils.get_uid()})
+        @set({"cid": Utils.get_uid()})
       
       if @isValid()
         # remove existing input connection since inputs only have one connection

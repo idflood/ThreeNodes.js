@@ -5,7 +5,7 @@ define [
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
   'order!threenodes/utils/Utils',
-], ($, _, Backbone, _view_node_field_in, _view_node_field_out) ->
+], ($, _, Backbone, _view_node_field_in, _view_node_field_out, Utils) ->
   "use strict"
   class ThreeNodes.NodeField extends Backbone.Model
     defaults: () ->
@@ -45,7 +45,7 @@ define [
       @changed = true
       @connections = []
       if @get("fid") == -1
-        @set("fid", ThreeNodes.Utils.get_uid())
+        @set("fid", Utils.get_uid())
     
     remove: () =>
       delete @on_value_update_hooks
