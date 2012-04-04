@@ -1,0 +1,34 @@
+c1 = #aaa
+c2 =  #fff
+
+
+@import 'blueprint/typography'
+
+.mono-font
+  font-family: mono
+
+body
+  color: #999
+  a, .ui-widget-content a
+    text-decoration: none
+    link-colors(c1, c2, c1, c1, c2)
+  
+  h2, h3
+    color: #aaa
+  
+  h3
+    @extend .mono-font
+    font-weight: normal
+
+.node
+  color: #aaa
+  font-size: 10px
+  
+  .head
+    font-weight: normal
+    letter-spacing: 1px
+    text-align: center
+    @extend .mono-font
+  
+  .outputs > div
+    text-align: right

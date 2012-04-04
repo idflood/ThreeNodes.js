@@ -6,3 +6,8 @@ Thumbs.db
 .project
 node_modules/
 public/tmp/
+output_static/
+output_static/*
+output_static/*/*
+output_static/*/*/*
+output_static/*/*/*/*

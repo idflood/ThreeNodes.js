@@ -1,0 +1,51 @@
+#timeline
+  overflow: hidden
+
+#keyEditDialog
+  background: #383838 !important
+  border: 1px solid #555 !important
+  line-height: 13px
+  font-size: 12px
+  margin-top: -42px
+  z-index: 970
+  box-shadow(#000 0 1px 4px)
+  
+  input
+    display: inline
+    width: auto
+    padding: 3px 5px
+  
+  label
+    display: block
+    position: relative
+    width: 180px
+    line-height: 23px
+    padding-bottom: 3px
+    input, select
+      margin-left: 8px
+      position: absolute
+      left: 43px
+    input
+      right: -5px
+      top: 3px
+
+#keyEditDialogOK
+  margin-left: 51px !important
+
+#keyEditDialogCancel
+  text-transform: uppercase
+
+_p = 1px
+_w = 16px
+#keyEditDialogDelete
+  float: right
+  width: _w + _p * 2
+  height: _w + _p * 2
+  background: url(../assets/images/icon-trash.png) no-repeat center center
+  font-size: 0
+  text-indent: -9999px
+  
+  opacity: 0.4
+  
+  &:hover
+    opacity: 1

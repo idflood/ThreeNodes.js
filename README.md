@@ -22,15 +22,24 @@ This will automatically compile coffescript files to javascript, sass to css and
 
 1. install node.js 0.6.x (http://nodejs.org/)
 2. install npm (https://github.com/isaacs/npm)
-3. install compass/coffeescript (http://compass-style.org/ and http://jashkenas.github.com/coffee-script/)
-4. cd in ThreeNodes
-5. npm install -d
+3. install coffeescript (http://jashkenas.github.com/coffee-script/)
+4. install jade globally: sudo npm install -g jade 
+5. cd in ThreeNodes
+6. npm install -d
 
 ## Usage
 1. cd in ThreeNodes
 2. node server.js
-3. with firefox or chrome go to http://localhost:8042/
+3. with firefox or chrome go to http://localhost:3000/
 4. allow this site to create popups (for webglrender node)
+
+## Build / Deploy
+1. cd in ThreeNodes
+2. node server.js build
+3. a new /output_static should have been created
+
+## Known limitations
+- It is recommended to always access ThreeNodes.js from http since chrome has a highly restrictive file access when using file://. (see http://code.google.com/p/chromium/issues/detail?id=40787)
 
 ## Howto create a simple scene
 First, create a webglrenderer node. Then add a scene and connect it to the "scene" of the webgl node. On the scene children you would connect a "merge" and to it a mesh. With that there should be a red cube showing in the renderer window.
