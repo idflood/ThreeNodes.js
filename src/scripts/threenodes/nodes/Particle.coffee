@@ -1,11 +1,11 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/models/Node',
   'order!threenodes/utils/Utils',
+  'order!threenodes/models/Node',
   "order!libs/Tween",
   "order!libs/Sparks",
-], (_, Backbone) ->
+], (_, Backbone, Utils) ->
   "use strict"
   
   $ = jQuery
@@ -554,7 +554,7 @@ define [
       
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cache) == false
+      if Utils.flatArraysAreEquals(new_cache, @cache) == false
         @generate()
         
       @move_particles()

@@ -1,9 +1,9 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/models/Node',
   'order!threenodes/utils/Utils',
-], (_, Backbone) ->
+  'order!threenodes/models/Node',
+], (_, Backbone, Utils) ->
   "use strict"
   
   $ = jQuery
@@ -36,7 +36,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.PlaneGeometry(@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue())
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
@@ -72,7 +72,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.CubeGeometry(@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("depth").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue(), @rack.getField("segments_depth").getValue(), @rack.getField("flip").getValue())
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
       @rack.setField("out", @ob)
@@ -104,7 +104,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.SphereGeometry(@rack.getField("radius").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue())
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
@@ -145,7 +145,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.CylinderGeometry(
           @rack.getField("radiusTop").getValue(), @rack.getField("radiusBottom").getValue(), @rack.getField("height").getValue(), 
           @rack.getField("segmentsRadius").getValue(), @rack.getField("segmentsHeight").getValue(), @rack.getField("openEnded").getValue()
@@ -186,7 +186,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.TorusGeometry(
           @rack.getField("radius").getValue(), @rack.getField("tube").getValue(), @rack.getField("segmentsR").getValue(), 
           @rack.getField("segmentsT").getValue(), @rack.getField("arc").getValue()
@@ -229,7 +229,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.TorusKnotGeometry(
           @rack.getField("radius").getValue(), @rack.getField("tube").getValue(), @rack.getField("segmentsR").getValue(), 
           @rack.getField("segmentsT").getValue(), @rack.getField("p").getValue(), @rack.getField("q").getValue(), @rack.getField("heightScale").getValue()
@@ -264,7 +264,7 @@ define [
   
     compute: =>
       new_cache = @get_cache_array()
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.OctahedronGeometry(@rack.getField("radius").getValue(), @rack.getField("detail").getValue())
         @cached = new_cache
       @apply_fields_to_val(@rack.node_fields.inputs, @ob)
@@ -313,7 +313,7 @@ define [
         @ob = false
         @rack.setField("out", @ob)
         return false
-      if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+      if Utils.flatArraysAreEquals(new_cache, @cached) == false
         console.log "building text #{font.font} / #{font.weight}"
         @ob = new THREE.TextGeometry @rack.getField("text").getValue(),
           size: @rack.getField("size").getValue()
