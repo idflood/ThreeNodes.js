@@ -38,7 +38,6 @@ _c = 100
   .inputs, .outputs
     width: 25%
   .center
-    @extend .inline-float
     width: 50%
 
 .no-inputs
@@ -68,6 +67,7 @@ _c = 100
   .options
     clearfix()
     width: 100%
+    margin-bottom: 3px
     .warning
       padding-top: 7px
   
@@ -99,12 +99,12 @@ _c = 100
       background: main_color
   
   .inputs, .outputs
-    @extend .inline-float
     color: #777
     & > div
       height: 12px
   
   .inputs, .outputs, .center
+    @extend .inline-float
     & > div
       display: inline-block
       width: 100%

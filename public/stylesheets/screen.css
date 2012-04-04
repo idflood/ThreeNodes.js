@@ -133,9 +133,9 @@ body,
   display: none;
 }
 .inline-float,
-.ratio-25-50-25 .center,
 .node .inputs,
 .node .outputs,
+.node .center,
 .node-Color .center {
   display: inline !important;
   float: left;
@@ -1540,6 +1540,7 @@ body > header h1 {
 .node .options {
   zoom: 1;
   width: 100%;
+  margin-bottom: 3px;
 }
 .node .options:before,
 .node .options:after {
