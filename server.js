@@ -42,9 +42,10 @@ function watchDirectoryAndRecompile(dir, callback) {
 }
 
 var app = express.createServer();
+var port = process.env.PORT || 3000;
 app.use(app.router);
 app.use(express.static(__dirname + '/public'));
-app.listen(8042);
+app.listen(port);
 
 watchDirectoryAndRecompile("src/sass", compile_sass);
 watchDirectoryAndRecompile("src/haml", compile_haml);
