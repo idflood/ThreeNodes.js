@@ -1,13 +1,15 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/models/Node',
   'order!threenodes/utils/Utils',
   "order!libs/Tween",
   "order!libs/Sparks",
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.nodes.ParticleSystem extends ThreeNodes.nodes.Object3D
     @node_name = 'ParticleSystem'
     @group_name = 'Particle'

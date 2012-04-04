@@ -1,11 +1,12 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "order!libs/timeline.js/timeline",
   "order!libs/timeline.js/timeline-gui",
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  $ = jQuery
+  
   class ThreeNodes.AppTimeline extends Backbone.View
     initialize: (options) =>
       super

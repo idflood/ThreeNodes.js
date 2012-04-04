@@ -1,11 +1,13 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/models/Node',
   'order!threenodes/utils/Utils',
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.NodeMaterialBase extends ThreeNodes.NodeBase
     set_fields: =>
       super

@@ -1,11 +1,13 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/utils/Utils',
   'order!threenodes/collections/Fields',
-], ($, _, Backbone, Utils) ->
+], (_, Backbone, Utils) ->
   "use strict"
+  
+  $ = jQuery
+  
   ThreeNodes.field_click_1 = false
   ThreeNodes.selected_nodes = $([])
   ThreeNodes.nodes_offset =

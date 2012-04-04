@@ -1,10 +1,11 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "order!libs/qunit-git",
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  
+  $ = jQuery
   class NodeGraphSpeedTest
     constructor: (app) ->
       ng = app.nodegraph

@@ -1,11 +1,13 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/utils/Rc4Random',
   'order!threenodes/models/Node',
-], ($, _, Backbone, Rc4Random) ->
+], (_, Backbone, Rc4Random) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.nodes.RandomSpread extends ThreeNodes.NodeBase
     @node_name = 'RandomSpread'
     @group_name = 'Spread'

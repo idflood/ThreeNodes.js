@@ -1,7 +1,6 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "order!libs/Three",
   "order!libs/three-extras/js/ShaderExtras",
   "order!libs/three-extras/js/postprocessing/EffectComposer",
@@ -14,8 +13,11 @@ define [
   "order!libs/BlobBuilder.min",
   "order!libs/FileSaver.min",
   "order!libs/canvas-toBlob.min",
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  
+  $ = jQuery
+  
   ThreeNodes.Webgl = {}
   class ThreeNodes.WebglBase
     constructor: () ->

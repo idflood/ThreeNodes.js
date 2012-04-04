@@ -1,10 +1,12 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "order!libs/qunit-git",
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  
+  $ = jQuery
+  
   class NodeConnectionTest
     constructor: (app) ->
       module "NodeConnection"

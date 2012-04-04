@@ -1,11 +1,12 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
+  'use!Underscore', 
+  'use!Backbone',
+  "jQueryUi",
   'order!threenodes/utils/Utils',
-], ($, _, Backbone, _view_node_template) ->
+], (_, Backbone, _view_node_template) ->
   "use strict"
+  
+  $ = jQuery
   
   class ThreeNodes.ConnectionView extends Backbone.View
     

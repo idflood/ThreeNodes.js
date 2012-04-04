@@ -1,7 +1,6 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
   "text!templates/app_ui.tmpl.html",
@@ -10,12 +9,14 @@ define [
   "order!libs/three-extras/js/RequestAnimationFrame",
   "order!libs/raphael-min",
   "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
+  "jQueryUi",
   "order!libs/jquery.transform2d",
   "order!libs/jquery-scrollview/jquery.scrollview",
   "order!libs/jquery.layout-latest",
-], ($, _, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
+], (_, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   "use strict"
+  $ = jQuery
+  
   ### UI View ###
   
   class ThreeNodes.UI extends Backbone.View

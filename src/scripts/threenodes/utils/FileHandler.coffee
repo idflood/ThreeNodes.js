@@ -1,13 +1,16 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
+  'threenodes/utils/utils',
   'order!threenodes/utils/CodeExporter',
   "order!libs/BlobBuilder.min",
   "order!libs/FileSaver.min",
   "order!libs/json2",
-], ($, _, Backbone) ->
+], (_, Backbone, Utils) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.FileHandler extends Backbone.Events
     constructor: (@nodes) ->
       ThreeNodes.events.on "SaveFile", @save_local_file
@@ -32,8 +35,10 @@ define [
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
       
     get_local_json: (stringify = true) =>
+      console.log Utils
+      console.log Utils.uid
       res = 
-        uid: ThreeNodes.uid
+        uid: Utils.get_uid(false)
         nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
         connections: jQuery.map(@nodes.connections.models, (c, i) -> c.toJSON())
       if stringify
@@ -46,7 +51,7 @@ define [
       res += '<?xml version="1.0" encoding="UTF-8"?>\n'
       res += ("<app>\n")
     
-      res += "\t<uid last='#{ThreeNodes.uid}' />\n"
+      res += "\t<uid last='#{ThreeNodes.get_uid(false)}' />\n"
     
       res += "\t<nodes>\n"
       for node in @nodes.models
@@ -69,7 +74,7 @@ define [
       for connection in loaded_data.connections
         @nodes.createConnectionFromObject(connection)
       
-      ThreeNodes.uid = loaded_data.uid
+      Utils.set_uid(loaded_data.uid)
       delay = (ms, func) -> setTimeout func, ms
       delay 1, => @nodes.renderAllConnections()
     

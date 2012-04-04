@@ -19,9 +19,9 @@ ThreeNodes.flash_sound_value =
   hat: 0
 
 define [
-  'jQuery',
-  'Underscore',
-  'Backbone',
+  'use!Underscore',
+  'use!Backbone',
+  "order!threenodes/utils/utils",
   'order!threenodes/collections/Nodes',
   'order!threenodes/views/UI',
   'order!threenodes/views/Timeline',
@@ -29,8 +29,9 @@ define [
   'order!threenodes/utils/FileHandler',
   'order!threenodes/utils/UrlHandler',
   "order!threenodes/utils/WebglBase",
-], ($, _, Backbone) ->
+], (_, Backbone, Utils) ->
   "use strict"
+  $ = jQuery
   
   # use a global event dispatcher (would be better without it)
   ThreeNodes.events = _.extend({}, Backbone.Events)
@@ -89,5 +90,5 @@ define [
       @initTimeline()
     
     reset_global_variables: () ->
-      ThreeNodes.uid = 0
+      Utils.set_uid(0)
       ThreeNodes.selected_nodes = $([])

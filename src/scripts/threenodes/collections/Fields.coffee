@@ -1,6 +1,6 @@
 define [
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/models/Field',
 ], (_, Backbone) ->
   "use strict"

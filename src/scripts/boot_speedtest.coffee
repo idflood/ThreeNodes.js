@@ -1,15 +1,29 @@
 require.config
   paths:
-    jQuery: 'loaders/jquery-loader'
-    Underscore: 'loaders/underscore-loader'
-    Backbone: 'loaders/backbone-loader'
+    jQuery: 'libs/jquery-1.7.2'
+    jQueryUi: 'libs/jquery-ui/js/jquery-ui-1.9m6'
+    Underscore: 'libs/underscore'
+    Backbone: 'libs/backbone'
+    use: "libs/require/use"
+    text: "libs/require/text"
+    order: "libs/require/order"
+  use:
+    'Underscore':
+      attach: "_"
+    'Backbone':
+      deps: ['use!Underscore', 'jQuery']
+      attach: () ->
+        return window.Backbone
+    'jQueryUi':
+      deps: ['jQuery']
+      attach: ($) ->
+        return jQuery
 
 require [
   'order!threenodes/App',
   'speedtests/NodeGraphSpeedTest',
-  'order!libs/jquery-1.6.4.min',
-  'order!libs/underscore-min',
-  'order!libs/backbone',
+  'use!Underscore',
+  'use!Backbone',
   "order!libs/JSLitmus",
 ], (App, NodeGraphSpeedTest) ->
   "use strict"

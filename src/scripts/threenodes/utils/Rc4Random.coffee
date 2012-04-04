@@ -1,9 +1,10 @@
 define [
-  'jQuery',
-  'Underscore',
-  'Backbone',
+  'use!Underscore',
+  'use!Backbone',
 ], ($, _, Backbone) ->
   "use strict"
+  
+  $ = jQuery
   
   class ThreeNodes.Rc4Random
     # Rc4Random function taken from http://www.webdeveloper.com/forum/showthread.php?t=140572

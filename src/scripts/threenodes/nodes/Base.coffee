@@ -1,12 +1,14 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/models/Node',
   "order!libs/colorpicker/js/colorpicker",
   'order!threenodes/utils/Utils',
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.nodes.Number extends ThreeNodes.NodeNumberSimple
     @node_name = 'Number'
     @group_name = 'Base'

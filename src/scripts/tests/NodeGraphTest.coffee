@@ -1,10 +1,13 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
+  "threenodes/utils/utils",
   "order!libs/qunit-git",
-], ($, _, Backbone) ->
+], (_, Backbone, Utils) ->
   "use strict"
+  
+  $ = jQuery
+  
   class NodeGraphTest
     constructor: (app) ->
       module "NodeGraph"
@@ -18,4 +21,4 @@ define [
         equals ng.length, 2, "Nodegraph has 2 nodes"
         ThreeNodes.events.trigger("ClearWorkspace")
         equals ng.length, 0, "Nodegraph has 0 nodes"
-        equals ThreeNodes.uid, 0, "ThreeNodes.uid has been reset to 0"
+        equals Utils.get_uid(false), 0, "ThreeNodes.uid has been reset to 0"

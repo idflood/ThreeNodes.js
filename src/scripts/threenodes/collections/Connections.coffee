@@ -1,6 +1,6 @@
 define [
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/models/Connection',
   'order!threenodes/views/ConnectionView',
 ], (_, Backbone) ->

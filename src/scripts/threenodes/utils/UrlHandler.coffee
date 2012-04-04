@@ -1,9 +1,11 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
-], ($, _, Backbone) ->
+  'use!Underscore', 
+  'use!Backbone',
+], (_, Backbone) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.UrlHandler extends Backbone.Router
     routes:
       "": "onDefault"

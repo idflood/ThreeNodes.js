@@ -1,10 +1,12 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "text!templates/app_menubar.tmpl.html",
-], ($, _, Backbone, _view_menubar) ->
+], (_, Backbone, _view_menubar) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.MenuBar extends Backbone.View
     @template = _view_menubar
     

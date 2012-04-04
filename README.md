@@ -38,5 +38,8 @@ This will automatically compile coffescript files to javascript, sass to css and
 2. node server.js build
 3. a new /output_static should have been created
 
+## Known limitations
+- It is recommended to always access ThreeNodes.js from http since chrome has a highly restrictive file access when using file://. (see http://code.google.com/p/chromium/issues/detail?id=40787)
+
 ## Howto create a simple scene
 First, create a webglrenderer node. Then add a scene and connect it to the "scene" of the webgl node. On the scene children you would connect a "merge" and to it a mesh. With that there should be a red cube showing in the renderer window.

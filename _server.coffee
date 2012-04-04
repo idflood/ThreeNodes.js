@@ -7,6 +7,7 @@ watch = require("watch")
 express = require("express")
 coffee = require("coffee-script")
 stylus = require("stylus")
+jade = require("jade")
 nib = require("nib")
 wrench = require("wrench")
 requirejs = require('requirejs')
@@ -24,7 +25,12 @@ if is_build
         console.log "error: " + err
       console.log stdout + stderr
       delay 100, () => on_complete()
-      
+  compile_jade = (filename) ->
+    html = jade.compile(fs.readFileSync('views/' + filename + ".jade", 'utf8'), {pretty: true})
+    if html
+      fs.writeFileSync('output_static/' + filename + ".html", html())
+    else
+      console.log "Can't compile: views/" + filename + ".jade"
   console.log "Building..."
   
   # Remove previous build
@@ -43,23 +49,47 @@ if is_build
   
   # Compile jade to html
   console.log "Compiling jade files..."
-  exec_and_log 'jade views/ --out output_static/', () ->
-    # Compile coffeescript to js
-    console.log "Compiling coffeescript files..."
-    exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/', () ->
-      # console.log "Starting to optimize the javascripts..."
-      # optimize the js
-      config =
-        baseUrl: 'output_static/scripts/'
-        paths:
-          jQuery: "libs/jquery-1.6.4.min"
-          Underscore: "libs/underscore-min"
-          Backbone: "libs/backbone"
-        #optimize: 'none'
-        name: 'threenodes/App'
-        out: 'output_static/scripts/threenodes/App.js'
-      #requirejs.optimize config, (buildResponse) ->
-      #  console.log "Optimization complete!"
+  compile_jade("index")
+  compile_jade("test")
+  compile_jade("speedtest")
+  compile_jade("code_export_example")
+  #exec_and_log 'jade views/ --out output_static/', () ->
+  # Compile coffeescript to js
+  console.log "Compiling coffeescript files..."
+  exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/', () ->
+    console.log "Starting to optimize the javascripts..."
+    # optimize the js
+    config =
+      baseUrl: 'output_static/scripts/'
+      paths:
+        jQuery: 'libs/jquery-1.7.2'
+        jQueryUi: 'libs/jquery-ui/js/jquery-ui-1.9m6'
+        Underscore: 'libs/underscore'
+        Backbone: 'libs/backbone'
+        use: "libs/require/use"
+        text: "libs/require/text"
+        order: "libs/require/order"
+      use:
+        'Underscore':
+          attach: "_"
+        'Backbone':
+          deps: ['use!Underscore', 'jQuery']
+          attach: "Backbone"
+        'jQueryUi':
+          deps: ['jQuery']
+          attach: 'jQuery'
+      
+      #  jQuery: "libs/jquery-1.6.4.min"
+      #  Underscore: "libs/underscore-min"
+      #  Backbone: "libs/backbone"
+      #modules: [{exclude: ["jQuery"]}]
+      optimize: 'none'
+      name: 'threenodes/App'
+      out: 'output_static/scripts/threenodes/App.js'
+      #name: 'boot'
+      #out: 'output_static/scripts/boot-built.js'
+    requirejs.optimize config, (buildResponse) ->
+      console.log "Optimization complete!"
       console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
       process.exit()
 

@@ -1,7 +1,6 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/models/Node',
   'order!threenodes/views/NodeView',
   'order!threenodes/nodes/Base',
@@ -16,8 +15,10 @@ define [
   'order!threenodes/nodes/Spread',
   'order!threenodes/nodes/Particle',
   'order!threenodes/collections/Connections',
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  $ = jQuery
+  
   class ThreeNodes.NodeGraph extends Backbone.Collection
     
     initialize: (models, options) =>

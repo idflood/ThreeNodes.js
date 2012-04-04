@@ -1,12 +1,13 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
+  'use!Underscore', 
+  'use!Backbone',
+  "jQueryUi",
   'order!threenodes/utils/Utils',
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
+  
   ### Fields View ###
+  $ = jQuery
   
   class ThreeNodes.NodeFieldRackView extends Backbone.View
     # Save some options in variables and bind events

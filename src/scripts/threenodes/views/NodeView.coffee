@@ -1,15 +1,15 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "text!templates/node.tmpl.html",
   'order!threenodes/views/NodeFieldRackView',
   "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
+  "jQueryUi",
   'order!threenodes/utils/Utils',
-], ($, _, Backbone, _view_node_template) ->
+], (_, Backbone, _view_node_template) ->
   "use strict"
   ### Node View ###
+  $ = jQuery
   
   class ThreeNodes.NodeView extends Backbone.View
     @template = _view_node_template

@@ -1,12 +1,14 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
   'order!threenodes/utils/Utils',
-], ($, _, Backbone, _view_node_field_in, _view_node_field_out, Utils) ->
+], (_, Backbone, _view_node_field_in, _view_node_field_out, Utils) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.NodeField extends Backbone.Model
     defaults: () ->
       fid: -1

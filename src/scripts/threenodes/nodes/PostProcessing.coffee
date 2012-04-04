@@ -1,11 +1,13 @@
 define [
-  'jQuery',
-  'Underscore', 
-  'Backbone',
+  'use!Underscore', 
+  'use!Backbone',
   'order!threenodes/utils/Utils',
   'order!threenodes/models/Node',
-], ($, _, Backbone, Utils) ->
+], (_, Backbone, Utils) ->
   "use strict"
+  
+  $ = jQuery
+  
   class ThreeNodes.nodes.BloomPass extends ThreeNodes.NodeBase
     @node_name = 'Bloom'
     @group_name = 'PostProcessing'
