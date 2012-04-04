@@ -98,6 +98,7 @@ else
   
   # Setup express server
   app = express.createServer()
+  port = process.env.PORT || 3000
   app.use app.router
   app.use express.methodOverride()
   app.use express.bodyParser()
@@ -173,6 +174,6 @@ else
       layout: false
   
   # Start the server
-  app.listen 8042
-  console.log "ready: http://localhost:8042/"
+  app.listen port
+  console.log "ready: http://localhost:#{port}/"
 

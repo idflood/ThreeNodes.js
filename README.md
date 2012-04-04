@@ -30,7 +30,7 @@ This will automatically compile coffescript files to javascript, sass to css and
 ## Usage
 1. cd in ThreeNodes
 2. node server.js
-3. with firefox or chrome go to http://localhost:8042/
+3. with firefox or chrome go to http://localhost:3000/
 4. allow this site to create popups (for webglrender node)
 
 ## Build / Deploy
