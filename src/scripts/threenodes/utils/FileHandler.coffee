@@ -1,7 +1,7 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'threenodes/utils/utils',
+  'threenodes/utils/Utils',
   'order!threenodes/utils/CodeExporter',
   "order!libs/BlobBuilder.min",
   "order!libs/FileSaver.min",
@@ -35,8 +35,6 @@ define [
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
       
     get_local_json: (stringify = true) =>
-      console.log Utils
-      console.log Utils.uid
       res = 
         uid: Utils.get_uid(false)
         nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
@@ -74,7 +72,7 @@ define [
       for connection in loaded_data.connections
         @nodes.createConnectionFromObject(connection)
       
-      Utils.set_uid(loaded_data.uid)
+      Utils.uid = loaded_data.uid
       delay = (ms, func) -> setTimeout func, ms
       delay 1, => @nodes.renderAllConnections()
     

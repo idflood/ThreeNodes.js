@@ -12,12 +12,11 @@ require.config
       attach: "_"
     'Backbone':
       deps: ['use!Underscore', 'jQuery']
-      attach: () ->
-        return window.Backbone
+      attach: "Backbone"
     'jQueryUi':
       deps: ['jQuery']
-      attach: ($) ->
-        return jQuery
+      attach: "jQuery"
+        
 
 require [
   'order!threenodes/App',

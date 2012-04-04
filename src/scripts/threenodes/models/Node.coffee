@@ -56,7 +56,7 @@ define [
       if !@get("nid")
         @setNID(Utils.get_uid())
       else
-        ThreeNodes.uid = @get("nid")
+        Utils.uid = @get("nid")
       
       @rack = new ThreeNodes.NodeFieldsCollection([], {node: this})
       @

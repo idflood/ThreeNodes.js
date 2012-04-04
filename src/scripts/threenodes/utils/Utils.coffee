@@ -1,15 +1,12 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-], ($, _, Backbone) ->
+], (_, Backbone) ->
   "use strict"
   
   class Utils
     # Define a static "unique id" property
     @uid: 0
-    
-    @set_uid: (uid) ->
-      Utils.uid = uid
     
     @get_uid: (increment = true) ->
       if increment
