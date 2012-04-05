@@ -38,8 +38,6 @@ define [
   $ = jQuery
   
   class ThreeNodes.App
-    # use a global event dispatcher (would be better without it)
-    ThreeNodes.events = _.extend({}, Backbone.Events)
     
     constructor: (testing_mode = false) ->
       # save settings in a global object
