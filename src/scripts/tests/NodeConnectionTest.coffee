@@ -19,7 +19,7 @@ define [
         c1 = ng.connections.create
           from_field: n1.v_out
           to_field: n2.v_in
-        console.log c1
+        
         equals ng.connections.length, 1, "There is one connection"
         equals n1.v_out.connections.length, 1, "The output field has one connection"
         n1.v_in.setValue 0.5

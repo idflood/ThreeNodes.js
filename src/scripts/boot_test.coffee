@@ -27,10 +27,11 @@ require [
   'tests/FileSaveTest',
   'tests/FileLoadTest',
   'tests/ThreeJsIntegrationTest',
+  'tests/GroupTest',
   'use!Underscore',
   'use!Backbone',
   "order!libs/qunit-git",
-], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest) ->
+], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) ->
   "use strict"
   app = new App(true)
   new NodeGraphTest(app)
@@ -40,3 +41,4 @@ require [
   new FileSaveTest(app)
   new FileLoadTest(app)
   new ThreeJsIntegrationTest(app)
+  new GroupTest(app)
