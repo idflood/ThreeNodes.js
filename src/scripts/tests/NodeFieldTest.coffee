@@ -12,7 +12,7 @@ define [
       module "NodeFields"
       
       test "Bool field", () ->
-        nf = new ThreeNodes.fields.types.Bool
+        nf = new ThreeNodes.fields.Bool
           name: "booltest"
           value: false
         equals nf.get("name"), "booltest", "Bool name is set"
@@ -27,7 +27,7 @@ define [
         equals nf.getValue(), true, "Boolfield kept previous value when wrong type is set"
 
       test "Float field", () ->
-        nf = new ThreeNodes.fields.types.Float
+        nf = new ThreeNodes.fields.Float
           name: "floattest"
           value: 3
         equals nf.getValue(), 3, "Floatfield value is 3"
@@ -43,7 +43,7 @@ define [
         equals nf.getValue(), 0, "Floatfield converted FALSE value to 0"
       
       test "Color field", () ->
-        nf = new ThreeNodes.fields.types.Color
+        nf = new ThreeNodes.fields.Color
           name: "colortest"
           value: new THREE.Color(0xff000)
         equals nf.getValue().getHex(), new THREE.Color(0xff000).getHex(), "ColorField value is 0xff0000"

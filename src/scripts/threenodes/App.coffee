@@ -1,9 +1,8 @@
-ThreeNodes = {}
-
-ThreeNodes.nodes = {}
-
-ThreeNodes.fields =
-  types: {}
+# Declare namespace
+if !ThreeNodes
+  ThreeNodes =
+    nodes: {}
+    fields: {}
 
 define [
   'use!Underscore',
