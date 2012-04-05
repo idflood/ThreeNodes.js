@@ -29,4 +29,4 @@ define [
     
     on_websocket_message: (data) =>
       messg = data.data
-      ThreeNodes.flash_sound_value = jQuery.parseJSON(messg)
+      #ThreeNodes.flash_sound_value = jQuery.parseJSON(messg)

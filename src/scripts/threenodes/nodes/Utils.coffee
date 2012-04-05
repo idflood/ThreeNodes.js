@@ -281,7 +281,6 @@ define [
       
       
     compute: () =>
-      #console.log flash_sound_value
       if !@is_chrome()
         return
       if @url_cache != @rack.getField("url").getValue()
@@ -301,28 +300,6 @@ define [
         @rack.setField("medium", @getAverageLevel(length3rd, (length3rd * 2) - 1))
         @rack.setField("high", @getAverageLevel(length3rd * 2, length - 1))
       return true
-  
-  class ThreeNodes.nodes.SoundInput extends ThreeNodes.NodeBase
-    @node_name = 'SoundInput'
-    @group_name = 'Utils'
-    
-    set_fields: =>
-      super
-      @auto_evaluate = true
-      @counter = 0
-      @rack.addFields
-        inputs:
-          "gain": 1.0
-        outputs:
-          "low" : 0
-          "medium" : 0
-          "high" : 0
-    
-    compute: () =>
-      #console.log flash_sound_value
-      @rack.setField("low", ThreeNodes.flash_sound_value.kick)
-      @rack.setField("medium", ThreeNodes.flash_sound_value.snare)
-      @rack.setField("high", ThreeNodes.flash_sound_value.hat)
   
   class ThreeNodes.nodes.Mouse extends ThreeNodes.NodeBase
     @node_name = 'Mouse'

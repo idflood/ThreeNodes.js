@@ -13,10 +13,6 @@ ThreeNodes.fields =
   types: {}
 
 ThreeNodes.svg = false
-ThreeNodes.flash_sound_value =
-  kick: 0
-  snare: 0
-  hat: 0
 
 define [
   'use!Underscore',
