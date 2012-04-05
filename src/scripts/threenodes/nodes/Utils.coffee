@@ -315,9 +315,14 @@ define [
           "y" : 0
       
     compute: =>
-      @rack.setField("xy", new THREE.Vector2(ThreeNodes.mouseX, ThreeNodes.mouseY))
-      @rack.setField("x", ThreeNodes.mouseX)
-      @rack.setField("y", ThreeNodes.mouseY)
+      dx = 0
+      dy = 0
+      if ThreeNodes.nodes.WebGLRenderer && ThreeNodes.nodes.WebGLRenderer.mouseX
+        dx = ThreeNodes.nodes.WebGLRenderer.mouseX
+        dy = ThreeNodes.nodes.WebGLRenderer.mouseY
+      @rack.setField("xy", new THREE.Vector2(dx, dy))
+      @rack.setField("x", dx)
+      @rack.setField("y", dy)
   
   class ThreeNodes.nodes.Timer extends ThreeNodes.NodeBase
     @node_name = 'Timer'

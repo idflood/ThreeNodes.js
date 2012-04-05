@@ -1,9 +1,10 @@
 define [
   'use!Underscore', 
   'use!Backbone',
+  'threenodes/views/UI',
   "jQueryUi",
   'order!threenodes/utils/Utils',
-], (_, Backbone, _view_node_template) ->
+], (_, Backbone, UI, _view_node_template) ->
   "use strict"
   
   $ = jQuery
@@ -12,7 +13,7 @@ define [
     
     initialize: () ->
       @container = $("#graph")
-      @line = ThreeNodes.svg.path().attr
+      @line = UI.svg.path().attr
         stroke: "#555"
         fill: "none"
       # set the dom element
@@ -25,13 +26,13 @@ define [
       @
     
     remove: ->
-      if ThreeNodes.svg && @line
+      if UI.svg && @line
         @line.remove()
         @line = false
       return true
     
     render: () ->
-      if ThreeNodes.svg && @line && @line.attrs
+      if UI.svg && @line && @line.attrs
         @line.attr
           path: @get_path()
       @

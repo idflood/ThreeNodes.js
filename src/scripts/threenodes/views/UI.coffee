@@ -20,6 +20,10 @@ define [
   ### UI View ###
   
   class ThreeNodes.UI extends Backbone.View
+    
+    # Background svg used to draw the connections
+    @svg: false
+    
     initialize: (options) ->
       super
       
@@ -34,8 +38,8 @@ define [
       
       # Setup SVG for drawing connections
       @svg = Raphael("graph", 4000, 4000)
-      ThreeNodes.svg = @svg
-      ThreeNodes.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
+      ThreeNodes.UI.svg = @svg
+      ThreeNodes.UI.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
         stroke: "#fff"
         'stroke-dasharray': "-"
         fill: "none"

@@ -475,6 +475,10 @@ define [
     @node_name = 'WebGLRenderer'
     @group_name = 'Three'
     
+    # Mouse position  over webgl renderer
+    @mouseX: 0
+    @mouseY: 0
+    
     set_fields: =>
       super
       @auto_evaluate = true
@@ -538,8 +542,8 @@ define [
     add_mouse_handler: =>
       $(@ob.domElement).unbind "mousemove"
       $(@ob.domElement).bind "mousemove", (e) ->
-        ThreeNodes.mouseX = e.clientX
-        ThreeNodes.mouseY = e.clientY
+        ThreeNodes.nodes.WebGLRenderer.mouseX = e.clientX
+        ThreeNodes.nodes.WebGLRenderer.mouseY = e.clientY
       return this
     
     create_popup_view: ->

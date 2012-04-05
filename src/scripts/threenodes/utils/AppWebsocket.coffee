@@ -5,8 +5,8 @@ define [
 ], (_, Backbone) ->
   "use strict"
   class ThreeNodes.AppWebsocket
-    constructor: () ->
-      if ThreeNodes.websocket_enabled
+    constructor: (websocket_enabled = false) ->
+      if websocket_enabled
         webso = false
         if window.MozWebSocket
           webso = window.MozWebSocket

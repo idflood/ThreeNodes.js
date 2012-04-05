@@ -1,18 +1,9 @@
 ThreeNodes = {}
 
-# disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
-# this makes the soundinput node not working
-ThreeNodes.websocket_enabled = false
-
 ThreeNodes.nodes = {}
-
-ThreeNodes.mouseX = 0
-ThreeNodes.mouseY = 0
 
 ThreeNodes.fields =
   types: {}
-
-ThreeNodes.svg = false
 
 define [
   'use!Underscore',
@@ -42,6 +33,10 @@ define [
         testing_mode: testing_mode
         player_mode: false
       
+      # disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
+      # this makes the soundinput node not working
+      websocket_enabled = false
+      
       @url_handler = new ThreeNodes.UrlHandler()
       @group_definitions = new ThreeNodes.GroupDefinitions([])
       @nodegraph = new ThreeNodes.NodeGraph([], {is_test: testing_mode})
@@ -69,7 +64,7 @@ define [
           view = new ThreeNodes.ConnectionView
             model: connection
       
-      @socket = new ThreeNodes.AppWebsocket()
+      @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
       @webgl = new ThreeNodes.WebglBase()
       @file_handler = new ThreeNodes.FileHandler(@nodegraph)
       
