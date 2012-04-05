@@ -1,8 +1,10 @@
 # Declare namespace
-if !ThreeNodes
-  ThreeNodes =
-    nodes: {}
-    fields: {}
+if ThreeNodes == null || typeof(!ThreeNodes) != "object"
+  ThreeNodes = {}
+if ThreeNodes.nodes == null || typeof(!ThreeNodes.nodes) != "object"
+  ThreeNodes.nodes = {}
+if ThreeNodes.fields == null || typeof(!ThreeNodes.fields) != "object"
+  ThreeNodes.fields = {}
 
 define [
   'use!Underscore',
