@@ -79,12 +79,14 @@ define [
             nodename = "Group"
             container =  $("#library")
             definition = ui.draggable.data("model")
+            offset.left -= container.offset().left
           else
             nodename = ui.draggable.attr("rel")
             container =  $("#sidebar")
           
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
           dy = ui.position.top + $("#container-wrapper").scrollTop() - container.scrollTop() - offset.top
+          #debugger
           self.trigger("CreateNode", {type: nodename, x: dx, y: dy, definition: definition})
           $("#sidebar").show()
       
