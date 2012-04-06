@@ -34,7 +34,19 @@ define [
       # Recreate the connections between internal subnodes
       for connection in @definition.get("connections")
         @subgraph.createConnectionFromObject(connection)
-        
+    
+    toJSON: () =>
+      res =
+        nid: @get('nid')
+        name: @get('name')
+        type: @typename()
+        anim: @getAnimationData()
+        x: @get('x')
+        y: @get('y')
+        fields: @rack.toJSON()
+        definition_id: @definition.get("gid")
+      res
+    
     set_fields: =>
       @rack.createNodesProxyFields(@subgraph.models)
       return this

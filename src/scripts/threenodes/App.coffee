@@ -66,7 +66,7 @@ define [
       
       @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
       @webgl = new ThreeNodes.WebglBase()
-      @file_handler = new ThreeNodes.FileHandler(@nodegraph)
+      @file_handler = new ThreeNodes.FileHandler(@nodegraph, @group_definitions)
       
       @file_handler.on("ClearWorkspace", () => @clearWorkspace())
       @url_handler.on("ClearWorkspace", () => @clearWorkspace())
@@ -129,6 +129,7 @@ define [
     
     clearWorkspace: () =>
       @nodegraph.clearWorkspace()
+      @group_definitions.removeAll()
       @reset_global_variables()
       if @ui then @ui.clearWorkspace()
       @initTimeline()

@@ -11,7 +11,7 @@ define [
   $ = jQuery
   
   class ThreeNodes.FileHandler extends Backbone.Events
-    constructor: (@nodes) ->
+    constructor: (@nodes, @group_definitions) ->
       _.extend(FileHandler::, Backbone.Events)
       
     save_local_file: () =>
@@ -35,6 +35,7 @@ define [
         uid: Utils.get_uid(false)
         nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
         connections: jQuery.map(@nodes.connections.models, (c, i) -> c.toJSON())
+        groups: jQuery.map(@group_definitions.models, (g, i) -> g.toJSON())
       if stringify
         return JSON.stringify(res)
       else
@@ -62,8 +63,18 @@ define [
     
     load_from_json_data: (txt) =>
       loaded_data = JSON.parse(txt)
+      for grp_def in loaded_data.groups
+        @group_definitions.create(grp_def)
+      
       for node in loaded_data.nodes
-        n = @nodes.create_node(node)
+        if node.type != "Group"
+          @nodes.create_node(node)
+        else
+          def = @group_definitions.getByGid(node.definition_id)
+          if def
+            @nodes.createGroup(node)
+          else
+            console.log "can't find the GroupDefinition: #{node.definition_id}"
       
       for connection in loaded_data.connections
         @nodes.createConnectionFromObject(connection)

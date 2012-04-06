@@ -2,14 +2,15 @@ define [
   'use!Underscore', 
   'use!Backbone',
   'order!threenodes/utils/Utils',
-], (_, Backbone) ->
+], (_, Backbone, Utils) ->
   "use strict"
   
   class ThreeNodes.GroupDefinition extends Backbone.Model
     defaults:
-      "nodes": []
-      "connections": []
-      "name": "Group"
+      nodes: []
+      connections: []
+      name: "Group"
+      gid: -1
     
     sync: () =>
     
@@ -19,6 +20,8 @@ define [
     
     initialize: (options) =>
       @internal_uid = 0
+      if !@get("gid")
+        @set("gid", Utils.get_uid())
       if options.fromSelectedNodes && options.fromSelectedNodes != false
         @fromSelectedNodes(options.fromSelectedNodes)
     
@@ -46,6 +49,7 @@ define [
     
     toJSON: () ->
       res =
+        gid: @get("gid")
         name: @get("name")
         conncections: @get("conncections")
         nodes: @get("nodes")

@@ -1,6 +1,7 @@
 define [
   'use!Underscore', 
   'use!Backbone',
+  'order!threenodes/models/GroupDefinition',
   'order!threenodes/models/Connection',
   'order!threenodes/views/ConnectionView',
 ], (_, Backbone) ->
@@ -14,6 +15,15 @@ define [
     initialize: () =>
       @.bind "group:removed", (c) =>
         @remove(c)
+    
+    removeAll: () =>
+      models = @models.concat()
+      _.invoke models, "remove"
+      @reset([])
+    
+    getByGid: (gid) =>
+      @each (def) -> if def.gid == gid then return def
+      return false
     
     render: () =>
       @.each (c) ->
