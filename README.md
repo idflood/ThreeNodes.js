@@ -38,6 +38,11 @@ This will automatically compile coffescript files to javascript, sass to css and
 2. node server.js build
 3. a new /output_static should have been created
 
+## Build annotated sources
+1. install docco and dependancies
+2. docco src/scripts/threenodes/*.coffee src/scripts/threenodes/*/*.coffee
+3. cp docs/App.html docs/index.html
+
 ## Known limitations
 - It is recommended to always access ThreeNodes.js from http since chrome has a highly restrictive file access when using file://. (see http://code.google.com/p/chromium/issues/detail?id=40787)
 
