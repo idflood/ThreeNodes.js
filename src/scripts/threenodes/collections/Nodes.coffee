@@ -160,7 +160,7 @@ define [
           from_field: from
           to_field: to
       
-      return this
+      return grp
     
     removeConnection: (c) ->
       @connections.remove(c)

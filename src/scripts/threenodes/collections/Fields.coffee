@@ -111,6 +111,8 @@ define [
       # set the initial value of input proxy
       if field.get("is_output") == false
         proxy_field.setValue(field.attributes.value)
+        # save it in the nodefields array
+        @node_fields.inputs[proxy_field.get('name') + "-" + field.get("node").get("nid")] = proxy_field
       
       return proxy_field
     

@@ -36,6 +36,7 @@ define [
         nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
         connections: jQuery.map(@nodes.connections.models, (c, i) -> c.toJSON())
         groups: jQuery.map(@group_definitions.models, (g, i) -> g.toJSON())
+      
       if stringify
         return JSON.stringify(res)
       else
@@ -72,7 +73,8 @@ define [
         else
           def = @group_definitions.getByGid(node.definition_id)
           if def
-            @nodes.createGroup(node)
+            node.definition = def
+            grp = @nodes.createGroup(node)
           else
             console.log "can't find the GroupDefinition: #{node.definition_id}"
       

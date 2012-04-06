@@ -19,9 +19,11 @@ define [
       return @internal_uid
     
     initialize: (options) =>
+      super
       @internal_uid = 0
-      if !@get("gid")
+      if @get("gid") == -1
         @set("gid", Utils.get_uid())
+      console.log "created group def with gid: " + @get("gid")
       if options.fromSelectedNodes && options.fromSelectedNodes != false
         @fromSelectedNodes(options.fromSelectedNodes)
     
@@ -51,7 +53,7 @@ define [
       res =
         gid: @get("gid")
         name: @get("name")
-        conncections: @get("conncections")
+        connections: @get("connections")
         nodes: @get("nodes")
       res
     

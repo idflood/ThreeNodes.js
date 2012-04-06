@@ -33,9 +33,10 @@ define [
         definition = app.group_definitions.groupSelectedNodes(selected_nodes)
         
         equals ng.length, 1, "There is one group node"
+        equals app.group_definitions.length, 1, "There is one group definition"
         grp = ng.models[0]
         equals grp.subgraph.length, 3, "The group node has 3 subnodes"
-        console.log grp
+        
         nbr_in1 = grp.rack.node_fields.inputs["in-1"]
         mult_out1 = grp.rack.node_fields.outputs["out-12"]
         mult_fact1 = grp.rack.node_fields.inputs["factor-12"]
@@ -45,10 +46,10 @@ define [
         ng.render()
         # 5 * 3
         equals mult_out1.getValue(), 15, "Group 1 sends correct value (1/2)"
-        nbr_in1.setValue 2
+        nbr_in1.setValue 7
         ng.render()
-        # 2 * 3
-        equals mult_out1.getValue(), 6, "Group 1 sends correct value (2/2)"
+        # 7 * 3
+        equals mult_out1.getValue(), 21, "Group 1 sends correct value (2/2)"
         
         # Create a second group node based on the same definition
         model =
@@ -60,7 +61,7 @@ define [
         equals ng.length, 2, "There is two group nodes"
         grp2 = ng.models[1]
         equals grp2.subgraph.length, 3, "The group2 has 3 subnodes"
-        console.log grp2
+        
         nbr_in2 = grp2.rack.node_fields.inputs["in-1"]
         mult_out2 = grp2.rack.node_fields.outputs["out-12"]
         mult_fact2 = grp2.rack.node_fields.inputs["factor-12"]
@@ -70,28 +71,49 @@ define [
         nbr_in2.setValue 11
         mult_fact2.setValue 2
         ng.render()
+        
+        equals mult_out1.getValue(), 21, "Group 1 value has not changed (1/2)"
         # 11 * 2
-        equals mult_out1.getValue(), 6, "Group 1 value has not changed (1/2)"
         equals mult_out2.getValue(), 22, "Group 2 sends correct value (1/2)"
         
         nbr_in2.setValue 2
         ng.render()
+        equals mult_out1.getValue(), 21, "Group 1 value has not changed (2/2)"
         # 2 * 2
-        equals mult_out1.getValue(), 6, "Group 1 value has not changed (2/2)"
-        equals mult_out2.getValue(), 4, "Group 2 sends correct value (1/2)"
+        equals mult_out2.getValue(), 4, "Group 2 sends correct value (2/2)"
         
         # Save current group in json for next test
         @saved_grp = filehandler.get_local_json()
         
         app.clearWorkspace()
-        console.log "######"
-        console.log @saved_grp
+        
         equals ng.length, 0, "The workspace is empty"
+        equals app.group_definitions.length, 0, "The group definition has been removed"
         
         # Load the previous workspace which had 2 groups
         filehandler.load_from_json_data(@saved_grp)
         ng.render()
+        
+        equals app.group_definitions.length, 1, "The group definition has been recreated"
+        def1 = app.group_definitions.models[0]
+        
+        equals def1.get("nodes").length, 3, "The group definition has 3 nodes"
+        equals def1.get("connections").length, 1, "The group definition has 1 connection"
         equals ng.length, 2, "The two group nodes have been loaded"
         grp = ng.models[0]
+        grp2 = ng.models[0]
         equals grp.subgraph.length, 3, "The group node has 3 subnodes"
+        
+        # Verify the output values of the group nodes
+        nbr_in1 = grp.rack.node_fields.inputs["in-1"]
+        mult_out1 = grp.rack.node_fields.outputs["out-12"]
+        mult_fact1 = grp.rack.node_fields.inputs["factor-12"]
+        nbr_in2 = grp2.rack.node_fields.inputs["in-1"]
+        mult_out2 = grp2.rack.node_fields.outputs["out-12"]
+        mult_fact2 = grp2.rack.node_fields.inputs["factor-12"]
+        
+        equals nbr_in1.getValue(), 7, "Group 1 input value is loaded"
+        equals nbr_in2.getValue(), 2, "Group 2 input value is loaded"
+        equals mult_out1.getValue(), 21, "Group 1 out value is loaded"
+        equals mult_out2.getValue(), 4, "Group 2 out value is loaded"
         

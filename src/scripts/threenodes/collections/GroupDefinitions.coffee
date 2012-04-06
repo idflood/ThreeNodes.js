@@ -22,8 +22,7 @@ define [
       @reset([])
     
     getByGid: (gid) =>
-      @each (def) -> if def.gid == gid then return def
-      return false
+      @find (def) -> def.get("gid") == gid
     
     render: () =>
       @.each (c) ->

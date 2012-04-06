@@ -34,6 +34,12 @@ define [
       # Recreate the connections between internal subnodes
       for connection in @definition.get("connections")
         @subgraph.createConnectionFromObject(connection)
+      
+      # Load the values from options.fields into the proxy fields
+      console.log "created group"
+      #if options.fields
+      #  @rack.load(options.fields)
+      #console.log options.fields
     
     toJSON: () =>
       res =
