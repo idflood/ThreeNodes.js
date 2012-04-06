@@ -1,9 +1,10 @@
 define [
   'use!Underscore', 
   'use!Backbone',
+  'threenodes/views/UI',
   "jQueryUi",
   'order!threenodes/utils/Utils',
-], (_, Backbone) ->
+], (_, Backbone, UiView) ->
   "use strict"
   
   ### Fields View ###
@@ -73,18 +74,18 @@ define [
           top: 0
         start: (event, ui) ->
           highlight_possible_targets()
-          if ThreeNodes.svg_connecting_line
-            ThreeNodes.svg_connecting_line.attr
+          if UiView.connecting_line
+            UiView.connecting_line.attr
               opacity: 1
         stop: (event, ui) ->
           $(".field").removeClass "field-possible-target"
-          if ThreeNodes.svg_connecting_line
-            ThreeNodes.svg_connecting_line.attr
+          if UiView.connecting_line
+            UiView.connecting_line.attr
               opacity: 0
         drag: (event, ui) ->
-          if ThreeNodes.svg_connecting_line
-            pos = $("span", event.target).position()
-            ThreeNodes.svg_connecting_line.attr
+          if UiView.connecting_line
+            pos = $(".inner-field span", $field).position()
+            UiView.connecting_line.attr
               path: get_path(pos, ui.position, self.node_el.position())
             return true
       

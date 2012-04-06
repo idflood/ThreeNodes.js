@@ -23,6 +23,7 @@ define [
     
     # Background svg used to draw the connections
     @svg: false
+    @connecting_line = false
     
     initialize: (options) ->
       super
@@ -38,9 +39,8 @@ define [
       @$el.append(ui_tmpl)
       
       # Setup SVG for drawing connections
-      @svg = Raphael("graph", 4000, 4000)
-      ThreeNodes.UI.svg = @svg
-      ThreeNodes.UI.svg_connecting_line = @svg.path("M0 -20 L0 -20").attr
+      ThreeNodes.UI.svg = Raphael("graph", 4000, 4000)
+      ThreeNodes.UI.connecting_line = ThreeNodes.UI.svg.path("M0 -20 L0 -20").attr
         stroke: "#fff"
         'stroke-dasharray': "-"
         fill: "none"
