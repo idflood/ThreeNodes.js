@@ -122,7 +122,7 @@ define [
       test "Connection from input to anoter input", () ->
         app.clearWorkspace()
         ng = app.nodegraph
-        console.log "create node...."
+        
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
         # connect an input to another input
@@ -171,10 +171,6 @@ define [
         node_mult.v_in.setValue 3
         ng.render()
         
-        console.log n1.v_in
-        console.log n1.v_out.get("value")
-        console.log n1.v_out.attributes.value
-        console.log node_merge.rack.getField("out", true)
         equals n1.v_out.get("value").length, 1, "Node number output one float value"
         equals node_merge.rack.getField("out", true).get("value").length, 2, "Merge node output 2 values"
         equals node_mult.v_factor.get("value").length, 2, "Mult node input factor has 2 values"
@@ -206,7 +202,7 @@ define [
         equals node_vec.rack.getMaxInputSliceCount(), 1, "Vector3 node has correct MaxInputSliceCount (1 since array start with 0)"
         equals node_vec.rack.getField("xyz", true).getValue(0).y, 5, "1st y value"
         equals node_vec.rack.getField("xyz", true).getValue(1).y, 7, "2nd y value"
-        console.log node_vec.rack.getField("xyz", true)
+        
         # mesh should duplicate itself
         app.clearWorkspace()
         meshNode = ng.create_node("ThreeMesh")

@@ -21,9 +21,10 @@ define [
     initialize: (options) =>
       super
       @internal_uid = 0
+      
       if @get("gid") == -1
         @set("gid", Utils.get_uid())
-      console.log "created group def with gid: " + @get("gid")
+      
       if options.fromSelectedNodes && options.fromSelectedNodes != false
         @fromSelectedNodes(options.fromSelectedNodes)
     
@@ -44,7 +45,6 @@ define [
                 internal_connections.push(connection)
       @attributes.nodes = jQuery.map(selected_nodes, (n, i) -> n.toJSON())
       @attributes.connections = jQuery.map(internal_connections, (c, i) -> c.toJSON())
-      #console.log data
     
     remove: =>
       super

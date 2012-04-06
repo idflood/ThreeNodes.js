@@ -27,7 +27,12 @@ define [
         return false
       
       for f in data.in
-        node_field = @node_fields.inputs[f.name]
+        if !f.nid
+          # Simple node field
+          node_field = @node_fields.inputs[f.name]
+        else
+          # Group node field
+          node_field = @node_fields.inputs[f.name + "-" + f.nid]
         if node_field then node_field.load(f.val)
       true
 

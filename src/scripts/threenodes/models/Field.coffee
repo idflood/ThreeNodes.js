@@ -135,6 +135,10 @@ define [
     toJSON : () =>
       res =
         name: @get("name")
+      # add the node nid for fields that are part of subnodes (group)
+      if @subfield
+        res.nid = @subfield.node.get("nid")
+      
       # help avoid cyclic value
       val = @get("value")
       val_type = jQuery.type(val)

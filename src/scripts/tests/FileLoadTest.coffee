@@ -26,7 +26,6 @@ define [
         ng.render()
         
         json_string1 = filehandler.get_local_json()
-        console.log json_string1
         app.clearWorkspace()
         
         filehandler.load_from_json_data(json_string1)

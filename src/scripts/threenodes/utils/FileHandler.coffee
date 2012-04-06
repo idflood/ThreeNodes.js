@@ -64,8 +64,9 @@ define [
     
     load_from_json_data: (txt) =>
       loaded_data = JSON.parse(txt)
-      for grp_def in loaded_data.groups
-        @group_definitions.create(grp_def)
+      if loaded_data.groups
+        for grp_def in loaded_data.groups
+          @group_definitions.create(grp_def)
       
       for node in loaded_data.nodes
         if node.type != "Group"
@@ -79,6 +80,7 @@ define [
             console.log "can't find the GroupDefinition: #{node.definition_id}"
       
       for connection in loaded_data.connections
+        console.log connection
         @nodes.createConnectionFromObject(connection)
       
       Utils.uid = loaded_data.uid

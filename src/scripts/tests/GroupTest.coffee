@@ -41,12 +41,18 @@ define [
         mult_out1 = grp.rack.node_fields.outputs["out-12"]
         mult_fact1 = grp.rack.node_fields.inputs["factor-12"]
         
-        nbr_in1.setValue 5
+        # Add a 4th node, external to the group, connected to a group field
+        n3 = ng.create_node("Number")
+        c1 = ng.connections.create
+          from_field: n3.v_out
+          to_field: nbr_in1
+        
+        n3.v_in.setValue 5
         mult_fact1.setValue 3
         ng.render()
         # 5 * 3
         equals mult_out1.getValue(), 15, "Group 1 sends correct value (1/2)"
-        nbr_in1.setValue 7
+        n3.v_in.setValue 7
         ng.render()
         # 7 * 3
         equals mult_out1.getValue(), 21, "Group 1 sends correct value (2/2)"
@@ -58,8 +64,9 @@ define [
         ng.createGroup(model)
         ng.render()
         
-        equals ng.length, 2, "There is two group nodes"
-        grp2 = ng.models[1]
+        equals ng.length, 3, "There is two group nodes + one external node"
+        equals ng.connections.length, 1, "There is only one connection (without subconnections)"
+        grp2 = ng.models[2]
         equals grp2.subgraph.length, 3, "The group2 has 3 subnodes"
         
         nbr_in2 = grp2.rack.node_fields.inputs["in-1"]
@@ -99,9 +106,10 @@ define [
         
         equals def1.get("nodes").length, 3, "The group definition has 3 nodes"
         equals def1.get("connections").length, 1, "The group definition has 1 connection"
-        equals ng.length, 2, "The two group nodes have been loaded"
+        equals ng.length, 3, "The two group nodes + the external number node have been loaded"
+        equals ng.connections.length, 1, "The external connection has been loaded"
         grp = ng.models[0]
-        grp2 = ng.models[0]
+        grp2 = ng.models[2]
         equals grp.subgraph.length, 3, "The group node has 3 subnodes"
         
         # Verify the output values of the group nodes
