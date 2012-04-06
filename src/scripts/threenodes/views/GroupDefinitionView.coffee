@@ -23,3 +23,5 @@ define [
         scroll: false
         containment: "document"
       @$el.data("model", @model)
+      @model.bind('remove', () => @remove())
+    
