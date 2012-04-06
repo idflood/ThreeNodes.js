@@ -76,8 +76,8 @@ define [
       res =
         id: @get("cid")
         from_node: @from_field.node.get("nid")
-        from: @from_field.get("name")
+        from: @from_field.get("machine_name")
         to_node: @to_field.node.get("nid")
-        to: @to_field.get("name")
+        to: @to_field.get("machine_name")
       res
     

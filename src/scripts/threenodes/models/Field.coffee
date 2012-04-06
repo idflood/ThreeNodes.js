@@ -13,6 +13,7 @@ define [
     defaults: () ->
       fid: -1
       name: "fieldname"
+      machine_name: "fieldname-nid"
       is_output: false
       value: 0
       default: null
@@ -48,6 +49,12 @@ define [
       @proxy = false
       @changed = true
       @connections = []
+      # Field machine_name must be unique inside each nodes
+      @set("machine_name", @get("name"))
+      # For proxyfields we append the subfield node id
+      # since the same field name can be in different subnodes
+      if @subfield && @subfield.node
+        @set("machine_name", @get("name") + "-" + @subfield.node.get("nid"))
       if @get("fid") == -1
         @set("fid", Utils.get_uid())
     
