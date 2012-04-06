@@ -27,6 +27,7 @@ define [
     initialize: (options) ->
       super
       
+      @settings = options.settings
       @is_grabbing = false
       
       # Bind events
@@ -181,7 +182,7 @@ define [
         $("body").removeClass("player-mode")
         $("#display-mode-switch").html("player mode")
       
-      ThreeNodes.settings.player_mode = is_player
+      @settings.player_mode = is_player
       if is_player == false
         @trigger("renderConnections")
       return true
@@ -225,7 +226,7 @@ define [
       @scroll_target.scrollLeft(x).scrollTop(y)
     
     switch_display_mode: () =>
-      @setDisplayMode(!ThreeNodes.settings.player_mode)
+      @setDisplayMode(!@settings.player_mode)
       return this
     
     init_display_mode_switch: () =>

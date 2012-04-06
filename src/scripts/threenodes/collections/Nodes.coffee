@@ -23,6 +23,7 @@ define [
     
     initialize: (models, options) =>
       @connections = new ThreeNodes.ConnectionsCollection()
+      @settings = options.settings
       self = this
       # save material nodes in an array so they can be quickly rebuild
       @materials = []
@@ -66,7 +67,7 @@ define [
         @timeline.off("trackRebuild", @showNodesAnimation)
         @timeline.off("startSound", @startSound)
         @timeline.off("stopSound", @stopSound)
-      console.log "binding timeline"
+      
       @timeline = timeline
       @timeline.on("trackRebuild", @showNodesAnimation)
       @timeline.on("startSound", @startSound)
@@ -78,6 +79,7 @@ define [
         opt = {type: opt}
       
       opt.timeline = @timeline
+      opt.settings = @settings
       
       if !ThreeNodes.nodes[opt.type]
         console.error("Node type doesn't exists: " + opt.type)

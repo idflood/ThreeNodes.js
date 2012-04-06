@@ -49,6 +49,7 @@ define [
       @out_connections = []
       @value = false
       @apptimeline = options.timeline
+      @settings = options.settings
       @options = options
       
       if !@get('name') || @get('name') == ''
@@ -91,6 +92,7 @@ define [
       delete @apptimeline
       delete @anim
       delete @options
+      delete @settings
       @destroy()
     
     createConnection: (field1, field2) =>

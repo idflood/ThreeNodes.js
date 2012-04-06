@@ -24,7 +24,7 @@ define [
       @definition = options.definition
       
       # A group contains a sub-nodegraph (nodes)
-      @subgraph = new ThreeNodes.NodeGraph([], ThreeNodes.settings.testing_mode)
+      @subgraph = new ThreeNodes.NodeGraph([], {settings: @settings})
       
       # Create the subnodes
       for node in @definition.get("nodes")

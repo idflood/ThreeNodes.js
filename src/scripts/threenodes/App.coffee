@@ -26,13 +26,12 @@ define [
   $ = jQuery
   
   class ThreeNodes.App
-    
-    constructor: (testing_mode = false) ->
-      # save settings in a global object
-      # if you have a more elegant way to handle this don't hesitate
-      ThreeNodes.settings =
-        testing_mode: testing_mode
+    constructor: (options) ->
+      # Default settings
+      settings = 
+        test: false
         player_mode: false
+      @settings = $.extend(settings, options)
       
       # disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
       # this makes the soundinput node not working
@@ -40,7 +39,7 @@ define [
       
       @url_handler = new ThreeNodes.UrlHandler()
       @group_definitions = new ThreeNodes.GroupDefinitions([])
-      @nodegraph = new ThreeNodes.NodeGraph([], {is_test: testing_mode})
+      @nodegraph = new ThreeNodes.NodeGraph([], {settings: settings})
       @nodegraph.bind "add", (node) ->
         template = ThreeNodes.NodeView.template
         tmpl = _.template(template, node)
@@ -60,7 +59,7 @@ define [
           el: $tmpl
         view.render()
       
-      if testing_mode == false
+      if @settings.test == false
         @nodegraph.connections.bind "add", (connection) ->
           view = new ThreeNodes.ConnectionView
             model: connection
@@ -73,7 +72,7 @@ define [
       @url_handler.on("ClearWorkspace", () => @clearWorkspace())
       @url_handler.on("LoadJSON", @file_handler.load_from_json_data)
       
-      @initUI(testing_mode)
+      @initUI()
       @initTimeline()
       
       # Start the url handling
@@ -86,10 +85,11 @@ define [
       
       return true
     
-    initUI: (testing_mode) =>
-      if testing_mode == false
+    initUI: () =>
+      if @settings.test == false
         @ui = new ThreeNodes.UI
           el: $("body")
+          settings: @settings
         @ui.on("render", @nodegraph.render)
         @ui.on("renderConnections", @nodegraph.renderAllConnections)
         @ui.menubar.on("RmoveSelectedNodes", @nodegraph.removeSelectedNodes)
