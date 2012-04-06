@@ -25,5 +25,6 @@ require [
   "order!libs/JSLitmus",
 ], (App, NodeGraphSpeedTest) ->
   "use strict"
-  app = new App(true)
+  app = new App
+    test: true
   new NodeGraphSpeedTest(app)

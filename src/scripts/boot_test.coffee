@@ -33,7 +33,8 @@ require [
   "order!libs/qunit-git",
 ], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) ->
   "use strict"
-  app = new App(true)
+  app = new App
+    test: true
   new NodeGraphTest(app)
   new NodeFieldTest(app)
   new NodeConnectionTest(app)
