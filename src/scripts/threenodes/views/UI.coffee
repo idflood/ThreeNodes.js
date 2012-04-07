@@ -87,7 +87,7 @@ define [
             offset.left -= container.offset().left
           else
             nodename = ui.draggable.attr("rel")
-            container =  $("#sidebar")
+            container =  $("#sidebar .ui-layout-center")
           
           dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
           dy = ui.position.top + $("#container-wrapper").scrollTop() - container.scrollTop() - offset.top
