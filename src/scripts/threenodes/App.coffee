@@ -126,19 +126,26 @@ define [
       return this
     
     initTimeline: () =>
+      # Remove old timeline DOM elements
       $("#timeline-container, #keyEditDialog").remove()
+      
+      # Cleanup the old timeline if there was one
       if @timelineView
         @nodegraph.off("remove", @timelineView.onNodeRemove)
         @timelineView.remove()
         if @ui
           @timelineView.off("TimelineCreated", @ui.on_ui_window_resize)
+      
+      # Create a new timeline
       @timelineView = new ThreeNodes.AppTimeline
         el: $("#timeline")
         ui: @ui
+      
+      # Bind events to it
       @nodegraph.bindTimelineEvents(@timelineView)
       @nodegraph.on("remove", @timelineView.onNodeRemove)
-      if @ui
-        @ui.on_ui_window_resize()
+      if @ui then @ui.on_ui_window_resize()
+      
       return this
     
     setDisplayMode: (is_player = false) =>

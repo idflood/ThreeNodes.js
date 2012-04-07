@@ -41,27 +41,7 @@ define [
         return JSON.stringify(res)
       else
         return res
-    
-    get_local_xml: () =>
-      res = ""
-      res += '<?xml version="1.0" encoding="UTF-8"?>\n'
-      res += ("<app>\n")
-    
-      res += "\t<uid last='#{@nodes.get_uid(false)}' />\n"
-    
-      res += "\t<nodes>\n"
-      for node in @nodes.models
-        res += node.toXML()
-      res += "\t</nodes>\n"
-      
-      res += "\t<connections>\n"
-      for c in @nodes.connections.models
-        res += c.toXML()
-      res += "\t</connections>\n"
-      
-      res += "</app>"
-      res
-    
+        
     load_from_json_data: (txt) =>
       loaded_data = JSON.parse(txt)
       if loaded_data.groups
@@ -85,31 +65,6 @@ define [
       @nodes.indexer.uid = loaded_data.uid
       delay = (ms, func) -> setTimeout func, ms
       delay 1, => @nodes.renderAllConnections()
-    
-    load_from_xml_data: (txt) =>
-      loaded_data = $(txt)
-      
-      $("node", loaded_data).each () ->
-        $this = $(this)
-        x = parseInt $this.attr("x")
-        y = parseInt $this.attr("y")
-        nid = parseInt $this.attr("nid")
-        type = $this.attr("type")
-        n = @nodes.create_node($this)
-      
-      $("connection", loaded_data).each () ->
-        $this = $(this)
-        from = parseInt $this.attr("from")
-        to = parseInt $this.attr("to")
-        cid = parseInt $this.attr("id")
-        from = ThreeNodes.nodes.fields[from.toString()]
-        to = ThreeNodes.nodes.fields[to.toString()]
-        c = @nodes.connections.create
-          from_field: from
-          to_field: to
-          cid: cid
-        
-      ThreeNodes.uid = parseInt $("uid", loaded_data).attr("last")
     
     load_local_file: (e) =>
       @trigger("ClearWorkspace")
