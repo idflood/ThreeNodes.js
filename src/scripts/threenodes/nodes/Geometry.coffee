@@ -33,7 +33,7 @@ define [
     
     get_cache_array: =>
       [@fields.getField("width").getValue(), @fields.getField("height").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue()]
-  
+    
     compute: =>
       new_cache = @get_cache_array()
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
