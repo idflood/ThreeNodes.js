@@ -1678,3 +1678,8 @@ body > header h1 {
 body {
   background: #333;
 }
+.definition .edit,
+.definition .remove {
+  display: none;
+  visibility: hidden;
+}
