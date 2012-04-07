@@ -26,10 +26,13 @@ define [
       @is_animated = false
       @out_connections = []
       @value = false
+      
+      # Keep a reference to the timeline, settings and options for later use
       @apptimeline = options.timeline
       @settings = options.settings
       @options = options
       
+      # Assign a default nid and name if they are not given
       if @get('name') == ''
         @set('name', @typename())
       
@@ -39,6 +42,7 @@ define [
         # todo: this may be the root issue why multiple group nodes don't play well (in fields too)
         Utils.uid = @get('nid')
       
+      # Create the node fields
       @rack = new ThreeNodes.NodeFieldsCollection([], {node: this})
       @
       
@@ -61,12 +65,16 @@ define [
       @trigger("postInit")
       @
     
+    # Utility to get the node name based on the classname
     typename: => String(@constructor.name)
     
     remove: () =>
+      # Destroy the anims and fields of the removed node
       if @anim
         @anim.destroy()
       @rack.destroy()
+      
+      # Delete some variables for the garbage collection
       delete @rack
       delete @apptimeline
       delete @anim
@@ -92,6 +100,7 @@ define [
     showNodeAnimation: () =>
       @trigger("node:showAnimations")
     
+    # Utility function to add a standard "count" input field
     add_count_input : () =>
       @rack.addFields
         inputs:
@@ -113,12 +122,12 @@ define [
     set_fields: =>
       # to implement
     
-    has_out_connection: () =>
-      @out_connections.length != 0
+    has_out_connection: () => @out_connections.length != 0
     
     getUpstreamNodes: () => @rack.getUpstreamNodes()
     getDownstreamNodes: () => @rack.getDownstreamNodes()
-        
+    
+    # Return true if any of the properties is animated
     hasPropertyTrackAnim: () =>
       for propTrack in @anim.objectTrack.propertyTracks
         if propTrack.anims.length > 0
@@ -159,11 +168,6 @@ define [
         if exceptions.indexOf(field_name) == -1
           target[field_name] = @rack.getField(field_name).getValue(index)
     
-    get_cached_array: (vals) =>
-      res = []
-      for v in vals
-        res[res.length] = @rack.getField(v).getValue()
-      
     add_out_connection: (c, field) =>
       if @out_connections.indexOf(c) == -1
         @out_connections.push(c)

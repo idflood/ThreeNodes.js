@@ -23,7 +23,7 @@ define [
           "resolution": 256
         outputs:
           "out": {type: "Any", val: @ob}
-      @cached = @get_cached_array ['kernelSize', 'sigma', 'resolution']
+      @cached = @create_cache_object ['kernelSize', 'sigma', 'resolution']
     
     remove: () =>
       delete @ob
@@ -31,7 +31,7 @@ define [
       super
     
     value_has_changed: (vals) =>
-      newvals = @get_cached_array vals
+      newvals = @create_cache_object vals
       if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
@@ -57,7 +57,7 @@ define [
           "scale": 1.0
         outputs:
           "out": {type: "Any", val: @ob}
-      @cached = @get_cached_array ['center', 'angle', 'scale']
+      @cached = @create_cache_object ['center', 'angle', 'scale']
     
     remove: () =>
       delete @ob
@@ -65,7 +65,7 @@ define [
       super
     
     value_has_changed: (vals) =>
-      newvals = @get_cached_array vals
+      newvals = @create_cache_object vals
       if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
@@ -91,7 +91,7 @@ define [
           "grayscale": false
         outputs:
           "out": {type: "Any", val: @ob}
-      @cached = @get_cached_array ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
+      @cached = @create_cache_object ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
     
     remove: () =>
       delete @ob
@@ -99,7 +99,7 @@ define [
       super
     
     value_has_changed: (vals) =>
-      newvals = @get_cached_array vals
+      newvals = @create_cache_object vals
       if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
