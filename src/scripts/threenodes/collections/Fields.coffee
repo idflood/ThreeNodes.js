@@ -6,7 +6,7 @@ define [
   "use strict"
   ### Fields Collection ###
   
-  class ThreeNodes.NodeFieldsCollection extends Backbone.Collection
+  class ThreeNodes.FieldsCollection extends Backbone.Collection
     initialize: (models, options) =>
       @node = options.node
       @indexer = options.indexer

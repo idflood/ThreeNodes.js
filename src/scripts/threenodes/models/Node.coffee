@@ -47,7 +47,7 @@ define [
         @indexer.uid = @get('nid')
       
       # Create the fields collections
-      @fields = new ThreeNodes.NodeFieldsCollection([], {node: this, indexer: @indexer})
+      @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
       @
       
     post_init: () =>
