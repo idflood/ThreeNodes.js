@@ -51,7 +51,6 @@ ThreeNodes.js includes the following libraries which may have different licenses
 "Three.js", Copyright (c) 2010-2011 three.js Authors
 "coffee-script", Copyright (c) 2011 Jeremy Ashkenas.
 "backbone.js", Copyright (c) 2010 Jeremy Ashkenas, DocumentCloud Inc.
-"compass", Copyright (c) 2009 Christopher M. Eppstein.
 "Raphaël", Copyright (c) 2008-2011 Dmitry Baranovskiy and Sencha Labs.
 "RequireJS", Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
 "jQuery", Copyright (c) 2011 John Resig, http://jquery.com/
