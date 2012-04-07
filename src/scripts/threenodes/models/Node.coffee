@@ -37,7 +37,6 @@ define [
       if @get('nid') == -1
         @set('nid', @indexer.get_uid())
       else
-        # todo: this may be the root issue why multiple group nodes don't play well (in fields too)
         @indexer.uid = @get('nid')
       
       @fields = new ThreeNodes.NodeFieldsCollection([], {node: this, indexer: @indexer})
