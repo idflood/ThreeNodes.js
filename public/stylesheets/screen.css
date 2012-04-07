@@ -1187,6 +1187,7 @@ div {
 }
 .player-mode #webgl-window canvas {
   cursor: auto;
+  margin: auto !important;
 }
 body > header {
   left: 50%;
@@ -1632,6 +1633,7 @@ body > header h1 {
   display: inline-block;
   width: 100%;
   vertical-align: middle;
+  line-height: 10px;
 }
 .node .inputs .inner-field span {
   margin-right: 4px;

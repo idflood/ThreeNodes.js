@@ -79,7 +79,9 @@ define [
     compute_node_position: () =>
       pos = $(@el).position()
       offset = $("#container-wrapper").offset()
-      @model.setPosition(pos.left + $("#container-wrapper").scrollLeft(), pos.top + $("#container-wrapper").scrollTop())
+      @model.set
+        x: pos.left + $("#container-wrapper").scrollLeft()
+        y: pos.top + $("#container-wrapper").scrollTop()
     
     remove: () =>
       $(".field", this.el).destroyContextMenu()
@@ -117,7 +119,7 @@ define [
         $input.val(prev)
         
         apply_input_result = () ->
-          self.model.setName($input.val())
+          self.model.set('name', $input.val())
           $input.remove()
         
         $input.blur (e) ->
@@ -134,20 +136,24 @@ define [
     
     make_draggable: () ->
       self = this
+      
+      nodes_offset = {top: 0, left: 0}
+      selected_nodes = $([])
+      
       $(this.el).draggable
         start: (ev, ui) ->
           if $(this).hasClass("ui-selected")
-            ThreeNodes.selected_nodes = $(".ui-selected").each () ->
+            selected_nodes = $(".ui-selected").each () ->
               $(this).data("offset", $(this).offset())
           else
-            ThreeNodes.selected_nodes = $([])
+            selected_nodes = $([])
             $(".node").removeClass("ui-selected")
-          ThreeNodes.nodes_offset = $(this).offset()
+          nodes_offset = $(this).offset()
         drag: (ev, ui) ->
           
-          dt = ui.position.top - ThreeNodes.nodes_offset.top
-          dl = ui.position.left - ThreeNodes.nodes_offset.left
-          ThreeNodes.selected_nodes.not(this).each () ->
+          dt = ui.position.top - nodes_offset.top
+          dl = ui.position.left - nodes_offset.left
+          selected_nodes.not(this).each () ->
             el = $(this)
             offset = el.data("offset")
             dx = offset.top + dt
@@ -160,7 +166,7 @@ define [
             
           self.render_connections()
         stop: () ->
-          ThreeNodes.selected_nodes.not(this).each () ->
+          selected_nodes.not(this).each () ->
             el = $(this).data("object")
             el.trigger("node:renderConnections")
           self.compute_node_position()

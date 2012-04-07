@@ -8,38 +8,16 @@ define [
   
   $ = jQuery
   
-  ThreeNodes.field_click_1 = false
-  ThreeNodes.selected_nodes = $([])
-  ThreeNodes.nodes_offset =
-    top: 0
-    left: 0
-  
   class ThreeNodes.NodeBase extends Backbone.Model
     @node_name = ''
     @group_name = ''
             
-    default:
+    defaults:
       nid: -1
       x: 0
       y: 0
       name: ""
     
-    setNID: (nid) =>
-      @set
-        "nid": nid
-      @
-    
-    setName: (name) =>
-      @set
-        "name": name
-      @
-    
-    setPosition: (x, y) =>
-      @set
-        "x": x
-        "y": y
-      @
-        
     initialize: (options) =>
       super
       @auto_evaluate = false
@@ -52,13 +30,14 @@ define [
       @settings = options.settings
       @options = options
       
-      if !@get('name') || @get('name') == ''
-        @setName(@typename())
+      if @get('name') == ''
+        @set('name', @typename())
       
-      if !@get("nid")
-        @setNID(Utils.get_uid())
+      if @get('nid') == -1
+        @set('nid', Utils.get_uid())
       else
-        Utils.uid = @get("nid")
+        # todo: this may be the root issue why multiple group nodes don't play well (in fields too)
+        Utils.uid = @get('nid')
       
       @rack = new ThreeNodes.NodeFieldsCollection([], {node: this})
       @
@@ -179,19 +158,6 @@ define [
         field_name = nf.get("name")
         if exceptions.indexOf(field_name) == -1
           target[field_name] = @rack.getField(field_name).getValue(index)
-    
-    create_field_connection: (field) =>
-      f = this
-      if ThreeNodes.field_click_1 == false
-        ThreeNodes.field_click_1 = field
-        $(".inputs .field").filter () ->
-          $(this).parent().parent().parent().data("nid") != f.nid
-        .addClass "field-possible-target"
-      else
-        field_click_2 = field
-        @trigger("createConnection", ThreeNodes.field_click_1, field_click_2)
-        $(".field").removeClass "field-possible-target"
-        ThreeNodes.field_click_1 = false
     
     get_cached_array: (vals) =>
       res = []

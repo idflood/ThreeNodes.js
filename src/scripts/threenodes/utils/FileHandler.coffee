@@ -80,7 +80,6 @@ define [
             console.log "can't find the GroupDefinition: #{node.definition_id}"
       
       for connection in loaded_data.connections
-        console.log connection
         @nodes.createConnectionFromObject(connection)
       
       Utils.uid = loaded_data.uid

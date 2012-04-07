@@ -74,29 +74,38 @@ define [
       @timeline.on("stopSound", @stopSound)
     
     create_node: (options) =>
-      opt = options
-      if $.type(opt) == "string"
-        opt = {type: opt}
+      # If not is a string instead of an object then take the option as the node type
+      if $.type(options) == "string"
+        options = {type: options}
       
-      opt.timeline = @timeline
-      opt.settings = @settings
+      # Save references to the application settings and timeline in the node model
+      options.timeline = @timeline
+      options.settings = @settings
       
-      if !ThreeNodes.nodes[opt.type]
-        console.error("Node type doesn't exists: " + opt.type)
+      # Print error if the node type is not found and return false
+      if !ThreeNodes.nodes[options.type]
+        console.error("Node type doesn't exists: " + options.type)
+        return false
       
-      n = new ThreeNodes.nodes[opt.type](opt)
+      # Create the node and pass the options
+      n = new ThreeNodes.nodes[options.type](options)
+      
+      # Add the node to the collection
       @add(n)
       n
     
     render: () =>
+      # Define temporary objects to index the nodes
       invalidNodes = {}
       terminalNodes = {}
       
+      # Get all root nodes and nodes requiring an update
       for node in @models
         if node.has_out_connection() == false || node.auto_evaluate || node.delays_output
           terminalNodes[node.attributes["nid"]] = node
         invalidNodes[node.attributes["nid"]] = node
       
+      # Update a node and his parents
       evaluateSubGraph = (node) ->
         upstreamNodes = node.getUpstreamNodes()
         for upnode in upstreamNodes
@@ -110,17 +119,20 @@ define [
         delete invalidNodes[node.attributes["nid"]]
         true
       
+      # Process all root nodes which require an update
       for nid of terminalNodes
         if invalidNodes[nid]
           evaluateSubGraph(terminalNodes[nid])
       true
     
     createConnectionFromObject: (connection) =>
+      # Get variables from their id
       from_node = @getNodeByNid(connection.from_node.toString())
       from = from_node.rack.node_fields.outputs[connection.from.toString()]
       to_node = @getNodeByNid(connection.to_node.toString())
       to = to_node.rack.node_fields.inputs[connection.to.toString()]
-      # if a field is missing try to switch from/to
+      
+      # If a field is missing try to switch from/to
       if !from || !to
         tmp = from_node
         from_node = to_node
@@ -134,14 +146,6 @@ define [
           cid: connection.id
       
       c
-    
-    renderAllConnections: () =>
-      @connections.render()
-    
-    removeSelectedNodes: () ->
-      $(".node.ui-selected").each () ->
-        $(this).data("object").remove()
-      return true
     
     createGroup: (model, external_objects = []) =>
       # create the group node
@@ -162,31 +166,28 @@ define [
       
       return grp
     
+    renderAllConnections: () =>
+      @connections.render()
+      
     removeConnection: (c) ->
       @connections.remove(c)
     
     getNodeByNid: (nid) =>
-      for node in @models
-        if node.get("nid").toString() == nid.toString()
-          return node
-      return false
+      @find (node) -> node.get("nid").toString() == nid.toString()
     
     showNodesAnimation: () =>
       @invoke "showNodeAnimation"
-      @
     
     startSound: (time) =>
-      @each (node) ->
-        if node.playSound instanceof Function
-          node.playSound(time)
-      @
+      @each (node) -> if node.playSound instanceof Function then node.playSound(time)
     
     stopSound: () =>
-      @each (node) ->
-        if node.stopSound instanceof Function
-          node.stopSound()
-      @
+      @each (node) -> if node.stopSound instanceof Function then node.stopSound()
     
+    removeSelectedNodes: () ->
+      for node in $(".node.ui-selected")
+        $(node).data("object").remove()
+      
     removeAll: () ->
       $("#tab-attribute").html("")
       models = @models.concat()

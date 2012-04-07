@@ -1,3 +1,5 @@
+#### App
+
 # Declare namespace
 if ThreeNodes == null || typeof(!ThreeNodes) != "object"
   ThreeNodes = {}
@@ -68,6 +70,7 @@ define [
       @webgl = new ThreeNodes.WebglBase()
       @file_handler = new ThreeNodes.FileHandler(@nodegraph, @group_definitions)
       
+      # File and url events
       @file_handler.on("ClearWorkspace", () => @clearWorkspace())
       @url_handler.on("ClearWorkspace", () => @clearWorkspace())
       @url_handler.on("LoadJSON", @file_handler.load_from_json_data)
@@ -76,7 +79,7 @@ define [
       @initTimeline()
       
       # Start the url handling
-      
+      # 
       # Enabling the pushState method would require to redirect path
       # for the node.js server and github page (if possible)
       # for simplicity we disable it
@@ -87,11 +90,16 @@ define [
     
     initUI: () =>
       if @settings.test == false
+        # Create the main user interface view
         @ui = new ThreeNodes.UI
           el: $("body")
           settings: @settings
+        
+        # Link UI to render events
         @ui.on("render", @nodegraph.render)
         @ui.on("renderConnections", @nodegraph.renderAllConnections)
+        
+        # Setup the main menu events
         @ui.menubar.on("RmoveSelectedNodes", @nodegraph.removeSelectedNodes)
         @ui.menubar.on("ClearWorkspace", @clearWorkspace)
         @ui.menubar.on("SaveFile", @file_handler.save_local_file)
@@ -100,10 +108,13 @@ define [
         @ui.menubar.on("LoadFile", @file_handler.load_local_file)
         @ui.menubar.on("ExportImage", @webgl.exportImage)
         @ui.menubar.on("GroupSelectedNodes", @group_definitions.groupSelectedNodes)
+        
+        # Special events
         @ui.on("CreateNode", @nodegraph.create_node)
         @nodegraph.on("nodeslist:rebuild", @ui.onNodeListRebuild)
         @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
       else
+        # If the application is in test mode add a css class to the body
         $("body").addClass "test-mode"
       return this
     
@@ -130,10 +141,7 @@ define [
     clearWorkspace: () =>
       @nodegraph.clearWorkspace()
       @group_definitions.removeAll()
-      @reset_global_variables()
+      Utils.uid = 0
       if @ui then @ui.clearWorkspace()
       @initTimeline()
-    
-    reset_global_variables: () ->
-      Utils.uid = 0
-      ThreeNodes.selected_nodes = $([])
+      
