@@ -35,13 +35,19 @@ define [
         player_mode: false
       @settings = $.extend(settings, options)
       
-      # disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
+      # Disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
       # this makes the soundinput node not working
       websocket_enabled = false
       
+      # Initialize some core classes
       @url_handler = new ThreeNodes.UrlHandler()
       @group_definitions = new ThreeNodes.GroupDefinitions([])
       @nodegraph = new ThreeNodes.NodeGraph([], {settings: settings})
+      @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
+      @webgl = new ThreeNodes.WebglBase()
+      @file_handler = new ThreeNodes.FileHandler(@nodegraph, @group_definitions)
+      
+      # Create views when a new node is created
       @nodegraph.bind "add", (node) ->
         template = ThreeNodes.NodeView.template
         tmpl = _.template(template, node)
@@ -51,30 +57,31 @@ define [
           el: $tmpl
       
       @group_definitions.bind "definition:created", @nodegraph.createGroup
-      @group_definitions.bind "add", (definition) ->
-        template = ThreeNodes.GroupDefinitionView.template
-        tmpl = _.template(template, definition)
-        $tmpl = $(tmpl).appendTo("#library")
-        
-        view = new ThreeNodes.GroupDefinitionView
-          model: definition
-          el: $tmpl
-        view.render()
       
+      # Create views if the application is not in test mode
       if @settings.test == false
+        # Create group definition views when a new one is created
+        @group_definitions.bind "add", (definition) ->
+          template = ThreeNodes.GroupDefinitionView.template
+          tmpl = _.template(template, definition)
+          $tmpl = $(tmpl).appendTo("#library")
+          
+          view = new ThreeNodes.GroupDefinitionView
+            model: definition
+            el: $tmpl
+          view.render()
+        
+        # Create a connection view when a connection is created
         @nodegraph.connections.bind "add", (connection) ->
           view = new ThreeNodes.ConnectionView
             model: connection
-      
-      @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
-      @webgl = new ThreeNodes.WebglBase()
-      @file_handler = new ThreeNodes.FileHandler(@nodegraph, @group_definitions)
       
       # File and url events
       @file_handler.on("ClearWorkspace", () => @clearWorkspace())
       @url_handler.on("ClearWorkspace", () => @clearWorkspace())
       @url_handler.on("LoadJSON", @file_handler.load_from_json_data)
       
+      # Initialize the user interface and timeline
       @initUI()
       @initTimeline()
       

@@ -16,14 +16,10 @@ define [
     
     initialize: (options) =>
       @options = options
-      indexer = options.indexer
+      indexer = options.indexer || ThreeNodes.NodeField.static_indexer
       
-      if !indexer
-        console.log "connection use static indexer"
-        indexer = ThreeNodes.NodeField.static_indexer
-      
-      if @get("cid") == -1
-        @set({"cid": indexer.get_uid()})
+      # Set a unique connection id
+      if @get("cid") == -1 then @set({"cid": indexer.get_uid()})
       
       if @isValid()
         # remove existing input connection since inputs only have one connection
@@ -36,14 +32,20 @@ define [
         @from_field.node.dirty = true
     
     remove: =>
+      # Unregister the connection from the fields
       @from_field.unregister_connection(this)
       @to_field.unregister_connection(this)
       @to_field.remove_connections()
+      
+      # Set the "to" node dirty so it is reprocessed next time
       @to_field.node.dirty = true
       @to_field.changed = true
+      
+      # Delete variable reference for garbage collection
       delete @from_field
       delete @to_field
       
+      # Trigger the removed event and call destroy()
       @trigger "connection:removed", this
       @destroy()
       false
@@ -71,15 +73,12 @@ define [
       return false
     
     switch_fields_if_needed: () =>
+      # Switch input and output if they are given in the wrong order
       if @from_field.get("is_output") == false
         f_out = @to_field
         @to_field = @from_field
         @from_field = f_out
       @
-    
-    setCID: (cid) =>
-      @set
-        "cid": cid
 
     toJSON: () ->
       res =

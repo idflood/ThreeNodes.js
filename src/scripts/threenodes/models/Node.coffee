@@ -20,41 +20,48 @@ define [
     
     initialize: (options) =>
       super
+      # Define common node properties defining how the node should be updated
       @auto_evaluate = false
       @delays_output = false
       @dirty = true
+      
+      # Define some utility variables, used internally
       @is_animated = false
       @out_connections = []
-      @value = false
+      
+      # Keep reference of some variables
       @apptimeline = options.timeline
       @settings = options.settings
       @indexer = options.indexer
       @options = options
       
-      if @get('name') == ''
-        @set('name', @typename())
+      # Set a default node name if none is provided
+      if @get('name') == '' then @set('name', @typename())
       
       if @get('nid') == -1
+        # If this a new node assign a unique id to it
         @set('nid', @indexer.get_uid())
       else
+        # If the node is loaded set the indexer uid to the node.nid.
+        # With this, the following created nodes will have a unique nid
         @indexer.uid = @get('nid')
       
+      # Create the fields collections
       @fields = new ThreeNodes.NodeFieldsCollection([], {node: this, indexer: @indexer})
       @
       
     post_init: () =>
-      # init fields
+      # Init fields
       @set_fields()
       
-      # load saved data after the fields have been set
+      # Load saved data after the fields have been set
       @fields.load(@options.fields)
       
-      # init animation for current fields
+      # Init animation for current fields
       @anim = @createAnimContainer()
       
-      # load saved data
+      # Load saved animation data if it exists
       if @options.anim != false
-        # load animation
         @loadAnimation()
             
       @showNodeAnimation()
@@ -63,6 +70,7 @@ define [
     
     typename: => String(@constructor.name)
     
+    # Cleanup the variables and destroy internal anims and fields for garbage collection
     remove: () =>
       if @anim
         @anim.destroy()
@@ -75,9 +83,7 @@ define [
       delete @indexer
       @destroy()
     
-    createConnection: (field1, field2) =>
-      @trigger("createConnection", field1, field2)
-    
+    # Load the animation from json data
     loadAnimation: () =>
       for propLabel, anims of @options.anim
         track = @anim.getPropertyTrack(propLabel)
@@ -89,6 +95,9 @@ define [
             track: track
         @anim.timeline.rebuildTrackAnimsFromKeys(track)
       true
+    
+    createConnection: (field1, field2) =>
+      @trigger("createConnection", field1, field2)
     
     showNodeAnimation: () =>
       @trigger("node:showAnimations")
