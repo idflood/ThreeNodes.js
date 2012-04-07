@@ -11,6 +11,7 @@ define [
   'order!threenodes/nodes/Math',
   'order!threenodes/nodes/PostProcessing',
   'order!threenodes/nodes/Three',
+  'order!threenodes/nodes/ConstructiveSolidGeometry',
   'order!threenodes/nodes/Utils',
   'order!threenodes/nodes/Spread',
   'order!threenodes/nodes/Particle',

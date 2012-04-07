@@ -49,6 +49,8 @@ and are not covered by this license.
 ThreeNodes.js includes the following libraries which may have different licenses.
 
 "Three.js", Copyright (c) 2010-2011 three.js Authors
+"ThreeCSG.js", Copyright (c) Chandler Prall (http://chandler.prallfamily.com)
+"csg.js", Copyright (c) 2011 Evan Wallace (http://madebyevan.com)
 "coffee-script", Copyright (c) 2011 Jeremy Ashkenas.
 "backbone.js", Copyright (c) 2010 Jeremy Ashkenas, DocumentCloud Inc.
 "Raphaël", Copyright (c) 2008-2011 Dmitry Baranovskiy and Sencha Labs.
