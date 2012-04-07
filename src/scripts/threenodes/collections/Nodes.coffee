@@ -128,17 +128,17 @@ define [
     createConnectionFromObject: (connection) =>
       # Get variables from their id
       from_node = @getNodeByNid(connection.from_node.toString())
-      from = from_node.rack.node_fields.outputs[connection.from.toString()]
+      from = from_node.rack.outputs[connection.from.toString()]
       to_node = @getNodeByNid(connection.to_node.toString())
-      to = to_node.rack.node_fields.inputs[connection.to.toString()]
+      to = to_node.rack.inputs[connection.to.toString()]
       
       # If a field is missing try to switch from/to
       if !from || !to
         tmp = from_node
         from_node = to_node
         to_node = tmp
-        from = from_node.rack.node_fields.outputs[connection.to.toString()]
-        to = to_node.rack.node_fields.inputs[connection.from.toString()]
+        from = from_node.rack.outputs[connection.to.toString()]
+        to = to_node.rack.inputs[connection.from.toString()]
       
       c = @connections.create
           from_field: from

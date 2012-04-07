@@ -9,9 +9,8 @@ define [
   class ThreeNodes.NodeFieldsCollection extends Backbone.Collection
     initialize: (models, options) =>
       @node = options.node
-      @node_fields = {}
-      @node_fields.inputs = {}
-      @node_fields.outputs = {}
+      @inputs = {}
+      @outputs = {}
     
     # Remove connections, fields and delete variables
     destroy: () =>
@@ -19,7 +18,8 @@ define [
       while @models.length > 0
         @models[0].remove()
       delete @node
-      delete @node_fields
+      delete @inputs
+      delete @outputs
     
     # Load saved fields values
     load: (data) =>
@@ -29,29 +29,29 @@ define [
       for f in data.in
         if !f.nid
           # Simple node field
-          node_field = @node_fields.inputs[f.name]
+          node_field = @inputs[f.name]
         else
           # Group node field
-          node_field = @node_fields.inputs[f.name + "-" + f.nid]
+          node_field = @inputs[f.name + "-" + f.nid]
         if node_field then node_field.load(f.val)
       true
 
     toJSON: =>
       data = 
-        in: jQuery.map(@node_fields.inputs, (f, i) -> f.toJSON())
-        out: jQuery.map(@node_fields.outputs, (f, i) -> f.toJSON()) 
+        in: jQuery.map(@inputs, (f, i) -> f.toJSON())
+        out: jQuery.map(@outputs, (f, i) -> f.toJSON()) 
       return data
     
     getField: (key, is_out = false) =>
       target = if is_out == true then "outputs" else "inputs"
-      return @node_fields[target][key]
+      return @[target][key]
     
     setField: (key, value) =>
-      @node_fields.outputs[key].setValue(value)
+      @outputs[key].setValue(value)
     
     getMaxInputSliceCount: () =>
       result = 1
-      for fname, f of @node_fields.inputs
+      for fname, f of @inputs
         val = f.attributes.value
         if val && $.type(val) == "array"
           if val.length > result
@@ -61,27 +61,27 @@ define [
     
     getUpstreamNodes: () =>
       res = []
-      for fname, f of @node_fields.inputs
+      for fname, f of @inputs
         for c in f.connections
           res[res.length] = c.from_field.node
       res
     
     getDownstreamNodes: () =>
       res = []
-      for fname, f in @node_fields.outputs
-        f = @node_fields.inputs[fname]
+      for fname, f in @outputs
+        f = @inputs[fname]
         for c in f.connections
           res[res.length] = c.to_field.node
       res
     
     hasUnconnectedInputs: () =>
-      for fname, f of @node_fields.inputs
+      for fname, f of @inputs
         if f.connections.length == 0
           return true
       return false
     
     hasUnconnectedOutputs: () =>
-      for fname, f of @node_fields.outputs
+      for fname, f of @outputs
         if f.connections.length == 0
           return true
       return false
@@ -90,8 +90,8 @@ define [
       return hasUnconnectedInputs() || hasUnconnectedOutputs()
       
     setFieldInputUnchanged: () =>
-      for fname in @node_fields.inputs
-        f = @node_fields.inputs[fname]
+      for fname in @inputs
+        f = @inputs[fname]
         f.changed = false
     
     renderConnections: =>
@@ -117,7 +117,7 @@ define [
       if field.get("is_output") == false
         proxy_field.setValue(field.attributes.value)
         # save it in the nodefields array
-        @node_fields.inputs[proxy_field.get('name') + "-" + field.get("node").get("nid")] = proxy_field
+        @inputs[proxy_field.get('name') + "-" + field.get("node").get("nid")] = proxy_field
       
       return proxy_field
     
@@ -128,7 +128,7 @@ define [
       
       setSubfields = (node, direction = "inputs") =>
         @trigger("addCustomHtml", $("<h3>#{node.get('name')}</h3>"), "." + direction)
-        for name, field of node.rack.node_fields[direction]
+        for name, field of node.rack[direction]
           # We hide subfields inputs with internal connection
           if field.connections.length == 0 || field.attributes.is_output == true
             @cloneSubField(field)
@@ -158,7 +158,7 @@ define [
       if field.subfield
         # In group nodes we want to have a unique field index
         field_index += "-" + field.subfield.node.get("nid")
-      @node_fields[target][field_index] = field
+      @[target][field_index] = field
       
       @add(field)
       field

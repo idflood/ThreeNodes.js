@@ -53,7 +53,7 @@ define [
         @geometry_cache = @rack.getField('geometry').getValue().id
         @material_cache = @rack.getField('material').getValue().id
       
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'geometry', 'material'])
+      @apply_fields_to_val(@rack.inputs, @ob, ['children', 'geometry', 'material'])
       
       if needs_rebuild == true
         @trigger("RebuildAllShaders")

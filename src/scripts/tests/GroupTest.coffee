@@ -37,9 +37,9 @@ define [
         grp = ng.models[0]
         equals grp.subgraph.length, 3, "The group node has 3 subnodes"
         
-        nbr_in1 = grp.rack.node_fields.inputs["in-1"]
-        mult_out1 = grp.rack.node_fields.outputs["out-12"]
-        mult_fact1 = grp.rack.node_fields.inputs["factor-12"]
+        nbr_in1 = grp.rack.inputs["in-1"]
+        mult_out1 = grp.rack.outputs["out-12"]
+        mult_fact1 = grp.rack.inputs["factor-12"]
         
         # Add a 4th node, external to the group, connected to a group field
         n3 = ng.create_node("Number")
@@ -74,9 +74,9 @@ define [
         grp2 = ng.models[3]
         equals grp2.subgraph.length, 3, "The group2 has 3 subnodes"
         
-        nbr_in2 = grp2.rack.node_fields.inputs["in-1"]
-        mult_out2 = grp2.rack.node_fields.outputs["out-12"]
-        mult_fact2 = grp2.rack.node_fields.inputs["factor-12"]
+        nbr_in2 = grp2.rack.inputs["in-1"]
+        mult_out2 = grp2.rack.outputs["out-12"]
+        mult_fact2 = grp2.rack.inputs["factor-12"]
         
         # Set different values for the second group but don't touch the first one
         
@@ -120,12 +120,12 @@ define [
         equals grp.subgraph.length, 3, "The group node has 3 subnodes"
         
         # Verify the output values of the group nodes
-        nbr_in1 = grp.rack.node_fields.inputs["in-1"]
-        mult_out1 = grp.rack.node_fields.outputs["out-12"]
-        mult_fact1 = grp.rack.node_fields.inputs["factor-12"]
-        nbr_in2 = grp2.rack.node_fields.inputs["in-1"]
-        mult_out2 = grp2.rack.node_fields.outputs["out-12"]
-        mult_fact2 = grp2.rack.node_fields.inputs["factor-12"]
+        nbr_in1 = grp.rack.inputs["in-1"]
+        mult_out1 = grp.rack.outputs["out-12"]
+        mult_fact1 = grp.rack.inputs["factor-12"]
+        nbr_in2 = grp2.rack.inputs["in-1"]
+        mult_out2 = grp2.rack.outputs["out-12"]
+        mult_fact2 = grp2.rack.inputs["factor-12"]
         
         equals nbr_in1.getValue(), 7, "Group 1 input value is loaded"
         equals nbr_in2.getValue(), 2, "Group 2 input value is loaded"

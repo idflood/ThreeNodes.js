@@ -82,7 +82,7 @@ define [
             @ob.add(child)
             
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children'])
+      @apply_fields_to_val(@rack.inputs, @ob, ['children'])
       @apply_children()
       @rack.setField("out", @ob)
   
@@ -107,7 +107,7 @@ define [
       super
       
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['children', 'lights'])
+      @apply_fields_to_val(@rack.inputs, @ob, ['children', 'lights'])
       @apply_children()
       @rack.setField("out", @ob)
   
@@ -223,7 +223,7 @@ define [
             applyShadowOptionsToSubMeshes(child)
       
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'file_url', 'castShadow', 'receiveShadow'], i)
+        @apply_fields_to_val(@rack.inputs, @ob[i], ['children', 'file_url', 'castShadow', 'receiveShadow'], i)
         @ob[i].castShadow = cast
         @ob[i].receiveShadow = receive
       
@@ -286,7 +286,7 @@ define [
           @ob[i] = item
           
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+        @apply_fields_to_val(@rack.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
         @trigger("RebuildAllShaders")
@@ -340,7 +340,7 @@ define [
           @ob[i] = item
           
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.node_fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+        @apply_fields_to_val(@rack.inputs, @ob[i], ['children', 'geometry', 'material'], i)
       
       if needs_rebuild == true
         @trigger("RebuildAllShaders")
@@ -387,7 +387,7 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['target'])
+      @apply_fields_to_val(@rack.inputs, @ob, ['target'])
       @ob.lookAt(@rack.getField("target").getValue())
       @rack.setField("out", @ob)
   
@@ -444,7 +444,7 @@ define [
     compute: =>
       if @ob == false
         @ob = new THREE.Fog(0xffffff, 1, 1000)
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.FogExp2 extends ThreeNodes.NodeBase
@@ -468,7 +468,7 @@ define [
     compute: =>
       if @ob == false
         @ob = new THREE.FogExp2(0xffffff, 0.00025)
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.WebGLRenderer extends ThreeNodes.NodeBase
@@ -636,7 +636,7 @@ define [
       
       @apply_size()
       @apply_bg_color()
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
+      @apply_fields_to_val(@rack.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
       ThreeNodes.Webgl.current_camera = @rack.getField("camera").getValue()
       ThreeNodes.Webgl.current_scene = @rack.getField("scene").getValue()
       

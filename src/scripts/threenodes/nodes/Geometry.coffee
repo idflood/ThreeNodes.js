@@ -38,7 +38,7 @@ define [
       new_cache = @get_cache_array()
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.PlaneGeometry(@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue())
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.CubeGeometry extends ThreeNodes.NodeBase
@@ -74,7 +74,7 @@ define [
       new_cache = @get_cache_array()
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.CubeGeometry(@rack.getField("width").getValue(), @rack.getField("height").getValue(), @rack.getField("depth").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue(), @rack.getField("segments_depth").getValue(), @rack.getField("flip").getValue())
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.SphereGeometry extends ThreeNodes.NodeBase
@@ -107,7 +107,7 @@ define [
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.SphereGeometry(@rack.getField("radius").getValue(), @rack.getField("segments_width").getValue(), @rack.getField("segments_height").getValue())
         @cached = new_cache
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.CylinderGeometry extends ThreeNodes.NodeBase
@@ -151,7 +151,7 @@ define [
           @rack.getField("segmentsRadius").getValue(), @rack.getField("segmentsHeight").getValue(), @rack.getField("openEnded").getValue()
         )
         @cached = new_cache
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.TorusGeometry extends ThreeNodes.NodeBase
@@ -192,7 +192,7 @@ define [
           @rack.getField("segmentsT").getValue(), @rack.getField("arc").getValue()
         )
         @cached = new_cache
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.TorusKnotGeometry extends ThreeNodes.NodeBase
@@ -235,7 +235,7 @@ define [
           @rack.getField("segmentsT").getValue(), @rack.getField("p").getValue(), @rack.getField("q").getValue(), @rack.getField("heightScale").getValue()
         )
         @cached = new_cache
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.OctahedronGeometry extends ThreeNodes.NodeBase
@@ -267,7 +267,7 @@ define [
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.OctahedronGeometry(@rack.getField("radius").getValue(), @rack.getField("detail").getValue())
         @cached = new_cache
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.TextGeometry extends ThreeNodes.NodeBase

@@ -31,7 +31,7 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.SpotLight extends ThreeNodes.NodeBase
@@ -68,7 +68,7 @@ define [
     compute: =>
       if @rack.getField("castShadow").getValue() != @ob.castShadow
         @trigger("RebuildAllShaders")
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.DirectionalLight extends ThreeNodes.NodeBase
@@ -94,7 +94,7 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)
   
   class ThreeNodes.nodes.AmbientLight extends ThreeNodes.NodeBase
@@ -118,5 +118,5 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@rack.node_fields.inputs, @ob)
+      @apply_fields_to_val(@rack.inputs, @ob)
       @rack.setField("out", @ob)

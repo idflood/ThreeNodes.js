@@ -127,8 +127,8 @@ define [
   
     compute: =>
       result = []
-      for f of @rack.node_fields.inputs
-        field = @rack.node_fields.inputs[f]
+      for f of @rack.inputs
+        field = @rack.inputs[f]
         if field.get("value") != null && field.connections.length > 0
           subval = field.get("value")
           # if subvalue is an array append it to the result
