@@ -43,15 +43,21 @@ define [
         return res
         
     load_from_json_data: (txt) =>
+      # Parse the json string
       loaded_data = JSON.parse(txt)
+      
+      # First recreate the group definitions
       if loaded_data.groups
         for grp_def in loaded_data.groups
           @group_definitions.create(grp_def)
       
+      # Create the nodes
       for node in loaded_data.nodes
         if node.type != "Group"
+          # Create a simple node
           @nodes.create_node(node)
         else
+          # If the node is a group we first need to get the previously created group definition
           def = @group_definitions.getByGid(node.definition_id)
           if def
             node.definition = def
@@ -59,6 +65,7 @@ define [
           else
             console.log "can't find the GroupDefinition: #{node.definition_id}"
       
+      # Create the connections
       for connection in loaded_data.connections
         @nodes.createConnectionFromObject(connection)
       
@@ -67,11 +74,15 @@ define [
       delay 1, => @nodes.renderAllConnections()
     
     load_local_file: (e) =>
+      # Clear the workspace first
       @trigger("ClearWorkspace")
+      
+      # Load the file
       file = e.target.files[0]
       reader = new FileReader()
       self = this
       reader.onload = (e) ->
         txt = e.target.result
+        # Call load_from_json_data when the file is loaded
         self.load_from_json_data(txt)
       reader.readAsText(file, "UTF-8")

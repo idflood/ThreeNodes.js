@@ -21,7 +21,10 @@ define [
       value: 0
       default: null
     
+    # Override the backbone sync method since the field is not directly stored on a server
     sync: () =>
+    
+    # A field is always valid
     _validate: (attrs, options) => return true
         
     # override the backbone set method if the key is "value"
@@ -34,29 +37,41 @@ define [
       super
     
     load: (data) =>
+      # Return without doing anything if there is no data
       if !data && data != false
         return
+      
       if $.type(data) != "object"
+        # If the loaded data is not an object simply apply the value
         @setValue(data)
       else
-        # directly apply each object properties to the value
+        # If the data is an object then directly apply each object properties to the value
         for property of data
           @attributes.value[property] = data[property]
       return this
     
     initialize: (options) =>
       self = this
-      @on_value_update_hooks = {}
+      
+      # Keep reference to some variables
       @node = options.node
       @subfield = options.subfield
-      indexer = options.indexer
-      if !indexer
-        indexer = ThreeNodes.NodeField.static_indexer
+      indexer = options.indexer || ThreeNodes.NodeField.static_indexer
+      
+      # Common field variables
       @proxy = false
       @changed = true
+      
+      # Array containing all connections from and to this field
       @connections = []
+      
+      # Callback called when the value is changed
+      # todo: replace it with the backbone standard way?
+      @on_value_update_hooks = {}
+      
       # Field machine_name must be unique inside each nodes
       @set("machine_name", @get("name"))
+      
       # For proxyfields we append the subfield node id
       # since the same field name can be in different subnodes
       if @subfield && @subfield.node
@@ -73,13 +88,12 @@ define [
       delete @subfield
       @destroy()
     
-    setFID: (fid) =>
-      @set("fid", fid)
-    
     setValue: (v) =>
+      # Set the 'changed' flag on the field and on the node
       @changed = true
-      if @node
-        @node.dirty = true
+      if @node then @node.dirty = true
+      
+      # Define references to the previous and current value
       prev_val = @attributes["value"]
       new_val = @on_value_changed(v)
       
@@ -95,17 +109,21 @@ define [
           else
             new_val = null
       
-      # reset the value if it's null and it has a default
+      # Reset the value if it's null and it has a default
       if new_val == null
         default_val = @attributes["default"]
         if default_val != null && default_val != undefined
           prev_val = default_val
         new_val = prev_val
       
-      #@set("value", new_val, {silent: true})
+      # Set the value
       @attributes["value"] = new_val
+      
+      # Call the on_value_update hooks
       for hook of @on_value_update_hooks
         @on_value_update_hooks[hook](new_val)
+      
+      # If this is an output and it is connected, propagate the value to the inputs
       if @attributes["is_output"] == true
         for connection in @connections
           connection.to_field.setValue(new_val)
@@ -148,20 +166,23 @@ define [
     toJSON : () =>
       res =
         name: @get("name")
-      # add the node nid for fields that are part of subnodes (group)
+      
+      # Add the node nid for fields that are part of subnodes (group)
       if @subfield
         res.nid = @subfield.node.get("nid")
       
-      # help avoid cyclic value
+      # Help avoid cyclic value
       val = @get("value")
       val_type = jQuery.type(val)
       if val_type != "object" && val_type != "array"
         res.val = val
-      # we may still need to save basic values
+      
+      # We may still need to save basic values
       if val_type == "object"
         if val.constructor == THREE.Vector2 || val.constructor == THREE.Vector3 || val.constructor == THREE.Vector4 || val.constructor == THREE.Color
           res.val = val
-      res
+      
+      return res
   
     render_connections: () =>
       for connection in @connections
