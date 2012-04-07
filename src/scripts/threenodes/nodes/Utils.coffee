@@ -15,17 +15,17 @@ define [
     set_fields: =>
       super
       @auto_evaluate = true
-      @rack.addFields
+      @fields.addFields
         inputs:
           "min" : 0
           "max" : 1
         outputs:
           "out" : 0
-      @rack.add_center_textfield(@rack.getField("out", true))
+      @fields.add_center_textfield(@fields.getField("out", true))
   
     compute: =>
-      value = @rack.getField("min").getValue() + Math.random() * (@rack.getField("max").getValue() - @rack.getField("min").getValue())
-      @rack.setField("out", value)
+      value = @fields.getField("min").getValue() + Math.random() * (@fields.getField("max").getValue() - @fields.getField("min").getValue())
+      @fields.setField("out", value)
   
   # based on http://www.cycling74.com/forums/topic.php?id=7821
   class ThreeNodes.nodes.LFO extends ThreeNodes.NodeBase
@@ -44,7 +44,7 @@ define [
       @clock = 0
       @PI = 3.14159
       
-      @rack.addFields
+      @fields.addFields
         inputs:
           "min" : 0
           "max" : 1
@@ -61,13 +61,13 @@ define [
               "random triangle": 5
         outputs:
           "out" : 0
-      @rack.add_center_textfield(@rack.getField("out", true))
+      @fields.add_center_textfield(@fields.getField("out", true))
   
     compute: =>
-      duration = @rack.getField("duration").getValue()
-      min = @rack.getField("min").getValue()
-      max = @rack.getField("max").getValue()
-      mode = @rack.getField("mode").getValue()
+      duration = @fields.getField("duration").getValue()
+      min = @fields.getField("min").getValue()
+      max = @fields.getField("max").getValue()
+      mode = @fields.getField("mode").getValue()
       
       @clock = Date.now()
       time = (@taskinterval * @clock) % duration
@@ -105,7 +105,7 @@ define [
             @rndrange = @rndB - @rndA
           src * @rndrange + @rndA
       
-      @rack.setField("out", lfout)
+      @fields.setField("out", lfout)
   
   class ThreeNodes.nodes.Merge extends ThreeNodes.NodeBase
     @node_name = 'Merge'
@@ -114,7 +114,7 @@ define [
     set_fields: =>
       #super
       @auto_evaluate = true
-      @rack.addFields
+      @fields.addFields
         inputs:
           "in0" : {type: "Any", val: null}
           "in1" : {type: "Any", val: null}
@@ -127,8 +127,8 @@ define [
   
     compute: =>
       result = []
-      for f of @rack.inputs
-        field = @rack.inputs[f]
+      for f of @fields.inputs
+        field = @fields.inputs[f]
         if field.get("value") != null && field.connections.length > 0
           subval = field.get("value")
           # if subvalue is an array append it to the result
@@ -136,7 +136,7 @@ define [
             result = result.concat(subval)
           else
             result[result.length] = subval
-      @rack.setField("out", result)
+      @fields.setField("out", result)
   
   class ThreeNodes.nodes.Get extends ThreeNodes.NodeBase
     @node_name = 'Get'
@@ -144,7 +144,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "array" : {type: "Array", val: null}
           "index" : 0
@@ -152,14 +152,14 @@ define [
           "out" : {type: "Any", val: null}
   
     compute: =>
-      old = @rack.getField("out", true).getValue()
+      old = @fields.getField("out", true).getValue()
       @value = false
-      arr = @rack.getField("array").getValue()
-      ind = parseInt(@rack.getField("index").getValue())
+      arr = @fields.getField("array").getValue()
+      ind = parseInt(@fields.getField("index").getValue())
       if $.type(arr) == "array"
         @value = arr[ind % arr.length]
       if @value != old
-        @rack.setField("out", @value)
+        @fields.setField("out", @value)
   
   class ThreeNodes.nodes.Mp3Input extends ThreeNodes.NodeBase
     @node_name = 'Mp3Input'
@@ -171,7 +171,7 @@ define [
       super
       @auto_evaluate = true
       @counter = 0
-      @rack.addFields
+      @fields.addFields
         inputs:
           "url": ""
           "smoothingTime": 0.1
@@ -185,7 +185,7 @@ define [
         @audioContext = new window.webkitAudioContext()
       else
         $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
-      @url_cache = @rack.getField("url").getValue()
+      @url_cache = @fields.getField("url").getValue()
     
     remove: () =>
       @stopSound()
@@ -195,8 +195,8 @@ define [
     
     onRegister: () ->
       super
-      if @rack.getField("url").getValue() != ""
-        @loadAudio(@rack.getField("url").getValue())
+      if @fields.getField("url").getValue() != ""
+        @loadAudio(@fields.getField("url").getValue())
     
     stopSound: () ->
       if @source
@@ -283,11 +283,11 @@ define [
     compute: () =>
       if !@is_chrome()
         return
-      if @url_cache != @rack.getField("url").getValue()
-        @url_cache = @rack.getField("url").getValue()
+      if @url_cache != @fields.getField("url").getValue()
+        @url_cache = @fields.getField("url").getValue()
         @loadAudio(@url_cache)
       if @analyser
-        @analyser.smoothingTimeConstant = @rack.getField("smoothingTime").getValue()
+        @analyser.smoothingTimeConstant = @fields.getField("smoothingTime").getValue()
         @analyser.getByteFrequencyData(@freqByteData)
         @analyser.getByteTimeDomainData(@timeByteData)
       
@@ -295,10 +295,10 @@ define [
         length = @freqByteData.length
         length3rd = length / 3
         
-        @rack.setField("average", @getAverageLevel(0, length - 1))
-        @rack.setField("low", @getAverageLevel(0, length3rd - 1))
-        @rack.setField("medium", @getAverageLevel(length3rd, (length3rd * 2) - 1))
-        @rack.setField("high", @getAverageLevel(length3rd * 2, length - 1))
+        @fields.setField("average", @getAverageLevel(0, length - 1))
+        @fields.setField("low", @getAverageLevel(0, length3rd - 1))
+        @fields.setField("medium", @getAverageLevel(length3rd, (length3rd * 2) - 1))
+        @fields.setField("high", @getAverageLevel(length3rd * 2, length - 1))
       return true
   
   class ThreeNodes.nodes.Mouse extends ThreeNodes.NodeBase
@@ -308,7 +308,7 @@ define [
     set_fields: =>
       super
       @auto_evaluate = true
-      @rack.addFields
+      @fields.addFields
         outputs:
           "xy": {type: "Vector2", val: new THREE.Vector2()}
           "x" : 0
@@ -320,9 +320,9 @@ define [
       if ThreeNodes.nodes.WebGLRenderer && ThreeNodes.nodes.WebGLRenderer.mouseX
         dx = ThreeNodes.nodes.WebGLRenderer.mouseX
         dy = ThreeNodes.nodes.WebGLRenderer.mouseY
-      @rack.setField("xy", new THREE.Vector2(dx, dy))
-      @rack.setField("x", dx)
-      @rack.setField("y", dy)
+      @fields.setField("xy", new THREE.Vector2(dx, dy))
+      @fields.setField("x", dx)
+      @fields.setField("y", dy)
   
   class ThreeNodes.nodes.Timer extends ThreeNodes.NodeBase
     @node_name = 'Timer'
@@ -333,31 +333,31 @@ define [
       @auto_evaluate = true
       @old = @get_time()
       @counter = 0
-      @rack.addFields
+      @fields.addFields
         inputs:
           "reset" : false
           "pause" : false
           "max" : 99999999999
         outputs:
           "out" : 0
-      @rack.add_center_textfield(@rack.getField("out", true))
+      @fields.add_center_textfield(@fields.getField("out", true))
     
     get_time: => new Date().getTime()
       
     compute: =>
-      oldval = @rack.getField("out", true).getValue()
+      oldval = @fields.getField("out", true).getValue()
       now = @get_time()
-      if @rack.getField("pause").getValue() == false
+      if @fields.getField("pause").getValue() == false
         @counter += now - @old
-      if @rack.getField("reset").getValue() == true
+      if @fields.getField("reset").getValue() == true
         @counter = 0
       
-      diff = @rack.getField("max").getValue() - @counter
+      diff = @fields.getField("max").getValue() - @counter
       if diff <= 0
         #@counter = diff * -1
         @counter = 0
       @old = now
-      @rack.setField("out", @counter)
+      @fields.setField("out", @counter)
   
   class ThreeNodes.nodes.Font extends ThreeNodes.NodeBase
     @node_name = 'Font'
@@ -384,7 +384,7 @@ define [
         "droid serif":
           "normal": dir + "droid/droid_serif_regular.typeface"
           "bold": dir + "droid/droid_serif_bold.typeface"
-      @rack.addFields
+      @fields.addFields
         inputs:
           "font": 
             type: "Float"
@@ -407,10 +407,10 @@ define [
       @reverseFontMap = {}
       @reverseWeightMap = {}
       
-      for i of @rack.getField("weight").get("possibilities")
-        @reverseWeightMap[@rack.getField("weight").get("possibilities")[i]] = i
-      for i of @rack.getField("font").get("possibilities")
-        @reverseFontMap[@rack.getField("font").get("possibilities")[i]] = i
+      for i of @fields.getField("weight").get("possibilities")
+        @reverseWeightMap[@fields.getField("weight").get("possibilities")[i]] = i
+      for i of @fields.getField("font").get("possibilities")
+        @reverseFontMap[@fields.getField("font").get("possibilities")[i]] = i
       
       @fontcache = -1
       @weightcache = -1
@@ -422,8 +422,8 @@ define [
       super
       
     compute: =>
-      findex = parseInt(@rack.getField("font").getValue())
-      windex = parseInt(@rack.getField("weight").getValue())
+      findex = parseInt(@fields.getField("font").getValue())
+      windex = parseInt(@fields.getField("weight").getValue())
       if findex > 4 || findex < 0
         findex = 0
       if windex != 0 || windex != 1
@@ -440,4 +440,4 @@ define [
       
       @fontcache = findex
       @weightcache = windex
-      @rack.setField("out", @ob)
+      @fields.setField("out", @ob)

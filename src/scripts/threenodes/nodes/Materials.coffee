@@ -16,7 +16,7 @@ define [
       @material_class = false
       @last_slice_count = -1
       @is_material = true
-      @rack.addFields
+      @fields.addFields
         inputs:
           "opacity": 1
           "transparent": false
@@ -54,7 +54,7 @@ define [
     
     compute: =>
       needs_rebuild = false
-      numItems = @rack.getMaxInputSliceCount()
+      numItems = @fields.getMaxInputSliceCount()
       if @input_value_has_changed(@vars_rebuild_shader_on_change) || @last_slice_count != numItems
         needs_rebuild = true
       
@@ -63,11 +63,11 @@ define [
         for i in [0..numItems]
           @ob[i] = new @material_class()
       for i in [0..numItems]
-        @apply_fields_to_val(@rack.inputs, @ob[i], [], i)
+        @apply_fields_to_val(@fields.inputs, @ob[i], [], i)
       @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
       
       @last_slice_count = numItems
-      @rack.setField("out", @ob)
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'MeshBasic'
@@ -77,7 +77,7 @@ define [
       super
       @ob = []
       @material_class = THREE.MeshBasicMaterial
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
           "map": {type: "Any", val: false}
@@ -101,7 +101,7 @@ define [
       super
       @ob = []
       @material_class = THREE.LineBasicMaterial
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
           "linewidth": 1
@@ -118,7 +118,7 @@ define [
       super
       @ob = []
       @material_class = THREE.MeshLambertMaterial
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
           "ambient": {type: "Color", val: new THREE.Color(0x050505)}
@@ -142,7 +142,7 @@ define [
       super
       @ob = []
       @material_class = THREE.MeshPhongMaterial
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xff0000)}
           "map": {type: "Any", val: false}

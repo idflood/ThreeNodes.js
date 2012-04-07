@@ -60,8 +60,8 @@ define [
       
       for node in nodes
         $target.append("<h2>#{node.get('name')}</h2>")
-        for f of node.rack.inputs
-          node.rack.inputs[f].render_sidebar()
+        for f of node.fields.inputs
+          node.fields.inputs[f].render_sidebar()
       return this
     
     filter_list_item: ($item, value) =>

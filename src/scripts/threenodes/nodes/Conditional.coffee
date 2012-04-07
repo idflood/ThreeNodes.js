@@ -14,7 +14,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "condition" : false
           "val1" : {type: "Any", val: 0.0}
@@ -23,12 +23,12 @@ define [
           "out" : {type: "Any", val: false}
   
     compute: =>
-      cond = @rack.getField("condition").getValue()
+      cond = @fields.getField("condition").getValue()
       if cond == false
-        res = @rack.getField("val1").attributes.value
+        res = @fields.getField("val1").attributes.value
       else
-        res = @rack.getField("val2").attributes.value
-      @rack.setField("out", res)
+        res = @fields.getField("val2").attributes.value
+      @fields.setField("out", res)
   
   class ThreeNodes.nodes.And extends ThreeNodes.NodeBase
     @node_name = 'And'
@@ -36,7 +36,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "val1" : false
           "val2" : false
@@ -44,8 +44,8 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.getField("val1").getValue() != false && @rack.getField("val2").getValue() != false
-      @rack.setField("out", res)
+      res = @fields.getField("val1").getValue() != false && @fields.getField("val2").getValue() != false
+      @fields.setField("out", res)
   
   class ThreeNodes.nodes.Or extends ThreeNodes.NodeBase
     @node_name = 'Or'
@@ -53,7 +53,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "val1" : false
           "val2" : false
@@ -61,8 +61,8 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.getField("val1").getValue() != false || @rack.getField("val2").getValue() != false
-      @rack.setField("out", res)
+      res = @fields.getField("val1").getValue() != false || @fields.getField("val2").getValue() != false
+      @fields.setField("out", res)
   
   class ThreeNodes.nodes.Equal extends ThreeNodes.NodeBase
     @node_name = 'Equal'
@@ -70,7 +70,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "val1" : {type: "Any", val: 0.0}
           "val2" : {type: "Any", val: 1.0}
@@ -78,8 +78,8 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.getField("val1").getValue(0) == @rack.getField("val2").getValue(0)
-      @rack.setField("out", res)
+      res = @fields.getField("val1").getValue(0) == @fields.getField("val2").getValue(0)
+      @fields.setField("out", res)
   
   class ThreeNodes.nodes.Smaller extends ThreeNodes.NodeBase
     @node_name = 'Smaller'
@@ -87,7 +87,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "val1" : {type: "Float", val: 0.0}
           "val2" : {type: "Float", val: 1.0}
@@ -95,8 +95,8 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.getField("val1").getValue(0) < @rack.getField("val2").getValue(0)
-      @rack.setField("out", res)
+      res = @fields.getField("val1").getValue(0) < @fields.getField("val2").getValue(0)
+      @fields.setField("out", res)
   
   class ThreeNodes.nodes.Greater extends ThreeNodes.NodeBase
     @node_name = 'Greater'
@@ -104,7 +104,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "val1" : {type: "Float", val: 0.0}
           "val2" : {type: "Float", val: 1.0}
@@ -112,5 +112,5 @@ define [
           "out" : false
   
     compute: =>
-      res = @rack.getField("val1").getValue(0) > @rack.getField("val2").getValue(0)
-      @rack.setField("out", res)
+      res = @fields.getField("val1").getValue(0) > @fields.getField("val2").getValue(0)
+      @fields.setField("out", res)

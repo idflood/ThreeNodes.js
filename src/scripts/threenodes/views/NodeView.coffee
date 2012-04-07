@@ -19,9 +19,9 @@ define [
       @init_el_click()
       @init_title_click()
       
-      @rack_view = new ThreeNodes.NodeFieldRackView
+      @fields_view = new ThreeNodes.NodeFieldRackView
         node: @model
-        collection: @model.rack
+        collection: @model.fields
         el: $(".options", @el)
         node_el: @$el
       
@@ -74,7 +74,7 @@ define [
       @$el.addClass("ui-selected")
     
     render_connections: () =>
-      @model.rack.renderConnections()
+      @model.fields.renderConnections()
     
     compute_node_position: () =>
       pos = $(@el).position()
@@ -88,8 +88,8 @@ define [
       $(this.el).draggable("destroy")
       $(this.el).unbind()
       @undelegateEvents()
-      @rack_view.remove()
-      @rack_view = null
+      @fields_view.remove()
+      @fields_view = null
       super
     
     init_el_click: () ->
@@ -106,7 +106,7 @@ define [
         selectable = $("#container").data("selectable")
         selectable.refresh()
         selectable._mouseStop(null)
-        self.model.rack.render_sidebar()
+        self.model.fields.render_sidebar()
       return @
     
     init_title_click: () ->

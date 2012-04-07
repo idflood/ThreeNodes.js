@@ -128,13 +128,13 @@ define [
       
       setSubfields = (node, direction = "inputs") =>
         @trigger("addCustomHtml", $("<h3>#{node.get('name')}</h3>"), "." + direction)
-        for name, field of node.rack[direction]
+        for name, field of node.fields[direction]
           # We hide subfields inputs with internal connection
           if field.connections.length == 0 || field.attributes.is_output == true
             @cloneSubField(field)
       
       for node in nodes
-        if node.rack.hasUnconnectedInputs() == true then setSubfields(node, "inputs")
+        if node.fields.hasUnconnectedInputs() == true then setSubfields(node, "inputs")
         # We want to be able to retrieve all outputs
         setSubfields(node, "outputs")
       return this

@@ -15,7 +15,7 @@ define [
     set_fields: =>
       super
       @ob = new THREE.BloomPass(1.6)
-      @rack.addFields
+      @fields.addFields
         inputs:
           "strength": 1.6
           "kernelSize": 25
@@ -39,9 +39,9 @@ define [
       
     compute: =>
       if @value_has_changed(['kernelSize', 'sigma', 'resolution']) == true
-        @ob = new THREE.BloomPass(@rack.getField("strength").getValue(), @rack.getField('kernelSize').getValue(), @rack.getField('sigma').getValue(), @rack.getField('resolution').getValue())
-      @ob.screenUniforms[ "opacity" ].value = @rack.getField("strength").getValue()
-      @rack.setField("out", @ob)
+        @ob = new THREE.BloomPass(@fields.getField("strength").getValue(), @fields.getField('kernelSize').getValue(), @fields.getField('sigma').getValue(), @fields.getField('resolution').getValue())
+      @ob.screenUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.DotScreenPass extends ThreeNodes.NodeBase
     @node_name = 'DotScreen'
@@ -50,7 +50,7 @@ define [
     set_fields: =>
       super
       @ob = new THREE.DotScreenPass(new THREE.Vector2( 0.5, 0.5 ))
-      @rack.addFields
+      @fields.addFields
         inputs:
           "center": {type: "Vector2", val: new THREE.Vector2( 0.5, 0.5 )}
           "angle": 1.57
@@ -73,8 +73,8 @@ define [
       
     compute: =>
       if @value_has_changed(['center', 'angle', 'scale']) == true
-        @ob = new THREE.DotScreenPass(@rack.getField("center").getValue(), @rack.getField('angle').getValue(), @rack.getField('scale').getValue())
-      @rack.setField("out", @ob)
+        @ob = new THREE.DotScreenPass(@fields.getField("center").getValue(), @fields.getField('angle').getValue(), @fields.getField('scale').getValue())
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.FilmPass extends ThreeNodes.NodeBase
     @node_name = 'Film'
@@ -83,7 +83,7 @@ define [
     set_fields: =>
       super
       @ob = new THREE.FilmPass( 0.5, 0.125, 2048, false )
-      @rack.addFields
+      @fields.addFields
         inputs:
           "noiseIntensity": 0.5
           "scanlinesIntensity": 0.125
@@ -106,11 +106,11 @@ define [
       false
       
     compute: =>
-      @ob.uniforms.grayscale.value = @rack.getField("grayscale").getValue()
-      @ob.uniforms.nIntensity.value = @rack.getField("noiseIntensity").getValue()
-      @ob.uniforms.sIntensity.value = @rack.getField("scanlinesIntensity").getValue()
-      @ob.uniforms.sCount.value = @rack.getField("scanlinesCount").getValue()
-      @rack.setField("out", @ob)
+      @ob.uniforms.grayscale.value = @fields.getField("grayscale").getValue()
+      @ob.uniforms.nIntensity.value = @fields.getField("noiseIntensity").getValue()
+      @ob.uniforms.sIntensity.value = @fields.getField("scanlinesIntensity").getValue()
+      @ob.uniforms.sCount.value = @fields.getField("scanlinesCount").getValue()
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.VignettePass extends ThreeNodes.NodeBase
     @node_name = 'Vignette'
@@ -120,7 +120,7 @@ define [
       super
       shader = THREE.ShaderExtras[ "vignette" ]
       @ob = new THREE.ShaderPass( shader )
-      @rack.addFields
+      @fields.addFields
         inputs:
           "offset": 1.0
           "darkness": 1.0
@@ -132,9 +132,9 @@ define [
       super
     
     compute: =>
-      @ob.uniforms[ "offset" ].value = @rack.getField("offset").getValue()
-      @ob.uniforms[ "darkness" ].value = @rack.getField("darkness").getValue()
-      @rack.setField("out", @ob)
+      @ob.uniforms[ "offset" ].value = @fields.getField("offset").getValue()
+      @ob.uniforms[ "darkness" ].value = @fields.getField("darkness").getValue()
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.HorizontalBlurPass extends ThreeNodes.NodeBase
     @node_name = 'HorizontalBlur'
@@ -144,7 +144,7 @@ define [
       super
       shader = THREE.ShaderExtras[ "horizontalBlur" ]
       @ob = new THREE.ShaderPass( shader )
-      @rack.addFields
+      @fields.addFields
         inputs:
           "delta": 1.0 / 512.0
         outputs:
@@ -155,8 +155,8 @@ define [
       super
     
     compute: =>
-      @ob.uniforms[ "h" ].value = @rack.getField("delta").getValue()
-      @rack.setField("out", @ob)
+      @ob.uniforms[ "h" ].value = @fields.getField("delta").getValue()
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.VerticalBlurPass extends ThreeNodes.NodeBase
     @node_name = 'VerticalBlur'
@@ -166,7 +166,7 @@ define [
       super
       shader = THREE.ShaderExtras[ "verticalBlur" ]
       @ob = new THREE.ShaderPass( shader )
-      @rack.addFields
+      @fields.addFields
         inputs:
           "delta": 1.0 / 512.0
         outputs:
@@ -177,8 +177,8 @@ define [
       super
     
     compute: =>
-      @ob.uniforms[ "v" ].value = @rack.getField("delta").getValue()
-      @rack.setField("out", @ob)
+      @ob.uniforms[ "v" ].value = @fields.getField("delta").getValue()
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.BleachPass extends ThreeNodes.NodeBase
     @node_name = 'Bleach'
@@ -188,7 +188,7 @@ define [
       super
       shader = THREE.ShaderExtras[ "bleachbypass" ]
       @ob = new THREE.ShaderPass( shader )
-      @rack.addFields
+      @fields.addFields
         inputs:
           "opacity": 0.95
         outputs:
@@ -199,5 +199,5 @@ define [
       super
     
     compute: =>
-      @ob.uniforms[ "opacity" ].value = @rack.getField("opacity").getValue()
-      @rack.setField("out", @ob)
+      @ob.uniforms[ "opacity" ].value = @fields.getField("opacity").getValue()
+      @fields.setField("out", @ob)

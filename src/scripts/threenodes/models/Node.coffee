@@ -26,13 +26,10 @@ define [
       @is_animated = false
       @out_connections = []
       @value = false
-      
-      # Keep a reference to the timeline, settings and options for later use
       @apptimeline = options.timeline
       @settings = options.settings
       @options = options
       
-      # Assign a default nid and name if they are not given
       if @get('name') == ''
         @set('name', @typename())
       
@@ -42,8 +39,7 @@ define [
         # todo: this may be the root issue why multiple group nodes don't play well (in fields too)
         Utils.uid = @get('nid')
       
-      # Create the node fields
-      @rack = new ThreeNodes.NodeFieldsCollection([], {node: this})
+      @fields = new ThreeNodes.NodeFieldsCollection([], {node: this})
       @
       
     post_init: () =>
@@ -51,7 +47,7 @@ define [
       @set_fields()
       
       # load saved data after the fields have been set
-      @rack.load(@options.fields)
+      @fields.load(@options.fields)
       
       # init animation for current fields
       @anim = @createAnimContainer()
@@ -65,17 +61,13 @@ define [
       @trigger("postInit")
       @
     
-    # Utility to get the node name based on the classname
     typename: => String(@constructor.name)
     
     remove: () =>
-      # Destroy the anims and fields of the removed node
       if @anim
         @anim.destroy()
-      @rack.destroy()
-      
-      # Delete some variables for the garbage collection
-      delete @rack
+      @fields.destroy()
+      delete @fields
       delete @apptimeline
       delete @anim
       delete @options
@@ -100,21 +92,20 @@ define [
     showNodeAnimation: () =>
       @trigger("node:showAnimations")
     
-    # Utility function to add a standard "count" input field
     add_count_input : () =>
-      @rack.addFields
+      @fields.addFields
         inputs:
           "count" : 1
     
     create_cache_object: (values) =>
       res = {}
       for v in values
-        res[v] = @rack.getField(v).attributes["value"]
+        res[v] = @fields.getField(v).attributes["value"]
       res
     
     input_value_has_changed: (values, cache = @material_cache) =>
       for v in values
-        v2 = @rack.getField(v).attributes["value"]
+        v2 = @fields.getField(v).attributes["value"]
         if v2 != cache[v]
           return true
       false
@@ -122,12 +113,12 @@ define [
     set_fields: =>
       # to implement
     
-    has_out_connection: () => @out_connections.length != 0
+    has_out_connection: () =>
+      @out_connections.length != 0
     
-    getUpstreamNodes: () => @rack.getUpstreamNodes()
-    getDownstreamNodes: () => @rack.getDownstreamNodes()
-    
-    # Return true if any of the properties is animated
+    getUpstreamNodes: () => @fields.getUpstreamNodes()
+    getDownstreamNodes: () => @fields.getDownstreamNodes()
+        
     hasPropertyTrackAnim: () =>
       for propTrack in @anim.objectTrack.propertyTracks
         if propTrack.anims.length > 0
@@ -158,7 +149,7 @@ define [
         anim: @getAnimationData()
         x: @get('x')
         y: @get('y')
-        fields: @rack.toJSON()
+        fields: @fields.toJSON()
       res
     
     apply_fields_to_val: (afields, target, exceptions = [], index) =>
@@ -166,8 +157,13 @@ define [
         nf = afields[f]
         field_name = nf.get("name")
         if exceptions.indexOf(field_name) == -1
-          target[field_name] = @rack.getField(field_name).getValue(index)
+          target[field_name] = @fields.getField(field_name).getValue(index)
     
+    get_cached_array: (vals) =>
+      res = []
+      for v in vals
+        res[res.length] = @fields.getField(v).getValue()
+      
     add_out_connection: (c, field) =>
       if @out_connections.indexOf(c) == -1
         @out_connections.push(c)
@@ -190,18 +186,18 @@ define [
         @anim.enableProperty(field.get("name"))
     
     createAnimContainer: () =>
-      res = anim("nid-" + @get("nid"), @rack.inputs)
+      res = anim("nid-" + @get("nid"), @fields.inputs)
       # enable track animation only for number/boolean
-      for f of @rack.inputs
-        field = @rack.inputs[f]
+      for f of @fields.inputs
+        field = @fields.inputs[f]
         if field.is_animation_property() == false
           @disable_property_anim(field)
       return res
   
   class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
     set_fields: =>
-      @v_in = @rack.addField("in", {type: "Float", val: 0})
-      @v_out = @rack.addField("out", {type: "Float", val: 0}, "outputs")
+      @v_in = @fields.addField("in", {type: "Float", val: 0})
+      @v_out = @fields.addField("out", {type: "Float", val: 0}, "outputs")
       
     process_val: (num, i) => num
     
@@ -212,7 +208,7 @@ define [
     
     compute: =>
       res = []
-      numItems = @rack.getMaxInputSliceCount()
+      numItems = @fields.getMaxInputSliceCount()
       for i in [0..numItems]
         ref = @v_in.getValue(i)
         switch $.type(ref)

@@ -69,24 +69,24 @@ define [
         n2 = ng.create_node("ThreeMesh")
         ng.render()
         
-        old_val = n2.rack.getField("geometry").getValue()
+        old_val = n2.fields.getField("geometry").getValue()
         # can't really connect a number to a geometry field, should not change his value
         c1 = ng.connections.create
           from_field: n1.v_out
-          to_field: n2.rack.getField("geometry")
+          to_field: n2.fields.getField("geometry")
         ng.render()
                 
-        equals n2.rack.getField("geometry").getValue().id, old_val.id, "Geometry field value should not change if wrong type is passed"
+        equals n2.fields.getField("geometry").getValue().id, old_val.id, "Geometry field value should not change if wrong type is passed"
         
         # same with mesh.material
         c1.remove()
-        old_val = n2.rack.getField("material").getValue()
+        old_val = n2.fields.getField("material").getValue()
         c1 = ng.connections.create
           from_field: n1.v_out
-          to_field: n2.rack.getField("material")
+          to_field: n2.fields.getField("material")
         ng.render()
         
-        equals n2.rack.getField("material").getValue().id, old_val.id, "Material field value should not change if wrong type is passed"
+        equals n2.fields.getField("material").getValue().id, old_val.id, "Material field value should not change if wrong type is passed"
       
       test "Connection between wrong field types (children array)", () ->
         app.clearWorkspace()
@@ -97,7 +97,7 @@ define [
         equals $.type(n3.ob.children), "array", "Scene.children is by default an empty array"
         c2 = ng.connections.create
           from_field: n1.v_out
-          to_field: n3.rack.getField("children")
+          to_field: n3.fields.getField("children")
         # the ng.render throw an error if the children attribute is not valid
         ng.render()
         
@@ -159,12 +159,12 @@ define [
         node_merge = ng.create_node("Merge")
         c1 = ng.connections.create
           from_field: n1.v_out
-          to_field: node_merge.rack.getField("in0")
+          to_field: node_merge.fields.getField("in0")
         c2 = ng.connections.create
           from_field: n2.v_out
-          to_field: node_merge.rack.getField("in1")
+          to_field: node_merge.fields.getField("in1")
         c3 = ng.connections.create
-          from_field: node_merge.rack.getField("out", true)
+          from_field: node_merge.fields.getField("out", true)
           to_field: node_mult.v_factor
         n1.v_in.setValue 1
         n2.v_in.setValue 2
@@ -172,9 +172,9 @@ define [
         ng.render()
         
         equals n1.v_out.get("value").length, 1, "Node number output one float value"
-        equals node_merge.rack.getField("out", true).get("value").length, 2, "Merge node output 2 values"
+        equals node_merge.fields.getField("out", true).get("value").length, 2, "Merge node output 2 values"
         equals node_mult.v_factor.get("value").length, 2, "Mult node input factor has 2 values"
-        equals node_mult.rack.getMaxInputSliceCount(), 1, "Mult node has correct MaxInputSliceCount (1 since array start with 0)"
+        equals node_mult.fields.getMaxInputSliceCount(), 1, "Mult node has correct MaxInputSliceCount (1 since array start with 0)"
         equals node_mult.v_out.getValue(0), 3, "1st mult output equals 3"
         equals node_mult.v_out.getValue(1), 6, "2nd mult output equals 6"
         
@@ -186,22 +186,22 @@ define [
         node_merge = ng.create_node("Merge")
         c1 = ng.connections.create
           from_field: n1.v_out
-          to_field: node_merge.rack.getField("in0")
+          to_field: node_merge.fields.getField("in0")
         c2 = ng.connections.create
           from_field: n2.v_out
-          to_field: node_merge.rack.getField("in1")
+          to_field: node_merge.fields.getField("in1")
         c3 = ng.connections.create
-          from_field: node_merge.rack.getField("out", true)
-          to_field: node_vec.rack.getField("y")
+          from_field: node_merge.fields.getField("out", true)
+          to_field: node_vec.fields.getField("y")
         n1.v_in.setValue 5
         n2.v_in.setValue 7
         ng.render()
         
         
-        equals node_vec.rack.getField("y").get("value").length, 2, "Vector3.y input has 2 values"
-        equals node_vec.rack.getMaxInputSliceCount(), 1, "Vector3 node has correct MaxInputSliceCount (1 since array start with 0)"
-        equals node_vec.rack.getField("xyz", true).getValue(0).y, 5, "1st y value"
-        equals node_vec.rack.getField("xyz", true).getValue(1).y, 7, "2nd y value"
+        equals node_vec.fields.getField("y").get("value").length, 2, "Vector3.y input has 2 values"
+        equals node_vec.fields.getMaxInputSliceCount(), 1, "Vector3 node has correct MaxInputSliceCount (1 since array start with 0)"
+        equals node_vec.fields.getField("xyz", true).getValue(0).y, 5, "1st y value"
+        equals node_vec.fields.getField("xyz", true).getValue(1).y, 7, "2nd y value"
         
         # mesh should duplicate itself
         app.clearWorkspace()
@@ -210,19 +210,19 @@ define [
         nvec1 = ng.create_node("Vector3")
         nvec2 = ng.create_node("Vector3")
         c1 = ng.connections.create
-          from_field: nvec1.rack.getField("xyz", true)
-          to_field: node_merge.rack.getField("in0")
+          from_field: nvec1.fields.getField("xyz", true)
+          to_field: node_merge.fields.getField("in0")
         c2 = ng.connections.create
-          from_field: nvec2.rack.getField("xyz", true)
-          to_field: node_merge.rack.getField("in1")
+          from_field: nvec2.fields.getField("xyz", true)
+          to_field: node_merge.fields.getField("in1")
         c3 = ng.connections.create
-          from_field: node_merge.rack.getField("out", true)
-          to_field: meshNode.rack.getField("position")
+          from_field: node_merge.fields.getField("out", true)
+          to_field: meshNode.fields.getField("position")
         ng.render()
         
         equals meshNode.ob.length, 2, "Meshnode has 2 mesh since it has 2 positions"
-        equals node_merge.rack.getField("out", true).get("value").length, 2, "Merge node output 2 values"
+        equals node_merge.fields.getField("out", true).get("value").length, 2, "Merge node output 2 values"
         c2.remove()
         ng.render()
-        equals node_merge.rack.getField("out", true).get("value").length, 1, "Merge node output 1 value"
+        equals node_merge.fields.getField("out", true).get("value").length, 1, "Merge node output 1 value"
         equals meshNode.ob.length, 1, "Meshnode has 1 mesh because a connection has been removed"

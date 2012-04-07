@@ -50,8 +50,8 @@ define [
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("WebGLRenderer")
         c1 = ng.connections.create
-          from_field: n1.rack.getField("out", true)
-          to_field: n2.rack.getField("scene")
+          from_field: n1.fields.getField("out", true)
+          to_field: n2.fields.getField("scene")
         ng.render()
         
         json_string = filehandler.get_local_json()
@@ -66,11 +66,11 @@ define [
         n2 = ng.create_node("Merge")
         n3 = ng.create_node("ThreeMesh")
         c1 = ng.connections.create
-          from_field: n2.rack.getField("out", true)
-          to_field: n1.rack.getField("children")
+          from_field: n2.fields.getField("out", true)
+          to_field: n1.fields.getField("children")
         c2 = ng.connections.create
-          from_field: n3.rack.getField("out", true)
-          to_field: n2.rack.getField("in0")
+          from_field: n3.fields.getField("out", true)
+          to_field: n2.fields.getField("in0")
         ng.render()
         
         json_string = filehandler.get_local_json()

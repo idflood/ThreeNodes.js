@@ -70,7 +70,7 @@ define [
     
     compute: =>
       res = []
-      numItems = @rack.getMaxInputSliceCount()
+      numItems = @fields.getMaxInputSliceCount()
       for i in [0..numItems]
         ref = @v_in.getValue(i)
         refb = @v_factor.getValue(i)
@@ -103,7 +103,7 @@ define [
     
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Float", val: 2})
+      @v_factor = @fields.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
       num % numb
   
@@ -113,7 +113,7 @@ define [
     
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Float", val: 1})
+      @v_factor = @fields.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
       num + numb
   
@@ -123,7 +123,7 @@ define [
     
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Float", val: 1})
+      @v_factor = @fields.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
       num - numb
   
@@ -133,7 +133,7 @@ define [
     
     set_fields: =>
       super
-      @v_factor = @rack.addField("factor", {type: "Float", val: 2})
+      @v_factor = @fields.addField("factor", {type: "Float", val: 2})
     
     process_val: (num, numb, i) =>
       num * numb
@@ -145,7 +145,7 @@ define [
     
     set_fields: =>
       super
-      @v_factor = @rack.addField("y", {type: "Float", val: 2})
+      @v_factor = @fields.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
       num / numb
   
@@ -155,7 +155,7 @@ define [
     
     set_fields: =>
       super
-      @v_factor = @rack.addField("in2", {type: "Float", val: 0})
+      @v_factor = @fields.addField("in2", {type: "Float", val: 0})
       
     process_val: (num, numb, i) =>
       Math.min(num, numb)
@@ -166,7 +166,7 @@ define [
     
     set_fields: =>
       super
-      @v_factor = @rack.addField("in2", {type: "Float", val: 0})
+      @v_factor = @fields.addField("in2", {type: "Float", val: 0})
       
     process_val: (num, numb, i) =>
       Math.max(num, numb)
@@ -177,9 +177,9 @@ define [
     
     set_fields: =>
       super
-      @def_val = @rack.addField("default", 0)
-      @reset_val = @rack.addField("reset", false)
-      @v_factor = @rack.addField("factor", 0.8)
+      @def_val = @fields.addField("default", 0)
+      @reset_val = @fields.addField("reset", false)
+      @v_factor = @fields.addField("factor", 0.8)
       @val = @def_val.getValue()
     process_val: (num, numb, i) =>
       if @reset_val.getValue(i) == true

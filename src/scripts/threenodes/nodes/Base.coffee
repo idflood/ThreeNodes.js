@@ -15,7 +15,7 @@ define [
     
     set_fields: =>
       super
-      @rack.add_center_textfield(@v_in)
+      @fields.add_center_textfield(@v_in)
   
   class ThreeNodes.nodes.Boolean extends ThreeNodes.NodeBase
     @node_name = 'Boolean'
@@ -26,14 +26,14 @@ define [
       @value = true
       
     set_fields: =>
-      @rack.addFields
+      @fields.addFields
         inputs:
           "bool": true
         outputs:
           "out": {type: "Bool", val: @value}
     
     compute: =>
-      @rack.setField("out", @rack.getField("bool").getValue())
+      @fields.setField("out", @fields.getField("bool").getValue())
   
   class ThreeNodes.nodes.String extends ThreeNodes.NodeBase
     @node_name = 'String'
@@ -44,16 +44,16 @@ define [
       @value = ""
       
     set_fields: =>
-      @rack.addFields
+      @fields.addFields
         inputs:
           "string": ""
         outputs:
           "out": {type: "Any", val: @value}
      
-      @rack.add_center_textfield(@rack.getField("string"))
+      @fields.add_center_textfield(@fields.getField("string"))
     
     compute: =>
-      @rack.setField("out", @rack.getField("string").getValue())
+      @fields.setField("out", @fields.getField("string").getValue())
   
   class ThreeNodes.nodes.Vector2 extends ThreeNodes.NodeBase
     @node_name = 'Vector2'
@@ -62,7 +62,7 @@ define [
     set_fields: =>
       super
       @vec = new THREE.Vector2(0, 0)
-      @rack.addFields
+      @fields.addFields
         inputs:
           "x" : 0
           "y" : 0
@@ -79,16 +79,16 @@ define [
       res = []
       resx = []
       resy = []
-      numItems = @rack.getMaxInputSliceCount()
+      numItems = @fields.getMaxInputSliceCount()
       
       for i in [0..numItems]
-        resx[i] = @rack.getField("x").getValue(i)
-        resy[i] = @rack.getField("y").getValue(i)
+        resx[i] = @fields.getField("x").getValue(i)
+        resy[i] = @fields.getField("y").getValue(i)
         res[i] = new THREE.Vector3(resx[i], resy[i])
       
-      @rack.setField("xy", res)
-      @rack.setField("x", resx)
-      @rack.setField("y", resy)
+      @fields.setField("xy", res)
+      @fields.setField("x", resx)
+      @fields.setField("y", resy)
   
   class ThreeNodes.nodes.Vector3 extends ThreeNodes.NodeBase
     @node_name = 'Vector3'
@@ -96,7 +96,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "x" : 0
           "y" : 0
@@ -112,18 +112,18 @@ define [
       resx = []
       resy = []
       resz = []
-      numItems = @rack.getMaxInputSliceCount()
+      numItems = @fields.getMaxInputSliceCount()
       
       for i in [0..numItems]
-        resx[i] = @rack.getField("x").getValue(i)
-        resy[i] = @rack.getField("y").getValue(i)
-        resz[i] = @rack.getField("z").getValue(i)
+        resx[i] = @fields.getField("x").getValue(i)
+        resy[i] = @fields.getField("y").getValue(i)
+        resz[i] = @fields.getField("z").getValue(i)
         res[i] = new THREE.Vector3(resx[i], resy[i], resz[i])
       
-      @rack.setField("xyz", res)
-      @rack.setField("x", resx)
-      @rack.setField("y", resy)
-      @rack.setField("z", resz)
+      @fields.setField("xyz", res)
+      @fields.setField("x", resx)
+      @fields.setField("y", resy)
+      @fields.setField("z", resz)
   
   class ThreeNodes.nodes.Color extends ThreeNodes.NodeBase
     @node_name = 'Color'
@@ -131,18 +131,18 @@ define [
     
     init_preview: () =>
       @$picker_el = $("<div class='color_preview'></div>")
-      col = @rack.getField("rgb", true).getValue(0)
+      col = @fields.getField("rgb", true).getValue(0)
       @$picker_el.ColorPicker
         color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
         onChange: (hsb, hex, rgb) =>
-          @rack.getField("r").setValue(rgb.r / 255)
-          @rack.getField("g").setValue(rgb.g / 255)
-          @rack.getField("b").setValue(rgb.b / 255)
+          @fields.getField("r").setValue(rgb.r / 255)
+          @fields.getField("g").setValue(rgb.g / 255)
+          @fields.getField("b").setValue(rgb.b / 255)
       
-      @rack.trigger("addCustomHtml", @$picker_el, ".center")
+      @fields.trigger("addCustomHtml", @$picker_el, ".center")
       
       # on output value change set preview color
-      @rack.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>
+      @fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>
         @$picker_el.css
           background: v[0].getContextStyle()
     
@@ -162,7 +162,7 @@ define [
     
     set_fields: =>
       super
-      @rack.addFields
+      @fields.addFields
         inputs:
           "r": 0
           "g": 0
@@ -179,15 +179,15 @@ define [
       resr = []
       resg = []
       resb = []
-      numItems = @rack.getMaxInputSliceCount()
+      numItems = @fields.getMaxInputSliceCount()
       
       for i in [0..numItems]
-        resr[i] = @rack.getField("r").getValue(i)
-        resg[i] = @rack.getField("g").getValue(i)
-        resb[i] = @rack.getField("b").getValue(i)
+        resr[i] = @fields.getField("r").getValue(i)
+        resg[i] = @fields.getField("g").getValue(i)
+        resb[i] = @fields.getField("b").getValue(i)
         res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i])
       
-      @rack.setField("rgb", res)
-      @rack.setField("r", resr)
-      @rack.setField("g", resg)
-      @rack.setField("b", resb)
+      @fields.setField("rgb", res)
+      @fields.setField("r", resr)
+      @fields.setField("g", resg)
+      @fields.setField("b", resb)

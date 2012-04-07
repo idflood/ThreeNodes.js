@@ -17,7 +17,7 @@ define [
       rnd = ng.create_node("Random")
       node_mult = ng.create_node("MathMult")
       
-      node_mult.rack.getField("factor").setValue(3)
+      node_mult.fields.getField("factor").setValue(3)
       
       ng.connections.create
         from_field: n1.v_out

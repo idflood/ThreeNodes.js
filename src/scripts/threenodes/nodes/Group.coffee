@@ -44,13 +44,13 @@ define [
         anim: @getAnimationData()
         x: @get('x')
         y: @get('y')
-        fields: @rack.toJSON()
+        fields: @fields.toJSON()
         definition_id: @definition.get("gid")
       
       res
     
     set_fields: =>
-      @rack.createNodesProxyFields(@subgraph.models)
+      @fields.createNodesProxyFields(@subgraph.models)
       return this
     
     remove: () =>

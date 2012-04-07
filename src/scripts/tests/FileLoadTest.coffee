@@ -44,13 +44,13 @@ define [
         n2 = ng.create_node("Number")
         n3 = ng.create_node("Number")
         c1 = ng.connections.create
-          from_field: n1.rack.getField("x", true)
+          from_field: n1.fields.getField("x", true)
           to_field: n2.v_in
         c2 = ng.connections.create
-          from_field: n1.rack.getField("y", true)
+          from_field: n1.fields.getField("y", true)
           to_field: n3.v_in
-        n1.rack.getField("x").setValue(0.7)
-        n1.rack.getField("y").setValue(12)
+        n1.fields.getField("x").setValue(0.7)
+        n1.fields.getField("y").setValue(12)
         ng.render()
         
         json_string2 = filehandler.get_local_json()
@@ -69,11 +69,11 @@ define [
         n2 = ng.create_node("Merge")
         n3 = ng.create_node("ThreeMesh")
         c1 = ng.connections.create
-          from_field: n2.rack.getField("out", true)
-          to_field: n1.rack.getField("children")
+          from_field: n2.fields.getField("out", true)
+          to_field: n1.fields.getField("children")
         c2 = ng.connections.create
-          from_field: n3.rack.getField("out", true)
-          to_field: n2.rack.getField("in0")
+          from_field: n3.fields.getField("out", true)
+          to_field: n2.fields.getField("in0")
         ng.render()
         
         json_string2 = filehandler.get_local_json()

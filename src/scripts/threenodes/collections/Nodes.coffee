@@ -64,12 +64,12 @@ define [
     
     bindTimelineEvents: (timeline) =>
       if @timeline
-        @timeline.off("trackRebuild", @showNodesAnimation)
+        @timeline.off("tfieldsRebuild", @showNodesAnimation)
         @timeline.off("startSound", @startSound)
         @timeline.off("stopSound", @stopSound)
       
       @timeline = timeline
-      @timeline.on("trackRebuild", @showNodesAnimation)
+      @timeline.on("tfieldsRebuild", @showNodesAnimation)
       @timeline.on("startSound", @startSound)
       @timeline.on("stopSound", @stopSound)
     
@@ -114,7 +114,7 @@ define [
         if node.dirty || node.auto_evaluate
           node.compute()
           node.dirty = false
-          node.rack.setFieldInputUnchanged()
+          node.fields.setFieldInputUnchanged()
         
         delete invalidNodes[node.attributes["nid"]]
         true
@@ -128,17 +128,17 @@ define [
     createConnectionFromObject: (connection) =>
       # Get variables from their id
       from_node = @getNodeByNid(connection.from_node.toString())
-      from = from_node.rack.outputs[connection.from.toString()]
+      from = from_node.fields.outputs[connection.from.toString()]
       to_node = @getNodeByNid(connection.to_node.toString())
-      to = to_node.rack.inputs[connection.to.toString()]
+      to = to_node.fields.inputs[connection.to.toString()]
       
       # If a field is missing try to switch from/to
       if !from || !to
         tmp = from_node
         from_node = to_node
         to_node = tmp
-        from = from_node.rack.outputs[connection.to.toString()]
-        to = to_node.rack.inputs[connection.from.toString()]
+        from = from_node.fields.outputs[connection.to.toString()]
+        to = to_node.fields.inputs[connection.from.toString()]
       
       c = @connections.create
           from_field: from
@@ -154,11 +154,11 @@ define [
       # Recreate the external connections
       for connection in external_objects
         if connection.to_subfield
-          from = @getNodeByNid(connection.from_node).rack.getField(connection.from, true)
-          to = grp.rack.getField(connection.to + "-" + connection.to_node)
+          from = @getNodeByNid(connection.from_node).fields.getField(connection.from, true)
+          to = grp.fields.getField(connection.to + "-" + connection.to_node)
         else
-          from = grp.rack.getField(connection.from + "-" + connection.from_node, true)
-          to = @getNodeByNid(connection.to_node).rack.getField(connection.to)
+          from = grp.fields.getField(connection.from + "-" + connection.from_node, true)
+          to = @getNodeByNid(connection.to_node).fields.getField(connection.to)
         
         c = @connections.create
           from_field: from

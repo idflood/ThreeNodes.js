@@ -21,7 +21,7 @@ define [
       @count = false
       @width = false
       @offset = false
-      @rack.addFields
+      @fields.addFields
         inputs:
           "count": 1
           "seed" : 1
@@ -30,7 +30,7 @@ define [
         outputs:
           "out" : 0
       
-      @v_out = @rack.getField("out", true)
+      @v_out = @fields.getField("out", true)
     
     remove: () =>
       delete @v_out
@@ -38,17 +38,17 @@ define [
     
     compute: =>
       needs_rebuild = false
-      if @seed != @rack.getField("seed").get("value") || @count != parseInt(@rack.getField("count").getValue(0)) || @width != @rack.getField("width").get("value") || @offset != @rack.getField("offset").get("value")
-        @seed = @rack.getField("seed").get("value")
+      if @seed != @fields.getField("seed").get("value") || @count != parseInt(@fields.getField("count").getValue(0)) || @width != @fields.getField("width").get("value") || @offset != @fields.getField("offset").get("value")
+        @seed = @fields.getField("seed").get("value")
         @rnd = new Rc4Random(@seed.toString())
         
         @value = []
-        @width = @rack.getField("width").getValue(0)
-        @offset = @rack.getField("offset").getValue(0)
-        @count = parseInt(@rack.getField("count").get("value"))
+        @width = @fields.getField("width").getValue(0)
+        @offset = @fields.getField("offset").getValue(0)
+        @count = parseInt(@fields.getField("count").get("value"))
         for i in [0..@count - 1]
           @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
-      @rack.setField("out", @value)
+      @fields.setField("out", @value)
   
   class ThreeNodes.nodes.LinearSpread extends ThreeNodes.NodeBase
     @node_name = 'LinearSpread'
@@ -62,7 +62,7 @@ define [
       @width = false
       @phase = false
       @offset = false
-      @rack.addFields
+      @fields.addFields
         inputs:
           "count": 1
           "width" : 1
@@ -71,7 +71,7 @@ define [
         outputs:
           "out" : 0
       
-      @v_out = @rack.getField("out", true)
+      @v_out = @fields.getField("out", true)
     
     remove: () =>
       delete @v_out
@@ -79,10 +79,10 @@ define [
     
     compute: =>
       needs_rebuild = false
-      @width = @rack.getField("width").getValue(0)
-      @offset = @rack.getField("offset").getValue(0)
-      @phase = @rack.getField("phase").getValue(0)
-      @count = parseInt(@rack.getField("count").getValue())
+      @width = @fields.getField("width").getValue(0)
+      @offset = @fields.getField("offset").getValue(0)
+      @phase = @fields.getField("phase").getValue(0)
+      @count = parseInt(@fields.getField("count").getValue())
       @value = []
       
       stepSize = @width / @count
@@ -91,5 +91,5 @@ define [
         res = ( i * stepSize + shift + @phase ) % @width
         res = @offset - @width / 2 + res
         @value[i] = res
-      @rack.setField("out", @value)
+      @fields.setField("out", @value)
       

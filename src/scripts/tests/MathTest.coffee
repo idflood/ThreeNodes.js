@@ -20,7 +20,7 @@ define [
         node_mult = ng.create_node("MathMult")
         
         n1.v_in.setValue 2
-        node_mult.rack.getField("factor").setValue(3)
+        node_mult.fields.getField("factor").setValue(3)
         
         c1 = ng.connections.create
           from_field: n1.v_out
@@ -37,10 +37,10 @@ define [
         equals node_mult.v_out.getValue(), 6, "2 * 3 = 6"
         
         # connect a vector 3 to the factor, should output vector 3
-        n2_out = n2.rack.getField("xyz", true)
-        n2.rack.getField("x").setValue(1)
-        n2.rack.getField("y").setValue(2)
-        n2.rack.getField("z").setValue(3)
+        n2_out = n2.fields.getField("xyz", true)
+        n2.fields.getField("x").setValue(1)
+        n2.fields.getField("y").setValue(2)
+        n2.fields.getField("z").setValue(3)
         c1 = ng.connections.create
           from_field: n2_out
           to_field: node_mult.v_in

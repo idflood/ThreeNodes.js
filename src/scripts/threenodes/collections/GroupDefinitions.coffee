@@ -79,7 +79,7 @@ define [
       external_objects = []
       for node in selected_nodes
         # check each node fields
-        for field in node.rack.models
+        for field in node.fields.models
           # loop each connections since we can have multiple out connections
           for connection in field.connections
             indx1 = selected_nodes.indexOf(connection.from_field.node)

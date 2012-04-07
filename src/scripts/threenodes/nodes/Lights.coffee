@@ -17,7 +17,7 @@ define [
       @auto_evaluate = true
       @ob = new THREE.PointLight(0xffffff)
       
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xffffff)}
           "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
@@ -31,8 +31,8 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@rack.inputs, @ob)
-      @rack.setField("out", @ob)
+      @apply_fields_to_val(@fields.inputs, @ob)
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.SpotLight extends ThreeNodes.NodeBase
     @node_name = 'SpotLight'
@@ -43,7 +43,7 @@ define [
       @auto_evaluate = true
       @ob = new THREE.SpotLight(0xffffff)
       
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xffffff)}
           "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
@@ -66,10 +66,10 @@ define [
       super
     
     compute: =>
-      if @rack.getField("castShadow").getValue() != @ob.castShadow
+      if @fields.getField("castShadow").getValue() != @ob.castShadow
         @trigger("RebuildAllShaders")
-      @apply_fields_to_val(@rack.inputs, @ob)
-      @rack.setField("out", @ob)
+      @apply_fields_to_val(@fields.inputs, @ob)
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.DirectionalLight extends ThreeNodes.NodeBase
     @node_name = 'DirectionalLight'
@@ -80,7 +80,7 @@ define [
       @auto_evaluate = true
       @ob = new THREE.DirectionalLight(0xffffff)
       
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xffffff)}
           "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
@@ -94,8 +94,8 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@rack.inputs, @ob)
-      @rack.setField("out", @ob)
+      @apply_fields_to_val(@fields.inputs, @ob)
+      @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.AmbientLight extends ThreeNodes.NodeBase
     @node_name = 'AmbientLight'
@@ -106,7 +106,7 @@ define [
       @auto_evaluate = true
       @ob = new THREE.AmbientLight(0xffffff)
       
-      @rack.addFields
+      @fields.addFields
         inputs:
           "color": {type: "Color", val: new THREE.Color(0xffffff)}
           "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
@@ -118,5 +118,5 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@rack.inputs, @ob)
-      @rack.setField("out", @ob)
+      @apply_fields_to_val(@fields.inputs, @ob)
+      @fields.setField("out", @ob)
