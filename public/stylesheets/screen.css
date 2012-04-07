@@ -577,16 +577,10 @@ button.ui-button::-moz-focus-inner {
 ::-webkit-scrollbar-thumb:horizontal:hover {
   background: #aaa;
 }
-slider_handle_size: 8px,
-slider_handle_top: -0.4em,
-slide_height: 0.8em,
 #zoom-slider,
 #sidebar .slider-container {
   border-top: 1px solid #555;
 }
-slider_handle_size: 8px .ui-slider-handle,
-slider_handle_top: -0.4em .ui-slider-handle,
-slide_height: 0.8em .ui-slider-handle,
 #zoom-slider .ui-slider-handle,
 #sidebar .slider-container .ui-slider-handle {
   background: #888;
@@ -597,8 +591,8 @@ slide_height: 0.8em .ui-slider-handle,
 .ui-slider .ui-slider-handle {
   position: absolute;
   z-index: 2;
-  width: slider_handle_size;
-  height: slider_handle_size;
+  width: 8px;
+  height: 8px;
   cursor: default;
 }
 .ui-slider .ui-slider-range {
@@ -610,10 +604,10 @@ slide_height: 0.8em .ui-slider-handle,
   background-position: 0 0;
 }
 .ui-slider-horizontal {
-  height: slide_height;
+  height: 0.8em;
 }
 .ui-slider-horizontal .ui-slider-handle {
-  top: slider_handle_top;
+  top: -0.4em;
   margin-left: -0.6em;
 }
 .ui-slider-horizontal .ui-slider-range {
@@ -627,11 +621,11 @@ slide_height: 0.8em .ui-slider-handle,
   right: 0;
 }
 .ui-slider-vertical {
-  width: slide_height;
+  width: 0.8em;
   height: 100px;
 }
 .ui-slider-vertical .ui-slider-handle {
-  left: slider_handle_top;
+  left: -0.4em;
   margin-left: 0;
   margin-bottom: -0.6em;
 }
