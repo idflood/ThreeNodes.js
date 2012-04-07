@@ -1,11 +1,14 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'threenodes/utils/Utils',
-], (_, Backbone, Utils) ->
+  'threenodes/utils/Indexer',
+], (_, Backbone, Indexer) ->
   "use strict"
   
   class ThreeNodes.Connection extends Backbone.Model
+    # Create a static indexer used if the connection is not part of a nodegraph (tests)
+    @static_indexer: new Indexer()
+    
     defaults:
       "cid": -1
     
@@ -13,8 +16,14 @@ define [
     
     initialize: (options) =>
       @options = options
+      indexer = options.indexer
+      
+      if !indexer
+        console.log "connection use static indexer"
+        indexer = ThreeNodes.NodeField.static_indexer
+      
       if @get("cid") == -1
-        @set({"cid": Utils.get_uid()})
+        @set({"cid": indexer.get_uid()})
       
       if @isValid()
         # remove existing input connection since inputs only have one connection

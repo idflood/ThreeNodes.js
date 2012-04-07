@@ -1,6 +1,7 @@
 define [
   'use!Underscore', 
   'use!Backbone',
+  'order!threenodes/utils/Indexer',
   'order!threenodes/models/Node',
   'order!threenodes/nodes/Base',
   'order!threenodes/nodes/Conditional',
@@ -15,18 +16,23 @@ define [
   'order!threenodes/nodes/Particle',
   'order!threenodes/nodes/Group',
   'order!threenodes/collections/Connections',
-], (_, Backbone) ->
+], (_, Backbone, Indexer) ->
   "use strict"
   $ = jQuery
   
   class ThreeNodes.NodeGraph extends Backbone.Collection
     
     initialize: (models, options) =>
-      @connections = new ThreeNodes.ConnectionsCollection()
       @settings = options.settings
       self = this
       # save material nodes in an array so they can be quickly rebuild
       @materials = []
+      
+      # Each node collections has it's own indexer, used to get unique id
+      @indexer = new Indexer()
+      
+      # Create the connections collection
+      @connections = new ThreeNodes.ConnectionsCollection([], {indexer: @indexer})
       
       @connections.bind "add", (connection) ->
         self.trigger "nodeslist:rebuild", self
@@ -60,6 +66,7 @@ define [
       @removeAll()
       $("#webgl-window canvas").remove()
       @materials = []
+      @indexer.reset()
       return this
     
     bindTimelineEvents: (timeline) =>
@@ -78,9 +85,12 @@ define [
       if $.type(options) == "string"
         options = {type: options}
       
-      # Save references to the application settings and timeline in the node model
+      # Save references of the application settings and timeline in the node model
       options.timeline = @timeline
       options.settings = @settings
+      
+      # Save a reference of the nodes indexer
+      options.indexer = @indexer
       
       # Print error if the node type is not found and return false
       if !ThreeNodes.nodes[options.type]

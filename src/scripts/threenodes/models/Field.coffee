@@ -3,13 +3,16 @@ define [
   'use!Backbone',
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
-  'order!threenodes/utils/Utils',
-], (_, Backbone, _view_node_field_in, _view_node_field_out, Utils) ->
+  'order!threenodes/utils/Indexer',
+], (_, Backbone, _view_node_field_in, _view_node_field_out, Indexer) ->
   "use strict"
   
   $ = jQuery
   
   class ThreeNodes.NodeField extends Backbone.Model
+    # Create a static indexer used if the field is not part of a nodegraph (tests)
+    @static_indexer: new Indexer()
+    
     defaults: () ->
       fid: -1
       name: "fieldname"
@@ -46,6 +49,9 @@ define [
       @on_value_update_hooks = {}
       @node = options.node
       @subfield = options.subfield
+      indexer = options.indexer
+      if !indexer
+        indexer = ThreeNodes.NodeField.static_indexer
       @proxy = false
       @changed = true
       @connections = []
@@ -56,7 +62,7 @@ define [
       if @subfield && @subfield.node
         @set("machine_name", @get("name") + "-" + @subfield.node.get("nid"))
       if @get("fid") == -1
-        @set("fid", Utils.get_uid())
+        @set("fid", indexer.get_uid())
     
     remove: () =>
       delete @on_value_update_hooks

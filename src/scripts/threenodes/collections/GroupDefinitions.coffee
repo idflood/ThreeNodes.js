@@ -1,10 +1,11 @@
 define [
   'use!Underscore', 
   'use!Backbone',
+  'order!threenodes/utils/Indexer',
   'order!threenodes/models/GroupDefinition',
   'order!threenodes/models/Connection',
   'order!threenodes/views/ConnectionView',
-], (_, Backbone) ->
+], (_, Backbone, Indexer) ->
   "use strict"
   
   $ = jQuery
@@ -13,13 +14,17 @@ define [
     model: ThreeNodes.GroupDefinition
     
     initialize: () =>
-      @.bind "group:removed", (c) =>
+      # The group definitions have their own indexer, used to get unique id
+      @indexer = new Indexer()
+      
+      @bind "group:removed", (c) =>
         @remove(c)
     
     removeAll: () =>
       models = @models.concat()
       _.invoke models, "remove"
       @reset([])
+      @indexer.reset()
     
     getByGid: (gid) =>
       @find (def) -> def.get("gid") == gid
@@ -29,8 +34,8 @@ define [
         c.render()
     
     create: (model, options) =>
-      if !options
-        options = {}
+      if !options then options = {}
+      options.indexer = @indexer
       model = @_prepareModel(model, options)
       if !model
         return false
@@ -71,6 +76,7 @@ define [
       # Create a new GroupDefinition from the selected nodes and connections
       group_def = new ThreeNodes.GroupDefinition
         fromSelectedNodes: selected_nodes
+        indexer: @indexer
       @add(group_def)
       
       # Save the connection going out or in the group of nodes

@@ -134,14 +134,12 @@ define [
         @ui.on_ui_window_resize()
       return this
     
-    
     setDisplayMode: (is_player = false) =>
       if @ui then @ui.setDisplayMode(is_player)
     
     clearWorkspace: () =>
       @nodegraph.clearWorkspace()
       @group_definitions.removeAll()
-      Utils.uid = 0
       if @ui then @ui.clearWorkspace()
       @initTimeline()
       

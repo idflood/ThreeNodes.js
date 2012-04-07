@@ -28,18 +28,19 @@ define [
       @value = false
       @apptimeline = options.timeline
       @settings = options.settings
+      @indexer = options.indexer
       @options = options
       
       if @get('name') == ''
         @set('name', @typename())
       
       if @get('nid') == -1
-        @set('nid', Utils.get_uid())
+        @set('nid', @indexer.get_uid())
       else
         # todo: this may be the root issue why multiple group nodes don't play well (in fields too)
-        Utils.uid = @get('nid')
+        @indexer.uid = @get('nid')
       
-      @fields = new ThreeNodes.NodeFieldsCollection([], {node: this})
+      @fields = new ThreeNodes.NodeFieldsCollection([], {node: this, indexer: @indexer})
       @
       
     post_init: () =>
@@ -72,6 +73,7 @@ define [
       delete @anim
       delete @options
       delete @settings
+      delete @indexer
       @destroy()
     
     createConnection: (field1, field2) =>

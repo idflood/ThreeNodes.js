@@ -21,9 +21,10 @@ define [
     initialize: (options) =>
       super
       @internal_uid = 0
+      indexer = options.indexer
       
       if @get("gid") == -1
-        @set("gid", Utils.get_uid())
+        @set("gid", indexer.get_uid())
       
       if options.fromSelectedNodes && options.fromSelectedNodes != false
         @fromSelectedNodes(options.fromSelectedNodes)

@@ -32,7 +32,7 @@ define [
       
     get_local_json: (stringify = true) =>
       res = 
-        uid: Utils.get_uid(false)
+        uid: @nodes.indexer.get_uid(false)
         nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
         connections: jQuery.map(@nodes.connections.models, (c, i) -> c.toJSON())
         groups: jQuery.map(@group_definitions.models, (g, i) -> g.toJSON())
@@ -47,7 +47,7 @@ define [
       res += '<?xml version="1.0" encoding="UTF-8"?>\n'
       res += ("<app>\n")
     
-      res += "\t<uid last='#{ThreeNodes.get_uid(false)}' />\n"
+      res += "\t<uid last='#{@nodes.get_uid(false)}' />\n"
     
       res += "\t<nodes>\n"
       for node in @nodes.models
@@ -82,7 +82,7 @@ define [
       for connection in loaded_data.connections
         @nodes.createConnectionFromObject(connection)
       
-      Utils.uid = loaded_data.uid
+      @nodes.indexer.uid = loaded_data.uid
       delay = (ms, func) -> setTimeout func, ms
       delay 1, => @nodes.renderAllConnections()
     

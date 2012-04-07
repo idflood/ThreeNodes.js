@@ -9,6 +9,7 @@ define [
   class ThreeNodes.NodeFieldsCollection extends Backbone.Collection
     initialize: (models, options) =>
       @node = options.node
+      @indexer = options.indexer
       @inputs = {}
       @outputs = {}
     
@@ -20,6 +21,7 @@ define [
       delete @node
       delete @inputs
       delete @outputs
+      delete @indexer
     
     # Load saved fields values
     load: (data) =>
@@ -152,6 +154,7 @@ define [
         is_output: field_is_out
         default: value.default
         subfield: value.subfield
+        indexer: @indexer
       
       target = if field.get("is_output") == false then "inputs" else "outputs"
       field_index = field.get("name")
