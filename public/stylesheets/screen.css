@@ -1167,24 +1167,25 @@ div {
 .editor-mode .ui-layout-resizer {
   visibility: visible !important;
 }
-.player-mode #container-wrapper,
-.player-mode #sidebar,
-.player-mode #sidebar-toggle,
-.player-mode #bottom-toolbox,
-.player-mode .ui-layout-resizer {
+body.player-mode #container-wrapper,
+body.player-mode #sidebar,
+body.player-mode #sidebar-toggle,
+body.player-mode #bottom-toolbox,
+body.player-mode .ui-layout-resizer,
+body.player-mode #library {
   visibility: hidden !important;
 }
-.player-mode #webgl-window {
+body.player-mode #webgl-window {
   overflow: auto;
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
+  top: 0 !important;
+  right: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
   text-align: center;
   padding: 20px;
 }
-.player-mode #webgl-window canvas {
+body.player-mode #webgl-window canvas {
   cursor: auto;
   margin: auto !important;
 }

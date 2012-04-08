@@ -93,16 +93,16 @@ _c = background_color - #050505
   .ui-layout-resizer
     visibility: visible !important
 
-.player-mode
-  #container-wrapper, #sidebar, #sidebar-toggle, #bottom-toolbox, .ui-layout-resizer
+body.player-mode
+  #container-wrapper, #sidebar, #sidebar-toggle, #bottom-toolbox, .ui-layout-resizer, #library
     visibility: hidden !important
   #webgl-window
     overflow: auto
     position: absolute
-    top: 0
-    right: 0
-    left: 0
-    bottom: 0
+    top: 0 !important
+    right: 0 !important
+    left: 0 !important
+    bottom: 0 !important
     text-align: center
     padding: 20px
     canvas

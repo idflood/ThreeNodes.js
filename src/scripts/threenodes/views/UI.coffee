@@ -285,7 +285,8 @@ define [
       if @layout.east.state.isClosed == false then margin_right += $("#library").innerWidth()
       
       $("#bottom-toolbox").attr("style", "bottom: #{timelinesize}px !important; right: #{margin_right}px")
-      $("#webgl-window").attr("style", "right: #{margin_right}px;")
+      $("#webgl-window").css
+        right: margin_right
       
     animate: () =>
       @render()
