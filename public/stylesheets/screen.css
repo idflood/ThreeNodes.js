@@ -1069,6 +1069,11 @@ body {
   overflow: hidden;
   margin-top: 0;
 }
+#sidebar,
+#library,
+#timeline {
+  background-color: #333;
+}
 #main-menu-bar {
   zoom: 1;
   z-index: 999 !important;

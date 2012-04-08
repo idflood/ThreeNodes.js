@@ -137,6 +137,12 @@ define [
         east:
           minSize: 220
           initClosed: true
+          onresize: (name, pane_el, state, opt, layout_name) =>
+            @on_ui_window_resize()
+          onopen: (name, pane_el, state, opt, layout_name) =>
+            @on_ui_window_resize()
+          onclose: (name, pane_el, state, opt, layout_name) =>
+            @on_ui_window_resize()
         west:
           minSize: 220
         south:
@@ -270,12 +276,16 @@ define [
       @trigger("render")
     
     on_ui_window_resize: () =>
+      console.log @layout
       w = $(window).width()
       h = $(window).height()
-      timelinesize = $("#timeline").innerHeight()
+      timelinesize = 20
+      margin_right = 25
+      if @layout.south.state.isClosed == false then timelinesize += $("#timeline").innerHeight() 
+      if @layout.east.state.isClosed == false then margin_right += $("#library").innerWidth()
       
-      toolbox_pos = timelinesize + 20
-      $("#bottom-toolbox").attr("style", "bottom: #{toolbox_pos}px !important;")
+      $("#bottom-toolbox").attr("style", "bottom: #{timelinesize}px !important; right: #{margin_right}px")
+      $("#webgl-window").attr("style", "right: #{margin_right}px;")
       
     animate: () =>
       @render()
