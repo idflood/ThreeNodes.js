@@ -367,7 +367,7 @@ define [
       super
       @auto_evaluate = true
       @ob = ""
-      dir = "../fonts/"
+      dir = "../assets/fonts/"
       @files =
         "helvetiker":
           "normal": dir + "helvetiker_regular.typeface"
