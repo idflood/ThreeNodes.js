@@ -20,11 +20,11 @@ define [
         nf.setValue true
         equals nf.getValue(), true, "Bool value is true"
         nf.setValue 0
-        equals nf.getValue(), false, "Boolfield converted float value to bool (0 == false)"
+        strictEqual nf.getValue(), false, "Boolfield converted float value to bool (0 == false)"
         nf.setValue 0.4
-        equals nf.getValue(), true, "Boolfield converted float value to bool (!0 == true)"
+        strictEqual nf.getValue(), true, "Boolfield converted float value to bool (!0 == true)"
         nf.setValue new THREE.Object3D
-        equals nf.getValue(), true, "Boolfield kept previous value when wrong type is set"
+        strictEqual nf.getValue(), true, "Boolfield kept previous value when wrong type is set"
 
       test "Float field", () ->
         nf = new ThreeNodes.fields.Float
@@ -38,9 +38,11 @@ define [
         nf.setValue new THREE.Object3D
         equals nf.getValue(), 4.2, "Floatfield kept previous value when wrong type is set"
         nf.setValue true
-        equals nf.getValue(), 1, "Floatfield converted TRUE value to 1"
+        strictEqual nf.getValue(), 1, "Floatfield converted TRUE value to 1"
         nf.setValue false
-        equals nf.getValue(), 0, "Floatfield converted FALSE value to 0"
+        strictEqual nf.getValue(), 0, "Floatfield converted FALSE value to 0"
+        nf.setValue "42"
+        strictEqual nf.getValue(), 42, "Floatfield converted string value to float"
       
       test "Color field", () ->
         nf = new ThreeNodes.fields.Color

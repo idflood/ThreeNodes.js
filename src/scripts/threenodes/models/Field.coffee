@@ -282,18 +282,21 @@ define [
         @add_textfield_slider($el)
       return $el
     
-    link_textfield_to_val: (f_input) =>
+    link_textfield_to_val: (f_input, type = "float") =>
       self = this
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_input.val(v)
       f_input.val(@getValue())
       f_input.keypress (e) ->
         if e.which == 13
-          self.setValue($(this).val())
+          if type == "float"
+            self.setValue(parseFloat($(this).val()))
+          else
+            self.setValue($(this).val())
           $(this).blur()
       f_input
     
-    link_textfield_to_subval: (f_input, subval) =>
+    link_textfield_to_subval: (f_input, subval, type = "float") =>
       self = this
       
       @on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
@@ -302,10 +305,12 @@ define [
       f_input.val(self.getValue()[subval])
       f_input.keypress (e) ->
         if e.which == 13
+          dval = $(this).val()
+          if type == "float" then dval = parseFloat(dval)
           if $.type(self.attributes.value) == "array"
-            self.attributes.value[0][subval] = $(this).val()
+            self.attributes.value[0][subval] = dval
           else
-            self.attributes.value[subval] = $(this).val()
+            self.attributes.value[subval] = dval
           $(this).blur()
       f_input
   
@@ -317,7 +322,7 @@ define [
     create_subval_textinput: (subval, type = "float") =>
       $target = @create_sidebar_container(subval)
       f_in = @create_textfield($target, type, false)
-      @link_textfield_to_subval(f_in, subval)
+      @link_textfield_to_subval(f_in, subval, type)
       if type == "float"
         @add_textfield_slider(f_in)
   
