@@ -1476,6 +1476,7 @@ body > header h1 {
 .node-Random,
 .node-Timer,
 .type-Lights,
+.type-Particle,
 .type-PostProcessing {
   width: 150px;
 }
@@ -1509,6 +1510,7 @@ body > header h1 {
 .node-Camera .inputs,
 .node.node-Texture .inputs,
 .type-Lights .inputs,
+.type-Particle .inputs,
 .type-PostProcessing .inputs {
   width: 80%;
 }
@@ -1519,6 +1521,7 @@ body > header h1 {
 .node-Camera .outputs,
 .node.node-Texture .outputs,
 .type-Lights .outputs,
+.type-Particle .outputs,
 .type-PostProcessing .outputs {
   width: 20%;
 }
