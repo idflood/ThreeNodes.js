@@ -8,7 +8,7 @@ define [
   
   $ = jQuery
   
-  class NodeGraphTest
+  class NodesTest
     constructor: (app) ->
       module "NodeGraph"
       

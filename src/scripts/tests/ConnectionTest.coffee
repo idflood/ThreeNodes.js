@@ -7,7 +7,7 @@ define [
   
   $ = jQuery
   
-  class NodeConnectionTest
+  class ConnectionTest
     constructor: (app) ->
       module "NodeConnection"
       

@@ -7,7 +7,7 @@ define [
   
   $ = jQuery
   
-  class NodeFieldTest
+  class FieldTest
     constructor: (app) ->
       module "NodeFields"
       
