@@ -177,6 +177,10 @@ define [
       
       return grp
     
+    removeGroupsByDefinition: (def) =>
+      _nodes = @models.concat()
+      _.each _nodes, (node) -> if node.definition && node.definition.gid == def.gid then node.remove()
+    
     renderAllConnections: () =>
       @connections.render()
       

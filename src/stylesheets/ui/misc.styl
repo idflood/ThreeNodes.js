@@ -38,3 +38,31 @@
 
 #main_file_input_open
   @extend .visually-hidden
+
+.ui-widget-overlay
+  position: absolute
+  top: 0
+  background: rgba(0,0,0, 0.4)
+
+.ui-dialog
+  background: background_color
+  border-radius: 10px
+  padding: 10px
+
+.ui-dialog-title
+  font-weight: bold
+  color: #fff
+  position: relative
+
+a.ui-dialog-titlebar-close
+  position: absolute
+  top: 5px
+  right: 5px
+  span
+    display: block
+    width: 13px
+    height: 13px
+    font-size: 0
+    line-height: 0
+    text-indent: -9999px
+    background: url(../assets/images/dialog-close.png) no-repeat

@@ -337,13 +337,28 @@ body h3 {
 .node .outputs > div {
   text-align: right;
 }
-input {
+input,
+button {
   width: 100%;
   border: 1px solid #333;
   background: #222;
   font-size: 9px;
   color: #aaa;
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+button {
+  width: auto;
+  margin-right: 10px !important;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+button:hover,
+button:focus {
+  background: #444;
+  color: #fff;
+}
+button:focus {
+  border: 1px solid #666;
 }
 select {
   background: #222;
@@ -743,6 +758,37 @@ button.ui-button::-moz-focus-inner {
 }
 .player-mode #webgl-window canvas {
   margin: auto;
+}
+.ui-widget-overlay {
+  position: absolute;
+  top: 0;
+  background: rgba(0,0,0,0.40);
+}
+.ui-dialog {
+  background: #333;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  padding: 10px;
+}
+.ui-dialog-title {
+  font-weight: bold;
+  color: #fff;
+  position: relative;
+}
+a.ui-dialog-titlebar-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+a.ui-dialog-titlebar-close span {
+  display: block;
+  width: 13px;
+  height: 13px;
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999px;
+  background: url("../assets/images/dialog-close.png") no-repeat;
 }
 #sidebar ul.tree {
   list-style: none outside;
@@ -1648,9 +1694,4 @@ body > header h1 {
 }
 body {
   background: #333;
-}
-.definition .edit,
-.definition .remove {
-  display: none;
-  visibility: hidden;
 }

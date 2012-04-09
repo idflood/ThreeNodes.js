@@ -56,7 +56,11 @@ define [
           model: node
           el: $tmpl
       
+      # Create a group node when selected nodes are grouped
       @group_definitions.bind "definition:created", @nodes.createGroup
+      
+      # When a group definition is removed delete all goup nodes using this definition
+      @group_definitions.bind "remove", @nodes.removeGroupsByDefinition
       
       # Create views if the application is not in test mode
       if @settings.test == false

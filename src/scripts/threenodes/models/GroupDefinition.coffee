@@ -18,6 +18,12 @@ define [
       @internal_uid += 1
       return @internal_uid
     
+    destroy: () =>
+      # Get all group nodes using this definition
+      
+      # Remove existing group nodes
+      super
+    
     initialize: (options) =>
       super
       @internal_uid = 0
@@ -47,9 +53,6 @@ define [
       @attributes.nodes = jQuery.map(selected_nodes, (n, i) -> n.toJSON())
       @attributes.connections = jQuery.map(internal_connections, (c, i) -> c.toJSON())
     
-    remove: =>
-      super
-    
     toJSON: () ->
       res =
         gid: @get("gid")
@@ -59,5 +62,6 @@ define [
       res
     
     toCode: () ->
+      # todo: export group definition to code
       res = ""
       res
