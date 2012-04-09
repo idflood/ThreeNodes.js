@@ -1410,10 +1410,8 @@ body > header h1 {
   stroke-width: 1;
 }
 .width-80,
-.node-Vector2,
-.node-Vector3,
-.node-Merge,
-.node-Get,
+.type-Base,
+.type-Utils,
 .node-SparksMove,
 .node-Mouse,
 .node-Color {
@@ -1422,10 +1420,7 @@ body > header h1 {
 .width-120,
 .node-ThreeMesh,
 .node-Camera,
-.node-PointLight,
-.node-AmbientLight,
-.node-BleachPass,
-.node-VignettePass,
+.node.node-Texture,
 .node-WebGLRenderer {
   width: 120px;
 }
@@ -1434,29 +1429,16 @@ body > header h1 {
 .node-String,
 .node-Random,
 .node-Timer,
-.node-FilmPass {
+.type-Lights,
+.type-PostProcessing {
   width: 150px;
 }
 .width-200,
 .node-Group,
 .node-LFO,
 .node-Mp3Input,
-.node-SpotLight,
-.node-ColladaLoader,
-.node-MeshLambertMaterial,
-.node-MeshBasicMaterial,
-.node-MeshPhongMaterial,
-.node-CubeGeometry,
-.node-ParticleBasicMaterial,
-.node-LineBasicMaterial,
-.node-Object3D,
-.node-Mesh,
-.node-Scene,
-.node-CylinderGeometry,
-.node-ParticleSystem,
-.node-Line,
-.node-TextGeometry,
-.node-ParticlePool {
+.type-Three,
+.type-Materials {
   width: 200px;
 }
 .width-230 {
@@ -1475,39 +1457,23 @@ body > header h1 {
   width: 50%;
 }
 .ratio-80-20 .inputs,
+.type-Three .inputs,
+.type-Materials .inputs,
 .node-ThreeMesh .inputs,
 .node-Camera .inputs,
-.node-PointLight .inputs,
-.node-AmbientLight .inputs,
-.node-SpotLight .inputs,
-.node-ColladaLoader .inputs,
-.node-MeshLambertMaterial .inputs,
-.node-MeshBasicMaterial .inputs,
-.node-MeshPhongMaterial .inputs,
-.node-CubeGeometry .inputs,
-.node-ParticleBasicMaterial .inputs,
-.node-LineBasicMaterial .inputs,
-.node-BleachPass .inputs,
-.node-VignettePass .inputs,
-.node-FilmPass .inputs {
+.node.node-Texture .inputs,
+.type-Lights .inputs,
+.type-PostProcessing .inputs {
   width: 80%;
 }
 .ratio-80-20 .outputs,
+.type-Three .outputs,
+.type-Materials .outputs,
 .node-ThreeMesh .outputs,
 .node-Camera .outputs,
-.node-PointLight .outputs,
-.node-AmbientLight .outputs,
-.node-SpotLight .outputs,
-.node-ColladaLoader .outputs,
-.node-MeshLambertMaterial .outputs,
-.node-MeshBasicMaterial .outputs,
-.node-MeshPhongMaterial .outputs,
-.node-CubeGeometry .outputs,
-.node-ParticleBasicMaterial .outputs,
-.node-LineBasicMaterial .outputs,
-.node-BleachPass .outputs,
-.node-VignettePass .outputs,
-.node-FilmPass .outputs {
+.node.node-Texture .outputs,
+.type-Lights .outputs,
+.type-PostProcessing .outputs {
   width: 20%;
 }
 .ratio-25-50-25 .inputs,
@@ -1572,7 +1538,6 @@ body > header h1 {
 .node .options {
   zoom: 1;
   width: 100%;
-  margin-bottom: 3px;
 }
 .node .options:before,
 .node .options:after {
