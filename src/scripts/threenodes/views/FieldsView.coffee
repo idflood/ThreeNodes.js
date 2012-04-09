@@ -10,7 +10,7 @@ define [
   ### Fields View ###
   $ = jQuery
   
-  class ThreeNodes.NodeFieldRackView extends Backbone.View
+  class ThreeNodes.FieldsView extends Backbone.View
     # Save some options in variables and bind events
     initialize: (options) ->
       super

@@ -2,7 +2,7 @@ define [
   'use!Underscore', 
   'use!Backbone',
   "text!templates/node.tmpl.html",
-  'order!threenodes/views/NodeFieldRackView',
+  'order!threenodes/views/FieldsView',
   "order!libs/jquery.contextMenu",
   "jQueryUi",
   'order!threenodes/utils/Utils',
@@ -20,7 +20,7 @@ define [
       @init_title_click()
       
       # Initialize the fields view
-      @fields_view = new ThreeNodes.NodeFieldRackView
+      @fields_view = new ThreeNodes.FieldsView
         node: @model
         collection: @model.fields
         el: $(".options", @el)
