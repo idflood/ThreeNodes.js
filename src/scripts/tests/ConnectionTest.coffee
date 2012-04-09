@@ -7,13 +7,13 @@ define [
   
   $ = jQuery
   
-  class NodeConnectionTest
+  class ConnectionTest
     constructor: (app) ->
       module "NodeConnection"
       
       test "Basic connection", () ->
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
         c1 = ng.connections.create
@@ -63,7 +63,7 @@ define [
       
       test "Connection between wrong field types", () ->
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         
         n1 = ng.create_node("Number")
         n2 = ng.create_node("ThreeMesh")
@@ -90,7 +90,7 @@ define [
       
       test "Connection between wrong field types (children array)", () ->
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         
         n1 = ng.create_node("Number")
         n3 = ng.create_node("Scene")
@@ -106,7 +106,7 @@ define [
       
       test "Connection direction", () ->
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
@@ -121,7 +121,7 @@ define [
       
       test "Connection from input to anoter input", () ->
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")
@@ -136,7 +136,7 @@ define [
       
       test "Connection from and to the same node", () ->
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         
         n1 = ng.create_node("Number")
         # connect an input to another input
@@ -151,7 +151,7 @@ define [
       test "Array connections", () ->
         # verify that the good amount of objects are created when having many inputs
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Number")

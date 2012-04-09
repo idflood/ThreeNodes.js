@@ -21,7 +21,7 @@ define [
   "use strict"
   $ = jQuery
   
-  class ThreeNodes.NodeGraph extends Backbone.Collection
+  class ThreeNodes.NodesCollection extends Backbone.Collection
     
     initialize: (models, options) =>
       @settings = options.settings

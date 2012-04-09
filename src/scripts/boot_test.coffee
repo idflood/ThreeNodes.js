@@ -20,9 +20,9 @@ require.config
 
 require [
   'order!threenodes/App',
-  'tests/NodeGraphTest',
-  'tests/NodeFieldTest',
-  'tests/NodeConnectionTest',
+  'tests/NodesTest',
+  'tests/FieldTest',
+  'tests/ConnectionTest',
   'tests/MathTest',
   'tests/FileSaveTest',
   'tests/FileLoadTest',
@@ -31,13 +31,13 @@ require [
   'use!Underscore',
   'use!Backbone',
   "order!libs/qunit-git",
-], (App, NodeGraphTest, NodeFieldTest, NodeConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) ->
+], (App, NodesTest, FieldTest, ConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) ->
   "use strict"
   app = new App
     test: true
-  new NodeGraphTest(app)
-  new NodeFieldTest(app)
-  new NodeConnectionTest(app)
+  new NodesTest(app)
+  new FieldTest(app)
+  new ConnectionTest(app)
   new MathTest(app)
   new FileSaveTest(app)
   new FileLoadTest(app)

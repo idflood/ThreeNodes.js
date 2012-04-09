@@ -61,12 +61,12 @@ define [
       # Start main render loop
       @animate()
     
-    onNodeListRebuild: (nodegraph) =>
+    onNodeListRebuild: (nodes) =>
       if @timeoutId
         clearTimeout(@timeoutId)
       # add a little delay since the event is fired multiple time on file load
       onTimeOut = () =>
-        @sidebar.render(nodegraph)
+        @sidebar.render(nodes)
       @timeoutId = setTimeout(onTimeOut, 10)
     
     initDrop: () =>
@@ -98,6 +98,7 @@ define [
       return this
     
     clearWorkspace: () =>
+      # Remove the nodes attributes from the sidebar
       @sidebar.clearWorkspace()
     
     # Setup menubar
@@ -162,6 +163,7 @@ define [
       @trigger("timelineResize", 48)
       return this
     
+    # Handle the nodes selection
     makeSelectable: () ->
       $("#container").selectable
         filter: ".node"
@@ -169,15 +171,19 @@ define [
           $selected = $(".node.ui-selected")
           nodes = []
           anims = []
+          # Add the nodes and their anims container to some arrays 
           $selected.each () ->
             ob = $(this).data("object")
             ob.anim.objectTrack.name = ob.get("name")
             anims.push(ob.anim)
             nodes.push(ob)
+          # Display the selected nodes attributes in the sidebar
           @sidebar.renderNodesAttributes(nodes)
+          # Display the selected nodes in the timeline
           @trigger("selectAnims", anims)
       return @
     
+    # Switch between player/editor mode
     setDisplayMode: (is_player = false) =>
       if is_player == true
         $("body").addClass("player-mode")
@@ -195,36 +201,39 @@ define [
     
     setupMouseScroll: () =>
       @scroll_target = $("#container-wrapper")
+      
+      # Return true if the click is made on the background, false otherwise
       is_from_target = (e) ->
         if e.target == $("#graph svg")[0]
           return true
         return false
-      @scroll_target.bind "contextmenu", (e) ->
-        return false
+      
+      # Disable the context menu on the container so that we can drag with right click
+      @scroll_target.bind "contextmenu", (e) -> return false
+      
+      # Handle start drag
       @scroll_target.mousedown (e) =>
-        if is_from_target(e)
-          #middle or right click button
-          if e.which == 2 || e.which == 3
-            @is_grabbing = true
-            @xp = e.pageX
-            @yp = e.pageY
-            return false
+        # Init drag only if middle or right click AND if the target element is the svg
+        if is_from_target(e) && (e.which == 2 || e.which == 3)
+          @is_grabbing = true
+          @xp = e.pageX
+          @yp = e.pageY
+          return false
+      
+      # Hande drag when the mouse move
       @scroll_target.mousemove (e) =>
-        if is_from_target(e)
-          if @is_grabbing == true
-            @scrollTo(@xp - e.pageX, @yp - e.pageY)
-            @xp = e.pageX
-            @yp = e.pageY
-      @scroll_target.mouseout => @stropgrab()
+        if is_from_target(e) && (@is_grabbing == true)
+          @scrollTo(@xp - e.pageX, @yp - e.pageY)
+          @xp = e.pageX
+          @yp = e.pageY
+      
+      # Handle stop drag
+      @scroll_target.mouseout => @is_grabbing = false
       @scroll_target.mouseup (e) => 
-        if is_from_target(e)
-          if e.which == 2 || e.which == 3
-            @stropgrab()
+        if is_from_target(e) && (e.which == 2 || e.which == 3)
+          @is_grabbing = false
     
       return true
-    
-    stropgrab: () =>
-      @is_grabbing = false
     
     scrollTo: (dx, dy) =>
       x = @scroll_target.scrollLeft() + dx
@@ -240,11 +249,13 @@ define [
       $("#display-mode-switch").click (e) =>
         @switch_display_mode()
     
+    # Setup the bottom right dom container
     init_bottom_toolbox: () =>
       $("body").append("<div id='bottom-toolbox'></div>")
       $container = $("#bottom-toolbox")
       @init_resize_slider($container)
     
+    # Initialize the little node zoom slider
     init_resize_slider: ($container) =>
       $container.append("<div id='zoom-slider'></div>")
       scale_graph = (val) ->
@@ -265,29 +276,33 @@ define [
       node_menu = _.template(_view_node_context_menu, {})
       $("body").append(node_menu)
     
+    # Display the app and hide the intro
     show_application: () =>
       delay_intro = 500
+      
+      # Display/hide with some delay
       $("body > header").delay(delay_intro).hide()
       $("#sidebar").delay(delay_intro).show()
       $("#container-wrapper").delay(delay_intro).show()
-      @trigger("renderConnections")
       
-    render: () =>
-      @trigger("render")
+      # Render the connections if needed
+      @trigger("renderConnections")
     
+    # Function called when the window is resized and if some panels are closed/opened/resized
     on_ui_window_resize: () =>
-      console.log @layout
-      w = $(window).width()
-      h = $(window).height()
-      timelinesize = 20
+      # Default minimum margins
+      margin_bottom = 20
       margin_right = 25
-      if @layout.south.state.isClosed == false then timelinesize += $("#timeline").innerHeight() 
+      
+      # Calculate the bottom and right margins if the corresponding panels are not closed
+      if @layout.south.state.isClosed == false then margin_bottom += $("#timeline").innerHeight() 
       if @layout.east.state.isClosed == false then margin_right += $("#library").innerWidth()
       
-      $("#bottom-toolbox").attr("style", "bottom: #{timelinesize}px !important; right: #{margin_right}px")
+      # Apply the margins to some DOM elements
+      $("#bottom-toolbox").attr("style", "bottom: #{margin_bottom}px !important; right: #{margin_right}px")
       $("#webgl-window").css
         right: margin_right
       
     animate: () =>
-      @render()
+      @trigger("render")
       requestAnimationFrame( @animate )

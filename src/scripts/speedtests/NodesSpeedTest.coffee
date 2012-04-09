@@ -6,9 +6,9 @@ define [
   "use strict"
   
   $ = jQuery
-  class NodeGraphSpeedTest
+  class NodesSpeedTest
     constructor: (app) ->
-      ng = app.nodegraph
+      ng = app.nodes
       filehandler = app.file_handler
       app.clearWorkspace()
       

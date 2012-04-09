@@ -12,7 +12,7 @@ define [
       module "ThreeJsIntegrationTest"
       
       test "Scene node children", () ->
-        ng = app.nodegraph
+        ng = app.nodes
         app.clearWorkspace()
         n1 = ng.create_node("Scene")
         n2 = ng.create_node("Merge")
@@ -66,7 +66,7 @@ define [
         equals n5.fields.getField("postfx").getValue().length, 0, "Webgl.postfx array is empty"
         
       test "Camera -> object3d -> merge -> scene connection test (children array)", () ->
-        ng = app.nodegraph
+        ng = app.nodes
         app.clearWorkspace()
         
         n1 = ng.create_node("Scene")

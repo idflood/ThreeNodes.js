@@ -12,7 +12,7 @@ define [
       module "File"
       
       test "JSON loader", () ->
-        ng = app.nodegraph
+        ng = app.nodes
         filehandler = app.file_handler
         app.clearWorkspace()
         
@@ -31,7 +31,7 @@ define [
         filehandler.load_from_json_data(json_string1)
         
         ng.render()
-        equals ng.length, 2, "The 2 nodes are created in the nodegraph"
+        equals ng.length, 2, "The 2 nodes are created in the nodes collection"
         equals ng.connections.length, 1, "A connection has been created"
         equals ng.models[0].get("x"), 363, "node1.x has been set"
         equals ng.models[0].get("y"), 113, "node1.y has been set"
@@ -58,7 +58,7 @@ define [
         
         filehandler.load_from_json_data(json_string2)
         ng.render()
-        equals ng.length, 3, "The 3 nodes are created in the nodegraph"
+        equals ng.length, 3, "The 3 nodes are created in the nodes collection"
         equals ng.connections.length, 2, "2 connections has been created"
         equals ng.models[1].v_out.getValue(), 0.7, "node2.input has been set"
         equals ng.models[2].v_out.getValue(), 12, "node3.input has been set"
@@ -81,5 +81,5 @@ define [
         
         filehandler.load_from_json_data(json_string2)
         ng.render()
-        equals ng.length, 3, "The 3 nodes are created in the nodegraph"
+        equals ng.length, 3, "The 3 nodes are created in the nodes collection"
         equals ng.connections.length, 2, "2 connections has been created"

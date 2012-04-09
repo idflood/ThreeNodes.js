@@ -19,12 +19,14 @@ define [
       @init_el_click()
       @init_title_click()
       
+      # Initialize the fields view
       @fields_view = new ThreeNodes.NodeFieldRackView
         node: @model
         collection: @model.fields
         el: $(".options", @el)
         node_el: @$el
       
+      # Bind events
       @model.bind('change', @render)
       @model.bind('postInit', @postInit)
       @model.bind('remove', () => @remove())
@@ -32,9 +34,13 @@ define [
       @model.bind("node:renderConnections", @render_connections)
       @model.bind("node:showAnimations", @highlighAnimations)
       @model.bind("node:addSelectedClass", @addSelectedClass)
+      
+      # Render the node and "post init" the model
       @render()
       @model.post_init()
-      @
+      
+      # Add the node group name as a class to the node element for easier styling
+      @$el.addClass("type-" + @model.constructor.group_name)
     
     postInit: () =>
       @$el.data("object", @model)

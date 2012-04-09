@@ -67,7 +67,6 @@ _c = 100
   .options
     clearfix()
     width: 100%
-    margin-bottom: 3px
     .warning
       padding-top: 7px
   
@@ -116,15 +115,12 @@ _c = 100
   .outputs .inner-field span
     margin-left: field-label-padding
 
-//animation_color: $main_color
 animation_color = #f00
 .node-has-animation
   box-shadow(animation_color 0 0 1px inset)
 
 .has-animation
   color: animation_color
-
-
 
 
 .node-Group
@@ -141,6 +137,9 @@ animation_color = #f00
     text-align: right
 
 // base
+.type-Base
+  @extend .width-80
+
 .node-Number
   @extend .width-150
   @extend .ratio-25-50-25
@@ -148,12 +147,9 @@ animation_color = #f00
 .node-String
   @extend .width-150
   @extend .ratio-25-50-25
-  
-.node-Vector2, .node-Vector3
-  @extend .width-80
 
 // utils
-.node-Merge, .node-Get
+.type-Utils
   @extend .width-80
 
 .node-Random, .node-Timer
@@ -169,23 +165,20 @@ animation_color = #f00
   @extend .ratio-50-50
 
 // three.js related nodes
-.node-ThreeMesh, .node-Camera, .node-PointLight, .node-AmbientLight
+.type-Three, .type-Materials
+  @extend .width-200
+  @extend .ratio-80-20
+
+.node-ThreeMesh, .node-Camera, .node.node-Texture
   @extend .width-120
   @extend .ratio-80-20
 
-.node-SpotLight, .node-ColladaLoader, .node-MeshLambertMaterial, .node-MeshBasicMaterial, .node-MeshPhongMaterial, .node-CubeGeometry, .node-ParticleBasicMaterial, .node-LineBasicMaterial
-  @extend .width-200
+.type-Lights
+  @extend .width-150
   @extend .ratio-80-20
-
-.node-Object3D, .node-Mesh, .node-Scene, .node-CylinderGeometry, .node-ParticleSystem, .node-Line, .node-TextGeometry, .node-ParticlePool
-  @extend .width-200
 
 // postprocessing
-.node-BleachPass, .node-VignettePass
-  @extend .width-120
-  @extend .ratio-80-20
-
-.node-FilmPass
+.type-PostProcessing
   @extend .width-150
   @extend .ratio-80-20
 

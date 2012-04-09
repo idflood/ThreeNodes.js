@@ -12,7 +12,7 @@ define [
       module "File"
       
       test "JSON save", () ->
-        ng = app.nodegraph
+        ng = app.nodes
         filehandler = app.file_handler
         app.clearWorkspace()
         

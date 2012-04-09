@@ -6,7 +6,7 @@ define [
   "use strict"
   
   class ThreeNodes.Connection extends Backbone.Model
-    # Create a static indexer used if the connection is not part of a nodegraph (tests)
+    # Create a static indexer used if the connection is not part of a nodes collection (tests)
     @static_indexer: new Indexer()
     
     defaults:
