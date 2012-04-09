@@ -26,7 +26,7 @@ define [
           "rotation_b": {type: "Vector3", val: new THREE.Vector3()}
         outputs:
           "geometry": {type: "Any", val: @ob}
-      @cache = []
+      @cached = []
     
     comput_csg_geometry: (a, b) => a.union(b)
     
@@ -42,7 +42,7 @@ define [
     
     remove: =>
       delete @ob
-      delete @cache
+      delete @cached
       super
     
     compute: =>
@@ -54,13 +54,13 @@ define [
       rot_b = @fields.getField("rotation_b").getValue()
       new_cache = @get_cache_array()
       # todo: recompute if a or b change
-      if (a && b) && (Utils.flatArraysAreEquals(new_cache, @cache) == false)
+      if (a && b) && (Utils.flatArraysAreEquals(new_cache, @cached) == false)
         console.log "csg operation"
         csg_a = THREE.CSG.toCSG(a, pos_a, rot_a)
         csg_b = THREE.CSG.toCSG(b, pos_b, rot_b)
         csg_geom = @comput_csg_geometry(csg_a, csg_b)
         @ob = THREE.CSG.fromCSG(csg_geom)
-        @cache = new_cache
+        @cached = new_cache
       @fields.setField("geometry", @ob)
       
   class ThreeNodes.nodes.CsgUnion extends NodeCSG
