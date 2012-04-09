@@ -13,7 +13,7 @@ define [
       
       test "Basic math", () ->
         app.clearWorkspace()
-        ng = app.nodegraph
+        ng = app.nodes
         
         n1 = ng.create_node("Number")
         n2 = ng.create_node("Vector3")

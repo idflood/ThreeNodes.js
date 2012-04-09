@@ -42,13 +42,13 @@ define [
       # Initialize some core classes
       @url_handler = new ThreeNodes.UrlHandler()
       @group_definitions = new ThreeNodes.GroupDefinitions([])
-      @nodegraph = new ThreeNodes.NodeGraph([], {settings: settings})
+      @nodes = new ThreeNodes.NodesCollection([], {settings: settings})
       @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
       @webgl = new ThreeNodes.WebglBase()
-      @file_handler = new ThreeNodes.FileHandler(@nodegraph, @group_definitions)
+      @file_handler = new ThreeNodes.FileHandler(@nodes, @group_definitions)
       
       # Create views when a new node is created
-      @nodegraph.bind "add", (node) ->
+      @nodes.bind "add", (node) ->
         template = ThreeNodes.NodeView.template
         tmpl = _.template(template, node)
         $tmpl = $(tmpl).appendTo("#container")
@@ -56,7 +56,7 @@ define [
           model: node
           el: $tmpl
       
-      @group_definitions.bind "definition:created", @nodegraph.createGroup
+      @group_definitions.bind "definition:created", @nodes.createGroup
       
       # Create views if the application is not in test mode
       if @settings.test == false
@@ -72,7 +72,7 @@ define [
           view.render()
         
         # Create a connection view when a connection is created
-        @nodegraph.connections.bind "add", (connection) ->
+        @nodes.connections.bind "add", (connection) ->
           view = new ThreeNodes.ConnectionView
             model: connection
       
@@ -103,11 +103,11 @@ define [
           settings: @settings
         
         # Link UI to render events
-        @ui.on("render", @nodegraph.render)
-        @ui.on("renderConnections", @nodegraph.renderAllConnections)
+        @ui.on("render", @nodes.render)
+        @ui.on("renderConnections", @nodes.renderAllConnections)
         
         # Setup the main menu events
-        @ui.menubar.on("RmoveSelectedNodes", @nodegraph.removeSelectedNodes)
+        @ui.menubar.on("RmoveSelectedNodes", @nodes.removeSelectedNodes)
         @ui.menubar.on("ClearWorkspace", @clearWorkspace)
         @ui.menubar.on("SaveFile", @file_handler.save_local_file)
         @ui.menubar.on("ExportCode", @file_handler.export_code)
@@ -117,8 +117,8 @@ define [
         @ui.menubar.on("GroupSelectedNodes", @group_definitions.groupSelectedNodes)
         
         # Special events
-        @ui.on("CreateNode", @nodegraph.create_node)
-        @nodegraph.on("nodeslist:rebuild", @ui.onNodeListRebuild)
+        @ui.on("CreateNode", @nodes.create_node)
+        @nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
         @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
       else
         # If the application is in test mode add a css class to the body
@@ -131,7 +131,7 @@ define [
       
       # Cleanup the old timeline if there was one
       if @timelineView
-        @nodegraph.off("remove", @timelineView.onNodeRemove)
+        @nodes.off("remove", @timelineView.onNodeRemove)
         @timelineView.remove()
         if @ui
           @timelineView.off("TimelineCreated", @ui.on_ui_window_resize)
@@ -142,8 +142,8 @@ define [
         ui: @ui
       
       # Bind events to it
-      @nodegraph.bindTimelineEvents(@timelineView)
-      @nodegraph.on("remove", @timelineView.onNodeRemove)
+      @nodes.bindTimelineEvents(@timelineView)
+      @nodes.on("remove", @timelineView.onNodeRemove)
       if @ui then @ui.on_ui_window_resize()
       
       return this
@@ -152,7 +152,7 @@ define [
       if @ui then @ui.setDisplayMode(is_player)
     
     clearWorkspace: () =>
-      @nodegraph.clearWorkspace()
+      @nodes.clearWorkspace()
       @group_definitions.removeAll()
       if @ui then @ui.clearWorkspace()
       @initTimeline()

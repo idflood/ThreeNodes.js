@@ -16,7 +16,7 @@ define [
       res += "\n\n"
       res += '"use strict";\n'
       res += "var app = new App();\n"
-      res += "var nodegraph = app.nodegraph;\n\n"
+      res += "var nodes = app.nodes;\n\n"
       res += "//\n"
       res += "// nodes\n"
       res += "//\n"
@@ -69,7 +69,7 @@ define [
       res += "\t" + "fields: #{fields_to_code(node.fields)},\n"
       res += "\t" + "anim: #{anim_to_code(node.anim)}\n"
       res += "};\n"
-      res += "var node_#{node.nid} = nodegraph.create_node(node_#{node.nid}_data);\n"
+      res += "var node_#{node.nid} = nodes.create_node(node_#{node.nid}_data);\n"
       return res
     
     connectionToCode: (connection) ->
@@ -78,5 +78,5 @@ define [
       res += "\t" + "from_node: #{connection.from_node}, from: '#{connection.from}',\n"
       res += "\t" + "to_node: #{connection.to_node}, to: '#{connection.to}'\n"
       res += "};\n"
-      res += "var connection_#{connection.id} = nodegraph.createConnectionFromObject(connection_#{connection.id}_data);\n"
+      res += "var connection_#{connection.id} = nodes.createConnectionFromObject(connection_#{connection.id}_data);\n"
       res

@@ -61,12 +61,12 @@ define [
       # Start main render loop
       @animate()
     
-    onNodeListRebuild: (nodegraph) =>
+    onNodeListRebuild: (nodes) =>
       if @timeoutId
         clearTimeout(@timeoutId)
       # add a little delay since the event is fired multiple time on file load
       onTimeOut = () =>
-        @sidebar.render(nodegraph)
+        @sidebar.render(nodes)
       @timeoutId = setTimeout(onTimeOut, 10)
     
     initDrop: () =>

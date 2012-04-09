@@ -11,7 +11,7 @@ define [
     constructor: (app) ->
       module "Group test"
       filehandler = app.file_handler
-      ng = app.nodegraph
+      ng = app.nodes
       
       test "Basic group", () ->
         app.clearWorkspace()

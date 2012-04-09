@@ -23,7 +23,7 @@ require [
   'use!Underscore',
   'use!Backbone',
   "order!libs/JSLitmus",
-], (App, NodeGraphSpeedTest) ->
+], (App, NodesSpeedTest) ->
   "use strict"
   app = new App
     test: true

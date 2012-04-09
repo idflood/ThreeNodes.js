@@ -23,8 +23,8 @@ define [
       # Save the group definition reference
       @definition = options.definition
       
-      # A group contains a sub-nodegraph (nodes)
-      @subgraph = new ThreeNodes.NodeGraph([], {settings: @settings})
+      # A group contains a sub-nodes (nodes)
+      @subgraph = new ThreeNodes.NodesCollection([], {settings: @settings})
       
       # Create the subnodes
       for node in @definition.get("nodes")
@@ -56,7 +56,7 @@ define [
     remove: () =>
       if @subgraph
         @subgraph.removeAll()
-        # todo: create a destroy method and properly clean the sub-nodegraph
+        # todo: create a destroy method and properly clean the sub-nodes
         delete @subgraph
       delete @definition
       super
