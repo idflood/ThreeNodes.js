@@ -19,7 +19,7 @@ require.config
 
 require [
   'order!threenodes/App',
-  'speedtests/NodeGraphSpeedTest',
+  'speedtests/NodesSpeedTest',
   'use!Underscore',
   'use!Backbone',
   "order!libs/JSLitmus",
@@ -27,4 +27,4 @@ require [
   "use strict"
   app = new App
     test: true
-  new NodeGraphSpeedTest(app)
+  new NodesSpeedTest(app)
