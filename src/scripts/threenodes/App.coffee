@@ -16,8 +16,8 @@ define [
   'order!threenodes/collections/GroupDefinitions',
   'order!threenodes/views/UI',
   'order!threenodes/views/Timeline',
-  'order!threenodes/views/NodeView',
   'order!threenodes/views/GroupDefinitionView',
+  'order!threenodes/views/Workspace',
   'order!threenodes/utils/AppWebsocket',
   'order!threenodes/utils/FileHandler',
   'order!threenodes/utils/UrlHandler',
@@ -47,15 +47,6 @@ define [
       @webgl = new ThreeNodes.WebglBase()
       @file_handler = new ThreeNodes.FileHandler(@nodes, @group_definitions)
       
-      # Create views when a new node is created
-      @nodes.bind "add", (node) ->
-        template = ThreeNodes.NodeView.template
-        tmpl = _.template(template, node)
-        $tmpl = $(tmpl).appendTo("#container")
-        view = new ThreeNodes.NodeView
-          model: node
-          el: $tmpl
-      
       # Create a group node when selected nodes are grouped
       @group_definitions.bind "definition:created", @nodes.createGroup
       
@@ -74,11 +65,6 @@ define [
             model: definition
             el: $tmpl
           view.render()
-        
-        # Create a connection view when a connection is created
-        @nodes.connections.bind "add", (connection) ->
-          view = new ThreeNodes.ConnectionView
-            model: connection
       
       # File and url events
       @file_handler.on("ClearWorkspace", () => @clearWorkspace())
@@ -88,6 +74,11 @@ define [
       # Initialize the user interface and timeline
       @initUI()
       @initTimeline()
+      
+      # Initialize the workspace view
+      @workspace = new ThreeNodes.Workspace()
+      # Make the workspace display the global nodes and connections
+      @workspace.render(@nodes)
       
       # Start the url handling
       # 

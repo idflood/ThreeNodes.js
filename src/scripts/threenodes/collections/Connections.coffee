@@ -2,7 +2,6 @@ define [
   'use!Underscore', 
   'use!Backbone',
   'order!threenodes/models/Connection',
-  'order!threenodes/views/ConnectionView',
 ], (_, Backbone) ->
   "use strict"
   
