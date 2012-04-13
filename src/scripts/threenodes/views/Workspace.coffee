@@ -35,16 +35,13 @@ define [
       @nodes.connections.bind("add", @renderConnection)
     
     renderNode: (node) =>
-      template = ThreeNodes.NodeView.template
-      tmpl = _.template(template, node)
-      $tmpl = $(tmpl).appendTo(@$el)
       view = new ThreeNodes.NodeView
         model: node
-        el: $tmpl
+      
+      view.$el.appendTo(@$el)
       @views.push(view)
     
     renderConnection: (connection) =>
-      console.log connection
       view = new ThreeNodes.ConnectionView
         model: connection
       @views.push(view)

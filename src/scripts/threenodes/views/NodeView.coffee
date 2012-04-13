@@ -12,9 +12,13 @@ define [
   $ = jQuery
   
   class ThreeNodes.NodeView extends Backbone.View
-    @template = _view_node_template
-        
-    initialize: () ->
+    className: "node"
+      
+    initialize: (options) ->
+      # Setup the view DOM element
+      @makeElement()
+      
+      # Initialize mouse events
       @make_draggable()
       @init_el_click()
       @init_title_click()
@@ -23,7 +27,7 @@ define [
       @fields_view = new ThreeNodes.FieldsView
         node: @model
         collection: @model.fields
-        el: $(".options", @el)
+        el: $(".options", @$el)
         node_el: @$el
       
       # Bind events
@@ -38,20 +42,30 @@ define [
       # Render the node and "post init" the model
       @render()
       @model.post_init()
+    
+    makeElement: () =>
+      # Compile the template file
+      @template = _.template(_view_node_template, @model)
+      @$el.html(@template)
       
       # Add the node group name as a class to the node element for easier styling
       @$el.addClass("type-" + @model.constructor.group_name)
-    
-    postInit: () =>
-      @$el.data("object", @model)
-      @init_context_menu()
+      
+      # Add other dynamic classes
+      @$el.addClass("node-" + @model.typename())
     
     render: () =>
+      # Save the nid and model in the data attribute
+      @$el.data("nid", @model.get("nid"))
+      @$el.data("object", @model)
+      
       @$el.css
         left: parseInt @model.get("x")
         top: parseInt @model.get("y")
       $(".head span", @$el).text(@model.get("name"))
       $(".head span", @$el).show()
+      
+      @init_context_menu()
       @
     
     init_context_menu: () ->
