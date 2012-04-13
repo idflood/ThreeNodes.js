@@ -56,7 +56,7 @@ define [
       # Create views if the application is not in test mode
       if @settings.test == false
         # Create group definition views when a new one is created
-        @group_definitions.bind "add", (definition) ->
+        @group_definitions.bind "add", (definition) =>
           template = ThreeNodes.GroupDefinitionView.template
           tmpl = _.template(template, definition)
           $tmpl = $(tmpl).appendTo("#library")
@@ -64,6 +64,7 @@ define [
           view = new ThreeNodes.GroupDefinitionView
             model: definition
             el: $tmpl
+          view.bind "edit", @setWorkspaceFromDefinition
           view.render()
       
       # File and url events
@@ -76,7 +77,8 @@ define [
       @initTimeline()
       
       # Initialize the workspace view
-      @workspace = new ThreeNodes.Workspace()
+      @workspace = new ThreeNodes.Workspace
+        el: "#container"
       # Make the workspace display the global nodes and connections
       @workspace.render(@nodes)
       
@@ -89,6 +91,14 @@ define [
         pushState: false
       
       return true
+    
+    setWorkspaceFromDefinition: (definition) =>
+      # create a hidden temporary group node from this definition
+      @edit_node = @nodes.createGroup
+        type: "Group"
+        definition: definition
+        x: -9999
+      @workspace.render(@edit_node.nodes)
     
     initUI: () =>
       if @settings.test == false

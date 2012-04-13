@@ -24,17 +24,16 @@ define [
       @definition = options.definition
       
       # A group contains a sub-nodes (nodes)
-      @subgraph = new ThreeNodes.NodesCollection([], {settings: @settings})
+      @nodes = new ThreeNodes.NodesCollection([], {settings: @settings})
       
       # Create the subnodes
       for node in @definition.get("nodes")
-        n = @subgraph.create_node(node)
+        n = @nodes.create_node(node)
         n.post_init()
       
       # Recreate the connections between internal subnodes
       for connection in @definition.get("connections")
-        @subgraph.createConnectionFromObject(connection)
-      
+        @nodes.createConnectionFromObject(connection)
     
     toJSON: () =>
       res =
@@ -50,23 +49,23 @@ define [
       res
     
     set_fields: =>
-      @fields.createNodesProxyFields(@subgraph.models)
+      @fields.createNodesProxyFields(@nodes.models)
       return this
     
     remove: () =>
-      if @subgraph
-        @subgraph.removeAll()
+      if @nodes
+        @nodes.removeAll()
         # todo: create a destroy method and properly clean the sub-nodes
-        delete @subgraph
+        delete @nodes
       delete @definition
       super
     
     compute: =>
-      if !@subgraph then return false
+      if !@nodes then return false
       # Since we are using proxy fields the upstream nodes are 'automatically' handled.
       # For inputs we simply need to copy value from fields to subfield (proxy->field)
       # For outputs we copy subfield value to the field (field->proxy)
       # The value propagation is directly handled in field.setValue
-      @subgraph.render()
+      @nodes.render()
       return this
   

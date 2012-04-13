@@ -17,12 +17,13 @@ define [
       @node = options.node
       @node_el = options.node_el
       
-      @collection.bind("addCenterTextfield", (field) => @addCenterTextfield(field))
+      @collection.bind("addCenterTextfield", @addCenterTextfield)
       @collection.bind("addCustomHtml", @addCustomHtml)
-      @collection.bind("add", (field) => @onFieldCreated(field))
+      @collection.bind("add", @onFieldCreated)
     
     # Create the field dom element and add events to it
     onFieldCreated: (field) =>
+      console.log "create button"
       target = if field.get("is_output") == false then ".inputs" else ".outputs"
       el = $(field.render_button()).appendTo($(target, @$el))
       @add_field_listener(el)

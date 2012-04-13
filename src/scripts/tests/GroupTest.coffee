@@ -35,7 +35,7 @@ define [
         equals ng.length, 1, "There is one group node"
         equals app.group_definitions.length, 1, "There is one group definition"
         grp = ng.models[0]
-        equals grp.subgraph.length, 3, "The group node has 3 subnodes"
+        equals grp.nodes.length, 3, "The group node has 3 subnodes"
         
         nbr_in1 = grp.fields.inputs["in-1"]
         mult_out1 = grp.fields.outputs["out-12"]
@@ -72,7 +72,7 @@ define [
         equals ng.length, 4, "There is two group nodes + two external node"
         equals ng.connections.length, 2, "There is only two connections (without subconnections)"
         grp2 = ng.models[3]
-        equals grp2.subgraph.length, 3, "The group2 has 3 subnodes"
+        equals grp2.nodes.length, 3, "The group2 has 3 subnodes"
         
         nbr_in2 = grp2.fields.inputs["in-1"]
         mult_out2 = grp2.fields.outputs["out-12"]
@@ -117,7 +117,7 @@ define [
         grp = ng.models[0]
         node_number_out = ng.models[2]
         grp2 = ng.models[3]
-        equals grp.subgraph.length, 3, "The group node has 3 subnodes"
+        equals grp.nodes.length, 3, "The group node has 3 subnodes"
         
         # Verify the output values of the group nodes
         nbr_in1 = grp.fields.inputs["in-1"]

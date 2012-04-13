@@ -29,7 +29,7 @@ define [
       # Trigger edit/remove events when these buttons are clicked
       $(".edit", @$el).click (e) =>
         e.preventDefault()
-        @trigger("definition:edit")
+        @trigger("edit", @model)
       
       $(".remove", @$el).click (e) =>
         e.preventDefault()

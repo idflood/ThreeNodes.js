@@ -47,7 +47,7 @@ define [
         onPlay: (time) => @trigger("startSound", time)
       
       Timeline.globalInstance = @timeline
-      console.log "new timeline"
+      
       @timeline.loop(-1)
       @time = 0
       

@@ -18,12 +18,6 @@ define [
       @internal_uid += 1
       return @internal_uid
     
-    destroy: () =>
-      # Get all group nodes using this definition
-      
-      # Remove existing group nodes
-      super
-    
     initialize: (options) =>
       super
       @internal_uid = 0

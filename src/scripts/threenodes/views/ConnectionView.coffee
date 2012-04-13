@@ -18,10 +18,8 @@ define [
         fill: "none"
       # set the dom element
       @el = @line.node
-      @model.bind "render", () =>
-        @render()
-      @model.bind "destroy", () =>
-        @remove()
+      @model.bind "render", @render
+      @model.bind "destroy", @remove
       @render()
       @
     
@@ -39,9 +37,12 @@ define [
     
     get_field_position: (field) ->
       if !field.button
+        console.log "no button"
+        console.log field
         return {left: 0, top: 0}
       o1 = $(".inner-field span", field.button).offset()
       if !o1
+        console.log "no o1"
         return {left: 0, top: 0}
       diff = 3
       o1.top += diff
@@ -49,8 +50,12 @@ define [
       return o1
     
     get_path: () ->
+      console.log "path.."
+      console.log @model.from_field
+      console.log @model.from_field.button
       f1 = @get_field_position(@model.from_field)
       f2 = @get_field_position(@model.to_field)
+      
       offset = $("#container-wrapper").offset()
       ofx = $("#container-wrapper").scrollLeft() - offset.left
       ofy = $("#container-wrapper").scrollTop() - offset.top
@@ -68,5 +73,4 @@ define [
       y3 = y4
       
       ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
-    
     
