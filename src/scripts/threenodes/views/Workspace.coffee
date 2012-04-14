@@ -11,6 +11,7 @@ define [
     initialize: (options) =>
       super
       @views = []
+      @settings = options.settings
     
     render: (nodes) =>
       # Remove all existing views before displaying new ones
@@ -46,6 +47,8 @@ define [
       @views.push(view)
     
     renderConnection: (connection) =>
+      if @settings.test == true
+        return false
       view = new ThreeNodes.ConnectionView
         model: connection
       @views.push(view)
