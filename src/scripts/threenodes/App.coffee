@@ -70,7 +70,7 @@ define [
       # File and url events
       @file_handler.on("ClearWorkspace", () => @clearWorkspace())
       @url_handler.on("ClearWorkspace", () => @clearWorkspace())
-      @url_handler.on("LoadJSON", @file_handler.load_from_json_data)
+      @url_handler.on("LoadJSON", @file_handler.loadFromJsonData)
       
       # Initialize the user interface and timeline
       @initUI()
@@ -114,15 +114,15 @@ define [
         # Setup the main menu events
         @ui.menubar.on("RmoveSelectedNodes", @nodes.removeSelectedNodes)
         @ui.menubar.on("ClearWorkspace", @clearWorkspace)
-        @ui.menubar.on("SaveFile", @file_handler.save_local_file)
-        @ui.menubar.on("ExportCode", @file_handler.export_code)
-        @ui.menubar.on("LoadJSON", @file_handler.load_from_json_data)
-        @ui.menubar.on("LoadFile", @file_handler.load_local_file)
+        @ui.menubar.on("SaveFile", @file_handler.saveLocalFile)
+        @ui.menubar.on("ExportCode", @file_handler.exportCode)
+        @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
+        @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
         @ui.menubar.on("ExportImage", @webgl.exportImage)
         @ui.menubar.on("GroupSelectedNodes", @group_definitions.groupSelectedNodes)
         
         # Special events
-        @ui.on("CreateNode", @nodes.create_node)
+        @ui.on("CreateNode", @nodes.createNode)
         @nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
         @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
       else
@@ -139,7 +139,7 @@ define [
         @nodes.off("remove", @timelineView.onNodeRemove)
         @timelineView.remove()
         if @ui
-          @timelineView.off("TimelineCreated", @ui.on_ui_window_resize)
+          @timelineView.off("TimelineCreated", @ui.onUiWindowResize)
       
       # Create a new timeline
       @timelineView = new ThreeNodes.AppTimeline
@@ -149,7 +149,7 @@ define [
       # Bind events to it
       @nodes.bindTimelineEvents(@timelineView)
       @nodes.on("remove", @timelineView.onNodeRemove)
-      if @ui then @ui.on_ui_window_resize()
+      if @ui then @ui.onUiWindowResize()
       
       return this
     

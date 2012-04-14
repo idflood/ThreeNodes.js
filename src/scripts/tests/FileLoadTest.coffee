@@ -17,18 +17,18 @@ define [
         app.clearWorkspace()
         
         # test with two number nodes connected
-        n1 = ng.create_node({type: "Number", x: 363, y: 113})
-        n2 = ng.create_node("Number")
+        n1 = ng.createNode({type: "Number", x: 363, y: 113})
+        n2 = ng.createNode("Number")
         c1 = ng.connections.create
           from_field: n1.v_out
           to_field: n2.v_in
         n1.v_in.setValue 4
         ng.render()
         
-        json_string1 = filehandler.get_local_json()
+        json_string1 = filehandler.getLocalJson()
         app.clearWorkspace()
         
-        filehandler.load_from_json_data(json_string1)
+        filehandler.loadFromJsonData(json_string1)
         
         ng.render()
         equals ng.length, 2, "The 2 nodes are created in the nodes collection"
@@ -40,9 +40,9 @@ define [
         
         app.clearWorkspace()
         # test with a vector3 object instead of only float
-        n1 = ng.create_node("Vector3")
-        n2 = ng.create_node("Number")
-        n3 = ng.create_node("Number")
+        n1 = ng.createNode("Vector3")
+        n2 = ng.createNode("Number")
+        n3 = ng.createNode("Number")
         c1 = ng.connections.create
           from_field: n1.fields.getField("x", true)
           to_field: n2.v_in
@@ -53,10 +53,10 @@ define [
         n1.fields.getField("y").setValue(12)
         ng.render()
         
-        json_string2 = filehandler.get_local_json()
+        json_string2 = filehandler.getLocalJson()
         app.clearWorkspace()
         
-        filehandler.load_from_json_data(json_string2)
+        filehandler.loadFromJsonData(json_string2)
         ng.render()
         equals ng.length, 3, "The 3 nodes are created in the nodes collection"
         equals ng.connections.length, 2, "2 connections has been created"
@@ -65,9 +65,9 @@ define [
         
         # possible issue with mesh (mesh.geometry undefined)
         app.clearWorkspace()
-        n1 = ng.create_node("Scene")
-        n2 = ng.create_node("Merge")
-        n3 = ng.create_node("ThreeMesh")
+        n1 = ng.createNode("Scene")
+        n2 = ng.createNode("Merge")
+        n3 = ng.createNode("ThreeMesh")
         c1 = ng.connections.create
           from_field: n2.fields.getField("out", true)
           to_field: n1.fields.getField("children")
@@ -76,10 +76,10 @@ define [
           to_field: n2.fields.getField("in0")
         ng.render()
         
-        json_string2 = filehandler.get_local_json()
+        json_string2 = filehandler.getLocalJson()
         app.clearWorkspace()
         
-        filehandler.load_from_json_data(json_string2)
+        filehandler.loadFromJsonData(json_string2)
         ng.render()
         equals ng.length, 3, "The 3 nodes are created in the nodes collection"
         equals ng.connections.length, 2, "2 connections has been created"

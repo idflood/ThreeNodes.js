@@ -15,9 +15,9 @@ define [
         app.clearWorkspace()
         ng = app.nodes
         
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("Vector3")
-        node_mult = ng.create_node("MathMult")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("Vector3")
+        node_mult = ng.createNode("MathMult")
         
         n1.v_in.setValue 2
         node_mult.fields.getField("factor").setValue(3)

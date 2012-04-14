@@ -13,7 +13,7 @@ define [
     @node_name = 'Number'
     @group_name = 'Base'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.add_center_textfield(@v_in)
   
@@ -25,7 +25,7 @@ define [
       super
       @value = true
       
-    set_fields: =>
+    setFields: =>
       @fields.addFields
         inputs:
           "bool": true
@@ -43,7 +43,7 @@ define [
       super
       @value = ""
       
-    set_fields: =>
+    setFields: =>
       @fields.addFields
         inputs:
           "string": ""
@@ -59,7 +59,7 @@ define [
     @node_name = 'Vector2'
     @group_name = 'Base'
     
-    set_fields: =>
+    setFields: =>
       super
       @vec = new THREE.Vector2(0, 0)
       @fields.addFields
@@ -94,7 +94,7 @@ define [
     @node_name = 'Vector3'
     @group_name = 'Base'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -160,7 +160,7 @@ define [
       delete @$picker_el
       super
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:

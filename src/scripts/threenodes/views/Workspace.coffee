@@ -39,6 +39,10 @@ define [
         model: node
       
       view.$el.appendTo(@$el)
+      
+      # Save the nid and model in the data attribute
+      view.$el.data("nid", node.get("nid"))
+      view.$el.data("object", node)
       @views.push(view)
     
     renderConnection: (connection) =>

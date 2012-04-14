@@ -14,8 +14,8 @@ define [
       test "Basic connection", () ->
         app.clearWorkspace()
         ng = app.nodes
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("Number")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("Number")
         c1 = ng.connections.create
           from_field: n1.v_out
           to_field: n2.v_in
@@ -39,7 +39,7 @@ define [
         ng.render()
         equals n2.v_out.getValue(), 0.8, "Node2 value didn't change if there is no connection"
         
-        n3 = ng.create_node("Number")
+        n3 = ng.createNode("Number")
         c1 = ng.connections.add
           from_field: n1.v_out
           to_field: n2.v_in
@@ -52,7 +52,7 @@ define [
         equals n3.v_out.getValue(), 0.7, "Multiple output connection propagated 2/2"
         
         # try to connect two outputs to one input (only the last one should be valid, the first removed)
-        n4 = ng.create_node("Number")
+        n4 = ng.createNode("Number")
         c3 = ng.connections.add
           from_field: n4.v_out
           to_field: n3.v_in
@@ -65,8 +65,8 @@ define [
         app.clearWorkspace()
         ng = app.nodes
         
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("ThreeMesh")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("ThreeMesh")
         ng.render()
         
         old_val = n2.fields.getField("geometry").getValue()
@@ -92,8 +92,8 @@ define [
         app.clearWorkspace()
         ng = app.nodes
         
-        n1 = ng.create_node("Number")
-        n3 = ng.create_node("Scene")
+        n1 = ng.createNode("Number")
+        n3 = ng.createNode("Scene")
         equals $.type(n3.ob.children), "array", "Scene.children is by default an empty array"
         c2 = ng.connections.create
           from_field: n1.v_out
@@ -108,8 +108,8 @@ define [
         app.clearWorkspace()
         ng = app.nodes
         
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("Number")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("Number")
         # connect node in reverse order (from input to output)
         c1 = ng.connections.create
           from_field: n2.v_in
@@ -123,8 +123,8 @@ define [
         app.clearWorkspace()
         ng = app.nodes
         
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("Number")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("Number")
         # connect an input to another input
         c1 = ng.connections.create
           from_field: n1.v_in
@@ -138,7 +138,7 @@ define [
         app.clearWorkspace()
         ng = app.nodes
         
-        n1 = ng.create_node("Number")
+        n1 = ng.createNode("Number")
         # connect an input to another input
         c1 = ng.connections.create
           from_field: n1.v_out
@@ -153,10 +153,10 @@ define [
         app.clearWorkspace()
         ng = app.nodes
         
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("Number")
-        node_mult = ng.create_node("MathMult")
-        node_merge = ng.create_node("Merge")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("Number")
+        node_mult = ng.createNode("MathMult")
+        node_merge = ng.createNode("Merge")
         c1 = ng.connections.create
           from_field: n1.v_out
           to_field: node_merge.fields.getField("in0")
@@ -180,10 +180,10 @@ define [
         
         # verify Vector3 support spreads
         app.clearWorkspace()
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("Number")
-        node_vec = ng.create_node("Vector3")
-        node_merge = ng.create_node("Merge")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("Number")
+        node_vec = ng.createNode("Vector3")
+        node_merge = ng.createNode("Merge")
         c1 = ng.connections.create
           from_field: n1.v_out
           to_field: node_merge.fields.getField("in0")
@@ -205,10 +205,10 @@ define [
         
         # mesh should duplicate itself
         app.clearWorkspace()
-        meshNode = ng.create_node("ThreeMesh")
-        node_merge = ng.create_node("Merge")
-        nvec1 = ng.create_node("Vector3")
-        nvec2 = ng.create_node("Vector3")
+        meshNode = ng.createNode("ThreeMesh")
+        node_merge = ng.createNode("Merge")
+        nvec1 = ng.createNode("Vector3")
+        nvec2 = ng.createNode("Vector3")
         c1 = ng.connections.create
           from_field: nvec1.fields.getField("xyz", true)
           to_field: node_merge.fields.getField("in0")

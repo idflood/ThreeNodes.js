@@ -14,9 +14,9 @@ define [
       test "Scene node children", () ->
         ng = app.nodes
         app.clearWorkspace()
-        n1 = ng.create_node("Scene")
-        n2 = ng.create_node("Merge")
-        n3 = ng.create_node("ThreeMesh")
+        n1 = ng.createNode("Scene")
+        n2 = ng.createNode("Merge")
+        n3 = ng.createNode("ThreeMesh")
         c1 = ng.connections.create
           from_field: n2.fields.getField("out", true)
           to_field: n1.fields.getField("children")
@@ -31,7 +31,7 @@ define [
         equals n1.ob.children.length, 0, "The mesh has been removed from the scene children"
         
         # recreate the connection and add one extra mesh
-        n4 = ng.create_node("ThreeMesh")
+        n4 = ng.createNode("ThreeMesh")
         c2 = ng.connections.create
           from_field: n3.fields.getField("out", true)
           to_field: n2.fields.getField("in0")
@@ -47,7 +47,7 @@ define [
         equals n1.ob.children.length, 0, "The Three.scene has 0 child"
         
         # mesh default material and color
-        meshNode = ng.create_node("ThreeMesh")
+        meshNode = ng.createNode("ThreeMesh")
         mesh = meshNode.ob
         ng.render()
         equals mesh[0].material.constructor, THREE.MeshBasicMaterial, "Mesh default material is a MeshBasicMaterial"
@@ -56,7 +56,7 @@ define [
         equals mesh[0].material.color.b, 0, "Mesh default material is red (3/3)"
         
         # webgl
-        n5 = ng.create_node("WebGLRenderer")
+        n5 = ng.createNode("WebGLRenderer")
         c4 = ng.connections.create
           from_field: n1.fields.getField("out", true)
           to_field: n5.fields.getField("scene")
@@ -69,11 +69,11 @@ define [
         ng = app.nodes
         app.clearWorkspace()
         
-        n1 = ng.create_node("Scene")
-        n2 = ng.create_node("Merge")
-        node_object3d = ng.create_node("Object3D")
-        node_camera = ng.create_node("Camera")
-        node_webgl = ng.create_node("WebGLRenderer")
+        n1 = ng.createNode("Scene")
+        n2 = ng.createNode("Merge")
+        node_object3d = ng.createNode("Object3D")
+        node_camera = ng.createNode("Camera")
+        node_webgl = ng.createNode("WebGLRenderer")
         
         # scene -> webglrenderer.scene
         ng.connections.create

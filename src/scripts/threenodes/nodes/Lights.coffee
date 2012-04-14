@@ -12,7 +12,7 @@ define [
     @node_name = 'PointLight'
     @group_name = 'Lights'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.PointLight(0xffffff)
@@ -31,14 +31,14 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.SpotLight extends ThreeNodes.NodeBase
     @node_name = 'SpotLight'
     @group_name = 'Lights'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.SpotLight(0xffffff)
@@ -68,14 +68,14 @@ define [
     compute: =>
       if @fields.getField("castShadow").getValue() != @ob.castShadow
         @trigger("RebuildAllShaders")
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.DirectionalLight extends ThreeNodes.NodeBase
     @node_name = 'DirectionalLight'
     @group_name = 'Lights'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.DirectionalLight(0xffffff)
@@ -94,14 +94,14 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.AmbientLight extends ThreeNodes.NodeBase
     @node_name = 'AmbientLight'
     @group_name = 'Lights'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.AmbientLight(0xffffff)
@@ -118,5 +118,5 @@ define [
       super
     
     compute: =>
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)

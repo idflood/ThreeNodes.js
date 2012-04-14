@@ -12,7 +12,7 @@ define [
   $ = jQuery
   
   class NodeCSG extends ThreeNodes.NodeBase
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = false

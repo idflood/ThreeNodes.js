@@ -9,7 +9,7 @@ define [
   $ = jQuery
   
   class ThreeNodes.NodeMaterialBase extends ThreeNodes.NodeBase
-    set_fields: =>
+    setFields: =>
       super
       @ob = false
       @auto_evaluate = true
@@ -55,7 +55,7 @@ define [
     compute: =>
       needs_rebuild = false
       numItems = @fields.getMaxInputSliceCount()
-      if @input_value_has_changed(@vars_rebuild_shader_on_change) || @last_slice_count != numItems
+      if @inputValueHasChanged(@vars_rebuild_shader_on_change) || @last_slice_count != numItems
         needs_rebuild = true
       
       if needs_rebuild == true
@@ -63,8 +63,8 @@ define [
         for i in [0..numItems]
           @ob[i] = new @material_class()
       for i in [0..numItems]
-        @apply_fields_to_val(@fields.inputs, @ob[i], [], i)
-      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+        @applyFieldsToVal(@fields.inputs, @ob[i], [], i)
+      @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
       
       @last_slice_count = numItems
       @fields.setField("out", @ob)
@@ -73,7 +73,7 @@ define [
     @node_name = 'MeshBasic'
     @group_name = 'Materials'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = []
       @material_class = THREE.MeshBasicMaterial
@@ -91,13 +91,13 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
   class ThreeNodes.nodes.LineBasicMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'LineBasic'
     @group_name = 'Materials'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = []
       @material_class = THREE.LineBasicMaterial
@@ -108,13 +108,13 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
-      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
   class ThreeNodes.nodes.MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'MeshLambert'
     @group_name = 'Materials'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = []
       @material_class = THREE.MeshLambertMaterial
@@ -132,13 +132,13 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
   class ThreeNodes.nodes.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'MeshPhong'
     @group_name = 'Materials'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = []
       @material_class = THREE.MeshPhongMaterial
@@ -158,4 +158,4 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)

@@ -12,7 +12,7 @@ define [
     @node_name = 'Plane'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1)
@@ -38,14 +38,14 @@ define [
       new_cache = @get_cache_array()
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.PlaneGeometry(@fields.getField("width").getValue(), @fields.getField("height").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue())
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.CubeGeometry extends ThreeNodes.NodeBase
     @node_name = 'Cube'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
@@ -74,14 +74,14 @@ define [
       new_cache = @get_cache_array()
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.CubeGeometry(@fields.getField("width").getValue(), @fields.getField("height").getValue(), @fields.getField("depth").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue(), @fields.getField("segments_depth").getValue(), @fields.getField("flip").getValue())
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.SphereGeometry extends ThreeNodes.NodeBase
     @node_name = 'Sphere'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.SphereGeometry(100, 20, 20)
@@ -107,14 +107,14 @@ define [
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.SphereGeometry(@fields.getField("radius").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue())
         @cached = new_cache
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.CylinderGeometry extends ThreeNodes.NodeBase
     @node_name = 'Cylinder'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false)
@@ -151,14 +151,14 @@ define [
           @fields.getField("segmentsRadius").getValue(), @fields.getField("segmentsHeight").getValue(), @fields.getField("openEnded").getValue()
         )
         @cached = new_cache
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.TorusGeometry extends ThreeNodes.NodeBase
     @node_name = 'Torus'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2)
@@ -192,14 +192,14 @@ define [
           @fields.getField("segmentsT").getValue(), @fields.getField("arc").getValue()
         )
         @cached = new_cache
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.TorusKnotGeometry extends ThreeNodes.NodeBase
     @node_name = 'TorusKnot'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.TorusKnotGeometry(200, 40, 64, 8, 2, 3, 1)
@@ -235,14 +235,14 @@ define [
           @fields.getField("segmentsT").getValue(), @fields.getField("p").getValue(), @fields.getField("q").getValue(), @fields.getField("heightScale").getValue()
         )
         @cached = new_cache
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.OctahedronGeometry extends ThreeNodes.NodeBase
     @node_name = 'Octahedron'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.OctahedronGeometry(100, 0)
@@ -267,14 +267,14 @@ define [
       if Utils.flatArraysAreEquals(new_cache, @cached) == false
         @ob = new THREE.OctahedronGeometry(@fields.getField("radius").getValue(), @fields.getField("detail").getValue())
         @cached = new_cache
-      @apply_fields_to_val(@fields.inputs, @ob)
+      @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
   class ThreeNodes.nodes.TextGeometry extends ThreeNodes.NodeBase
     @node_name = 'Text'
     @group_name = 'Geometry'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = false
       

@@ -18,7 +18,7 @@ define [
         try
           socket = new webso("ws://localhost:8080/p5websocket")
           socket.onmessage = (data) ->
-            self.on_websocket_message(data)
+            self.onWebsocketMessage(data)
             
           socket.onerror = () ->
             console.log 'socket close'
@@ -27,6 +27,6 @@ define [
           console.log e
         true
     
-    on_websocket_message: (data) =>
+    onWebsocketMessage: (data) =>
       messg = data.data
       #ThreeNodes.flash_sound_value = jQuery.parseJSON(messg)

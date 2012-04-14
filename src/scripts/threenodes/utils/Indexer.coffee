@@ -9,7 +9,7 @@ define [
       # Define a "unique id" property
       @uid = 0
     
-    get_uid: (increment = true) ->
+    getUID: (increment = true) ->
       if increment
         return @uid += 1
       else

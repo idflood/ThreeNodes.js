@@ -12,7 +12,7 @@ define [
     @node_name = 'Bloom'
     @group_name = 'PostProcessing'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = new THREE.BloomPass(1.6)
       @fields.addFields
@@ -23,7 +23,7 @@ define [
           "resolution": 256
         outputs:
           "out": {type: "Any", val: @ob}
-      @cached = @create_cache_object ['kernelSize', 'sigma', 'resolution']
+      @cached = @createCacheObject ['kernelSize', 'sigma', 'resolution']
     
     remove: () =>
       delete @ob
@@ -31,7 +31,7 @@ define [
       super
     
     value_has_changed: (vals) =>
-      newvals = @create_cache_object vals
+      newvals = @createCacheObject vals
       if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
@@ -47,7 +47,7 @@ define [
     @node_name = 'DotScreen'
     @group_name = 'PostProcessing'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = new THREE.DotScreenPass(new THREE.Vector2( 0.5, 0.5 ))
       @fields.addFields
@@ -57,7 +57,7 @@ define [
           "scale": 1.0
         outputs:
           "out": {type: "Any", val: @ob}
-      @cached = @create_cache_object ['center', 'angle', 'scale']
+      @cached = @createCacheObject ['center', 'angle', 'scale']
     
     remove: () =>
       delete @ob
@@ -65,7 +65,7 @@ define [
       super
     
     value_has_changed: (vals) =>
-      newvals = @create_cache_object vals
+      newvals = @createCacheObject vals
       if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
@@ -80,7 +80,7 @@ define [
     @node_name = 'Film'
     @group_name = 'PostProcessing'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = new THREE.FilmPass( 0.5, 0.125, 2048, false )
       @fields.addFields
@@ -91,7 +91,7 @@ define [
           "grayscale": false
         outputs:
           "out": {type: "Any", val: @ob}
-      @cached = @create_cache_object ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
+      @cached = @createCacheObject ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
     
     remove: () =>
       delete @ob
@@ -99,7 +99,7 @@ define [
       super
     
     value_has_changed: (vals) =>
-      newvals = @create_cache_object vals
+      newvals = @createCacheObject vals
       if Utils.flatArraysAreEquals(newvals, @cached) == false
         @cached = newvals
         return true
@@ -116,7 +116,7 @@ define [
     @node_name = 'Vignette'
     @group_name = 'PostProcessing'
     
-    set_fields: =>
+    setFields: =>
       super
       shader = THREE.ShaderExtras[ "vignette" ]
       @ob = new THREE.ShaderPass( shader )
@@ -140,7 +140,7 @@ define [
     @node_name = 'HorizontalBlur'
     @group_name = 'PostProcessing'
     
-    set_fields: =>
+    setFields: =>
       super
       shader = THREE.ShaderExtras[ "horizontalBlur" ]
       @ob = new THREE.ShaderPass( shader )
@@ -162,7 +162,7 @@ define [
     @node_name = 'VerticalBlur'
     @group_name = 'PostProcessing'
     
-    set_fields: =>
+    setFields: =>
       super
       shader = THREE.ShaderExtras[ "verticalBlur" ]
       @ob = new THREE.ShaderPass( shader )
@@ -184,7 +184,7 @@ define [
     @node_name = 'Bleach'
     @group_name = 'PostProcessing'
     
-    set_fields: =>
+    setFields: =>
       super
       shader = THREE.ShaderExtras[ "bleachbypass" ]
       @ob = new THREE.ShaderPass( shader )

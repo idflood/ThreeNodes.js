@@ -16,9 +16,9 @@ define [
       test "Basic group", () ->
         app.clearWorkspace()
         
-        n1 = ng.create_node("Number")
-        n2 = ng.create_node("Vector3")
-        node_mult = ng.create_node("MathMult")
+        n1 = ng.createNode("Number")
+        n2 = ng.createNode("Vector3")
+        node_mult = ng.createNode("MathMult")
         
         n1.v_in.setValue 2
         node_mult.fields.getField("factor").setValue(3)
@@ -42,8 +42,8 @@ define [
         mult_fact1 = grp.fields.inputs["factor-12"]
         
         # Add a 4th node, external to the group, connected to a group field
-        n3 = ng.create_node("Number")
-        n4 = ng.create_node("Number")
+        n3 = ng.createNode("Number")
+        n4 = ng.createNode("Number")
         c1 = ng.connections.create
           from_field: n3.v_out
           to_field: nbr_in1
@@ -96,7 +96,7 @@ define [
         equals mult_out2.getValue(), 4, "Group 2 sends correct value (2/2)"
         
         # Save current group in json for next test
-        @saved_grp = filehandler.get_local_json()
+        @saved_grp = filehandler.getLocalJson()
         
         app.clearWorkspace()
         
@@ -104,7 +104,7 @@ define [
         equals app.group_definitions.length, 0, "The group definition has been removed"
         
         # Load the previous workspace which had 2 groups
-        filehandler.load_from_json_data(@saved_grp)
+        filehandler.loadFromJsonData(@saved_grp)
         ng.render()
         
         equals app.group_definitions.length, 1, "The group definition has been recreated"

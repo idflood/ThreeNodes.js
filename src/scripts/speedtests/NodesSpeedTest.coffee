@@ -12,10 +12,10 @@ define [
       filehandler = app.file_handler
       app.clearWorkspace()
       
-      n1 = ng.create_node("Number")
-      n2 = ng.create_node("Vector3")
-      rnd = ng.create_node("Random")
-      node_mult = ng.create_node("MathMult")
+      n1 = ng.createNode("Number")
+      n2 = ng.createNode("Vector3")
+      rnd = ng.createNode("Random")
+      node_mult = ng.createNode("MathMult")
       
       node_mult.fields.getField("factor").setValue(3)
       

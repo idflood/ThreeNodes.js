@@ -63,7 +63,7 @@ define [
           to_field: field2
     
     clearWorkspace: () =>
-      @removeAllConnections()
+      @removeConnections()
       @removeAll()
       $("#webgl-window canvas").remove()
       @materials = []
@@ -81,7 +81,7 @@ define [
       @timeline.on("startSound", @startSound)
       @timeline.on("stopSound", @stopSound)
     
-    create_node: (options) =>
+    createNode: (options) =>
       # If not is a string instead of an object then take the option as the node type
       if $.type(options) == "string"
         options = {type: options}
@@ -112,7 +112,7 @@ define [
       
       # Get all root nodes and nodes requiring an update
       for node in @models
-        if node.has_out_connection() == false || node.auto_evaluate || node.delays_output
+        if node.hasOutConnection() == false || node.auto_evaluate || node.delays_output
           terminalNodes[node.attributes["nid"]] = node
         invalidNodes[node.attributes["nid"]] = node
       
@@ -160,7 +160,7 @@ define [
     
     createGroup: (model, external_objects = []) =>
       # create the group node
-      grp = @create_node(model)
+      grp = @createNode(model)
       
       # Recreate the external connections
       for connection in external_objects
@@ -210,6 +210,6 @@ define [
       @reset([])
       true
     
-    removeAllConnections: () ->
+    removeConnections: () ->
       @connections.removeAll()
       

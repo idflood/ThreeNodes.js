@@ -24,7 +24,7 @@ define [
       indexer = options.indexer
       
       if @get("gid") == -1
-        @set("gid", indexer.get_uid())
+        @set("gid", indexer.getUID())
       
       if options.fromSelectedNodes && options.fromSelectedNodes != false
         @fromSelectedNodes(options.fromSelectedNodes)

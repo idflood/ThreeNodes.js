@@ -12,7 +12,7 @@ define [
     @node_name = 'RandomSpread'
     @group_name = 'Spread'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @rnd = false
@@ -54,7 +54,7 @@ define [
     @node_name = 'LinearSpread'
     @group_name = 'Spread'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @value = false

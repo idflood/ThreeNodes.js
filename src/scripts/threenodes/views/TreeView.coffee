@@ -22,7 +22,7 @@ define [
       data = []
       terminalNodes = {}
       for node in nodelist.models
-        if node.has_out_connection() == false
+        if node.hasOutConnection() == false
           terminalNodes[node.attributes["nid"]] = node
       
       renderNode = (node) =>

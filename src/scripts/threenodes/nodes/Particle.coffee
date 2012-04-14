@@ -14,7 +14,7 @@ define [
     @node_name = 'ParticleSystem'
     @group_name = 'Particle'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -53,7 +53,7 @@ define [
         @geometry_cache = @fields.getField('geometry').getValue().id
         @material_cache = @fields.getField('material').getValue().id
       
-      @apply_fields_to_val(@fields.inputs, @ob, ['children', 'geometry', 'material'])
+      @applyFieldsToVal(@fields.inputs, @ob, ['children', 'geometry', 'material'])
       
       if needs_rebuild == true
         @trigger("RebuildAllShaders")
@@ -64,7 +64,7 @@ define [
     @node_name = 'ParticleBasicMaterial'
     @group_name = 'Materials'
     
-    set_fields: =>
+    setFields: =>
       super
       @ob = []
       @material_class = THREE.ParticleBasicMaterial
@@ -78,13 +78,13 @@ define [
         outputs:
           "out": {type: "Any", val: @ob}
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-      @material_cache = @create_cache_object(@vars_rebuild_shader_on_change)
+      @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
 
   class ThreeNodes.nodes.SparksEmitter extends ThreeNodes.NodeBase
     @node_name = 'Emitter'
     @group_name = 'Particle.sparks'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -150,7 +150,7 @@ define [
     @node_name = 'Age'
     @group_name = 'Particle.sparks.actions'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -173,7 +173,7 @@ define [
     @node_name = 'Move'
     @group_name = 'Particle.sparks.actions'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @fields.addFields
@@ -192,7 +192,7 @@ define [
     @node_name = 'Accelerate'
     @group_name = 'Particle.sparks.actions'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -215,7 +215,7 @@ define [
     @node_name = 'AccelerateFactor'
     @group_name = 'Particle.sparks.actions'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -238,7 +238,7 @@ define [
     @node_name = 'AccelerateVelocity'
     @group_name = 'Particle.sparks.actions'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -261,7 +261,7 @@ define [
     @node_name = 'RandomDrift'
     @group_name = 'Particle.sparks.actions'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -284,7 +284,7 @@ define [
     @node_name = 'Lifetime'
     @group_name = 'Particle.sparks.initializers'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -309,7 +309,7 @@ define [
     @node_name = 'Position'
     @group_name = 'Particle.sparks.initializers'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -332,7 +332,7 @@ define [
     @node_name = 'PointZone'
     @group_name = 'Particle.sparks.zone'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -355,7 +355,7 @@ define [
     @node_name = 'LineZone'
     @group_name = 'Particle.sparks.zone'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -382,7 +382,7 @@ define [
     @node_name = 'CubeZone'
     @group_name = 'Particle.sparks.zone'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -411,7 +411,7 @@ define [
     @node_name = 'SteadyCounter'
     @group_name = 'Particle.sparks'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       
@@ -434,7 +434,7 @@ define [
     @node_name = 'ParticlePool'
     @group_name = 'Particle.sparks'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @geom = false
@@ -496,7 +496,7 @@ define [
     @node_name = 'RandomCloudGeometry'
     @group_name = 'Particle'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = new THREE.Geometry()

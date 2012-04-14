@@ -40,7 +40,7 @@ define [
       
       if @get('nid') == -1
         # If this a new node assign a unique id to it
-        @set('nid', @indexer.get_uid())
+        @set('nid', @indexer.getUID())
       else
         # If the node is loaded set the indexer uid to the node.nid.
         # With this, the following created nodes will have a unique nid
@@ -50,9 +50,9 @@ define [
       @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
       @
       
-    post_init: () =>
+    postInit: () =>
       # Init fields
-      @set_fields()
+      @setFields()
       
       # Load saved data after the fields have been set
       @fields.load(@options.fields)
@@ -102,28 +102,28 @@ define [
     showNodeAnimation: () =>
       @trigger("node:showAnimations")
     
-    add_count_input : () =>
+    addCountInput : () =>
       @fields.addFields
         inputs:
           "count" : 1
     
-    create_cache_object: (values) =>
+    createCacheObject: (values) =>
       res = {}
       for v in values
         res[v] = @fields.getField(v).attributes["value"]
       res
     
-    input_value_has_changed: (values, cache = @material_cache) =>
+    inputValueHasChanged: (values, cache = @material_cache) =>
       for v in values
         v2 = @fields.getField(v).attributes["value"]
         if v2 != cache[v]
           return true
       false
     
-    set_fields: =>
+    setFields: =>
       # to implement
     
-    has_out_connection: () =>
+    hasOutConnection: () =>
       @out_connections.length != 0
     
     getUpstreamNodes: () => @fields.getUpstreamNodes()
@@ -162,50 +162,48 @@ define [
         fields: @fields.toJSON()
       res
     
-    apply_fields_to_val: (afields, target, exceptions = [], index) =>
+    applyFieldsToVal: (afields, target, exceptions = [], index) =>
       for f of afields
         nf = afields[f]
         field_name = nf.get("name")
+        # Only apply value from fields that are not in the exclude list
         if exceptions.indexOf(field_name) == -1
+          # Apply the field's value to the object property
           target[field_name] = @fields.getField(field_name).getValue(index)
     
-    get_cached_array: (vals) =>
-      res = []
-      for v in vals
-        res[res.length] = @fields.getField(v).getValue()
-      
-    add_out_connection: (c, field) =>
-      if @out_connections.indexOf(c) == -1
-        @out_connections.push(c)
+    addOutConnection: (c, field) =>
+      if @out_connections.indexOf(c) == -1 then @out_connections.push(c)
       c
   
-    remove_connection: (c) =>
+    removeConnection: (c) =>
       c_index = @out_connections.indexOf(c)
       if c_index != -1
         @out_connections.splice(c_index, 1)
       c
   
-    disable_property_anim: (field) =>
+    disablePropertyAnim: (field) =>
+      # We only want to animate inputs so we deactivate timeline's animation for outputs fields
       if @anim && field.get("is_output") == false
         @anim.disableProperty(field.get("name"))
   
-    enable_property_anim: (field) =>
+    enablePropertyAnim: (field) =>
+      # Make sure we don't enable animation on output fields
       if field.get("is_output") == true || !@anim
         return false
-      if field.is_animation_property()
-        @anim.enableProperty(field.get("name"))
+      
+      # If the field can be animated enabale property animation
+      if field.isAnimationProperty() then @anim.enableProperty(field.get("name"))
     
     createAnimContainer: () =>
       res = anim("nid-" + @get("nid"), @fields.inputs)
       # enable track animation only for number/boolean
       for f of @fields.inputs
         field = @fields.inputs[f]
-        if field.is_animation_property() == false
-          @disable_property_anim(field)
+        if field.isAnimationProperty() == false then @disablePropertyAnim(field)
       return res
   
   class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
-    set_fields: =>
+    setFields: =>
       @v_in = @fields.addField("in", {type: "Float", val: 0})
       @v_out = @fields.addField("out", {type: "Float", val: 0}, "outputs")
       

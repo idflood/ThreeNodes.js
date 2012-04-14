@@ -12,7 +12,7 @@ define [
     @node_name = 'Random'
     @group_name = 'Utils'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @fields.addFields
@@ -32,7 +32,7 @@ define [
     @node_name = 'LFO'
     @group_name = 'Utils'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @rndB = Math.random()
@@ -111,7 +111,7 @@ define [
     @node_name = 'Merge'
     @group_name = 'Utils'
     
-    set_fields: =>
+    setFields: =>
       #super
       @auto_evaluate = true
       @fields.addFields
@@ -142,7 +142,7 @@ define [
     @node_name = 'Get'
     @group_name = 'Utils'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -167,7 +167,7 @@ define [
     
     is_chrome: => navigator.userAgent.toLowerCase().indexOf('chrome') > -1
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @counter = 0
@@ -305,7 +305,7 @@ define [
     @node_name = 'Mouse'
     @group_name = 'Utils'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @fields.addFields
@@ -328,7 +328,7 @@ define [
     @node_name = 'Timer'
     @group_name = 'Utils'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @old = @get_time()
@@ -363,7 +363,7 @@ define [
     @node_name = 'Font'
     @group_name = 'Utils'
     
-    set_fields: =>
+    setFields: =>
       super
       @auto_evaluate = true
       @ob = ""

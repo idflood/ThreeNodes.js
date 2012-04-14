@@ -14,15 +14,15 @@ define [
     constructor: (@nodes, @group_definitions) ->
       _.extend(FileHandler::, Backbone.Events)
       
-    save_local_file: () =>
+    saveLocalFile: () =>
       bb = new BlobBuilder()
-      result_string = @get_local_json()
+      result_string = @getLocalJson()
       bb.append(result_string)
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json")
     
-    export_code: () =>
+    exportCode: () =>
       # get the json export and convert it to code
-      json = @get_local_json(false)
+      json = @getLocalJson(false)
       exporter = new ThreeNodes.CodeExporter()
       res = exporter.toCode(json)
       
@@ -30,9 +30,9 @@ define [
       bb.append(res)
       fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
       
-    get_local_json: (stringify = true) =>
+    getLocalJson: (stringify = true) =>
       res = 
-        uid: @nodes.indexer.get_uid(false)
+        uid: @nodes.indexer.getUID(false)
         nodes: jQuery.map(@nodes.models, (n, i) -> n.toJSON())
         connections: jQuery.map(@nodes.connections.models, (c, i) -> c.toJSON())
         groups: jQuery.map(@group_definitions.models, (g, i) -> g.toJSON())
@@ -42,7 +42,7 @@ define [
       else
         return res
         
-    load_from_json_data: (txt) =>
+    loadFromJsonData: (txt) =>
       # Parse the json string
       loaded_data = JSON.parse(txt)
       
@@ -55,7 +55,7 @@ define [
       for node in loaded_data.nodes
         if node.type != "Group"
           # Create a simple node
-          @nodes.create_node(node)
+          @nodes.createNode(node)
         else
           # If the node is a group we first need to get the previously created group definition
           def = @group_definitions.getByGid(node.definition_id)
@@ -73,7 +73,7 @@ define [
       delay = (ms, func) -> setTimeout func, ms
       delay 1, => @nodes.renderAllConnections()
     
-    load_local_file: (e) =>
+    loadLocalFile: (e) =>
       # Clear the workspace first
       @trigger("ClearWorkspace")
       
@@ -83,6 +83,6 @@ define [
       self = this
       reader.onload = (e) ->
         txt = e.target.result
-        # Call load_from_json_data when the file is loaded
-        self.load_from_json_data(txt)
+        # Call loadFromJsonData when the file is loaded
+        self.loadFromJsonData(txt)
       reader.readAsText(file, "UTF-8")

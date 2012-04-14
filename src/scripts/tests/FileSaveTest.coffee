@@ -17,15 +17,15 @@ define [
         app.clearWorkspace()
         
         # test with two number nodes connected
-        n1 = ng.create_node({type: "Number", x: 363, y: 113})
-        n2 = ng.create_node({type: "Number", x: 123, y: 456})
+        n1 = ng.createNode({type: "Number", x: 363, y: 113})
+        n2 = ng.createNode({type: "Number", x: 123, y: 456})
         c1 = ng.connections.create
           from_field: n1.v_out
           to_field: n2.v_in
         n1.v_in.setValue 4
         ng.render()
         
-        json_string = filehandler.get_local_json()
+        json_string = filehandler.getLocalJson()
         
         parsed_data1 = JSON.parse(json_string)
         equals parsed_data1.uid, 7, "Saved the last uid"
@@ -47,14 +47,14 @@ define [
         
         # save a scene connected to webglrenderer
         app.clearWorkspace()
-        n1 = ng.create_node("Scene")
-        n2 = ng.create_node("WebGLRenderer")
+        n1 = ng.createNode("Scene")
+        n2 = ng.createNode("WebGLRenderer")
         c1 = ng.connections.create
           from_field: n1.fields.getField("out", true)
           to_field: n2.fields.getField("scene")
         ng.render()
         
-        json_string = filehandler.get_local_json()
+        json_string = filehandler.getLocalJson()
         parsed_data1 = JSON.parse(json_string)
         equals parsed_data1.nodes.length, 2, "Saved 2 nodes"
         equals parsed_data1.connections.length, 1, "Saved one connection"
@@ -62,9 +62,9 @@ define [
         # test for possible circular reference in json
         # appear when saving an object inside an array, the mesh in the merge array for this example
         app.clearWorkspace()
-        n1 = ng.create_node("Scene")
-        n2 = ng.create_node("Merge")
-        n3 = ng.create_node("ThreeMesh")
+        n1 = ng.createNode("Scene")
+        n2 = ng.createNode("Merge")
+        n3 = ng.createNode("ThreeMesh")
         c1 = ng.connections.create
           from_field: n2.fields.getField("out", true)
           to_field: n1.fields.getField("children")
@@ -73,6 +73,6 @@ define [
           to_field: n2.fields.getField("in0")
         ng.render()
         
-        json_string = filehandler.get_local_json()
+        json_string = filehandler.getLocalJson()
         parsed_data1 = JSON.parse(json_string)
         equals parsed_data1.nodes.length, 3, "Saved 3 nodes (cyclic value)"

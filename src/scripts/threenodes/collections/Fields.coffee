@@ -15,7 +15,7 @@ define [
     
     # Remove connections, fields and delete variables
     destroy: () =>
-      @removeAllConnections()
+      @removeConnections()
       while @models.length > 0
         @models[0].remove()
       delete @node
@@ -97,10 +97,10 @@ define [
         f.changed = false
     
     renderConnections: =>
-      @invoke "render_connections"
+      @invoke "renderConnections"
     
-    removeAllConnections: =>
-      @invoke "remove_connections"
+    removeConnections: =>
+      @invoke "removeConnections"
     
     cloneSubField: (field) =>
       options = 
@@ -174,7 +174,7 @@ define [
           @addField(fname, value, dir)
       @
     
-    render_sidebar: () =>
+    renderSidebar: () =>
       @trigger("renderSidebar")
       @
     

@@ -19,12 +19,12 @@ define [
           return false
         
         url = $(this).attr('href').substr(1)
-        self.on_link_click(event, this, url)
+        self.onLinkClick(event, this, url)
       
       $("#main_file_input_open").change (e) =>
         @trigger("LoadFile", e)
     
-    on_link_click: (event, link, url) =>
+    onLinkClick: (event, link, url) =>
       data_event = $(link).data("event")
       data_attr = $(link).data("eventData")
       

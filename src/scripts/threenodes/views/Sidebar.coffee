@@ -61,22 +61,22 @@ define [
       for node in nodes
         $target.append("<h2>#{node.get('name')}</h2>")
         for f of node.fields.inputs
-          node.fields.inputs[f].render_sidebar()
+          node.fields.inputs[f].renderSidebar()
       return this
     
-    filter_list_item: ($item, value) =>
+    filterListItem: ($item, value) =>
       s = $.trim($("a", $item).html()).toLowerCase()
       if s.indexOf(value) == -1
         $item.hide()
       else
         $item.show()
     
-    filter_list: (ul, value) =>
+    filterList: (ul, value) =>
       self = this
       ul_title = ul.prev()
       has_visible_items = false
       
-      $("li", ul).each () -> self.filter_list_item($(this), value)
+      $("li", ul).each () -> self.filterListItem($(this), value)
       
       if $("li:visible", ul).length == 0
         ul_title.hide()
@@ -91,7 +91,7 @@ define [
         if v == ""
           $("#tab-new li, #tab-new h3").show()
         else
-          $("#tab-new ul").each () -> self.filter_list($(this), v)
+          $("#tab-new ul").each () -> self.filterList($(this), v)
       return this
                   
     initNewNode: () =>

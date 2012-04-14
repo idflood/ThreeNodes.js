@@ -32,7 +32,7 @@ define [
       @is_grabbing = false
       
       # Bind events
-      $(window).resize(@on_ui_window_resize)
+      $(window).resize(@onUiWindowResize)
             
       # Create the ui dom elements from template
       ui_tmpl = _.template(_view_app_ui, {})
@@ -53,10 +53,10 @@ define [
       # Set the layout and show application
       @initLayout()
       @initDrop()
-      @show_application()
+      @showApplication()
       
       # Fire the first resize event
-      @on_ui_window_resize()
+      @onUiWindowResize()
       
       # Start main render loop
       @animate()
@@ -118,9 +118,9 @@ define [
     initLayout: () =>
       @makeSelectable()
       @setupMouseScroll()
-      @init_context_menus()
-      @init_bottom_toolbox()
-      @init_display_mode_switch()
+      @initContextMenus()
+      @initBottomToolbox()
+      @initDisplayModeSwitch()
       
       @layout = $('body').layout
         scrollToBookmarkOnLoad: false
@@ -139,11 +139,11 @@ define [
           minSize: 220
           initClosed: true
           onresize: (name, pane_el, state, opt, layout_name) =>
-            @on_ui_window_resize()
+            @onUiWindowResize()
           onopen: (name, pane_el, state, opt, layout_name) =>
-            @on_ui_window_resize()
+            @onUiWindowResize()
           onclose: (name, pane_el, state, opt, layout_name) =>
-            @on_ui_window_resize()
+            @onUiWindowResize()
         west:
           minSize: 220
         south:
@@ -151,13 +151,13 @@ define [
           size: 48
           onopen: (name, pane_el, state, opt, layout_name) =>
             @trigger("timelineResize", pane_el.innerHeight())
-            @on_ui_window_resize()
+            @onUiWindowResize()
           onclose: (name, pane_el, state, opt, layout_name) =>
             @trigger("timelineResize", pane_el.innerHeight())
-            @on_ui_window_resize()
+            @onUiWindowResize()
           onresize: (name, pane_el, state, opt, layout_name) =>
             @trigger("timelineResize", pane_el.innerHeight())
-            @on_ui_window_resize()
+            @onUiWindowResize()
       
       # Set timeline height
       @trigger("timelineResize", 48)
@@ -240,23 +240,23 @@ define [
       y = @scroll_target.scrollTop() + dy
       @scroll_target.scrollLeft(x).scrollTop(y)
     
-    switch_display_mode: () =>
+    switchDisplayMode: () =>
       @setDisplayMode(!@settings.player_mode)
       return this
     
-    init_display_mode_switch: () =>
+    initDisplayModeSwitch: () =>
       $("body").append("<div id='display-mode-switch'>switch mode</div>")
       $("#display-mode-switch").click (e) =>
-        @switch_display_mode()
+        @switchDisplayMode()
     
     # Setup the bottom right dom container
-    init_bottom_toolbox: () =>
+    initBottomToolbox: () =>
       $("body").append("<div id='bottom-toolbox'></div>")
       $container = $("#bottom-toolbox")
-      @init_resize_slider($container)
+      @initResizeSlider($container)
     
     # Initialize the little node zoom slider
-    init_resize_slider: ($container) =>
+    initResizeSlider: ($container) =>
       $container.append("<div id='zoom-slider'></div>")
       scale_graph = (val) ->
         factor = val / 100
@@ -269,7 +269,7 @@ define [
         change: (event, ui) -> scale_graph(ui.value)
         slide: (event, ui) -> scale_graph(ui.value) 
     
-    init_context_menus: () =>
+    initContextMenus: () =>
       menu_field_menu = _.template(_view_field_context_menu, {})
       $("body").append(menu_field_menu)
       
@@ -277,7 +277,7 @@ define [
       $("body").append(node_menu)
     
     # Display the app and hide the intro
-    show_application: () =>
+    showApplication: () =>
       delay_intro = 500
       
       # Display/hide with some delay
@@ -289,7 +289,7 @@ define [
       @trigger("renderConnections")
     
     # Function called when the window is resized and if some panels are closed/opened/resized
-    on_ui_window_resize: () =>
+    onUiWindowResize: () =>
       # Default minimum margins
       margin_bottom = 20
       margin_right = 25

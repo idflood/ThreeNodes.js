@@ -12,7 +12,7 @@ define [
     @node_name = 'IfElse'
     @group_name = 'Conditional'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -34,7 +34,7 @@ define [
     @node_name = 'And'
     @group_name = 'Conditional'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -51,7 +51,7 @@ define [
     @node_name = 'Or'
     @group_name = 'Conditional'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -68,7 +68,7 @@ define [
     @node_name = 'Equal'
     @group_name = 'Conditional'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -85,7 +85,7 @@ define [
     @node_name = 'Smaller'
     @group_name = 'Conditional'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:
@@ -102,7 +102,7 @@ define [
     @node_name = 'Greater'
     @group_name = 'Conditional'
     
-    set_fields: =>
+    setFields: =>
       super
       @fields.addFields
         inputs:

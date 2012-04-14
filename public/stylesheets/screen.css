@@ -1293,6 +1293,7 @@ body > header h1 {
 #sidebar .ui-tabs-nav {
   margin: 0;
   padding: 0;
+  padding-top: 5px;
   display: block;
   float: none;
   background: #2a2a2a;
@@ -1304,6 +1305,7 @@ body > header h1 {
   margin: 0;
   background: #2a2a2a;
   border-right: 1px solid #333;
+  border-top: 1px solid #3a3a3a;
 }
 #sidebar .ui-tabs-nav li a {
   padding: 0.2em 5px;

@@ -19,23 +19,23 @@ define [
       indexer = options.indexer || ThreeNodes.NodeField.static_indexer
       
       # Set a unique connection id
-      if @get("cid") == -1 then @set({"cid": indexer.get_uid()})
+      if @get("cid") == -1 then @set({"cid": indexer.getUID()})
       
       if @isValid()
         # remove existing input connection since inputs only have one connection
-        @to_field.remove_connections()
+        @to_field.removeConnections()
         # add the connection to each fields
-        @from_field.add_connection(this)
-        @to_field.add_connection(this)
+        @from_field.addConnection(this)
+        @to_field.addConnection(this)
         # dispatch the new value
         @to_field.setValue(@from_field.get("value"))
         @from_field.node.dirty = true
     
     remove: =>
       # Unregister the connection from the fields
-      @from_field.unregister_connection(this)
-      @to_field.unregister_connection(this)
-      @to_field.remove_connections()
+      @from_field.unregisterConnection(this)
+      @to_field.unregisterConnection(this)
+      @to_field.removeConnections()
       
       # Set the "to" node dirty so it is reprocessed next time
       @to_field.node.dirty = true
@@ -69,10 +69,10 @@ define [
       if @from_field.node.get('nid') == @to_field.node.get('nid')
         return true
       
-      @switch_fields_if_needed()
+      @switchFieldsIfNeeded()
       return false
     
-    switch_fields_if_needed: () =>
+    switchFieldsIfNeeded: () =>
       # Switch input and output if they are given in the wrong order
       if @from_field.get("is_output") == false
         f_out = @to_field

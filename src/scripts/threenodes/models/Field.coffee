@@ -1,10 +1,8 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  "text!templates/node_field_input.tmpl.html",
-  "text!templates/node_field_output.tmpl.html",
   'order!threenodes/utils/Indexer',
-], (_, Backbone, _view_node_field_in, _view_node_field_out, Indexer) ->
+], (_, Backbone, Indexer) ->
   "use strict"
   
   $ = jQuery
@@ -77,7 +75,7 @@ define [
       if @subfield && @subfield.node
         @set("machine_name", @get("name") + "-" + @subfield.node.get("nid"))
       if @get("fid") == -1
-        @set("fid", indexer.get_uid())
+        @set("fid", indexer.getUID())
     
     remove: () =>
       delete @on_value_update_hooks
@@ -95,7 +93,7 @@ define [
       
       # Define references to the previous and current value
       prev_val = @attributes["value"]
-      new_val = @on_value_changed(v)
+      new_val = @onValueChanged(v)
       
       # remove all null values from the array
       if $.type(new_val) == "array"
@@ -158,7 +156,7 @@ define [
         return 1
       return val.length
     
-    is_animation_property: () =>
+    isAnimationProperty: () =>
       if this.constructor == ThreeNodes.fields.Float || this.constructor == ThreeNodes.fields.Bool
         return true
       return false
@@ -184,65 +182,52 @@ define [
       
       return res
   
-    render_connections: () =>
+    renderConnections: () =>
       for connection in @connections
         connection.render()
       true
     
-    render_sidebar: =>
+    renderSidebar: =>
       false
     
-    render_button: =>
-      layout = _view_node_field_in
-      if @get("is_output")
-        layout = _view_node_field_out
-      el = _.template layout,
-        fid: @get("fid")
-        name: @get("name")
-      el = $(el)
-      el.data("object", this)
-      @button = el
-      el
-      
-    compute_value : (val) =>
+    computeValue : (val) =>
       val
     
-    add_connection: (c) =>
+    addConnection: (c) =>
       if @connections.indexOf(c) == -1
         @connections.push c
         if @get("is_output") == true
-          @node.add_out_connection(c, this)
-        @node.disable_property_anim(this)
+          @node.addOutConnection(c, this)
+        @node.disablePropertyAnim(this)
       c
     
-    unregister_connection: (c) =>
-      @node.remove_connection(c)
+    unregisterConnection: (c) =>
+      @node.removeConnection(c)
       
       ind = @connections.indexOf(c)
       if ind != -1
         @connections.splice(ind, 1)
       if @connections.length == 0
-        @node.enable_property_anim(this)
+        @node.enablePropertyAnim(this)
         
     # remove all connections
-    remove_connections: () =>
+    removeConnections: () =>
       @connections[0].remove() while @connections.length > 0
-      true
       
-    on_value_changed : (val) =>
+    onValueChanged: (val) =>
       self = this
       if $.type(val) == "array"
-        return _.map(val, (n) -> self.compute_value(n))
+        return _.map(val, (n) -> self.computeValue(n))
       
-      return @compute_value(val)
+      return @computeValue(val)
     
-    create_sidebar_container: (name = @get("name")) =>
+    createSidebarContainer: (name = @get("name")) =>
       $cont = $("#tab-attribute")
       $target = $("<div data-fid='" + @get("fid") + "' class='field-wrapper'></div>").appendTo($cont)
       $target.append("<h3>#{name}</h3>")
       return $target
     
-    add_textfield_slider: ($el) =>
+    addRextfieldSlider: ($el) =>
       $parent = $el.parent()
       on_slider_change = (e, ui) ->
         $el.val(ui.value)
@@ -274,15 +259,15 @@ define [
       # create first slider
       create_slider()
     
-    create_textfield: ($target, type = "float", link_to_val = true) =>
+    createTextfield: ($target, type = "float", link_to_val = true) =>
       container = $("<div class='input-container'><input type='text' class='field-#{type}' /></div>").appendTo($target)
       $el = $("input", container)
       if type == "float" && link_to_val == true
         $el.val(@getValue())
-        @add_textfield_slider($el)
+        @addRextfieldSlider($el)
       return $el
     
-    link_textfield_to_val: (f_input, type = "float") =>
+    linkTextfieldToVal: (f_input, type = "float") =>
       self = this
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_input.val(v)
@@ -296,7 +281,7 @@ define [
           $(this).blur()
       f_input
     
-    link_textfield_to_subval: (f_input, subval, type = "float") =>
+    linkTextfieldToSubval: (f_input, subval, type = "float") =>
       self = this
       
       @on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
@@ -314,27 +299,27 @@ define [
           $(this).blur()
       f_input
   
-    create_sidebar_field_title: (name = @get("name")) =>
+    createSidebarFieldTitle: (name = @get("name")) =>
       $cont = $("#tab-attribute")
       $cont.append("<h3>#{name}</h3>")
       return $cont
     
-    create_subval_textinput: (subval, type = "float") =>
-      $target = @create_sidebar_container(subval)
-      f_in = @create_textfield($target, type, false)
-      @link_textfield_to_subval(f_in, subval, type)
+    createSubvalTextinput: (subval, type = "float") =>
+      $target = @createSidebarContainer(subval)
+      f_in = @createTextfield($target, type, false)
+      @linkTextfieldToSubval(f_in, subval, type)
       if type == "float"
-        @add_textfield_slider(f_in)
+        @addRextfieldSlider(f_in)
   
   class ThreeNodes.fields.Any extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       val
     
-    on_value_changed : (val) =>
+    onValueChanged : (val) =>
       return val
     
   class ThreeNodes.fields.Array extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if !val || val == false
         return []
       if $.type(val) == "array"
@@ -342,20 +327,20 @@ define [
       else
         [val]
     
-    remove_connections: () =>
+    removeConnections: () =>
       super
       if @get("is_output") == false
         @setValue([])
     
-    on_value_changed : (val) =>
-      return @compute_value(val)
+    onValueChanged : (val) =>
+      return @computeValue(val)
     
     getValue: (index = 0) => @get("value")
     
   class ThreeNodes.fields.Bool extends ThreeNodes.NodeField
-    render_sidebar: =>
+    renderSidebar: =>
       self = this
-      $target = @create_sidebar_container()
+      $target = @createSidebarContainer()
       id = "side-field-checkbox-#{@get('fid')}"
       $target.append("<div><input type='checkbox' id='#{id}'/></div>")
       f_in = $("#" + id)
@@ -375,7 +360,7 @@ define [
           self.setValue(false)
       true
         
-    compute_value : (val) =>
+    computeValue : (val) =>
       switch $.type(val)
         when "boolean" then return val
         when "number" then return val != 0
@@ -383,10 +368,10 @@ define [
       return null
   
   class ThreeNodes.fields.String extends ThreeNodes.NodeField
-    render_sidebar: =>
+    renderSidebar: =>
       self = this
-      $target = @create_sidebar_container()
-      f_in = @create_textfield($target, "string")
+      $target = @createSidebarContainer()
+      f_in = @createTextfield($target, "string")
       @on_value_update_hooks.update_sidebar_textfield = (v) ->
         f_in.val(v.toString())
       f_in.val(@getValue())
@@ -395,7 +380,7 @@ define [
           self.setValue($(this).val())
           $(this).blur()
       true
-    compute_value : (val) =>
+    computeValue : (val) =>
       switch $.type(val)
         when "array" then return val
         when "number" then return val.toString
@@ -419,18 +404,18 @@ define [
       return true
     
     create_sidebar_input: ($target) =>
-      f_in = @create_textfield($target)
-      @link_textfield_to_val(f_in)
+      f_in = @createTextfield($target)
+      @linkTextfieldToVal(f_in)
           
-    render_sidebar: =>
-      $target = @create_sidebar_container()
+    renderSidebar: =>
+      $target = @createSidebarContainer()
       if @possible_values
         @create_sidebar_select($target)
       else
         @create_sidebar_input($target)
       true
     
-    compute_value : (val) =>
+    computeValue : (val) =>
       switch $.type(val)
         when "number", "string" then return parseFloat(val)
         when "object"
@@ -444,56 +429,56 @@ define [
       return null
       
   class ThreeNodes.fields.Vector2 extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Vector2
           return val
       return null
     
-    render_sidebar: =>
-      @create_sidebar_field_title()
-      @create_subval_textinput("x")
-      @create_subval_textinput("y")
+    renderSidebar: =>
+      @createSidebarFieldTitle()
+      @createSubvalTextinput("x")
+      @createSubvalTextinput("y")
       true
   
   class ThreeNodes.fields.Vector3 extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Vector3
           return val
       return null
     
-    render_sidebar: =>
-      @create_sidebar_field_title()
-      @create_subval_textinput("x")
-      @create_subval_textinput("y")
-      @create_subval_textinput("z")
+    renderSidebar: =>
+      @createSidebarFieldTitle()
+      @createSubvalTextinput("x")
+      @createSubvalTextinput("y")
+      @createSubvalTextinput("z")
       true
   
   class ThreeNodes.fields.Vector4 extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Vector4
           return val
       return null
     
-    render_sidebar: =>
-      @create_sidebar_field_title()
-      @create_subval_textinput("x")
-      @create_subval_textinput("y")
-      @create_subval_textinput("z")
-      @create_subval_textinput("w")
+    renderSidebar: =>
+      @createSidebarFieldTitle()
+      @createSubvalTextinput("x")
+      @createSubvalTextinput("y")
+      @createSubvalTextinput("z")
+      @createSubvalTextinput("w")
       true
   
   class ThreeNodes.fields.Quaternion extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Quaternion
           return val
       return null
       
   class ThreeNodes.fields.Color extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       switch $.type(val)
         when "number" then return new THREE.Color().setRGB(val, val, val)
         when "object"
@@ -508,49 +493,49 @@ define [
       return null
    
   class ThreeNodes.fields.Object3D extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
           return val
       return null
   class ThreeNodes.fields.Scene extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Scene
           return val
       return null
   class ThreeNodes.fields.Camera extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
           return val
       return null
   class ThreeNodes.fields.Mesh extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
           return val
       return null
   class ThreeNodes.fields.Geometry extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
           return val
       return null
   class ThreeNodes.fields.Material extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Material || val instanceof THREE.Material
           return val
       return null
   class ThreeNodes.fields.Texture extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Texture || val instanceof THREE.Texture
           return val
       return null
   class ThreeNodes.fields.Fog extends ThreeNodes.NodeField
-    compute_value : (val) =>
+    computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Fog || val.constructor == THREE.FogExp2
           return val

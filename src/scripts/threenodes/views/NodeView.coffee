@@ -19,29 +19,28 @@ define [
       @makeElement()
       
       # Initialize mouse events
-      @make_draggable()
-      @init_el_click()
-      @init_title_click()
+      @makeDraggable()
+      @initNodeClick()
+      @initTitleClick()
       
       # Initialize the fields view
       @fields_view = new ThreeNodes.FieldsView
         node: @model
         collection: @model.fields
         el: $(".options", @$el)
-        node_el: @$el
       
       # Bind events
       @model.bind('change', @render)
       @model.bind('postInit', @postInit)
       @model.bind('remove', () => @remove())
-      @model.bind("node:computePosition", @compute_node_position)
-      @model.bind("node:renderConnections", @render_connections)
+      @model.bind("node:computePosition", @computeNodePosition)
+      @model.bind("node:renderConnections", @renderConnections)
       @model.bind("node:showAnimations", @highlighAnimations)
       @model.bind("node:addSelectedClass", @addSelectedClass)
       
       # Render the node and "post init" the model
       @render()
-      @model.post_init()
+      @model.postInit()
     
     makeElement: () =>
       # Compile the template file
@@ -55,25 +54,11 @@ define [
       @$el.addClass("node-" + @model.typename())
     
     render: () =>
-      # Save the nid and model in the data attribute
-      @$el.data("nid", @model.get("nid"))
-      @$el.data("object", @model)
-      
       @$el.css
         left: parseInt @model.get("x")
         top: parseInt @model.get("y")
       $(".head span", @$el).text(@model.get("name"))
       $(".head span", @$el).show()
-      
-      @init_context_menu()
-      @
-    
-    init_context_menu: () ->
-      $(".field", this.el).contextMenu {menu: "field-context-menu"}, (action, el, pos) ->
-        if action == "remove_connection"
-          field = $(el).data("object")
-          field.remove_connections()
-      return @
     
     highlighAnimations: () =>
       nodeAnimation = false
@@ -93,10 +78,10 @@ define [
     addSelectedClass: () =>
       @$el.addClass("ui-selected")
     
-    render_connections: () =>
+    renderConnections: () =>
       @model.fields.renderConnections()
     
-    compute_node_position: () =>
+    computeNodePosition: () =>
       pos = $(@el).position()
       offset = $("#container-wrapper").offset()
       @model.set
@@ -105,14 +90,14 @@ define [
     
     remove: () =>
       $(".field", this.el).destroyContextMenu()
-      $(this.el).draggable("destroy")
+      if @$el.data("draggable") then @$el.draggable("destroy")
       $(this.el).unbind()
       @undelegateEvents()
-      @fields_view.remove()
+      if @fields_view then @fields_view.remove()
       @fields_view = null
       super
     
-    init_el_click: () ->
+    initNodeClick: () ->
       self = this
       $(@el).click (e) ->
         if e.metaKey == false
@@ -126,10 +111,10 @@ define [
         selectable = $("#container").data("selectable")
         selectable.refresh()
         selectable._mouseStop(null)
-        self.model.fields.render_sidebar()
+        self.model.fields.renderSidebar()
       return @
     
-    init_title_click: () ->
+    initTitleClick: () ->
       self = this
       $(".head span", @el).dblclick (e) ->
         prev = $(this).html()
@@ -154,7 +139,7 @@ define [
             apply_input_result()
       return @
     
-    make_draggable: () ->
+    makeDraggable: () =>
       self = this
       
       nodes_offset = {top: 0, left: 0}
@@ -184,13 +169,13 @@ define [
             el.data("object").trigger("node:computePosition")
             el.data("object").trigger("node:renderConnections")
             
-          self.render_connections()
+          self.renderConnections()
         stop: () ->
           selected_nodes.not(this).each () ->
             el = $(this).data("object")
             el.trigger("node:renderConnections")
-          self.compute_node_position()
-          self.render_connections()
+          self.computeNodePosition()
+          self.renderConnections()
       return @
   
   return ThreeNodes.NodeView

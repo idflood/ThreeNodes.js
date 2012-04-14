@@ -10,18 +10,17 @@ define [
   $ = jQuery
   
   class ThreeNodes.ConnectionView extends Backbone.View
-    
-    initialize: () ->
+    initialize: (options) ->
+      super
       @container = $("#graph")
       @line = UI.svg.path().attr
         stroke: "#555"
         fill: "none"
       # set the dom element
       @el = @line.node
-      @model.bind "render", @render
-      @model.bind "destroy", @remove
+      @model.bind("render", () => @render())
+      @model.bind("destroy", () => @remove())
       @render()
-      @
     
     remove: ->
       if UI.svg && @line
@@ -32,10 +31,10 @@ define [
     render: () ->
       if UI.svg && @line && @line.attrs
         @line.attr
-          path: @get_path()
+          path: @getPath()
       @
     
-    get_field_position: (field) ->
+    getFieldPosition: (field) ->
       if !field.button
         console.log "no button"
         console.log field
@@ -49,12 +48,9 @@ define [
       o1.left += diff
       return o1
     
-    get_path: () ->
-      console.log "path.."
-      console.log @model.from_field
-      console.log @model.from_field.button
-      f1 = @get_field_position(@model.from_field)
-      f2 = @get_field_position(@model.to_field)
+    getPath: () ->
+      f1 = @getFieldPosition(@model.from_field)
+      f2 = @getFieldPosition(@model.to_field)
       
       offset = $("#container-wrapper").offset()
       ofx = $("#container-wrapper").scrollLeft() - offset.left

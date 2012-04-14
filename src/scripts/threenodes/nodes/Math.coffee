@@ -101,7 +101,7 @@ define [
     @node_name = 'Mod'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @v_factor = @fields.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
@@ -111,7 +111,7 @@ define [
     @node_name = 'Add'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @v_factor = @fields.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
@@ -121,7 +121,7 @@ define [
     @node_name = 'Subtract'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @v_factor = @fields.addField("y", {type: "Float", val: 1})
     process_val: (num, numb, i) =>
@@ -131,7 +131,7 @@ define [
     @node_name = 'Mult'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @v_factor = @fields.addField("factor", {type: "Float", val: 2})
     
@@ -143,7 +143,7 @@ define [
     @node_name = 'Divide'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @v_factor = @fields.addField("y", {type: "Float", val: 2})
     process_val: (num, numb, i) =>
@@ -153,7 +153,7 @@ define [
     @node_name = 'Min'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @v_factor = @fields.addField("in2", {type: "Float", val: 0})
       
@@ -164,7 +164,7 @@ define [
     @node_name = 'Max'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @v_factor = @fields.addField("in2", {type: "Float", val: 0})
       
@@ -175,7 +175,7 @@ define [
     @node_name = 'Attenuation'
     @group_name = 'Math'
     
-    set_fields: =>
+    setFields: =>
       super
       @def_val = @fields.addField("default", 0)
       @reset_val = @fields.addField("reset", false)

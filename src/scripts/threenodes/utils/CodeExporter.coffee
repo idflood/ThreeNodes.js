@@ -69,7 +69,7 @@ define [
       res += "\t" + "fields: #{fields_to_code(node.fields)},\n"
       res += "\t" + "anim: #{anim_to_code(node.anim)}\n"
       res += "};\n"
-      res += "var node_#{node.nid} = nodes.create_node(node_#{node.nid}_data);\n"
+      res += "var node_#{node.nid} = nodes.createNode(node_#{node.nid}_data);\n"
       return res
     
     connectionToCode: (connection) ->

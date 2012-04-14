@@ -28,8 +28,8 @@ define [
       
       # Create the subnodes
       for node in @definition.get("nodes")
-        n = @nodes.create_node(node)
-        n.post_init()
+        n = @nodes.createNode(node)
+        n.postInit()
       
       # Recreate the connections between internal subnodes
       for connection in @definition.get("connections")
@@ -48,7 +48,7 @@ define [
       
       res
     
-    set_fields: =>
+    setFields: =>
       @fields.createNodesProxyFields(@nodes.models)
       return this
     
