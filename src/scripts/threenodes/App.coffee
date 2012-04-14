@@ -79,6 +79,7 @@ define [
       # Initialize the workspace view
       @workspace = new ThreeNodes.Workspace
         el: "#container"
+        settings: @settings
       # Make the workspace display the global nodes and connections
       @workspace.render(@nodes)
       
