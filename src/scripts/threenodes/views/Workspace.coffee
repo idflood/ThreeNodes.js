@@ -1,8 +1,8 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/views/NodeView',
-  'order!threenodes/views/ConnectionView',
+  'cs!threenodes/views/NodeView',
+  'cs!threenodes/views/ConnectionView',
 ], (_, Backbone) ->
   "use strict"
   $ = jQuery

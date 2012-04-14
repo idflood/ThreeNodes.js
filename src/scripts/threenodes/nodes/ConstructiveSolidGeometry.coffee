@@ -1,8 +1,8 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/utils/Utils',
-  'order!threenodes/models/Node',
+  'cs!threenodes/utils/Utils',
+  'cs!threenodes/models/Node',
   "order!libs/Three",
   "order!libs/csg",
   "order!libs/ThreeCSG",

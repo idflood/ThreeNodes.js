@@ -2,10 +2,10 @@ define [
   'use!Underscore', 
   'use!Backbone',
   "text!templates/node.tmpl.html",
-  'order!threenodes/views/FieldsView',
+  'cs!threenodes/views/FieldsView',
   "order!libs/jquery.contextMenu",
   "jQueryUi",
-  'order!threenodes/utils/Utils',
+  'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_node_template) ->
   "use strict"
   ### Node View ###

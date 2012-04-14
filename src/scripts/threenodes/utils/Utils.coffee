@@ -4,7 +4,7 @@ define [
 ], (_, Backbone) ->
   "use strict"
   
-  class Utils
+  class ThreeNodes.Utils
     @flatArraysAreEquals: (arr1, arr2) ->
       if arr1.length != arr2.length
         return false

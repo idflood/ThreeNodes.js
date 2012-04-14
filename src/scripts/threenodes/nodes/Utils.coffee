@@ -1,8 +1,8 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/models/Node',
-  'order!threenodes/utils/Utils',
+  'cs!threenodes/models/Node',
+  'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   "use strict"
   

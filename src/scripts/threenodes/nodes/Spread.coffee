@@ -1,8 +1,8 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/utils/Rc4Random',
-  'order!threenodes/models/Node',
+  'cs!threenodes/utils/Rc4Random',
+  'cs!threenodes/models/Node',
 ], (_, Backbone, Rc4Random) ->
   "use strict"
   

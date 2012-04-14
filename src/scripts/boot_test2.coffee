@@ -9,6 +9,7 @@ require.config
     order: "libs/require/order"
     cs: "libs/require/cs"
     CoffeeScript: "libs/coffee-script"
+    chai: "libs/chai"
   use:
     'Underscore':
       attach: "_"
@@ -18,10 +19,18 @@ require.config
     'jQueryUi':
       deps: ['jQuery']
       attach: "jQuery"
+        
 
 require [
-  'cs!threenodes/App',
-], (App) ->
+  'order!threenodes/App',
+  "order!libs/mocha",
+  "chai",
+], (App, NodesTest2) ->
   "use strict"
-  
-  app = new App()
+  mocha.setup("tdd")
+  require [
+    'test/NodesTest2',
+  ], () ->
+    #mocha.globals(["ThreeNodes"]).run()
+    console.log "tests loaded"
+    mocha.run()

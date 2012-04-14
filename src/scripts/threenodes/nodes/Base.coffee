@@ -1,9 +1,9 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/models/Node',
+  'cs!threenodes/models/Node',
   "order!libs/colorpicker/js/colorpicker",
-  'order!threenodes/utils/Utils',
+  'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   "use strict"
   

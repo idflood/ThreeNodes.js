@@ -1,9 +1,9 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'threenodes/views/UI',
+  'cs!threenodes/views/UI',
   "jQueryUi",
-  'order!threenodes/utils/Utils',
+  'cs!threenodes/utils/Utils',
 ], (_, Backbone, UI, _view_node_template) ->
   "use strict"
   

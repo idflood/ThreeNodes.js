@@ -1,27 +1,29 @@
 #### App
+root = if typeof exports != "undefined" && exports != null then exports else window
 
 # Declare namespace
-if ThreeNodes == null || typeof(!ThreeNodes) != "object"
-  ThreeNodes = {}
-if ThreeNodes.nodes == null || typeof(!ThreeNodes.nodes) != "object"
-  ThreeNodes.nodes = {}
-if ThreeNodes.fields == null || typeof(!ThreeNodes.fields) != "object"
-  ThreeNodes.fields = {}
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object"
+  root.ThreeNodes = {}
+if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object"
+  root.ThreeNodes.nodes = {}
+if root.ThreeNodes.fields == null || typeof(!root.ThreeNodes.fields) != "object"
+  root.ThreeNodes.fields = {}
 
 define [
   'use!Underscore',
   'use!Backbone',
-  "order!threenodes/utils/Utils",
-  'order!threenodes/collections/Nodes',
-  'order!threenodes/collections/GroupDefinitions',
-  'order!threenodes/views/UI',
-  'order!threenodes/views/Timeline',
-  'order!threenodes/views/GroupDefinitionView',
-  'order!threenodes/views/Workspace',
-  'order!threenodes/utils/AppWebsocket',
-  'order!threenodes/utils/FileHandler',
-  'order!threenodes/utils/UrlHandler',
-  "order!threenodes/utils/WebglBase",
+  "cs!threenodes/utils/Utils",
+  'cs!threenodes/collections/Nodes',
+  'cs!threenodes/collections/GroupDefinitions',
+  'cs!threenodes/views/UI',
+  'cs!threenodes/views/Timeline',
+  'cs!threenodes/views/GroupDefinitionView',
+  'cs!threenodes/views/Workspace',
+  'cs!threenodes/utils/AppWebsocket',
+  'cs!threenodes/utils/FileHandler',
+  'cs!threenodes/utils/UrlHandler',
+  "cs!threenodes/utils/WebglBase",
+  'jQuery'
 ], (_, Backbone, Utils) ->
   "use strict"
   

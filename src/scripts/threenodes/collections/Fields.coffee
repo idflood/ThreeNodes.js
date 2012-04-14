@@ -1,7 +1,7 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/models/Field',
+  'cs!threenodes/models/Field',
 ], (_, Backbone) ->
   "use strict"
   ### Fields Collection ###

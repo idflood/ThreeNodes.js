@@ -1,10 +1,10 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/utils/Indexer',
-  'order!threenodes/models/GroupDefinition',
-  'order!threenodes/models/Connection',
-  'order!threenodes/views/ConnectionView',
+  'cs!threenodes/utils/Indexer',
+  'cs!threenodes/models/GroupDefinition',
+  'cs!threenodes/models/Connection',
+  'cs!threenodes/views/ConnectionView',
 ], (_, Backbone, Indexer) ->
   "use strict"
   

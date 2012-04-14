@@ -1,7 +1,7 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'order!threenodes/utils/Indexer',
+  'cs!threenodes/utils/Indexer',
 ], (_, Backbone, Indexer) ->
   "use strict"
   

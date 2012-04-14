@@ -1,8 +1,8 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'threenodes/utils/Utils',
-  'order!threenodes/utils/CodeExporter',
+  'cs!threenodes/utils/Utils',
+  'cs!threenodes/utils/CodeExporter',
   "order!libs/BlobBuilder.min",
   "order!libs/FileSaver.min",
   "order!libs/json2",

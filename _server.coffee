@@ -14,17 +14,20 @@ requirejs = require('requirejs')
 
 is_build = (process.argv[2] == "build")
 
+
+exec_and_log = (command, on_complete = null) ->
+  console.log "executing command: " + command
+  exec command, (err, stdout, stderr) ->
+    if err
+      console.log "error: " + err
+    console.log stdout + stderr
+    if on_complete then delay 100, () => on_complete()
+    
 # Require the external coffeescript and jade to build the static_output
 # todo: also remove the external dependencies
 if is_build
   delay = (ms, func) -> setTimeout func, ms
-  exec_and_log = (command, on_complete) ->
-    console.log "executing command: " + command
-    exec command, (err, stdout, stderr) ->
-      if err
-        console.log "error: " + err
-      console.log stdout + stderr
-      delay 100, () => on_complete()
+  
   compile_jade = (filename) ->
     html = jade.compile(fs.readFileSync('views/' + filename + ".jade", 'utf8'), {pretty: true})
     if html
@@ -79,15 +82,10 @@ if is_build
           deps: ['jQuery']
           attach: 'jQuery'
       
-      #  jQuery: "libs/jquery-1.6.4.min"
-      #  Underscore: "libs/underscore-min"
-      #  Backbone: "libs/backbone"
-      #modules: [{exclude: ["jQuery"]}]
       optimize: 'none'
       name: 'threenodes/App'
       out: 'output_static/scripts/threenodes/App.js'
-      #name: 'boot'
-      #out: 'output_static/scripts/boot-built.js'
+    
     requirejs.optimize config, (buildResponse) ->
       console.log "Optimization complete!"
       console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
@@ -116,34 +114,40 @@ else
   app.use express.static(__dirname + "/public")
   
   # Serve on the fly compiled js or existing js if there is no .coffee
-  app.get "/scripts/*.js", (req, res) ->
+  app.get "/scripts/*.coffee", (req, res) ->
     file = req.params[0]
-    compile_coffee = () ->
-      res.header("Content-Type", "application/x-javascript")
-      cs = fs.readFileSync("src/scripts/" + file + ".coffee", "utf8")
-      try
-        js = coffee.compile(cs, {bare: true})
-        res.send(js)
-      catch compileErr
-        console.log "##################################"
-        console.log "Error in file: " + file + ".coffee"
-        console.log compileErr
-        return compileErr
-    
     return_static = () ->
-      path.exists "public/scripts/" + file + ".js", (exists) ->
+      path.exists "src/scripts/" + file + ".coffee", (exists) ->
         if exists
           res.header("Content-Type", "application/x-javascript")
-          cs = fs.readFileSync("public/scripts/" + file + ".js", "utf8")
+          cs = fs.readFileSync("src/scripts/" + file + ".coffee", "utf8")
           res.send(cs)
         else
-          res.send("Cannot GET " + "/public/scripts/" + file + ".js", 404)
+          # attempt to serve test file before doing a 404
+          path.exists file + ".coffee", (exists) ->
+            if exists
+              res.header("Content-Type", "application/x-javascript")
+              cs = fs.readFileSync(file + ".coffee", "utf8")
+              res.send(cs)
+            else
+              res.send("Cannot GET " + "src/scripts/" + file + ".coffee", 404)
     
-    path.exists "src/scripts/" + file + ".coffee", (exists) ->
-      if exists
-        compile_coffee()
-      else
-        return_static()
+    return_static()
+  
+  app.get "/scripts/*.js", (req, res) ->
+    file = req.params[0]
+    
+    return_static = () ->
+      path.exists "src/scripts/" + file + ".js", (exists) ->
+        if exists
+          res.header("Content-Type", "application/x-javascript")
+          cs = fs.readFileSync("src/scripts/" + file + ".js", "utf8")
+          res.send(cs)
+        else
+          res.send("Cannot GET " + "/scripts/" + file + ".js", 404)
+    
+    return_static()
+  
   
   # Pseudo link for js templates (src/html/templates -> assets/js/templates/)
   app.get "/scripts/templates/*", (req, res) ->
@@ -172,6 +176,22 @@ else
   app.get "/test", (req, res) ->
     res.render "test",
       layout: false
+      
+  app.get "/test2", (req, res) ->
+    res.render "test2",
+      layout: false
+  
+  # Continuous integration
+  runTests = () ->
+    console.log "run mocha tests"
+    #exec_and_log "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script -u tdd"
+    require("./public/misc/run_test").run()
+
+  watch.watchTree "src/", {'ignoreDotFiles': true}, (f, curr, prev) ->
+    if typeof f != "object" && prev != null && curr != null then runTests()
+  watch.watchTree "test/", {'ignoreDotFiles': true}, (f, curr, prev) ->
+    if typeof f != "object" && prev != null && curr != null then runTests()
+  runTests()
   
   # Start the server
   app.listen port

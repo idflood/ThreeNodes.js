@@ -2,7 +2,7 @@ define [
   'use!Underscore', 
   'use!Backbone',
   "jQueryUi",
-  'order!threenodes/views/TreeView',
+  'cs!threenodes/views/TreeView',
   "order!libs/jquery.layout-latest",
 ], (_, Backbone, jQueryUi) ->
   "use strict"
