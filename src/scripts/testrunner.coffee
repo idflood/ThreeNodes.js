@@ -19,10 +19,13 @@ run = ->
       chai: "libs/chai"
 
     use:
+      jQuery:
+        attach: "jQuery"
       Underscore:
         attach: "_"
       
-      # backbone looks for "underscore" while all threenodes classes looks for "Underscore"
+      # backbone looks for "underscore" while all custom classes looks for "Underscore"
+      # todo: maybe replace all Underscore to underscore
       underscore:
         attach: "_"
       
@@ -31,7 +34,7 @@ run = ->
         attach: "Backbone"
 
       jQueryUi:
-        deps: [ "jQuery" ]
+        deps: [ "use!jQuery" ]
         attach: "jQuery"
 
   # Setup require.js
