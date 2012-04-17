@@ -2,7 +2,7 @@
  * Copyright 2012, Tim Branyen (@tbranyen)
  * use.js may be freely distributed under the MIT license.
  */
-(function() {
+(function(window) {
 
 // Cache used to map configuration options between load and write.
 var buildMap = {};
@@ -89,4 +89,4 @@ define({
   }
 });
 
-})();
+})(this);
