@@ -1,14 +1,15 @@
 run = ->
   reporter = "dot"
   conf =
-    baseUrl: '.'
+    baseUrl: __dirname
     nodeRequire: require
     paths:
       jQuery: "libs/jquery-1.7.2"
       jQueryUi: "libs/jquery-ui/js/jquery-ui-1.9m6"
       Underscore: "libs/underscore"
+      underscore: "libs/underscore"
       Backbone: "libs/backbone"
-      mocha: "libs/mocha"
+      mocha: "libs/mocha2"
       requirejs: "libs/require/require"
       use: "libs/require/use"
       text: "libs/require/text"
@@ -20,7 +21,11 @@ run = ->
     use:
       Underscore:
         attach: "_"
-
+      
+      # backbone looks for "underscore" while all threenodes classes looks for "Underscore"
+      underscore:
+        attach: "_"
+      
       Backbone:
         deps: [ "use!Underscore", "jQuery" ]
         attach: "Backbone"
@@ -33,18 +38,25 @@ run = ->
   requirejs.config(conf)
   global.define = requirejs
   
-  jsdom = require("jsdom").jsdom
-  global.document = jsdom()
-  global.window = global.document.parentWindow
-  window = global.window
-  #requirejs(['requirejs', 'mocha', 'chai'], function(require, mocha){
-  requirejs [ "requirejs", "mocha", "chai", "jQuery" ], (require, mocha) ->
+  jsdom = require("jsdom")
+  jsdom.defaultDocumentFeatures =
+    MutationEvents: '2.0'
+  
+  document = jsdom.jsdom()
+  window = document.createWindow()
+  global.window = window
+  global.document = document
+  
+  requirejs ["mocha", "chai"], (mocha) ->
     suite = new mocha.Suite("", new mocha.Context)
     ui = mocha.interfaces["tdd"]
     mocha.useColors = true
     ui suite
     suite.emit "pre-require", root
-    requirejs [ "../../test/NodesTest2" ], (tmp_test) ->
+    
+    requirejs [
+      "../../test/NodesTest2", 'use!Underscore', 'use!Backbone',"cs!threenodes/App", "cs!threenodes/utils/Utils"
+    ], (tmp_test) ->
       # todo: remove tmp_test when this is working...
       console.log tmp_test
       suite.emit "run"
