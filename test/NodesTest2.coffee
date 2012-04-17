@@ -1,13 +1,11 @@
-if typeof requirejs != 'function' then requirejs = define
+#if typeof requirejs != 'function' then requirejs = define
+console.log("this gets called in node if jQuery is removed from the testrunner require function")
 
-requirejs [
-  'use!Underscore', 
-  'use!Backbone',
-  "cs!threenodes/App",
-  "cs!threenodes/utils/Utils",
-], (_, Backbone, App, Utils) ->
+define ['use!Underscore', 'use!Backbone',"cs!threenodes/App", "cs!threenodes/utils/Utils"], (_, Backbone, App, Utils) ->
   "use strict"
   
+  # never called using node.js, works in the browser
+  console.log("TESTING...")
   $ = jQuery
   assert = require('chai').assert
   

@@ -1,5 +1,6 @@
 sys = require("util")
 fs = require("fs")
+spawn = require("child_process").spawn
 path = require("path")
 url = require("url")
 exec = require("child_process").exec
@@ -11,6 +12,7 @@ jade = require("jade")
 nib = require("nib")
 wrench = require("wrench")
 requirejs = require('requirejs')
+
 
 is_build = (process.argv[2] == "build")
 
@@ -181,12 +183,19 @@ else
     res.render "test2",
       layout: false
   
+  app.listen port
+  console.log "ready: http://localhost:#{port}/"
+  
   # Continuous integration
+  #testrunner = require("./public/misc/run_test")
+  testrunner = require("./src/scripts/testrunner")
   runTests = () ->
     console.log "run mocha tests"
-    #exec_and_log "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script -u tdd"
-    require("./public/misc/run_test").run()
-
+    testrunner.run()
+    
+    #exec_and_log "node public/misc/run_test.js"
+    console.log "mocha END"
+  
   watch.watchTree "src/", {'ignoreDotFiles': true}, (f, curr, prev) ->
     if typeof f != "object" && prev != null && curr != null then runTests()
   watch.watchTree "test/", {'ignoreDotFiles': true}, (f, curr, prev) ->
@@ -194,6 +203,5 @@ else
   runTests()
   
   # Start the server
-  app.listen port
-  console.log "ready: http://localhost:#{port}/"
+  
 
