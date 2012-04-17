@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -6,12 +8,12 @@ define [
   'cs!threenodes/models/Connection',
   'cs!threenodes/views/ConnectionView',
 ], (_, Backbone, Indexer) ->
-  "use strict"
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.GroupDefinitions extends Backbone.Collection
-    model: ThreeNodes.GroupDefinition
+  class root.ThreeNodes.GroupDefinitions extends Backbone.Collection
+    model: root.ThreeNodes.GroupDefinition
     
     initialize: () =>
       # The group definitions have their own indexer, used to get unique id
@@ -74,7 +76,7 @@ define [
       dy = (min_y + max_y) / 2
       
       # Create a new GroupDefinition from the selected nodes and connections
-      group_def = new ThreeNodes.GroupDefinition
+      group_def = new root.ThreeNodes.GroupDefinition
         fromSelectedNodes: selected_nodes
         indexer: @indexer
       @add(group_def)
@@ -104,7 +106,7 @@ define [
       for node in selected_nodes
         node.remove()
       
-      # Create a ThreeNodes.nodes.Group
+      # Create a root.ThreeNodes.nodes.Group
       model =
         type: "Group"
         definition: group_def

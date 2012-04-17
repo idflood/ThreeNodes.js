@@ -1,15 +1,18 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/GroupDefinition',
-], (_, Backbone) ->
-  "use strict"
+], (jQuery, _, Backbone) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.Group extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Group extends root.ThreeNodes.NodeBase
     @node_name = 'Group'
     @group_name = false
         
@@ -24,7 +27,7 @@ define [
       @definition = options.definition
       
       # A group contains a sub-nodes (nodes)
-      @nodes = new ThreeNodes.NodesCollection([], {settings: @settings})
+      @nodes = new root.ThreeNodes.nodesCollection([], {settings: @settings})
       
       # Create the subnodes
       for node in @definition.get("nodes")

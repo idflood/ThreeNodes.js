@@ -1,8 +1,10 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   
   class Indexer
     constructor: () ->

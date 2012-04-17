@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -5,12 +7,12 @@ define [
   'cs!threenodes/views/TreeView',
   "order!libs/jquery.layout-latest",
 ], (_, Backbone, jQueryUi) ->
-  "use strict"
+  #"use strict"
   
   ### Sidebar View ###
   $ = jQuery
   
-  class ThreeNodes.Sidebar extends Backbone.View
+  class root.ThreeNodes.Sidebar extends Backbone.View
     initialize: () ->
       super
       @initNewNode()
@@ -31,7 +33,7 @@ define [
           size: "100%"
     
     initTreeView: () =>
-      @treeview = new ThreeNodes.TreeView
+      @treeview = new root.ThreeNodes.TreeView
         el: $("#tab-list")
       return this
     
@@ -101,9 +103,9 @@ define [
       nodes_by_group = {}
       
       # Organize each node types by group
-      for node of ThreeNodes.nodes
+      for node of root.ThreeNodes.nodes
         # don't show hidden nodes types (group_name = false)
-        if ThreeNodes.nodes[node].group_name
+        if root.ThreeNodes.nodes[node].group_name
           group_name = (ThreeNodes.nodes[node].group_name).replace(/\./g, "-")
           if !nodes_by_group[group_name]
             nodes_by_group[group_name] = []
@@ -113,7 +115,7 @@ define [
       for group of nodes_by_group
         $container.append("<h3>#{group}</h3><ul id='nodetype-#{group}'></ul>")
         for node in nodes_by_group[group]
-          $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.nodes[node].node_name }</a></li>")
+          $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ root.ThreeNodes.nodes[node].node_name }</a></li>")
       
       # Make the list of nodes draggable
       jQuery("a.button", $container).draggable

@@ -1,14 +1,17 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/collections/Fields',
-], (_, Backbone, Utils) ->
-  "use strict"
+], (jQuery, _, Backbone, Utils) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.NodeBase extends Backbone.Model
+  class root.ThreeNodes.NodeBase extends Backbone.Model
     @node_name = ''
     @group_name = ''
             
@@ -47,7 +50,7 @@ define [
         @indexer.uid = @get('nid')
       
       # Create the fields collections
-      @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
+      @fields = new root.ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
       @
       
     postInit: () =>
@@ -202,7 +205,7 @@ define [
         if field.isAnimationProperty() == false then @disablePropertyAnim(field)
       return res
   
-  class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
+  class root.ThreeNodes.NodeNumberSimple extends root.ThreeNodes.NodeBase
     setFields: =>
       @v_in = @fields.addField("in", {type: "Float", val: 0})
       @v_out = @fields.addField("out", {type: "Float", val: 0}, "outputs")

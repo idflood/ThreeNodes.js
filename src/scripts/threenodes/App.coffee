@@ -1,5 +1,5 @@
 #### App
-root = if typeof exports != "undefined" && exports != null then exports else window
+root = if typeof window != "undefined" && window != null then window else exports
 
 # Declare namespace
 if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object"
@@ -10,6 +10,7 @@ if root.ThreeNodes.fields == null || typeof(!root.ThreeNodes.fields) != "object
   root.ThreeNodes.fields = {}
 
 define [
+  'jQuery',
   'use!Underscore',
   'use!Backbone',
   "cs!threenodes/utils/Utils",
@@ -24,12 +25,12 @@ define [
   'cs!threenodes/utils/UrlHandler',
   "cs!threenodes/utils/WebglBase",
   'jQuery'
-], (_, Backbone, Utils) ->
-  "use strict"
+], (jQuery, _, Backbone, Utils) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.App
+  class root.ThreeNodes.App
     constructor: (options) ->
       # Default settings
       settings = 
@@ -42,12 +43,12 @@ define [
       websocket_enabled = false
       
       # Initialize some core classes
-      @url_handler = new ThreeNodes.UrlHandler()
-      @group_definitions = new ThreeNodes.GroupDefinitions([])
-      @nodes = new ThreeNodes.NodesCollection([], {settings: settings})
-      @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
-      @webgl = new ThreeNodes.WebglBase()
-      @file_handler = new ThreeNodes.FileHandler(@nodes, @group_definitions)
+      @url_handler = new root.ThreeNodes.UrlHandler()
+      @group_definitions = new root.ThreeNodes.GroupDefinitions([])
+      @nodes = new root.ThreeNodes.nodesCollection([], {settings: settings})
+      @socket = new root.ThreeNodes.AppWebsocket(websocket_enabled)
+      @webgl = new root.ThreeNodes.WebglBase()
+      @file_handler = new root.ThreeNodes.FileHandler(@nodes, @group_definitions)
       
       # Create a group node when selected nodes are grouped
       @group_definitions.bind "definition:created", @nodes.createGroup
@@ -59,11 +60,11 @@ define [
       if @settings.test == false
         # Create group definition views when a new one is created
         @group_definitions.bind "add", (definition) =>
-          template = ThreeNodes.GroupDefinitionView.template
+          template = root.ThreeNodes.GroupDefinitionView.template
           tmpl = _.template(template, definition)
           $tmpl = $(tmpl).appendTo("#library")
           
-          view = new ThreeNodes.GroupDefinitionView
+          view = new root.ThreeNodes.GroupDefinitionView
             model: definition
             el: $tmpl
           view.bind "edit", @setWorkspaceFromDefinition
@@ -79,7 +80,7 @@ define [
       @initTimeline()
       
       # Initialize the workspace view
-      @workspace = new ThreeNodes.Workspace
+      @workspace = new root.ThreeNodes.Workspace
         el: "#container"
         settings: @settings
       # Make the workspace display the global nodes and connections
@@ -106,7 +107,7 @@ define [
     initUI: () =>
       if @settings.test == false
         # Create the main user interface view
-        @ui = new ThreeNodes.UI
+        @ui = new root.ThreeNodes.UI
           el: $("body")
           settings: @settings
         
@@ -145,7 +146,7 @@ define [
           @timelineView.off("TimelineCreated", @ui.onUiWindowResize)
       
       # Create a new timeline
-      @timelineView = new ThreeNodes.AppTimeline
+      @timelineView = new root.ThreeNodes.AppTimeline
         el: $("#timeline")
         ui: @ui
       

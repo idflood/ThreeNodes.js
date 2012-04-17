@@ -1,13 +1,15 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/views/NodeView',
   'cs!threenodes/views/ConnectionView',
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   $ = jQuery
   
-  class ThreeNodes.Workspace extends Backbone.View
+  class root.ThreeNodes.Workspace extends Backbone.View
     initialize: (options) =>
       super
       @views = []
@@ -36,7 +38,7 @@ define [
       @nodes.connections.bind("add", @renderConnection)
     
     renderNode: (node) =>
-      view = new ThreeNodes.NodeView
+      view = new root.ThreeNodes.NodeView
         model: node
       
       view.$el.appendTo(@$el)
@@ -49,6 +51,6 @@ define [
     renderConnection: (connection) =>
       if @settings.test == true
         return false
-      view = new ThreeNodes.ConnectionView
+      view = new root.ThreeNodes.ConnectionView
         model: connection
       @views.push(view)

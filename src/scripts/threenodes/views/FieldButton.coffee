@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -7,12 +9,12 @@ define [
   'cs!threenodes/utils/Utils',
   "order!libs/jquery.contextMenu",
 ], (_, Backbone, UiView, _view_node_field_in, _view_node_field_out) ->
-  "use strict"
+  #"use strict"
   
   ### FieldButton View ###
   $ = jQuery
   
-  class ThreeNodes.FieldButton extends Backbone.View
+  class root.ThreeNodes.FieldButton extends Backbone.View
     className: "field"
     # Save some options in variables and bind events
     initialize: (options) ->

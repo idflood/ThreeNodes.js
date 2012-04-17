@@ -1,14 +1,17 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
-], (_, Backbone) ->
-  "use strict"
+], (jQuery, _, Backbone) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.NodeMaterialBase extends ThreeNodes.NodeBase
+  class root.ThreeNodes.NodeMaterialBase extends root.ThreeNodes.NodeBase
     setFields: =>
       super
       @ob = false
@@ -69,7 +72,7 @@ define [
       @last_slice_count = numItems
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
+  class root.ThreeNodes.nodes.MeshBasicMaterial extends root.ThreeNodes.NodeMaterialBase
     @node_name = 'MeshBasic'
     @group_name = 'Materials'
     
@@ -93,7 +96,7 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
-  class ThreeNodes.nodes.LineBasicMaterial extends ThreeNodes.NodeMaterialBase
+  class root.ThreeNodes.nodes.LineBasicMaterial extends root.ThreeNodes.NodeMaterialBase
     @node_name = 'LineBasic'
     @group_name = 'Materials'
     
@@ -110,7 +113,7 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
       @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
-  class ThreeNodes.nodes.MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
+  class root.ThreeNodes.nodes.MeshLambertMaterial extends root.ThreeNodes.NodeMaterialBase
     @node_name = 'MeshLambert'
     @group_name = 'Materials'
     
@@ -134,7 +137,7 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
-  class ThreeNodes.nodes.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
+  class root.ThreeNodes.nodes.MeshPhongMaterial extends root.ThreeNodes.NodeMaterialBase
     @node_name = 'MeshPhong'
     @group_name = 'Materials'
     

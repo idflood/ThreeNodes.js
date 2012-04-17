@@ -1,12 +1,14 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Connection',
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   
-  class ThreeNodes.ConnectionsCollection extends Backbone.Collection
-    model: ThreeNodes.Connection
+  class root.ThreeNodes.ConnectionsCollection extends Backbone.Collection
+    model: root.ThreeNodes.Connection
     
     initialize: (models, options) =>
       @indexer = options.indexer

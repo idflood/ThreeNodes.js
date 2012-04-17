@@ -1,4 +1,7 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
@@ -6,12 +9,12 @@ define [
   "order!libs/Three",
   "order!libs/csg",
   "order!libs/ThreeCSG",
-], (_, Backbone, Utils) ->
-  "use strict"
+], (jQuery, _, Backbone, Utils) ->
+  #"use strict"
   
   $ = jQuery
   
-  class NodeCSG extends ThreeNodes.NodeBase
+  class NodeCSG extends root.ThreeNodes.NodeBase
     setFields: =>
       super
       @auto_evaluate = true
@@ -63,17 +66,17 @@ define [
         @cached = new_cache
       @fields.setField("geometry", @ob)
       
-  class ThreeNodes.nodes.CsgUnion extends NodeCSG
+  class root.ThreeNodes.nodes.CsgUnion extends NodeCSG
     @node_name = 'Union'
     @group_name = 'Constructive-Geometry'
   
-  class ThreeNodes.nodes.CsgSubtract extends NodeCSG
+  class root.ThreeNodes.nodes.CsgSubtract extends NodeCSG
     @node_name = 'Subtract'
     @group_name = 'Constructive-Geometry'
     
     comput_csg_geometry: (a, b) => a.subtract(b)
   
-  class ThreeNodes.nodes.CsgIntersect extends NodeCSG
+  class root.ThreeNodes.nodes.CsgIntersect extends NodeCSG
     @node_name = 'Intersect'
     @group_name = 'Constructive-Geometry'
     

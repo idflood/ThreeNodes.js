@@ -1,11 +1,13 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, Utils) ->
-  "use strict"
+  #"use strict"
   
-  class ThreeNodes.GroupDefinition extends Backbone.Model
+  class root.ThreeNodes.GroupDefinition extends Backbone.Model
     defaults:
       nodes: []
       connections: []

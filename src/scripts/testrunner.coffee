@@ -34,20 +34,32 @@ run = ->
         deps: [ "jQuery" ]
         attach: "jQuery"
 
+  # Setup require.js
   requirejs = require("requirejs")
   requirejs.config(conf)
   global.define = requirejs
   
+  # Loads the coffeescript module before setting the global.window since it relies on this to see if this is a browser or node.js
+  requirejs("cs")
+  requirejs("use")
+  requirejs("text")
+  requirejs("order")
+  
   jsdom = require("jsdom")
   jsdom.defaultDocumentFeatures =
     MutationEvents: '2.0'
+    QuerySelector: true
   
+  # Create main DOM elements with jsdom
   document = jsdom.jsdom()
   window = document.createWindow()
+  
+  # Set global.window and global.document for Underscore/backbone/jquery/...
   global.window = window
   global.document = document
+  global.ThreeNodes = {}
   
-  requirejs ["mocha", "chai"], (mocha) ->
+  requirejs ["mocha", "chai", 'use!Underscore'], (mocha, chai, unde) ->
     suite = new mocha.Suite("", new mocha.Context)
     ui = mocha.interfaces["tdd"]
     mocha.useColors = true
@@ -55,10 +67,10 @@ run = ->
     suite.emit "pre-require", root
     
     requirejs [
-      "../../test/NodesTest2", 'use!Underscore', 'use!Backbone',"cs!threenodes/App", "cs!threenodes/utils/Utils"
-    ], (tmp_test) ->
+      "../../test/NodesTest2", 'use!Underscore', 'use!Backbone',"cs!threenodes/App", "threenodes/utils/Utils"
+    ], (tmp_test, _) ->
       # todo: remove tmp_test when this is working...
-      console.log tmp_test
+      console.log _
       suite.emit "run"
       runner = new mocha.Runner(suite)
       runner.ignoreLeaks = true

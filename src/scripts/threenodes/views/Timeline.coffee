@@ -1,13 +1,15 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   "order!libs/timeline.js/timeline",
   "order!libs/timeline.js/timeline-gui",
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   $ = jQuery
   
-  class ThreeNodes.AppTimeline extends Backbone.View
+  class root.ThreeNodes.AppTimeline extends Backbone.View
     initialize: (options) =>
       super
       # reset canvas height

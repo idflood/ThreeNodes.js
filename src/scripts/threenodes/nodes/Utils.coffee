@@ -1,14 +1,17 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
-], (_, Backbone) ->
-  "use strict"
+], (jQuery, _, Backbone) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.Random extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Random extends root.ThreeNodes.NodeBase
     @node_name = 'Random'
     @group_name = 'Utils'
     
@@ -28,7 +31,7 @@ define [
       @fields.setField("out", value)
   
   # based on http://www.cycling74.com/forums/topic.php?id=7821
-  class ThreeNodes.nodes.LFO extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.LFO extends root.ThreeNodes.NodeBase
     @node_name = 'LFO'
     @group_name = 'Utils'
     
@@ -107,7 +110,7 @@ define [
       
       @fields.setField("out", lfout)
   
-  class ThreeNodes.nodes.Merge extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Merge extends root.ThreeNodes.NodeBase
     @node_name = 'Merge'
     @group_name = 'Utils'
     
@@ -138,7 +141,7 @@ define [
             result[result.length] = subval
       @fields.setField("out", result)
   
-  class ThreeNodes.nodes.Get extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Get extends root.ThreeNodes.NodeBase
     @node_name = 'Get'
     @group_name = 'Utils'
     
@@ -161,7 +164,7 @@ define [
       if @value != old
         @fields.setField("out", @value)
   
-  class ThreeNodes.nodes.Mp3Input extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Mp3Input extends root.ThreeNodes.NodeBase
     @node_name = 'Mp3Input'
     @group_name = 'Utils'
     
@@ -301,7 +304,7 @@ define [
         @fields.setField("high", @getAverageLevel(length3rd * 2, length - 1))
       return true
   
-  class ThreeNodes.nodes.Mouse extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Mouse extends root.ThreeNodes.NodeBase
     @node_name = 'Mouse'
     @group_name = 'Utils'
     
@@ -317,14 +320,14 @@ define [
     compute: =>
       dx = 0
       dy = 0
-      if ThreeNodes.nodes.WebGLRenderer && ThreeNodes.nodes.WebGLRenderer.mouseX
-        dx = ThreeNodes.nodes.WebGLRenderer.mouseX
-        dy = ThreeNodes.nodes.WebGLRenderer.mouseY
+      if root.ThreeNodes.nodes.WebGLRenderer && root.ThreeNodes.nodes.WebGLRenderer.mouseX
+        dx = root.ThreeNodes.nodes.WebGLRenderer.mouseX
+        dy = root.ThreeNodes.nodes.WebGLRenderer.mouseY
       @fields.setField("xy", new THREE.Vector2(dx, dy))
       @fields.setField("x", dx)
       @fields.setField("y", dy)
   
-  class ThreeNodes.nodes.Timer extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Timer extends root.ThreeNodes.NodeBase
     @node_name = 'Timer'
     @group_name = 'Utils'
     
@@ -359,7 +362,7 @@ define [
       @old = now
       @fields.setField("out", @counter)
   
-  class ThreeNodes.nodes.Font extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Font extends root.ThreeNodes.NodeBase
     @node_name = 'Font'
     @group_name = 'Utils'
     

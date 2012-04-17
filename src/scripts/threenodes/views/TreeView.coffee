@@ -1,13 +1,15 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   "order!libs/tree.jquery",
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.TreeView extends Backbone.View
+  class root.ThreeNodes.TreeView extends Backbone.View
     initialize: (options) ->
       super
       @timeoutId = false

@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -14,12 +16,12 @@ define [
   "order!libs/FileSaver.min",
   "order!libs/canvas-toBlob.min",
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   
   $ = jQuery
   
-  ThreeNodes.Webgl = {}
-  class ThreeNodes.WebglBase
+  root.ThreeNodes.Webgl = {}
+  class root.ThreeNodes.WebglBase
     constructor: () ->
       console.log "webgl init..."
       @current_scene = new THREE.Scene()
@@ -33,12 +35,12 @@ define [
       @renderModel = new THREE.RenderPass( @current_scene, @current_camera )
       @composer = new THREE.EffectComposer( @current_renderer )
       
-      ThreeNodes.Webgl.current_renderer = @current_renderer
-      ThreeNodes.Webgl.current_scene = @current_scene
-      ThreeNodes.Webgl.current_camera = @current_camera
-      ThreeNodes.Webgl.composer = @composer
-      ThreeNodes.Webgl.renderModel = @renderModel
-      ThreeNodes.Webgl.effectScreen = @effectScreen
+      root.ThreeNodes.Webgl.current_renderer = @current_renderer
+      root.ThreeNodes.Webgl.current_scene = @current_scene
+      root.ThreeNodes.Webgl.current_camera = @current_camera
+      root.ThreeNodes.Webgl.composer = @composer
+      root.ThreeNodes.Webgl.renderModel = @renderModel
+      root.ThreeNodes.Webgl.effectScreen = @effectScreen
     
     exportImage: (fname) =>
       canvas = @current_renderer.domElement

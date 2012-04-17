@@ -1,12 +1,14 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Field',
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   ### Fields Collection ###
   
-  class ThreeNodes.FieldsCollection extends Backbone.Collection
+  class root.ThreeNodes.FieldsCollection extends Backbone.Collection
     initialize: (models, options) =>
       @node = options.node
       @indexer = options.indexer
@@ -146,7 +148,7 @@ define [
       field_is_out = (direction != "inputs")
       if $.type(value) != "object"
         value = @getFieldValueObject(value)
-      field = new ThreeNodes.fields[value.type]
+      field = new root.ThreeNodes.fields[value.type]
         name: name
         value: value.val
         possibilities: value.values

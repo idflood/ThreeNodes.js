@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -7,10 +9,10 @@ define [
   "order!libs/FileSaver.min",
   "order!libs/json2",
 ], (_, Backbone, Utils) ->
-  "use strict"
+  #"use strict"
   $ = jQuery
   
-  class ThreeNodes.FileHandler extends Backbone.Events
+  class root.ThreeNodes.FileHandler extends Backbone.Events
     constructor: (@nodes, @group_definitions) ->
       _.extend(FileHandler::, Backbone.Events)
       
@@ -23,7 +25,7 @@ define [
     exportCode: () =>
       # get the json export and convert it to code
       json = @getLocalJson(false)
-      exporter = new ThreeNodes.CodeExporter()
+      exporter = new root.ThreeNodes.CodeExporter()
       res = exporter.toCode(json)
       
       bb = new BlobBuilder()

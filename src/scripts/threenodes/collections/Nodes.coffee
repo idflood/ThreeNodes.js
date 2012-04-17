@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -18,10 +20,10 @@ define [
   'cs!threenodes/nodes/Group',
   'cs!threenodes/collections/Connections',
 ], (_, Backbone, Indexer) ->
-  "use strict"
+  #"use strict"
   $ = jQuery
   
-  class ThreeNodes.NodesCollection extends Backbone.Collection
+  class root.ThreeNodes.nodesCollection extends Backbone.Collection
     
     initialize: (models, options) =>
       @settings = options.settings
@@ -33,7 +35,7 @@ define [
       @indexer = new Indexer()
       
       # Create the connections collection
-      @connections = new ThreeNodes.ConnectionsCollection([], {indexer: @indexer})
+      @connections = new root.ThreeNodes.ConnectionsCollection([], {indexer: @indexer})
       
       @connections.bind "add", (connection) ->
         self.trigger "nodeslist:rebuild", self
@@ -99,7 +101,7 @@ define [
         return false
       
       # Create the node and pass the options
-      n = new ThreeNodes.nodes[options.type](options)
+      n = new root.ThreeNodes.nodes[options.type](options)
       
       # Add the node to the collection
       @add(n)

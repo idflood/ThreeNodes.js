@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -7,11 +9,11 @@ define [
   "jQueryUi",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_node_template) ->
-  "use strict"
+  #"use strict"
   ### Node View ###
   $ = jQuery
   
-  class ThreeNodes.NodeView extends Backbone.View
+  class root.ThreeNodes.NodeView extends Backbone.View
     className: "node"
       
     initialize: (options) ->
@@ -24,7 +26,7 @@ define [
       @initTitleClick()
       
       # Initialize the fields view
-      @fields_view = new ThreeNodes.FieldsView
+      @fields_view = new root.ThreeNodes.FieldsView
         node: @model
         collection: @model.fields
         el: $(".options", @$el)
@@ -178,4 +180,4 @@ define [
           self.renderConnections()
       return @
   
-  return ThreeNodes.NodeView
+  return root.ThreeNodes.NodeView

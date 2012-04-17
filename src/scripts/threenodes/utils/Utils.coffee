@@ -1,10 +1,12 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   
-  class ThreeNodes.Utils
+  class root.ThreeNodes.Utils
     @flatArraysAreEquals: (arr1, arr2) ->
       if arr1.length != arr2.length
         return false

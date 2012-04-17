@@ -1,15 +1,18 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Node',
   "order!libs/colorpicker/js/colorpicker",
   'cs!threenodes/utils/Utils',
-], (_, Backbone) ->
-  "use strict"
+], (jQuery, _, Backbone) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.Number extends ThreeNodes.NodeNumberSimple
+  class root.ThreeNodes.nodes.Number extends root.ThreeNodes.NodeNumberSimple
     @node_name = 'Number'
     @group_name = 'Base'
     
@@ -17,7 +20,7 @@ define [
       super
       @fields.add_center_textfield(@v_in)
   
-  class ThreeNodes.nodes.Boolean extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Boolean extends root.ThreeNodes.NodeBase
     @node_name = 'Boolean'
     @group_name = 'Base'
     
@@ -35,7 +38,7 @@ define [
     compute: =>
       @fields.setField("out", @fields.getField("bool").getValue())
   
-  class ThreeNodes.nodes.String extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.String extends root.ThreeNodes.NodeBase
     @node_name = 'String'
     @group_name = 'Base'
     
@@ -55,7 +58,7 @@ define [
     compute: =>
       @fields.setField("out", @fields.getField("string").getValue())
   
-  class ThreeNodes.nodes.Vector2 extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Vector2 extends root.ThreeNodes.NodeBase
     @node_name = 'Vector2'
     @group_name = 'Base'
     
@@ -90,7 +93,7 @@ define [
       @fields.setField("x", resx)
       @fields.setField("y", resy)
   
-  class ThreeNodes.nodes.Vector3 extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Vector3 extends root.ThreeNodes.NodeBase
     @node_name = 'Vector3'
     @group_name = 'Base'
     
@@ -125,7 +128,7 @@ define [
       @fields.setField("y", resy)
       @fields.setField("z", resz)
   
-  class ThreeNodes.nodes.Color extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Color extends root.ThreeNodes.NodeBase
     @node_name = 'Color'
     @group_name = 'Base'
     

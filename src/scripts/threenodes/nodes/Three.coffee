@@ -1,14 +1,17 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
-], (_, Backbone) ->
-  "use strict"
+], (jQuery, _, Backbone) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.Object3D extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Object3D extends root.ThreeNodes.NodeBase
     @node_name = 'Object3D'
     @group_name = 'Three'
     
@@ -86,7 +89,7 @@ define [
       @apply_children()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.Scene extends ThreeNodes.nodes.Object3D
+  class root.ThreeNodes.nodes.Scene extends root.ThreeNodes.nodes.Object3D
     @node_name = 'Scene'
     @group_name = 'Three'
     
@@ -111,7 +114,7 @@ define [
       @apply_children()
       @fields.setField("out", @ob)
   
-  class Object3DwithMeshAndMaterial extends ThreeNodes.nodes.Object3D
+  class Object3DwithMeshAndMaterial extends root.ThreeNodes.nodes.Object3D
     setFields: =>
       super
       @material_cache = false
@@ -151,7 +154,7 @@ define [
         res = current_val.id
       res
   
-  class ThreeNodes.nodes.ColladaLoader extends ThreeNodes.nodes.Object3D
+  class root.ThreeNodes.nodes.ColladaLoader extends root.ThreeNodes.nodes.Object3D
     @node_name = 'ColladaLoader'
     @group_name = 'Three'
     
@@ -238,7 +241,7 @@ define [
       @shadow_cache = @createCacheObject(@vars_shadow_options)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.ThreeMesh extends Object3DwithMeshAndMaterial
+  class root.ThreeNodes.nodes.ThreeMesh extends Object3DwithMeshAndMaterial
     @node_name = 'Mesh'
     @group_name = 'Three'
     
@@ -296,7 +299,7 @@ define [
       @material_cache = @get_material_cache()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.ThreeLine extends Object3DwithMeshAndMaterial
+  class root.ThreeNodes.nodes.ThreeLine extends Object3DwithMeshAndMaterial
     @node_name = 'Line'
     @group_name = 'Three'
     
@@ -350,7 +353,7 @@ define [
       @material_cache = @get_material_cache()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.Camera extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Camera extends root.ThreeNodes.NodeBase
     @node_name = 'Camera'
     @group_name = 'Three'
     
@@ -391,7 +394,7 @@ define [
       @ob.lookAt(@fields.getField("target").getValue())
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.Texture extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Texture extends root.ThreeNodes.NodeBase
     @node_name = 'Texture'
     @group_name = 'Three'
     
@@ -422,7 +425,7 @@ define [
           
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.Fog extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.Fog extends root.ThreeNodes.NodeBase
     @node_name = 'Fog'
     @group_name = 'Three'
     
@@ -447,7 +450,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.FogExp2 extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.FogExp2 extends root.ThreeNodes.NodeBase
     @node_name = 'FogExp2'
     @group_name = 'Three'
     
@@ -471,7 +474,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.WebGLRenderer extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.WebGLRenderer extends root.ThreeNodes.NodeBase
     @node_name = 'WebGLRenderer'
     @group_name = 'Three'
     
@@ -484,7 +487,7 @@ define [
       @auto_evaluate = true
       @preview_mode = true
       @creating_popup = false
-      @ob = ThreeNodes.Webgl.current_renderer
+      @ob = root.ThreeNodes.Webgl.current_renderer
       @width = 0
       @height = 0
       $("body").append("<div id='webgl-window'></div>")
@@ -522,12 +525,12 @@ define [
       if @win && @win != false
         @win.close()
       
-      if ThreeNodes.Webgl.current_camera == @fields.getField("camera").getValue()
-        ThreeNodes.Webgl.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
-        ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
-      if ThreeNodes.Webgl.current_scene == @fields.getField("scene").getValue()
-        ThreeNodes.Webgl.current_scene = new THREE.Scene()
-        ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
+      if root.ThreeNodes.Webgl.current_camera == @fields.getField("camera").getValue()
+        root.ThreeNodes.Webgl.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
+        root.ThreeNodes.Webgl.renderModel.camera = root.ThreeNodes.Webgl.current_camera
+      if root.ThreeNodes.Webgl.current_scene == @fields.getField("scene").getValue()
+        root.ThreeNodes.Webgl.current_scene = new THREE.Scene()
+        root.ThreeNodes.Webgl.renderModel.scene = root.ThreeNodes.Webgl.current_scene
       
       @webgl_container.unbind()
       $(@ob.domElement).unbind()
@@ -542,8 +545,8 @@ define [
     add_mouse_handler: =>
       $(@ob.domElement).unbind "mousemove"
       $(@ob.domElement).bind "mousemove", (e) ->
-        ThreeNodes.nodes.WebGLRenderer.mouseX = e.clientX
-        ThreeNodes.nodes.WebGLRenderer.mouseY = e.clientY
+        root.ThreeNodes.nodes.WebGLRenderer.mouseX = e.clientX
+        root.ThreeNodes.nodes.WebGLRenderer.mouseY = e.clientY
       return this
     
     create_popup_view: ->
@@ -611,9 +614,9 @@ define [
       # work on a copy of the incoming array
       fxs = @fields.getField("postfx").getValue().slice(0)
       # 1st pass = rendermodel, last pass = screen
-      fxs.unshift ThreeNodes.Webgl.renderModel
-      fxs.push ThreeNodes.Webgl.effectScreen
-      ThreeNodes.Webgl.composer.passes = fxs
+      fxs.unshift root.ThreeNodes.Webgl.renderModel
+      fxs.push root.ThreeNodes.Webgl.effectScreen
+      root.ThreeNodes.Webgl.composer.passes = fxs
       
     add_renderer_to_dom: =>
       if @preview_mode && $("canvas", @webgl_container).length == 0
@@ -637,8 +640,8 @@ define [
       @apply_size()
       @apply_bg_color()
       @applyFieldsToVal(@fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
-      ThreeNodes.Webgl.current_camera = @fields.getField("camera").getValue()
-      ThreeNodes.Webgl.current_scene = @fields.getField("scene").getValue()
+      root.ThreeNodes.Webgl.current_camera = @fields.getField("camera").getValue()
+      root.ThreeNodes.Webgl.current_scene = @fields.getField("scene").getValue()
       
       #set the current aspect on the camera
       @fields.getField("camera").getValue().aspect = @width / @height
@@ -646,9 +649,9 @@ define [
       
       @apply_post_fx()
       @ob.clear()
-      ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
-      ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
-      ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer
-      ThreeNodes.Webgl.composer.render(0.05)
+      root.ThreeNodes.Webgl.renderModel.scene = root.ThreeNodes.Webgl.current_scene
+      root.ThreeNodes.Webgl.renderModel.camera = root.ThreeNodes.Webgl.current_camera
+      root.ThreeNodes.Webgl.composer.renderer = root.ThreeNodes.Webgl.current_renderer
+      root.ThreeNodes.Webgl.composer.render(0.05)
     
   return true

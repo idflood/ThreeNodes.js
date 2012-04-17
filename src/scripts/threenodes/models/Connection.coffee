@@ -1,11 +1,13 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Indexer',
 ], (_, Backbone, Indexer) ->
-  "use strict"
+  #"use strict"
   
-  class ThreeNodes.Connection extends Backbone.Model
+  class root.ThreeNodes.Connection extends Backbone.Model
     # Create a static indexer used if the connection is not part of a nodes collection (tests)
     @static_indexer: new Indexer()
     
@@ -16,7 +18,7 @@ define [
     
     initialize: (options) =>
       @options = options
-      indexer = options.indexer || ThreeNodes.NodeField.static_indexer
+      indexer = options.indexer || root.ThreeNodes.NodeField.static_indexer
       
       # Set a unique connection id
       if @get("cid") == -1 then @set({"cid": indexer.getUID()})

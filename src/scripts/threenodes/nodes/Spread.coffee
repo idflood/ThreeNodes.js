@@ -1,14 +1,17 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Rc4Random',
   'cs!threenodes/models/Node',
-], (_, Backbone, Rc4Random) ->
-  "use strict"
+], (jQuery, _, Backbone, Rc4Random) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.RandomSpread extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.RandomSpread extends root.ThreeNodes.NodeBase
     @node_name = 'RandomSpread'
     @group_name = 'Spread'
     
@@ -50,7 +53,7 @@ define [
           @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
       @fields.setField("out", @value)
   
-  class ThreeNodes.nodes.LinearSpread extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.LinearSpread extends root.ThreeNodes.NodeBase
     @node_name = 'LinearSpread'
     @group_name = 'Spread'
     

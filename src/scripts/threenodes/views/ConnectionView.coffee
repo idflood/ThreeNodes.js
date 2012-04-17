@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -5,11 +7,11 @@ define [
   "jQueryUi",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, UI, _view_node_template) ->
-  "use strict"
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.ConnectionView extends Backbone.View
+  class root.ThreeNodes.ConnectionView extends Backbone.View
     initialize: (options) ->
       super
       @container = $("#graph")

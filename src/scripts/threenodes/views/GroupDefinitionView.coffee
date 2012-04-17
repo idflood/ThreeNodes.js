@@ -1,3 +1,5 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -7,12 +9,12 @@ define [
   "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_template, _view_group_delete) ->
-  "use strict"
+  #"use strict"
   ### Node View ###
   
   $ = jQuery
   
-  class ThreeNodes.GroupDefinitionView extends Backbone.View
+  class root.ThreeNodes.GroupDefinitionView extends Backbone.View
     @template = _view_template
         
     initialize: () ->

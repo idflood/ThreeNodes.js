@@ -1,10 +1,12 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   "order!libs/sockjs-latest.min",
 ], (_, Backbone) ->
-  "use strict"
-  class ThreeNodes.AppWebsocket
+  #"use strict"
+  class root.ThreeNodes.AppWebsocket
     constructor: (websocket_enabled = false) ->
       if websocket_enabled
         webso = false

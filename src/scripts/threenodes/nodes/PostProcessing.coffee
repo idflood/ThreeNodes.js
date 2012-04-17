@@ -1,14 +1,17 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
-], (_, Backbone, Utils) ->
-  "use strict"
+], (jQuery, _, Backbone, Utils) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.BloomPass extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.BloomPass extends root.ThreeNodes.NodeBase
     @node_name = 'Bloom'
     @group_name = 'PostProcessing'
     
@@ -43,7 +46,7 @@ define [
       @ob.screenUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.DotScreenPass extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.DotScreenPass extends root.ThreeNodes.NodeBase
     @node_name = 'DotScreen'
     @group_name = 'PostProcessing'
     
@@ -76,7 +79,7 @@ define [
         @ob = new THREE.DotScreenPass(@fields.getField("center").getValue(), @fields.getField('angle').getValue(), @fields.getField('scale').getValue())
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.FilmPass extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.FilmPass extends root.ThreeNodes.NodeBase
     @node_name = 'Film'
     @group_name = 'PostProcessing'
     
@@ -112,7 +115,7 @@ define [
       @ob.uniforms.sCount.value = @fields.getField("scanlinesCount").getValue()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.VignettePass extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.VignettePass extends root.ThreeNodes.NodeBase
     @node_name = 'Vignette'
     @group_name = 'PostProcessing'
     
@@ -136,7 +139,7 @@ define [
       @ob.uniforms[ "darkness" ].value = @fields.getField("darkness").getValue()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.HorizontalBlurPass extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.HorizontalBlurPass extends root.ThreeNodes.NodeBase
     @node_name = 'HorizontalBlur'
     @group_name = 'PostProcessing'
     
@@ -158,7 +161,7 @@ define [
       @ob.uniforms[ "h" ].value = @fields.getField("delta").getValue()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.VerticalBlurPass extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.VerticalBlurPass extends root.ThreeNodes.NodeBase
     @node_name = 'VerticalBlur'
     @group_name = 'PostProcessing'
     
@@ -180,7 +183,7 @@ define [
       @ob.uniforms[ "v" ].value = @fields.getField("delta").getValue()
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.BleachPass extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.BleachPass extends root.ThreeNodes.NodeBase
     @node_name = 'Bleach'
     @group_name = 'PostProcessing'
     

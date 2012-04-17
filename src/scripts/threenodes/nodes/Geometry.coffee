@@ -1,14 +1,17 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
-], (_, Backbone, Utils) ->
-  "use strict"
+], (jQuery, _, Backbone, Utils) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.PlaneGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.PlaneGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'Plane'
     @group_name = 'Geometry'
     
@@ -41,7 +44,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.CubeGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.CubeGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'Cube'
     @group_name = 'Geometry'
     
@@ -77,7 +80,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.SphereGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SphereGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'Sphere'
     @group_name = 'Geometry'
     
@@ -110,7 +113,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.CylinderGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.CylinderGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'Cylinder'
     @group_name = 'Geometry'
     
@@ -154,7 +157,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.TorusGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.TorusGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'Torus'
     @group_name = 'Geometry'
     
@@ -195,7 +198,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.TorusKnotGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.TorusKnotGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'TorusKnot'
     @group_name = 'Geometry'
     
@@ -238,7 +241,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.OctahedronGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.OctahedronGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'Octahedron'
     @group_name = 'Geometry'
     
@@ -270,7 +273,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.TextGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.TextGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'Text'
     @group_name = 'Geometry'
     

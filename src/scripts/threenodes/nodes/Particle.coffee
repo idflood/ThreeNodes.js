@@ -1,16 +1,19 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
+  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
   "order!libs/Tween",
   "order!libs/Sparks",
-], (_, Backbone, Utils) ->
-  "use strict"
+], (jQuery, _, Backbone, Utils) ->
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.nodes.ParticleSystem extends ThreeNodes.nodes.Object3D
+  class root.ThreeNodes.nodes.ParticleSystem extends root.ThreeNodes.nodes.Object3D
     @node_name = 'ParticleSystem'
     @group_name = 'Particle'
     
@@ -60,7 +63,7 @@ define [
       
       @fields.setField("out", @ob)
   
-  class ThreeNodes.nodes.ParticleBasicMaterial extends ThreeNodes.NodeMaterialBase
+  class root.ThreeNodes.nodes.ParticleBasicMaterial extends root.ThreeNodes.NodeMaterialBase
     @node_name = 'ParticleBasicMaterial'
     @group_name = 'Materials'
     
@@ -80,7 +83,7 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
 
-  class ThreeNodes.nodes.SparksEmitter extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksEmitter extends root.ThreeNodes.NodeBase
     @node_name = 'Emitter'
     @group_name = 'Particle.sparks'
     
@@ -146,7 +149,7 @@ define [
       delete @geom
       delete @pool
   
-  class ThreeNodes.nodes.SparksAge extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksAge extends root.ThreeNodes.NodeBase
     @node_name = 'Age'
     @group_name = 'Particle.sparks.actions'
     
@@ -169,7 +172,7 @@ define [
       @ob._easing = @fields.getField("easing").get("value")
       @fields.setField("action", @ob)
   
-  class ThreeNodes.nodes.SparksMove extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksMove extends root.ThreeNodes.NodeBase
     @node_name = 'Move'
     @group_name = 'Particle.sparks.actions'
     
@@ -188,7 +191,7 @@ define [
     compute: =>
       @fields.setField("action", @ob)
   
-  class ThreeNodes.nodes.SparksAccelerate extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksAccelerate extends root.ThreeNodes.NodeBase
     @node_name = 'Accelerate'
     @group_name = 'Particle.sparks.actions'
     
@@ -211,7 +214,7 @@ define [
       @ob.acceleration = @fields.getField("vector").getValue()
       @fields.setField("action", @ob)
   
-  class ThreeNodes.nodes.SparksAccelerateFactor extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksAccelerateFactor extends root.ThreeNodes.NodeBase
     @node_name = 'AccelerateFactor'
     @group_name = 'Particle.sparks.actions'
     
@@ -234,7 +237,7 @@ define [
       @ob.factor = @fields.getField("factor").getValue()
       @fields.setField("action", @ob)
   
-  class ThreeNodes.nodes.SparksAccelerateVelocity extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksAccelerateVelocity extends root.ThreeNodes.NodeBase
     @node_name = 'AccelerateVelocity'
     @group_name = 'Particle.sparks.actions'
     
@@ -257,7 +260,7 @@ define [
       @ob.factor = @fields.getField("factor").getValue()
       @fields.setField("action", @ob)
   
-  class ThreeNodes.nodes.SparksRandomDrift extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksRandomDrift extends root.ThreeNodes.NodeBase
     @node_name = 'RandomDrift'
     @group_name = 'Particle.sparks.actions'
     
@@ -280,7 +283,7 @@ define [
       @ob.drift = @fields.getField("vector").getValue()
       @fields.setField("action", @ob)
   
-  class ThreeNodes.nodes.SparksLifetime extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksLifetime extends root.ThreeNodes.NodeBase
     @node_name = 'Lifetime'
     @group_name = 'Particle.sparks.initializers'
     
@@ -305,7 +308,7 @@ define [
       @ob._min = @fields.getField("max").getValue()
       @fields.setField("initializer", @ob)
   
-  class ThreeNodes.nodes.SparksPosition extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksPosition extends root.ThreeNodes.NodeBase
     @node_name = 'Position'
     @group_name = 'Particle.sparks.initializers'
     
@@ -328,7 +331,7 @@ define [
       @ob.zone = @fields.getField("zone").getValue()
       @fields.setField("initializer", @ob)
   
-  class ThreeNodes.nodes.SparksPointZone extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksPointZone extends root.ThreeNodes.NodeBase
     @node_name = 'PointZone'
     @group_name = 'Particle.sparks.zone'
     
@@ -351,7 +354,7 @@ define [
       @ob.pos = @fields.getField("pos").getValue()
       @fields.setField("zone", @ob)
   
-  class ThreeNodes.nodes.SparksLineZone extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksLineZone extends root.ThreeNodes.NodeBase
     @node_name = 'LineZone'
     @group_name = 'Particle.sparks.zone'
     
@@ -378,7 +381,7 @@ define [
         @ob._length = @ob.end.clone().subSelf( @ob.start )
       @fields.setField("zone", @ob)
   
-  class ThreeNodes.nodes.SparksCubeZone extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksCubeZone extends root.ThreeNodes.NodeBase
     @node_name = 'CubeZone'
     @group_name = 'Particle.sparks.zone'
     
@@ -407,7 +410,7 @@ define [
       @ob.z = @fields.getField("z").getValue()
       @fields.setField("zone", @ob)
   
-  class ThreeNodes.nodes.SparksSteadyCounter extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.SparksSteadyCounter extends root.ThreeNodes.NodeBase
     @node_name = 'SteadyCounter'
     @group_name = 'Particle.sparks'
     
@@ -430,7 +433,7 @@ define [
       @ob.pos = @fields.getField("rate").getValue()
       @fields.setField("counter", @ob)
   
-  class ThreeNodes.nodes.ParticlePool extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.ParticlePool extends root.ThreeNodes.NodeBase
     @node_name = 'ParticlePool'
     @group_name = 'Particle.sparks'
     
@@ -492,7 +495,7 @@ define [
         @geom.__dirtyVertices = true
       @fields.setField("pool", this)
     
-  class ThreeNodes.nodes.RandomCloudGeometry extends ThreeNodes.NodeBase
+  class root.ThreeNodes.nodes.RandomCloudGeometry extends root.ThreeNodes.NodeBase
     @node_name = 'RandomCloudGeometry'
     @group_name = 'Particle'
     

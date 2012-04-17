@@ -1,13 +1,15 @@
+root = if typeof window != "undefined" && window != null then window else exports
+
 define [
   'use!Underscore', 
   'use!Backbone',
   "text!templates/app_menubar.tmpl.html",
 ], (_, Backbone, _view_menubar) ->
-  "use strict"
+  #"use strict"
   
   $ = jQuery
   
-  class ThreeNodes.MenuBar extends Backbone.View
+  class root.ThreeNodes.MenuBar extends Backbone.View
     @template = _view_menubar
     
     initialize: () ->
