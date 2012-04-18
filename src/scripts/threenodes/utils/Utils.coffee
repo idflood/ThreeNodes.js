@@ -4,13 +4,14 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  class ThreeNodes.Utils
-    @flatArraysAreEquals: (arr1, arr2) ->
-      if arr1.length != arr2.length
-        return false
-      
-      for k, i in arr1
-        if arr1[i] != arr2[i]
+  namespace "ThreeNodes"
+    class Utils
+      @flatArraysAreEquals: (arr1, arr2) ->
+        if arr1.length != arr2.length
           return false
-          
-      true
+        
+        for k, i in arr1
+          if arr1[i] != arr2[i]
+            return false
+            
+        true
