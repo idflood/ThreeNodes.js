@@ -123,8 +123,13 @@ define(['CoffeeScript'], function (CoffeeScript) {
             fetchText(path, function (text) {
 
                 //Do CoffeeScript transform.
-                text = CoffeeScript.compile(text, config.CoffeeScript);
-
+                try {
+                  text = CoffeeScript.compile(text, config.CoffeeScript);
+                }
+                catch (err) {
+                  err.message = "In " + path + ", " + err.message;
+                  throw(err);
+                }
                 //Hold on to the transformed text if a build.
                 if (config.isBuild) {
                     buildMap[name] = text;
