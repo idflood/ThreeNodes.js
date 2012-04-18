@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -13,7 +12,7 @@ define [
   ### Node View ###
   $ = window.jQuery
   
-  class root.ThreeNodes.NodeView extends Backbone.View
+  class ThreeNodes.NodeView extends Backbone.View
     className: "node"
       
     initialize: (options) ->
@@ -26,7 +25,7 @@ define [
       @initTitleClick()
       
       # Initialize the fields view
-      @fields_view = new root.ThreeNodes.FieldsView
+      @fields_view = new ThreeNodes.FieldsView
         node: @model
         collection: @model.fields
         el: $(".options", @$el)
@@ -180,4 +179,4 @@ define [
           self.renderConnections()
       return @
   
-  return root.ThreeNodes.NodeView
+  return ThreeNodes.NodeView

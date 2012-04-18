@@ -1,8 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
-
 define [
   'jQuery',
   'use!Underscore', 
@@ -14,7 +9,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.nodes.IfElse extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.IfElse extends ThreeNodes.NodeBase
     @node_name = 'IfElse'
     @group_name = 'Conditional'
     
@@ -36,7 +31,7 @@ define [
         res = @fields.getField("val2").attributes.value
       @fields.setField("out", res)
   
-  class root.ThreeNodes.nodes.And extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.And extends ThreeNodes.NodeBase
     @node_name = 'And'
     @group_name = 'Conditional'
     
@@ -53,7 +48,7 @@ define [
       res = @fields.getField("val1").getValue() != false && @fields.getField("val2").getValue() != false
       @fields.setField("out", res)
   
-  class root.ThreeNodes.nodes.Or extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Or extends ThreeNodes.NodeBase
     @node_name = 'Or'
     @group_name = 'Conditional'
     
@@ -70,7 +65,7 @@ define [
       res = @fields.getField("val1").getValue() != false || @fields.getField("val2").getValue() != false
       @fields.setField("out", res)
   
-  class root.ThreeNodes.nodes.Equal extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Equal extends ThreeNodes.NodeBase
     @node_name = 'Equal'
     @group_name = 'Conditional'
     
@@ -87,7 +82,7 @@ define [
       res = @fields.getField("val1").getValue(0) == @fields.getField("val2").getValue(0)
       @fields.setField("out", res)
   
-  class root.ThreeNodes.nodes.Smaller extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Smaller extends ThreeNodes.NodeBase
     @node_name = 'Smaller'
     @group_name = 'Conditional'
     
@@ -104,7 +99,7 @@ define [
       res = @fields.getField("val1").getValue(0) < @fields.getField("val2").getValue(0)
       @fields.setField("out", res)
   
-  class root.ThreeNodes.nodes.Greater extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.Greater extends ThreeNodes.NodeBase
     @node_name = 'Greater'
     @group_name = 'Conditional'
     

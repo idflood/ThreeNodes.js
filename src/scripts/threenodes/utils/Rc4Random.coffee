@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore',
@@ -6,7 +5,7 @@ define [
 ], ($, _, Backbone) ->
   #"use strict"
     
-  class root.ThreeNodes.Rc4Random
+  class ThreeNodes.Rc4Random
     # Rc4Random function taken from http://www.webdeveloper.com/forum/showthread.php?t=140572
     constructor: (seed) ->
       @keySchedule = []

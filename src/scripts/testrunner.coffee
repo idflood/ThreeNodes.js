@@ -61,7 +61,7 @@ run = ->
   # Set global.window and global.document for Underscore/backbone/jquery/...
   global.window = window
   global.document = document
-  global.ThreeNodes = {}
+  #global.ThreeNodes = {}
   
   # Get window.location for jQuery-UI
   global.location = window.location

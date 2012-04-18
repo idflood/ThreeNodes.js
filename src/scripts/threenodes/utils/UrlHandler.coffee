@@ -6,7 +6,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.UrlHandler extends Backbone.Router
+  class ThreeNodes.UrlHandler extends Backbone.Router
     routes:
       "": "onDefault"
       "play": "onPlay"

@@ -1,7 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -12,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.NodeBase extends Backbone.Model
+  class ThreeNodes.NodeBase extends Backbone.Model
     @node_name = ''
     @group_name = ''
             
@@ -51,7 +47,7 @@ define [
         @indexer.uid = @get('nid')
       
       # Create the fields collections
-      @fields = new root.ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
+      @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
       @
       
     postInit: () =>
@@ -206,7 +202,7 @@ define [
         if field.isAnimationProperty() == false then @disablePropertyAnim(field)
       return res
   
-  class root.ThreeNodes.NodeNumberSimple extends root.ThreeNodes.NodeBase
+  class ThreeNodes.NodeNumberSimple extends ThreeNodes.NodeBase
     setFields: =>
       @v_in = @fields.addField("in", {type: "Float", val: 0})
       @v_out = @fields.addField("out", {type: "Float", val: 0}, "outputs")

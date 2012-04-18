@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -9,7 +8,7 @@ define [
   #"use strict"
   $ = window.jQuery
   
-  class root.ThreeNodes.Workspace extends Backbone.View
+  class ThreeNodes.Workspace extends Backbone.View
     initialize: (options) =>
       super
       @views = []
@@ -38,7 +37,7 @@ define [
       @nodes.connections.bind("add", @renderConnection)
     
     renderNode: (node) =>
-      view = new root.ThreeNodes.NodeView
+      view = new ThreeNodes.NodeView
         model: node
       
       view.$el.appendTo(@$el)
@@ -51,6 +50,6 @@ define [
     renderConnection: (connection) =>
       if @settings.test == true
         return false
-      view = new root.ThreeNodes.ConnectionView
+      view = new ThreeNodes.ConnectionView
         model: connection
       @views.push(view)

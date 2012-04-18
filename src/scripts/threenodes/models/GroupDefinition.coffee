@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -7,7 +6,7 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
-  class root.ThreeNodes.GroupDefinition extends Backbone.Model
+  class ThreeNodes.GroupDefinition extends Backbone.Model
     defaults:
       nodes: []
       connections: []

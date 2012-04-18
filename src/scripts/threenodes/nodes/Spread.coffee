@@ -1,8 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -13,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.nodes.RandomSpread extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.RandomSpread extends ThreeNodes.NodeBase
     @node_name = 'RandomSpread'
     @group_name = 'Spread'
     
@@ -55,7 +50,7 @@ define [
           @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
       @fields.setField("out", @value)
   
-  class root.ThreeNodes.nodes.LinearSpread extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.LinearSpread extends ThreeNodes.NodeBase
     @node_name = 'LinearSpread'
     @group_name = 'Spread'
     

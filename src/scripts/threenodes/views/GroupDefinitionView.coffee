@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -14,7 +13,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.GroupDefinitionView extends Backbone.View
+  class ThreeNodes.GroupDefinitionView extends Backbone.View
     @template = _view_template
         
     initialize: () ->

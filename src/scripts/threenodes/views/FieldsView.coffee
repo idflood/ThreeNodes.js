@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -12,7 +11,7 @@ define [
   ### Fields View ###
   $ = window.jQuery
   
-  class root.ThreeNodes.FieldsView extends Backbone.View
+  class ThreeNodes.FieldsView extends Backbone.View
     # Save some options in variables and bind events
     initialize: (options) ->
       super
@@ -25,7 +24,7 @@ define [
     # Create the field dom element and add events to it
     onFieldCreated: (field) =>
       target = if field.get("is_output") == false then ".inputs" else ".outputs"
-      view = new root.ThreeNodes.FieldButton
+      view = new ThreeNodes.FieldButton
         model: field
       
       view.$el.appendTo($(target, @$el))

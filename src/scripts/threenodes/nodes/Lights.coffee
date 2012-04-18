@@ -1,8 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -13,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.nodes.PointLight extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.PointLight extends ThreeNodes.NodeBase
     @node_name = 'PointLight'
     @group_name = 'Lights'
     
@@ -39,7 +34,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class root.ThreeNodes.nodes.SpotLight extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.SpotLight extends ThreeNodes.NodeBase
     @node_name = 'SpotLight'
     @group_name = 'Lights'
     
@@ -76,7 +71,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class root.ThreeNodes.nodes.DirectionalLight extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.DirectionalLight extends ThreeNodes.NodeBase
     @node_name = 'DirectionalLight'
     @group_name = 'Lights'
     
@@ -102,7 +97,7 @@ define [
       @applyFieldsToVal(@fields.inputs, @ob)
       @fields.setField("out", @ob)
   
-  class root.ThreeNodes.nodes.AmbientLight extends root.ThreeNodes.NodeBase
+  class ThreeNodes.nodes.AmbientLight extends ThreeNodes.NodeBase
     @node_name = 'AmbientLight'
     @group_name = 'Lights'
     

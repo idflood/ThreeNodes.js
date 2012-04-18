@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -14,7 +13,7 @@ define [
   ### FieldButton View ###
   $ = window.jQuery
   
-  class root.ThreeNodes.FieldButton extends Backbone.View
+  class ThreeNodes.FieldButton extends Backbone.View
     className: "field"
     # Save some options in variables and bind events
     initialize: (options) ->

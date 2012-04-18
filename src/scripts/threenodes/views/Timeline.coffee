@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -9,7 +8,7 @@ define [
   #"use strict"
   $ = window.jQuery
   
-  class root.ThreeNodes.AppTimeline extends Backbone.View
+  class ThreeNodes.AppTimeline extends Backbone.View
     initialize: (options) =>
       super
       # reset canvas height

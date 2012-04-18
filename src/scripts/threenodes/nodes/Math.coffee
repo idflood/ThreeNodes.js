@@ -1,8 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -13,49 +8,49 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.nodes.MathSin extends root.ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathSin extends ThreeNodes.NodeNumberSimple
     @node_name = 'Sin'
     @group_name = 'Math'
     
     process_val: (num, i) =>
       Math.sin(num)
   
-  class root.ThreeNodes.nodes.MathCos extends root.ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathCos extends ThreeNodes.NodeNumberSimple
     @node_name = 'Cos'
     @group_name = 'Math'
     
     process_val: (num, i) =>
       Math.cos(num)
   
-  class root.ThreeNodes.nodes.MathTan extends root.ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathTan extends ThreeNodes.NodeNumberSimple
     @node_name = 'Tan'
     @group_name = 'Math'
     
     process_val: (num, i) =>
       Math.tan(num)
   
-  class root.ThreeNodes.nodes.MathRound extends root.ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathRound extends ThreeNodes.NodeNumberSimple
     @node_name = 'Round'
     @group_name = 'Math'
     
     process_val: (num, i) =>
       Math.round(num)
   
-  class root.ThreeNodes.nodes.MathCeil extends root.ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathCeil extends ThreeNodes.NodeNumberSimple
     @node_name = 'Ceil'
     @group_name = 'Math'
     
     process_val: (num, i) =>
       Math.ceil(num)
   
-  class root.ThreeNodes.nodes.MathFloor extends root.ThreeNodes.NodeNumberSimple
+  class ThreeNodes.nodes.MathFloor extends ThreeNodes.NodeNumberSimple
     @node_name = 'Floor'
     @group_name = 'Math'
     
     process_val: (num, i) =>
       Math.floor(num)
   
-  class root.ThreeNodes.NodeNumberParam1 extends root.ThreeNodes.NodeNumberSimple
+  class ThreeNodes.NodeNumberParam1 extends ThreeNodes.NodeNumberSimple
     process_val: (num, numb, i) =>
       num + numb
     
@@ -102,7 +97,7 @@ define [
       @v_out.setValue res
       true
   
-  class root.ThreeNodes.nodes.MathMod extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMod extends ThreeNodes.NodeNumberParam1
     @node_name = 'Mod'
     @group_name = 'Math'
     
@@ -112,7 +107,7 @@ define [
     process_val: (num, numb, i) =>
       num % numb
   
-  class root.ThreeNodes.nodes.MathAdd extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathAdd extends ThreeNodes.NodeNumberParam1
     @node_name = 'Add'
     @group_name = 'Math'
     
@@ -122,7 +117,7 @@ define [
     process_val: (num, numb, i) =>
       num + numb
   
-  class root.ThreeNodes.nodes.MathSubtract extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathSubtract extends ThreeNodes.NodeNumberParam1
     @node_name = 'Subtract'
     @group_name = 'Math'
     
@@ -132,7 +127,7 @@ define [
     process_val: (num, numb, i) =>
       num - numb
   
-  class root.ThreeNodes.nodes.MathMult extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMult extends ThreeNodes.NodeNumberParam1
     @node_name = 'Mult'
     @group_name = 'Math'
     
@@ -144,7 +139,7 @@ define [
       num * numb
     
                 
-  class root.ThreeNodes.nodes.MathDivide extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathDivide extends ThreeNodes.NodeNumberParam1
     @node_name = 'Divide'
     @group_name = 'Math'
     
@@ -154,7 +149,7 @@ define [
     process_val: (num, numb, i) =>
       num / numb
   
-  class root.ThreeNodes.nodes.MathMin extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMin extends ThreeNodes.NodeNumberParam1
     @node_name = 'Min'
     @group_name = 'Math'
     
@@ -165,7 +160,7 @@ define [
     process_val: (num, numb, i) =>
       Math.min(num, numb)
   
-  class root.ThreeNodes.nodes.MathMax extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathMax extends ThreeNodes.NodeNumberParam1
     @node_name = 'Max'
     @group_name = 'Math'
     
@@ -176,7 +171,7 @@ define [
     process_val: (num, numb, i) =>
       Math.max(num, numb)
       
-  class root.ThreeNodes.nodes.MathAttenuation extends root.ThreeNodes.NodeNumberParam1
+  class ThreeNodes.nodes.MathAttenuation extends ThreeNodes.NodeNumberParam1
     @node_name = 'Attenuation'
     @group_name = 'Math'
     

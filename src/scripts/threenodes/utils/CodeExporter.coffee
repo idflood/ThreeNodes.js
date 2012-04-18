@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -8,10 +7,10 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.CodeExporter
+  class ThreeNodes.CodeExporter
     toCode: (json) =>
       res = "//\n"
-      res += "// code exported from root.ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
+      res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
       res += "//\n\n"
       res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});"
       res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone'], function(App) {"

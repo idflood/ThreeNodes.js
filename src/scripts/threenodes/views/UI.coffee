@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -21,7 +20,7 @@ define [
   
   ### UI View ###
   
-  class root.ThreeNodes.UI extends Backbone.View
+  class ThreeNodes.UI extends Backbone.View
     
     # Background svg used to draw the connections
     @svg: false
@@ -41,15 +40,15 @@ define [
       @$el.append(ui_tmpl)
       
       # Setup SVG for drawing connections
-      root.ThreeNodes.UI.svg = Raphael("graph", 4000, 4000)
-      root.ThreeNodes.UI.connecting_line = root.ThreeNodes.UI.svg.path("M0 -20 L0 -20").attr
+      ThreeNodes.UI.svg = Raphael("graph", 4000, 4000)
+      ThreeNodes.UI.connecting_line = ThreeNodes.UI.svg.path("M0 -20 L0 -20").attr
         stroke: "#fff"
         'stroke-dasharray': "-"
         fill: "none"
         opacity: 0
       
       # Setup the sidebar and menu subviews
-      @sidebar = new root.ThreeNodes.Sidebar({el: $("#sidebar")})
+      @sidebar = new ThreeNodes.Sidebar({el: $("#sidebar")})
       @initMenubar()
       
       # Set the layout and show application
@@ -107,7 +106,7 @@ define [
     initMenubar: () =>
       menu_tmpl = _.template(ThreeNodes.MenuBar.template, {})
       $menu_tmpl = $(menu_tmpl).prependTo("body")
-      @menubar = new root.ThreeNodes.MenuBar
+      @menubar = new ThreeNodes.MenuBar
         el: $menu_tmpl
       
       @menubar.on "ToggleAttributes", () => if @layout then @layout.toggle("west")

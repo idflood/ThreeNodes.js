@@ -1,8 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-if root.ThreeNodes.fields == null || typeof(!root.ThreeNodes.fields) != "object" then root.ThreeNodes.fields = {}
-
 define [
   'use!Underscore',
   'use!Backbone',
@@ -12,7 +7,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.NodeField extends Backbone.Model
+  class ThreeNodes.NodeField extends Backbone.Model
     # Create a static indexer used if the field is not part of a nodes collection (tests)
     @static_indexer: new Indexer()
     
@@ -104,7 +99,7 @@ define [
       if $.type(new_val) == "array"
         tmp_val = _.filter new_val, (item) ->
           item != null
-        if this.constructor == root.ThreeNodes.fields.Array
+        if this.constructor == ThreeNodes.fields.Array
           new_val = tmp_val
         else
           if tmp_val.length != 0
@@ -162,7 +157,7 @@ define [
       return val.length
     
     isAnimationProperty: () =>
-      if this.constructor == root.ThreeNodes.fields.Float || this.constructor == root.ThreeNodes.fields.Bool
+      if this.constructor == ThreeNodes.fields.Float || this.constructor == ThreeNodes.fields.Bool
         return true
       return false
     
@@ -316,14 +311,14 @@ define [
       if type == "float"
         @addRextfieldSlider(f_in)
   
-  class root.ThreeNodes.fields.Any extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Any extends ThreeNodes.NodeField
     computeValue : (val) =>
       val
     
     onValueChanged : (val) =>
       return val
     
-  class root.ThreeNodes.fields.Array extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Array extends ThreeNodes.NodeField
     computeValue : (val) =>
       if !val || val == false
         return []
@@ -342,7 +337,7 @@ define [
     
     getValue: (index = 0) => @get("value")
     
-  class root.ThreeNodes.fields.Bool extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Bool extends ThreeNodes.NodeField
     renderSidebar: =>
       self = this
       $target = @createSidebarContainer()
@@ -372,7 +367,7 @@ define [
         when "string" then return val == "1"
       return null
   
-  class root.ThreeNodes.fields.String extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.String extends ThreeNodes.NodeField
     renderSidebar: =>
       self = this
       $target = @createSidebarContainer()
@@ -392,7 +387,7 @@ define [
         when "string" then return val
       return null
   
-  class root.ThreeNodes.fields.Float extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Float extends ThreeNodes.NodeField
     create_sidebar_select: ($target) =>
       self = this
       input = "<div><select>"
@@ -433,7 +428,7 @@ define [
             return 0
       return null
       
-  class root.ThreeNodes.fields.Vector2 extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Vector2 extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Vector2
@@ -446,7 +441,7 @@ define [
       @createSubvalTextinput("y")
       true
   
-  class root.ThreeNodes.fields.Vector3 extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Vector3 extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Vector3
@@ -460,7 +455,7 @@ define [
       @createSubvalTextinput("z")
       true
   
-  class root.ThreeNodes.fields.Vector4 extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Vector4 extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Vector4
@@ -475,14 +470,14 @@ define [
       @createSubvalTextinput("w")
       true
   
-  class root.ThreeNodes.fields.Quaternion extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Quaternion extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Quaternion
           return val
       return null
       
-  class root.ThreeNodes.fields.Color extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Color extends ThreeNodes.NodeField
     computeValue : (val) =>
       switch $.type(val)
         when "number" then return new THREE.Color().setRGB(val, val, val)
@@ -497,49 +492,49 @@ define [
             return new THREE.Color(0x000000)
       return null
    
-  class root.ThreeNodes.fields.Object3D extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Object3D extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
           return val
       return null
-  class root.ThreeNodes.fields.Scene extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Scene extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Scene
           return val
       return null
-  class root.ThreeNodes.fields.Camera extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Camera extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
           return val
       return null
-  class root.ThreeNodes.fields.Mesh extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Mesh extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
           return val
       return null
-  class root.ThreeNodes.fields.Geometry extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Geometry extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
           return val
       return null
-  class root.ThreeNodes.fields.Material extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Material extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Material || val instanceof THREE.Material
           return val
       return null
-  class root.ThreeNodes.fields.Texture extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Texture extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Texture || val instanceof THREE.Texture
           return val
       return null
-  class root.ThreeNodes.fields.Fog extends root.ThreeNodes.NodeField
+  class ThreeNodes.fields.Fog extends ThreeNodes.NodeField
     computeValue : (val) =>
       if $.type(val) == "object"
         if val.constructor == THREE.Fog || val.constructor == THREE.FogExp2

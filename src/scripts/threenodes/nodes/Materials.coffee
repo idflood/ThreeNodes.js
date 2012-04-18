@@ -1,8 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -13,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.NodeMaterialBase extends root.ThreeNodes.NodeBase
+  class ThreeNodes.NodeMaterialBase extends ThreeNodes.NodeBase
     setFields: =>
       super
       @ob = false
@@ -74,7 +69,7 @@ define [
       @last_slice_count = numItems
       @fields.setField("out", @ob)
   
-  class root.ThreeNodes.nodes.MeshBasicMaterial extends root.ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'MeshBasic'
     @group_name = 'Materials'
     
@@ -98,7 +93,7 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
-  class root.ThreeNodes.nodes.LineBasicMaterial extends root.ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.LineBasicMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'LineBasic'
     @group_name = 'Materials'
     
@@ -115,7 +110,7 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
       @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
-  class root.ThreeNodes.nodes.MeshLambertMaterial extends root.ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'MeshLambert'
     @group_name = 'Materials'
     
@@ -139,7 +134,7 @@ define [
       @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
       @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
   
-  class root.ThreeNodes.nodes.MeshPhongMaterial extends root.ThreeNodes.NodeMaterialBase
+  class ThreeNodes.nodes.MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
     @node_name = 'MeshPhong'
     @group_name = 'Materials'
     

@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -11,7 +10,7 @@ define [
   
   $ = window.jQuery
   
-  class root.ThreeNodes.ConnectionView extends Backbone.View
+  class ThreeNodes.ConnectionView extends Backbone.View
     initialize: (options) ->
       super
       @container = $("#graph")

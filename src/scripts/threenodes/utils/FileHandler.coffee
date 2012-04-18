@@ -1,4 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
 
 define [
   'use!Underscore', 
@@ -12,7 +11,7 @@ define [
   #"use strict"
   $ = window.jQuery
   
-  class root.ThreeNodes.FileHandler extends Backbone.Events
+  class ThreeNodes.FileHandler extends Backbone.Events
     constructor: (@nodes, @group_definitions) ->
       _.extend(FileHandler::, Backbone.Events)
       
@@ -25,7 +24,7 @@ define [
     exportCode: () =>
       # get the json export and convert it to code
       json = @getLocalJson(false)
-      exporter = new root.ThreeNodes.CodeExporter()
+      exporter = new ThreeNodes.CodeExporter()
       res = exporter.toCode(json)
       
       bb = new BlobBuilder()

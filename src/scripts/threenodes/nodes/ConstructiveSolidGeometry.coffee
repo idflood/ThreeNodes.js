@@ -1,8 +1,3 @@
-root = if typeof window != "undefined" && window != null then window else exports
-
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
-if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -16,7 +11,7 @@ define [
   
   $ = window.jQuery
   
-  class NodeCSG extends root.ThreeNodes.NodeBase
+  class NodeCSG extends ThreeNodes.NodeBase
     setFields: =>
       super
       @auto_evaluate = true
@@ -68,17 +63,17 @@ define [
         @cached = new_cache
       @fields.setField("geometry", @ob)
       
-  class root.ThreeNodes.nodes.CsgUnion extends NodeCSG
+  class ThreeNodes.nodes.CsgUnion extends NodeCSG
     @node_name = 'Union'
     @group_name = 'Constructive-Geometry'
   
-  class root.ThreeNodes.nodes.CsgSubtract extends NodeCSG
+  class ThreeNodes.nodes.CsgSubtract extends NodeCSG
     @node_name = 'Subtract'
     @group_name = 'Constructive-Geometry'
     
     comput_csg_geometry: (a, b) => a.subtract(b)
   
-  class root.ThreeNodes.nodes.CsgIntersect extends NodeCSG
+  class ThreeNodes.nodes.CsgIntersect extends NodeCSG
     @node_name = 'Intersect'
     @group_name = 'Constructive-Geometry'
     
