@@ -18,7 +18,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   root.ThreeNodes.Webgl = {}
   class root.ThreeNodes.WebglBase

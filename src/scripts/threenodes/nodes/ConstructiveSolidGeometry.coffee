@@ -1,7 +1,9 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
+
 define [
-  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
@@ -9,10 +11,10 @@ define [
   "order!libs/Three",
   "order!libs/csg",
   "order!libs/ThreeCSG",
-], (jQuery, _, Backbone, Utils) ->
+], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class NodeCSG extends root.ThreeNodes.NodeBase
     setFields: =>

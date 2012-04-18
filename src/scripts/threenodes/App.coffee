@@ -2,15 +2,11 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
 # Declare namespace
-if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object"
-  root.ThreeNodes = {}
-if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object"
-  root.ThreeNodes.nodes = {}
-if root.ThreeNodes.fields == null || typeof(!root.ThreeNodes.fields) != "object"
-  root.ThreeNodes.fields = {}
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
+if root.ThreeNodes.fields == null || typeof(!root.ThreeNodes.fields) != "object" then root.ThreeNodes.fields = {}
 
 define [
-  'jQuery',
   'use!Underscore',
   'use!Backbone',
   "cs!threenodes/utils/Utils",
@@ -25,10 +21,10 @@ define [
   'cs!threenodes/utils/UrlHandler',
   "cs!threenodes/utils/WebglBase",
   'jQuery'
-], (jQuery, _, Backbone, Utils) ->
+], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.App
     constructor: (options) ->

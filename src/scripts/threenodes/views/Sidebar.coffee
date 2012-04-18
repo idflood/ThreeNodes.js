@@ -10,7 +10,7 @@ define [
   #"use strict"
   
   ### Sidebar View ###
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.Sidebar extends Backbone.View
     initialize: () ->

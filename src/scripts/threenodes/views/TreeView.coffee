@@ -7,7 +7,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.TreeView extends Backbone.View
     initialize: (options) ->

@@ -9,7 +9,7 @@ define [
 ], (_, Backbone, UI, _view_node_template) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.ConnectionView extends Backbone.View
     initialize: (options) ->

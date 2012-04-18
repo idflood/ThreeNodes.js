@@ -10,7 +10,7 @@ define [
   "order!libs/json2",
 ], (_, Backbone, Utils) ->
   #"use strict"
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.FileHandler extends Backbone.Events
     constructor: (@nodes, @group_definitions) ->

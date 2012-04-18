@@ -17,7 +17,7 @@ define [
   "order!libs/jquery.layout-latest",
 ], (_, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   #"use strict"
-  $ = jQuery
+  $ = window.jQuery
   
   ### UI View ###
   

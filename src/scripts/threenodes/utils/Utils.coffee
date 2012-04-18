@@ -1,5 +1,7 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+
 define [
   'use!Underscore', 
   'use!Backbone',

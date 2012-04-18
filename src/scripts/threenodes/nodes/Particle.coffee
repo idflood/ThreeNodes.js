@@ -1,17 +1,19 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
+
 define [
-  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
   "order!libs/Tween",
   "order!libs/Sparks",
-], (jQuery, _, Backbone, Utils) ->
+], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.nodes.ParticleSystem extends root.ThreeNodes.nodes.Object3D
     @node_name = 'ParticleSystem'

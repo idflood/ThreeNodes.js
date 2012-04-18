@@ -10,7 +10,7 @@ define [
 ], (_, Backbone, Indexer) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.GroupDefinitions extends Backbone.Collection
     model: root.ThreeNodes.GroupDefinition

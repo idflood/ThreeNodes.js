@@ -12,6 +12,7 @@
 // prevent duplicate loading
 // this is only a problem because we proxy existing functions
 // and we don't want to double proxy them
+
 $.ui = $.ui || {};
 if ( $.ui.version ) {
 	return;

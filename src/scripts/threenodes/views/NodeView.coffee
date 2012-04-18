@@ -11,7 +11,7 @@ define [
 ], (_, Backbone, _view_node_template) ->
   #"use strict"
   ### Node View ###
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.NodeView extends Backbone.View
     className: "node"

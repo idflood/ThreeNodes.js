@@ -1,16 +1,18 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
+
 define [
-  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/GroupDefinition',
-], (jQuery, _, Backbone) ->
+], (_, Backbone) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.nodes.Group extends root.ThreeNodes.NodeBase
     @node_name = 'Group'

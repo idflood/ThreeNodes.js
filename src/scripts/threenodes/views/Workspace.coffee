@@ -7,7 +7,7 @@ define [
   'cs!threenodes/views/ConnectionView',
 ], (_, Backbone) ->
   #"use strict"
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.Workspace extends Backbone.View
     initialize: (options) =>

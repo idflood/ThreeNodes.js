@@ -10,7 +10,7 @@ define [
   #"use strict"
   
   ### Fields View ###
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.FieldsView extends Backbone.View
     # Save some options in variables and bind events

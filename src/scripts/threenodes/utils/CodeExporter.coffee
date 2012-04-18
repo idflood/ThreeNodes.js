@@ -6,7 +6,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.CodeExporter
     toCode: (json) =>

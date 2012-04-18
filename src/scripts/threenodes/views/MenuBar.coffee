@@ -7,7 +7,7 @@ define [
 ], (_, Backbone, _view_menubar) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.MenuBar extends Backbone.View
     @template = _view_menubar

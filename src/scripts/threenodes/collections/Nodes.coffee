@@ -21,7 +21,7 @@ define [
   'cs!threenodes/collections/Connections',
 ], (_, Backbone, Indexer) ->
   #"use strict"
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.nodesCollection extends Backbone.Collection
     

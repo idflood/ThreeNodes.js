@@ -1,15 +1,16 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+
 define [
-  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/collections/Fields',
-], (jQuery, _, Backbone, Utils) ->
+], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.NodeBase extends Backbone.Model
     @node_name = ''

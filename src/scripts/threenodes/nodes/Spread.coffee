@@ -1,15 +1,17 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
+
 define [
-  'jQuery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Rc4Random',
   'cs!threenodes/models/Node',
-], (jQuery, _, Backbone, Rc4Random) ->
+], (_, Backbone, Rc4Random) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.nodes.RandomSpread extends root.ThreeNodes.NodeBase
     @node_name = 'RandomSpread'

@@ -1,14 +1,16 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+if root.ThreeNodes.fields == null || typeof(!root.ThreeNodes.fields) != "object" then root.ThreeNodes.fields = {}
+
 define [
-  'jQuery',
   'use!Underscore',
   'use!Backbone',
   'cs!threenodes/utils/Indexer',
-], (jQuery, _, Backbone, Indexer) ->
+], (_, Backbone, Indexer) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.NodeField extends Backbone.Model
     # Create a static indexer used if the field is not part of a nodes collection (tests)

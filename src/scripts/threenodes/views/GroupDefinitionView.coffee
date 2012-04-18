@@ -12,7 +12,7 @@ define [
   #"use strict"
   ### Node View ###
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.GroupDefinitionView extends Backbone.View
     @template = _view_template

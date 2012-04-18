@@ -1,5 +1,7 @@
 run = ->
   reporter = "dot"
+  
+  # Configuration for require.js
   conf =
     baseUrl: __dirname
     nodeRequire: require
@@ -19,8 +21,6 @@ run = ->
       chai: "libs/chai"
 
     use:
-      jQuery:
-        attach: "jQuery"
       Underscore:
         attach: "_"
       
@@ -34,7 +34,7 @@ run = ->
         attach: "Backbone"
 
       jQueryUi:
-        deps: [ "use!jQuery" ]
+        deps: [ "jQuery" ]
         attach: "jQuery"
 
   # Setup require.js
@@ -48,6 +48,7 @@ run = ->
   requirejs("text")
   requirejs("order")
   
+  # Setup jsdom
   jsdom = require("jsdom")
   jsdom.defaultDocumentFeatures =
     MutationEvents: '2.0'
@@ -62,18 +63,27 @@ run = ->
   global.document = document
   global.ThreeNodes = {}
   
-  requirejs ["mocha", "chai", 'use!Underscore'], (mocha, chai, unde) ->
+  # Get window.location for jQuery-UI
+  global.location = window.location
+  
+  # Set the global jQuery for jQuery-UI
+  requirejs("jQuery")
+  global.jQuery = global.$ = window.jQuery
+  
+  # Setup the tests
+  requirejs ["mocha", "chai"], (mocha, chai) ->
     suite = new mocha.Suite("", new mocha.Context)
     ui = mocha.interfaces["tdd"]
     mocha.useColors = true
     ui suite
     suite.emit "pre-require", root
     
+    # Load and execute tests
     requirejs [
-      "../../test/NodesTest2", 'use!Underscore', 'use!Backbone',"cs!threenodes/App", "threenodes/utils/Utils"
-    ], (tmp_test, _) ->
+      "cs!threenodes/App",
+      "../../test/NodesTest2",
+    ], (tmp_test) ->
       # todo: remove tmp_test when this is working...
-      console.log _
       suite.emit "run"
       runner = new mocha.Runner(suite)
       runner.ignoreLeaks = true

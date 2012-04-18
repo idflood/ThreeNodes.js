@@ -7,7 +7,7 @@ define [
   "order!libs/timeline.js/timeline-gui",
 ], (_, Backbone) ->
   #"use strict"
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.AppTimeline extends Backbone.View
     initialize: (options) =>

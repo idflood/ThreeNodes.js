@@ -1,5 +1,8 @@
 root = if typeof window != "undefined" && window != null then window else exports
 
+if root.ThreeNodes == null || typeof(!root.ThreeNodes) != "object" then root.ThreeNodes = {}
+if root.ThreeNodes.nodes == null || typeof(!root.ThreeNodes.nodes) != "object" then root.ThreeNodes.nodes = {}
+
 define [
   'jQuery',
   'use!Underscore', 
@@ -9,7 +12,7 @@ define [
 ], (jQuery, _, Backbone) ->
   #"use strict"
   
-  $ = jQuery
+  $ = window.jQuery
   
   class root.ThreeNodes.nodes.IfElse extends root.ThreeNodes.NodeBase
     @node_name = 'IfElse'
