@@ -19,10 +19,10 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes"
-    Webgl = {}
+  window.namespace "ThreeNodes",
+    Webgl: {}
     
-    class WebglBase
+    WebglBase: class WebglBase
       constructor: () ->
         console.log "webgl init..."
         @current_scene = new THREE.Scene()

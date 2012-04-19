@@ -4,8 +4,8 @@ define [
   'use!Backbone',
 ], ($, _, Backbone) ->
   #"use strict"
-  namespace "ThreeNodes"
-    class Rc4Random
+  window.namespace "ThreeNodes",
+    Rc4Random: class Rc4Random
       # Rc4Random function taken from http://www.webdeveloper.com/forum/showthread.php?t=140572
       constructor: (seed) ->
         @keySchedule = []

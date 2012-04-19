@@ -71,7 +71,7 @@ run = ->
   global.jQuery = global.$ = window.jQuery
   
   # Setup the tests
-  requirejs ["mocha", "chai"], (mocha, chai) ->
+  requirejs ["mocha", "chai"], (mocha, chai, ns) ->
     suite = new mocha.Suite("", new mocha.Context)
     ui = mocha.interfaces["tdd"]
     mocha.useColors = true

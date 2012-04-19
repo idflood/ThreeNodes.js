@@ -24,8 +24,8 @@ require.config({
     }
   }
 });
-require(['cs!threenodes/App'], function(App) {
-  "use strict";
+require(['cs!threenodes/App'], function() {
+  //"use strict";
   var app;
-  return app = new App();
+  return app = new ThreeNodes.App();
 });

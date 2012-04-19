@@ -11,8 +11,8 @@ define [
   #"use strict"
   $ = window.jQuery
   
-  namespace "ThreeNodes"
-    class FileHandler extends Backbone.Events
+  window.namespace "ThreeNodes",
+    FileHandler: class FileHandler extends Backbone.Events
       constructor: (@nodes, @group_definitions) ->
         _.extend(FileHandler::, Backbone.Events)
         

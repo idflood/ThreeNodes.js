@@ -8,8 +8,9 @@ define [
   #"use strict"
   
   $ = window.jQuery
-  namespace "ThreeNodes.nodes"
-    class Number extends ThreeNodes.NodeNumberSimple
+  
+  window.namespace "ThreeNodes.nodes",
+    Number: class Number extends ThreeNodes.NodeNumberSimple
       @node_name = 'Number'
       @group_name = 'Base'
       
@@ -17,7 +18,7 @@ define [
         super
         @fields.add_center_textfield(@v_in)
     
-    class Boolean extends ThreeNodes.NodeBase
+    Boolean: class Boolean extends ThreeNodes.NodeBase
       @node_name = 'Boolean'
       @group_name = 'Base'
       
@@ -35,7 +36,7 @@ define [
       compute: =>
         @fields.setField("out", @fields.getField("bool").getValue())
     
-    class String extends ThreeNodes.NodeBase
+    String: class String extends ThreeNodes.NodeBase
       @node_name = 'String'
       @group_name = 'Base'
       
@@ -55,7 +56,7 @@ define [
       compute: =>
         @fields.setField("out", @fields.getField("string").getValue())
     
-    class Vector2 extends ThreeNodes.NodeBase
+    Vector2: class Vector2 extends ThreeNodes.NodeBase
       @node_name = 'Vector2'
       @group_name = 'Base'
       
@@ -90,7 +91,7 @@ define [
         @fields.setField("x", resx)
         @fields.setField("y", resy)
     
-    class Vector3 extends ThreeNodes.NodeBase
+    Vector3: class Vector3 extends ThreeNodes.NodeBase
       @node_name = 'Vector3'
       @group_name = 'Base'
       
@@ -125,7 +126,7 @@ define [
         @fields.setField("y", resy)
         @fields.setField("z", resz)
     
-    class Color extends ThreeNodes.NodeBase
+    Color: class Color extends ThreeNodes.NodeBase
       @node_name = 'Color'
       @group_name = 'Base'
       

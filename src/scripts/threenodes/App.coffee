@@ -3,6 +3,7 @@
 define [
   'use!Underscore',
   'use!Backbone',
+  'libs/namespace'
   "cs!threenodes/utils/Utils",
   'cs!threenodes/collections/Nodes',
   'cs!threenodes/collections/GroupDefinitions',
@@ -15,13 +16,12 @@ define [
   'cs!threenodes/utils/UrlHandler',
   "cs!threenodes/utils/WebglBase",
   'jQuery',
-  'namespace'
-], (_, Backbone, Utils) ->
+], (_, Backbone) ->
   #"use strict"
   
   $ = window.jQuery
-  namespace "ThreeNodes"
-    class App
+  window.namespace "ThreeNodes",
+    App: class App
       constructor: (options) ->
         # Default settings
         settings = 

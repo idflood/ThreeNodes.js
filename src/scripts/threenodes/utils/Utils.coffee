@@ -4,8 +4,8 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  namespace "ThreeNodes"
-    class Utils
+  window.namespace "ThreeNodes",
+    Utils: class Utils
       @flatArraysAreEquals: (arr1, arr2) ->
         if arr1.length != arr2.length
           return false

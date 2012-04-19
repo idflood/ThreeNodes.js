@@ -10,8 +10,8 @@ define [
   #"use strict"
   
   $ = window.jQuery
-  namespace "ThreeNodes.nodes"
-    class NodeCSG extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    NodeCSG: class NodeCSG extends ThreeNodes.NodeBase
       setFields: =>
         super
         @auto_evaluate = true
@@ -54,7 +54,7 @@ define [
         rot_b = @fields.getField("rotation_b").getValue()
         new_cache = @get_cache_array()
         # todo: recompute if a or b change
-        if (a && b) && (Utils.flatArraysAreEquals(new_cache, @cached) == false)
+        if (a && b) && (ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false)
           console.log "csg operation"
           csg_a = THREE.CSG.toCSG(a, pos_a, rot_a)
           csg_b = THREE.CSG.toCSG(b, pos_b, rot_b)
@@ -63,17 +63,17 @@ define [
           @cached = new_cache
         @fields.setField("geometry", @ob)
         
-    class CsgUnion extends ThreeNodes.NodeCSG
+    CsgUnion: class CsgUnion extends NodeCSG
       @node_name = 'Union'
       @group_name = 'Constructive-Geometry'
     
-    class CsgSubtract extends ThreeNodes.NodeCSG
+    CsgSubtract: class CsgSubtract extends NodeCSG
       @node_name = 'Subtract'
       @group_name = 'Constructive-Geometry'
       
       comput_csg_geometry: (a, b) => a.subtract(b)
     
-    class CsgIntersect extends ThreeNodes.NodeCSG
+    CsgIntersect: class CsgIntersect extends NodeCSG
       @node_name = 'Intersect'
       @group_name = 'Constructive-Geometry'
       

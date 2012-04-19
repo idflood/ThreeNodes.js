@@ -8,8 +8,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class ThreeNodes.NodeMaterialBase extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes",
+    NodeMaterialBase: class NodeMaterialBase extends ThreeNodes.NodeBase
       setFields: =>
         super
         @ob = false
@@ -69,8 +69,9 @@ define [
         
         @last_slice_count = numItems
         @fields.setField("out", @ob)
-    
-    class MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
+        
+  window.namespace "ThreeNodes.nodes",
+    MeshBasicMaterial: class MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshBasic'
       @group_name = 'Materials'
       
@@ -94,7 +95,7 @@ define [
         @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
         @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
     
-    class LineBasicMaterial extends ThreeNodes.NodeMaterialBase
+    LineBasicMaterial: class LineBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'LineBasic'
       @group_name = 'Materials'
       
@@ -111,7 +112,7 @@ define [
         @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
         @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
     
-    class MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
+    MeshLambertMaterial: class MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshLambert'
       @group_name = 'Materials'
       
@@ -135,7 +136,7 @@ define [
         @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
         @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
     
-    class MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
+    MeshPhongMaterial: class MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshPhong'
       @group_name = 'Materials'
       

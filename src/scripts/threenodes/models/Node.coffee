@@ -8,8 +8,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes"
-    class NodeBase extends Backbone.Model
+  window.namespace "ThreeNodes",
+    NodeBase: class NodeBase extends Backbone.Model
       @node_name = ''
       @group_name = ''
               
@@ -203,7 +203,7 @@ define [
           if field.isAnimationProperty() == false then @disablePropertyAnim(field)
         return res
     
-    class NodeNumberSimple extends ThreeNodes.NodeBase
+    NodeNumberSimple: class NodeNumberSimple extends NodeBase
       setFields: =>
         @v_in = @fields.addField("in", {type: "Float", val: 0})
         @v_out = @fields.addField("out", {type: "Float", val: 0}, "outputs")

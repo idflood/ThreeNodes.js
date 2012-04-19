@@ -8,8 +8,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class PlaneGeometry extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    PlaneGeometry: class PlaneGeometry extends ThreeNodes.NodeBase
       @node_name = 'Plane'
       @group_name = 'Geometry'
       
@@ -37,12 +37,12 @@ define [
       
       compute: =>
         new_cache = @get_cache_array()
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.PlaneGeometry(@fields.getField("width").getValue(), @fields.getField("height").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue())
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class CubeGeometry extends ThreeNodes.NodeBase
+    CubeGeometry: class CubeGeometry extends ThreeNodes.NodeBase
       @node_name = 'Cube'
       @group_name = 'Geometry'
       
@@ -73,12 +73,12 @@ define [
     
       compute: =>
         new_cache = @get_cache_array()
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.CubeGeometry(@fields.getField("width").getValue(), @fields.getField("height").getValue(), @fields.getField("depth").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue(), @fields.getField("segments_depth").getValue(), @fields.getField("flip").getValue())
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class SphereGeometry extends ThreeNodes.NodeBase
+    SphereGeometry: class SphereGeometry extends ThreeNodes.NodeBase
       @node_name = 'Sphere'
       @group_name = 'Geometry'
       
@@ -105,13 +105,13 @@ define [
     
       compute: =>
         new_cache = @get_cache_array()
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.SphereGeometry(@fields.getField("radius").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue())
           @cached = new_cache
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class CylinderGeometry extends ThreeNodes.NodeBase
+    CylinderGeometry: class CylinderGeometry extends ThreeNodes.NodeBase
       @node_name = 'Cylinder'
       @group_name = 'Geometry'
       
@@ -146,7 +146,7 @@ define [
     
       compute: =>
         new_cache = @get_cache_array()
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.CylinderGeometry(
             @fields.getField("radiusTop").getValue(), @fields.getField("radiusBottom").getValue(), @fields.getField("height").getValue(), 
             @fields.getField("segmentsRadius").getValue(), @fields.getField("segmentsHeight").getValue(), @fields.getField("openEnded").getValue()
@@ -155,7 +155,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class TorusGeometry extends ThreeNodes.NodeBase
+    TorusGeometry: class TorusGeometry extends ThreeNodes.NodeBase
       @node_name = 'Torus'
       @group_name = 'Geometry'
       
@@ -187,7 +187,7 @@ define [
     
       compute: =>
         new_cache = @get_cache_array()
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.TorusGeometry(
             @fields.getField("radius").getValue(), @fields.getField("tube").getValue(), @fields.getField("segmentsR").getValue(), 
             @fields.getField("segmentsT").getValue(), @fields.getField("arc").getValue()
@@ -196,7 +196,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class TorusKnotGeometry extends ThreeNodes.NodeBase
+    TorusKnotGeometry: class TorusKnotGeometry extends ThreeNodes.NodeBase
       @node_name = 'TorusKnot'
       @group_name = 'Geometry'
       
@@ -230,7 +230,7 @@ define [
     
       compute: =>
         new_cache = @get_cache_array()
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.TorusKnotGeometry(
             @fields.getField("radius").getValue(), @fields.getField("tube").getValue(), @fields.getField("segmentsR").getValue(), 
             @fields.getField("segmentsT").getValue(), @fields.getField("p").getValue(), @fields.getField("q").getValue(), @fields.getField("heightScale").getValue()
@@ -239,7 +239,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class OctahedronGeometry extends ThreeNodes.NodeBase
+    OctahedronGeometry: class OctahedronGeometry extends ThreeNodes.NodeBase
       @node_name = 'Octahedron'
       @group_name = 'Geometry'
       
@@ -265,13 +265,13 @@ define [
     
       compute: =>
         new_cache = @get_cache_array()
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.OctahedronGeometry(@fields.getField("radius").getValue(), @fields.getField("detail").getValue())
           @cached = new_cache
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class TextGeometry extends ThreeNodes.NodeBase
+    TextGeometry: class TextGeometry extends ThreeNodes.NodeBase
       @node_name = 'Text'
       @group_name = 'Geometry'
       
@@ -314,7 +314,7 @@ define [
           @ob = false
           @fields.setField("out", @ob)
           return false
-        if Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
           console.log "building text #{font.font} / #{font.weight}"
           @ob = new THREE.TextGeometry @fields.getField("text").getValue(),
             size: @fields.getField("size").getValue()

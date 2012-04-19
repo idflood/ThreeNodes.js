@@ -6,8 +6,8 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  namespace "ThreeNodes"
-    class ConnectionsCollection extends Backbone.Collection
+  window.namespace "ThreeNodes",
+    ConnectionsCollection: class ConnectionsCollection extends Backbone.Collection
       model: ThreeNodes.Connection
       
       initialize: (models, options) =>

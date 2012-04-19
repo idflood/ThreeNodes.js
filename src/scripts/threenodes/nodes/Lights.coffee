@@ -8,8 +8,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class PointLight extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    PointLight: class PointLight extends ThreeNodes.NodeBase
       @node_name = 'PointLight'
       @group_name = 'Lights'
       
@@ -35,7 +35,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class SpotLight extends ThreeNodes.NodeBase
+    SpotLight: class SpotLight extends ThreeNodes.NodeBase
       @node_name = 'SpotLight'
       @group_name = 'Lights'
       
@@ -72,7 +72,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class DirectionalLight extends ThreeNodes.NodeBase
+    DirectionalLight: class DirectionalLight extends ThreeNodes.NodeBase
       @node_name = 'DirectionalLight'
       @group_name = 'Lights'
       
@@ -98,7 +98,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class AmbientLight extends ThreeNodes.NodeBase
+    AmbientLight: class AmbientLight extends ThreeNodes.NodeBase
       @node_name = 'AmbientLight'
       @group_name = 'Lights'
       

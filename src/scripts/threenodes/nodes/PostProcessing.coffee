@@ -8,8 +8,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class BloomPass extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    BloomPass: class BloomPass extends ThreeNodes.NodeBase
       @node_name = 'Bloom'
       @group_name = 'PostProcessing'
       
@@ -33,7 +33,7 @@ define [
       
       value_has_changed: (vals) =>
         newvals = @createCacheObject vals
-        if Utils.flatArraysAreEquals(newvals, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
           @cached = newvals
           return true
         false
@@ -44,7 +44,7 @@ define [
         @ob.screenUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
         @fields.setField("out", @ob)
     
-    class DotScreenPass extends ThreeNodes.NodeBase
+    DotScreenPass: class DotScreenPass extends ThreeNodes.NodeBase
       @node_name = 'DotScreen'
       @group_name = 'PostProcessing'
       
@@ -67,7 +67,7 @@ define [
       
       value_has_changed: (vals) =>
         newvals = @createCacheObject vals
-        if Utils.flatArraysAreEquals(newvals, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
           @cached = newvals
           return true
         false
@@ -77,7 +77,7 @@ define [
           @ob = new THREE.DotScreenPass(@fields.getField("center").getValue(), @fields.getField('angle').getValue(), @fields.getField('scale').getValue())
         @fields.setField("out", @ob)
     
-    class FilmPass extends ThreeNodes.NodeBase
+    FilmPass: class FilmPass extends ThreeNodes.NodeBase
       @node_name = 'Film'
       @group_name = 'PostProcessing'
       
@@ -101,7 +101,7 @@ define [
       
       value_has_changed: (vals) =>
         newvals = @createCacheObject vals
-        if Utils.flatArraysAreEquals(newvals, @cached) == false
+        if ThreeNodes.Utils.flatArraysAreEquals(newvals, @cached) == false
           @cached = newvals
           return true
         false
@@ -113,7 +113,7 @@ define [
         @ob.uniforms.sCount.value = @fields.getField("scanlinesCount").getValue()
         @fields.setField("out", @ob)
     
-    class VignettePass extends ThreeNodes.NodeBase
+    VignettePass: class VignettePass extends ThreeNodes.NodeBase
       @node_name = 'Vignette'
       @group_name = 'PostProcessing'
       
@@ -137,7 +137,7 @@ define [
         @ob.uniforms[ "darkness" ].value = @fields.getField("darkness").getValue()
         @fields.setField("out", @ob)
     
-    class HorizontalBlurPass extends ThreeNodes.NodeBase
+    HorizontalBlurPass: class HorizontalBlurPass extends ThreeNodes.NodeBase
       @node_name = 'HorizontalBlur'
       @group_name = 'PostProcessing'
       
@@ -159,7 +159,7 @@ define [
         @ob.uniforms[ "h" ].value = @fields.getField("delta").getValue()
         @fields.setField("out", @ob)
     
-    class VerticalBlurPass extends ThreeNodes.NodeBase
+    VerticalBlurPass: class VerticalBlurPass extends ThreeNodes.NodeBase
       @node_name = 'VerticalBlur'
       @group_name = 'PostProcessing'
       
@@ -181,7 +181,7 @@ define [
         @ob.uniforms[ "v" ].value = @fields.getField("delta").getValue()
         @fields.setField("out", @ob)
     
-    class BleachPass extends ThreeNodes.NodeBase
+    BleachPass: class BleachPass extends ThreeNodes.NodeBase
       @node_name = 'Bleach'
       @group_name = 'PostProcessing'
       

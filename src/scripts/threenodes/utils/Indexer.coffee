@@ -5,8 +5,8 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  namespace "ThreeNodes"
-    class Indexer
+  window.namespace "ThreeNodes",
+    Indexer: class Indexer
       constructor: () ->
         # Define a "unique id" property
         @uid = 0

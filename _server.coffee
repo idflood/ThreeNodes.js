@@ -185,7 +185,7 @@ else
   
   app.listen port
   console.log "ready: http://localhost:#{port}/"
-  
+  return
   # Continuous integration
   #testrunner = require("./public/misc/run_test")
   testrunner = require("./src/scripts/testrunner")

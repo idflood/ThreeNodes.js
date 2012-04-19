@@ -9,8 +9,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class Object3D extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    Object3D: class Object3D extends ThreeNodes.NodeBase
       @node_name = 'Object3D'
       @group_name = 'Three'
       
@@ -88,7 +88,7 @@ define [
         @apply_children()
         @fields.setField("out", @ob)
     
-    class Scene extends Object3D
+    Scene: class Scene extends Object3D
       @node_name = 'Scene'
       @group_name = 'Three'
       
@@ -113,7 +113,7 @@ define [
         @apply_children()
         @fields.setField("out", @ob)
     
-    class Object3DwithMeshAndMaterial extends Object3D
+    Object3DwithMeshAndMaterial: class Object3DwithMeshAndMaterial extends Object3D
       setFields: =>
         super
         @material_cache = false
@@ -153,7 +153,7 @@ define [
           res = current_val.id
         res
     
-    class ColladaLoader extends Object3D
+    ColladaLoader: class ColladaLoader extends Object3D
       @node_name = 'ColladaLoader'
       @group_name = 'Three'
       
@@ -240,7 +240,7 @@ define [
         @shadow_cache = @createCacheObject(@vars_shadow_options)
         @fields.setField("out", @ob)
     
-    class ThreeMesh extends Object3DwithMeshAndMaterial
+    ThreeMesh: class ThreeMesh extends Object3DwithMeshAndMaterial
       @node_name = 'Mesh'
       @group_name = 'Three'
       
@@ -298,7 +298,7 @@ define [
         @material_cache = @get_material_cache()
         @fields.setField("out", @ob)
     
-    class ThreeLine extends Object3DwithMeshAndMaterial
+    ThreeLine: class ThreeLine extends Object3DwithMeshAndMaterial
       @node_name = 'Line'
       @group_name = 'Three'
       
@@ -352,7 +352,7 @@ define [
         @material_cache = @get_material_cache()
         @fields.setField("out", @ob)
     
-    class Camera extends ThreeNodes.NodeBase
+    Camera: class Camera extends ThreeNodes.NodeBase
       @node_name = 'Camera'
       @group_name = 'Three'
       
@@ -393,7 +393,7 @@ define [
         @ob.lookAt(@fields.getField("target").getValue())
         @fields.setField("out", @ob)
     
-    class Texture extends ThreeNodes.NodeBase
+    Texture: class Texture extends ThreeNodes.NodeBase
       @node_name = 'Texture'
       @group_name = 'Three'
       
@@ -424,7 +424,7 @@ define [
             
         @fields.setField("out", @ob)
     
-    class Fog extends ThreeNodes.NodeBase
+    Fog: class Fog extends ThreeNodes.NodeBase
       @node_name = 'Fog'
       @group_name = 'Three'
       
@@ -449,7 +449,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class FogExp2 extends ThreeNodes.NodeBase
+    FogExp2: class FogExp2 extends ThreeNodes.NodeBase
       @node_name = 'FogExp2'
       @group_name = 'Three'
       
@@ -473,7 +473,7 @@ define [
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
     
-    class WebGLRenderer extends ThreeNodes.NodeBase
+    WebGLRenderer: class WebGLRenderer extends ThreeNodes.NodeBase
       @node_name = 'WebGLRenderer'
       @group_name = 'Three'
       
@@ -652,5 +652,3 @@ define [
         ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
         ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer
         ThreeNodes.Webgl.composer.render(0.05)
-      
-    return true

@@ -6,18 +6,18 @@ define [
   'cs!threenodes/models/GroupDefinition',
   'cs!threenodes/models/Connection',
   'cs!threenodes/views/ConnectionView',
-], (_, Backbone, Indexer) ->
+], (_, Backbone) ->
   #"use strict"
   
   $ = window.jQuery
   
-  namespace "ThreeNodes"
-    class GroupDefinitions extends Backbone.Collection
+  window.namespace "ThreeNodes",
+    GroupDefinitions: class GroupDefinitions extends Backbone.Collection
       model: ThreeNodes.GroupDefinition
       
       initialize: () =>
         # The group definitions have their own indexer, used to get unique id
-        @indexer = new Indexer()
+        @indexer = new ThreeNodes.Indexer()
         
         @bind "group:removed", (c) =>
           @remove(c)

@@ -9,8 +9,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class Group extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    Group: class Group extends ThreeNodes.NodeBase
       @node_name = 'Group'
       @group_name = false
           

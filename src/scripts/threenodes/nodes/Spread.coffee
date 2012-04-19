@@ -8,8 +8,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class RandomSpread extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    RandomSpread: class RandomSpread extends ThreeNodes.NodeBase
       @node_name = 'RandomSpread'
       @group_name = 'Spread'
       
@@ -51,7 +51,7 @@ define [
             @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
         @fields.setField("out", @value)
     
-    class LinearSpread extends ThreeNodes.NodeBase
+    LinearSpread: class LinearSpread extends ThreeNodes.NodeBase
       @node_name = 'LinearSpread'
       @group_name = 'Spread'
       

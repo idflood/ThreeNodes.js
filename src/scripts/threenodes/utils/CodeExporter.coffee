@@ -7,8 +7,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes"
-    class CodeExporter
+  window.namespace "ThreeNodes",
+    CodeExporter: class CodeExporter
       toCode: (json) =>
         res = "//\n"
         res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"

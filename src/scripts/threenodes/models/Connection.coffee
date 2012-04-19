@@ -1,15 +1,15 @@
-
 define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/utils/Indexer',
-], (_, Backbone, Indexer) ->
+], (_, Backbone) ->
   #"use strict"
   
-  namespace "ThreeNodes"
-    class Connection extends Backbone.Model
+  window.namespace "ThreeNodes",
+    Connection: class Connection extends Backbone.Model
       # Create a static indexer used if the connection is not part of a nodes collection (tests)
-      @static_indexer: new Indexer()
+      @STATIC_INDEXER = false
+      @GET_INDEXER = () -> (@STATIC_INDEXER || @STATIC_INDEXER = new ThreeNodes.Indexer())
       
       defaults:
         "cid": -1
@@ -18,7 +18,7 @@ define [
       
       initialize: (options) =>
         @options = options
-        indexer = options.indexer || ThreeNodes.NodeField.static_indexer
+        indexer = options.indexer || @GET_INDEXER()
         
         # Set a unique connection id
         if @get("cid") == -1 then @set({"cid": indexer.getUID()})
@@ -90,4 +90,3 @@ define [
           to_node: @to_field.node.get("nid")
           to: @to_field.get("machine_name")
         res
-    

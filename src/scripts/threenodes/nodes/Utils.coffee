@@ -8,8 +8,8 @@ define [
   
   $ = window.jQuery
   
-  namespace "ThreeNodes.nodes"
-    class Random extends ThreeNodes.NodeBase
+  window.namespace "ThreeNodes.nodes",
+    Random: class Random extends ThreeNodes.NodeBase
       @node_name = 'Random'
       @group_name = 'Utils'
       
@@ -29,7 +29,7 @@ define [
         @fields.setField("out", value)
     
     # based on http://www.cycling74.com/forums/topic.php?id=7821
-    class LFO extends ThreeNodes.NodeBase
+    LFO: class LFO extends ThreeNodes.NodeBase
       @node_name = 'LFO'
       @group_name = 'Utils'
       
@@ -108,7 +108,7 @@ define [
         
         @fields.setField("out", lfout)
     
-    class Merge extends ThreeNodes.NodeBase
+    Merge: class Merge extends ThreeNodes.NodeBase
       @node_name = 'Merge'
       @group_name = 'Utils'
       
@@ -139,7 +139,7 @@ define [
               result[result.length] = subval
         @fields.setField("out", result)
     
-    class Get extends ThreeNodes.NodeBase
+    Get: class Get extends ThreeNodes.NodeBase
       @node_name = 'Get'
       @group_name = 'Utils'
       
@@ -162,7 +162,7 @@ define [
         if @value != old
           @fields.setField("out", @value)
     
-    class Mp3Input extends ThreeNodes.NodeBase
+    Mp3Input: class Mp3Input extends ThreeNodes.NodeBase
       @node_name = 'Mp3Input'
       @group_name = 'Utils'
       
@@ -302,7 +302,7 @@ define [
           @fields.setField("high", @getAverageLevel(length3rd * 2, length - 1))
         return true
     
-    class Mouse extends ThreeNodes.NodeBase
+    Mouse: class Mouse extends ThreeNodes.NodeBase
       @node_name = 'Mouse'
       @group_name = 'Utils'
       
@@ -325,7 +325,7 @@ define [
         @fields.setField("x", dx)
         @fields.setField("y", dy)
     
-    class Timer extends ThreeNodes.NodeBase
+    Timer: class Timer extends ThreeNodes.NodeBase
       @node_name = 'Timer'
       @group_name = 'Utils'
       
@@ -360,7 +360,7 @@ define [
         @old = now
         @fields.setField("out", @counter)
     
-    class Font extends ThreeNodes.NodeBase
+    Font: class Font extends ThreeNodes.NodeBase
       @node_name = 'Font'
       @group_name = 'Utils'
       

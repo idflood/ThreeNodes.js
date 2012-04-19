@@ -2,15 +2,16 @@ define [
   'use!Underscore',
   'use!Backbone',
   'cs!threenodes/utils/Indexer',
-], (_, Backbone, Indexer) ->
+], (_, Backbone) ->
   #"use strict"
   
   $ = window.jQuery
   
-  namespace "ThreeNodes"
-    class NodeField extends Backbone.Model
+  window.namespace "ThreeNodes",
+    NodeField: class NodeField extends Backbone.Model
       # Create a static indexer used if the field is not part of a nodes collection (tests)
-      @static_indexer: new Indexer()
+      @STATIC_INDEXER = false
+      @GET_INDEXER = () -> (@STATIC_INDEXER || @STATIC_INDEXER = new ThreeNodes.Indexer())
       
       defaults: () ->
         fid: -1
@@ -55,7 +56,7 @@ define [
         # Keep reference to some variables
         @node = options.node
         @subfield = options.subfield
-        indexer = options.indexer || NodeField.static_indexer
+        indexer = options.indexer || @GET_INDEXER()
         
         # Common field variables
         @proxy = false
@@ -311,16 +312,17 @@ define [
         @linkTextfieldToSubval(f_in, subval, type)
         if type == "float"
           @addRextfieldSlider(f_in)
-          
-  namespace "ThreeNodes.fields"
-    class Any extends ThreeNodes.NodeField
+        return false
+  
+  window.namespace "ThreeNodes.fields",
+    Any: class Any extends NodeField
       computeValue : (val) =>
         val
       
       onValueChanged : (val) =>
         return val
       
-    class Array extends ThreeNodes.NodeField
+    Array: class Array extends NodeField
       computeValue : (val) =>
         if !val || val == false
           return []
@@ -339,7 +341,7 @@ define [
       
       getValue: (index = 0) => @get("value")
       
-    class Bool extends ThreeNodes.NodeField
+    Bool: class Bool extends NodeField
       renderSidebar: =>
         self = this
         $target = @createSidebarContainer()
@@ -369,7 +371,7 @@ define [
           when "string" then return val == "1"
         return null
     
-    class String extends ThreeNodes.NodeField
+    String: class String extends NodeField
       renderSidebar: =>
         self = this
         $target = @createSidebarContainer()
@@ -389,7 +391,7 @@ define [
           when "string" then return val
         return null
     
-    class Float extends ThreeNodes.NodeField
+    Float: class Float extends NodeField
       create_sidebar_select: ($target) =>
         self = this
         input = "<div><select>"
@@ -430,7 +432,7 @@ define [
               return 0
         return null
         
-    class Vector2 extends ThreeNodes.NodeField
+    Vector2: class Vector2 extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Vector2
@@ -443,7 +445,7 @@ define [
         @createSubvalTextinput("y")
         true
     
-    class Vector3 extends ThreeNodes.NodeField
+    Vector3: class Vector3 extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Vector3
@@ -457,7 +459,7 @@ define [
         @createSubvalTextinput("z")
         true
     
-    class Vector4 extends ThreeNodes.NodeField
+    Vector4: class Vector4 extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Vector4
@@ -472,14 +474,14 @@ define [
         @createSubvalTextinput("w")
         true
     
-    class Quaternion extends ThreeNodes.NodeField
+    Quaternion: class Quaternion extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Quaternion
             return val
         return null
         
-    class Color extends ThreeNodes.NodeField
+    Color: class Color extends NodeField
       computeValue : (val) =>
         switch $.type(val)
           when "number" then return new THREE.Color().setRGB(val, val, val)
@@ -494,49 +496,50 @@ define [
               return new THREE.Color(0x000000)
         return null
      
-    class Object3D extends ThreeNodes.NodeField
+    Object3D: class Object3D extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Object3D || val instanceof THREE.Object3D
             return val
         return null
-    class Scene extends ThreeNodes.NodeField
+    Scene: class Scene extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Scene
             return val
         return null
-    class Camera extends ThreeNodes.NodeField
+    Camera: class Camera extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
             return val
         return null
-    class Mesh extends ThreeNodes.NodeField
+    Mesh: class Mesh extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Mesh || val instanceof THREE.Mesh
             return val
         return null
-    class Geometry extends ThreeNodes.NodeField
+    Geometry: class Geometry extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Geometry || val instanceof THREE.Geometry
             return val
         return null
-    class Material extends ThreeNodes.NodeField
+    Material: class Material extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Material || val instanceof THREE.Material
             return val
         return null
-    class Texture extends ThreeNodes.NodeField
+    Texture: class Texture extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Texture || val instanceof THREE.Texture
             return val
         return null
-    class Fog extends ThreeNodes.NodeField
+    
+    Fog: class Fog extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Fog || val.constructor == THREE.FogExp2

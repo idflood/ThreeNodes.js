@@ -18,12 +18,12 @@ define [
   'cs!threenodes/nodes/Particle',
   'cs!threenodes/nodes/Group',
   'cs!threenodes/collections/Connections',
-], (_, Backbone, Indexer) ->
+], (_, Backbone) ->
   #"use strict"
   $ = window.jQuery
   
-  namespace "ThreeNodes"
-    class nodesCollection extends Backbone.Collection
+  window.namespace "ThreeNodes",
+    nodesCollection: class nodesCollection extends Backbone.Collection
       
       initialize: (models, options) =>
         @settings = options.settings
@@ -32,7 +32,7 @@ define [
         @materials = []
         
         # Each node collections has it's own indexer, used to get unique id
-        @indexer = new Indexer()
+        @indexer = new ThreeNodes.Indexer()
         
         # Create the connections collection
         @connections = new ThreeNodes.ConnectionsCollection([], {indexer: @indexer})
