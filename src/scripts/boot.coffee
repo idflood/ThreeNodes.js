@@ -4,7 +4,6 @@ require.config
     jQueryUi: 'libs/jquery-ui/js/jquery-ui-1.9m6'
     Underscore: 'libs/underscore'
     Backbone: 'libs/backbone'
-    namespace: 'libs/namespace'
     use: "libs/require/use"
     text: "libs/require/text"
     order: "libs/require/order"
