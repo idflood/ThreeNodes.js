@@ -8,7 +8,7 @@ define [
   #"use strict"
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     Workspace: class Workspace extends Backbone.View
       initialize: (options) =>
         super

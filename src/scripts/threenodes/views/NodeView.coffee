@@ -12,7 +12,7 @@ define [
   ### Node View ###
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     NodeView: class NodeView extends Backbone.View
       className: "node"
       

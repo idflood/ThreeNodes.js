@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     MathSin: class MathSin extends ThreeNodes.NodeNumberSimple
       @node_name = 'Sin'
       @group_name = 'Math'

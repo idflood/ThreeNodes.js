@@ -70,6 +70,11 @@ run = ->
   requirejs("jQuery")
   global.jQuery = global.$ = window.jQuery
   
+  # Setup namespace.coffee
+  requirejs("libs/namespace")
+  global.namespace =  window.namespace
+  window.ThreeNodes = global.ThreeNodes = {}
+  
   # Setup the tests
   requirejs ["mocha", "chai"], (mocha, chai, ns) ->
     suite = new mocha.Suite("", new mocha.Context)

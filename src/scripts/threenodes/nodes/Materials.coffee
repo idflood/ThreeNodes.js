@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     NodeMaterialBase: class NodeMaterialBase extends ThreeNodes.NodeBase
       setFields: =>
         super
@@ -70,7 +70,7 @@ define [
         @last_slice_count = numItems
         @fields.setField("out", @ob)
         
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     MeshBasicMaterial: class MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshBasic'
       @group_name = 'Materials'

@@ -11,7 +11,7 @@ define [
   ### Sidebar View ###
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     Sidebar: class Sidebar extends Backbone.View
       initialize: () ->
         super

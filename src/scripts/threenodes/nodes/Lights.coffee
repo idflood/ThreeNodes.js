@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     PointLight: class PointLight extends ThreeNodes.NodeBase
       @node_name = 'PointLight'
       @group_name = 'Lights'

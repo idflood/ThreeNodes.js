@@ -11,7 +11,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     GroupDefinitions: class GroupDefinitions extends Backbone.Collection
       model: ThreeNodes.GroupDefinition
       

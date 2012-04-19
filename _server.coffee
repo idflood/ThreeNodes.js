@@ -154,10 +154,10 @@ else
   # Pseudo link for js templates (src/html/templates -> assets/js/templates/)
   app.get "/scripts/templates/*", (req, res) ->
     file = req.params[0]
-    path.exists "views/templates/" + file, (exists) ->
+    path.exists "src/scripts/templates/" + file, (exists) ->
       if exists
         res.header("Content-Type", "text/html")
-        cs = fs.readFileSync("views/templates/" + file, "utf8")
+        cs = fs.readFileSync("src/scripts/templates/" + file, "utf8")
         res.send(cs)
       else
         res.send("Cannot GET " + "/scripts/templates/" + file, 404)
@@ -185,7 +185,7 @@ else
   
   app.listen port
   console.log "ready: http://localhost:#{port}/"
-  return
+  #return
   # Continuous integration
   #testrunner = require("./public/misc/run_test")
   testrunner = require("./src/scripts/testrunner")

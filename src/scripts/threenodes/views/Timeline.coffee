@@ -8,7 +8,7 @@ define [
   #"use strict"
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     AppTimeline: class AppTimeline extends Backbone.View
       initialize: (options) =>
         super

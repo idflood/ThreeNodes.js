@@ -6,7 +6,7 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     GroupDefinition: class GroupDefinition extends Backbone.Model
       defaults:
         nodes: []

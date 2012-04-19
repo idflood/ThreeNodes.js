@@ -19,7 +19,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     Webgl: {}
     
     WebglBase: class WebglBase

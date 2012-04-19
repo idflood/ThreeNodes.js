@@ -8,7 +8,7 @@ define [
   #"use strict"
   
   $ = window.jQuery
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     IfElse: class IfElse extends ThreeNodes.NodeBase
       @node_name = 'IfElse'
       @group_name = 'Conditional'

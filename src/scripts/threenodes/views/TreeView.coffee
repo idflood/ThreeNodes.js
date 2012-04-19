@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     TreeView: class TreeView extends Backbone.View
       initialize: (options) ->
         super

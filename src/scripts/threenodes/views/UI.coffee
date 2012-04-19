@@ -20,7 +20,7 @@ define [
   
   ### UI View ###
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     UI: class UI extends Backbone.View
     
       # Background svg used to draw the connections

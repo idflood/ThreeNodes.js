@@ -10,7 +10,7 @@ define [
   #"use strict"
   
   $ = window.jQuery
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     NodeCSG: class NodeCSG extends ThreeNodes.NodeBase
       setFields: =>
         super

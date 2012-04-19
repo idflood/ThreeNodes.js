@@ -12,7 +12,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     ParticleSystem: class ParticleSystem extends ThreeNodes.nodes.Object3D
       @node_name = 'ParticleSystem'
       @group_name = 'Particle'

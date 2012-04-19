@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     MenuBar: class MenuBar extends Backbone.View
       @template: _view_menubar
     

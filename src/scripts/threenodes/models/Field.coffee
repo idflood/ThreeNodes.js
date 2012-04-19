@@ -7,7 +7,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     NodeField: class NodeField extends Backbone.Model
       # Create a static indexer used if the field is not part of a nodes collection (tests)
       @STATIC_INDEXER: new ThreeNodes.Indexer()
@@ -313,7 +313,7 @@ define [
           @addRextfieldSlider(f_in)
         return false
   
-  window.namespace "ThreeNodes.fields",
+  namespace "ThreeNodes.fields",
     Any: class Any extends NodeField
       computeValue : (val) =>
         val

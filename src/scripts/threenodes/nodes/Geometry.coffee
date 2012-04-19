@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     PlaneGeometry: class PlaneGeometry extends ThreeNodes.NodeBase
       @node_name = 'Plane'
       @group_name = 'Geometry'

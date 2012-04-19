@@ -7,7 +7,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     CodeExporter: class CodeExporter
       toCode: (json) =>
         res = "//\n"

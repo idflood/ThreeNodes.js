@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     RandomSpread: class RandomSpread extends ThreeNodes.NodeBase
       @node_name = 'RandomSpread'
       @group_name = 'Spread'

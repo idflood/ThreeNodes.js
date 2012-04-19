@@ -20,7 +20,7 @@ define [
   #"use strict"
   
   $ = window.jQuery
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     App: class App
       constructor: (options) ->
         # Default settings

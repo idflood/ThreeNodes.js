@@ -22,7 +22,7 @@ define [
   #"use strict"
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     nodesCollection: class nodesCollection extends Backbone.Collection
       
       initialize: (models, options) =>

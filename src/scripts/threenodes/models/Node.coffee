@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     NodeBase: class NodeBase extends Backbone.Model
       @node_name = ''
       @group_name = ''

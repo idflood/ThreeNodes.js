@@ -13,7 +13,7 @@ define [
   ### FieldButton View ###
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     FieldButton: class FieldButton extends Backbone.View
       className: "field"
       # Save some options in variables and bind events

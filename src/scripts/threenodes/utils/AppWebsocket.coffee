@@ -5,7 +5,7 @@ define [
   "order!libs/sockjs-latest.min",
 ], (_, Backbone) ->
   #"use strict"
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     AppWebsocket: class AppWebsocket
       constructor: (websocket_enabled = false) ->
         if websocket_enabled

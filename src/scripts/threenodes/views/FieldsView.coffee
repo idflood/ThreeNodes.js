@@ -11,7 +11,7 @@ define [
   ### Fields View ###
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     FieldsView: class FieldsView extends Backbone.View
       # Save some options in variables and bind events
       initialize: (options) ->

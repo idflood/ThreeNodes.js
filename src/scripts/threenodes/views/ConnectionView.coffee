@@ -10,7 +10,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     ConnectionView: class ConnectionView extends Backbone.View
       initialize: (options) ->
         super

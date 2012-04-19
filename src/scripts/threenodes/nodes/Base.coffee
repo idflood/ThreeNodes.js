@@ -9,7 +9,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     Number: class Number extends ThreeNodes.NodeNumberSimple
       @node_name = 'Number'
       @group_name = 'Base'

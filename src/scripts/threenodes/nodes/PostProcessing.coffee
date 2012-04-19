@@ -8,7 +8,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes",
     BloomPass: class BloomPass extends ThreeNodes.NodeBase
       @node_name = 'Bloom'
       @group_name = 'PostProcessing'

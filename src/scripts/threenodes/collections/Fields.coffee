@@ -7,7 +7,7 @@ define [
   #"use strict"
   ### Fields Collection ###
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     FieldsCollection: class FieldsCollection extends Backbone.Collection
       initialize: (models, options) =>
         @node = options.node

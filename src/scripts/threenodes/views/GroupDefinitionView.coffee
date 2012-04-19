@@ -13,7 +13,7 @@ define [
   
   $ = window.jQuery
   
-  window.namespace "ThreeNodes",
+  namespace "ThreeNodes",
     GroupDefinitionView: class GroupDefinitionView extends Backbone.View
       @template = _view_template
         
