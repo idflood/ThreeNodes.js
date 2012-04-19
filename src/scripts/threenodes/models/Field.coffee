@@ -10,8 +10,7 @@ define [
   window.namespace "ThreeNodes",
     NodeField: class NodeField extends Backbone.Model
       # Create a static indexer used if the field is not part of a nodes collection (tests)
-      @STATIC_INDEXER = false
-      @GET_INDEXER = () -> (@STATIC_INDEXER || @STATIC_INDEXER = new ThreeNodes.Indexer())
+      @STATIC_INDEXER: new ThreeNodes.Indexer()
       
       defaults: () ->
         fid: -1
@@ -56,7 +55,7 @@ define [
         # Keep reference to some variables
         @node = options.node
         @subfield = options.subfield
-        indexer = options.indexer || @GET_INDEXER()
+        indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER
         
         # Common field variables
         @proxy = false

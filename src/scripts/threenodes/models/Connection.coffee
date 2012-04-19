@@ -8,8 +8,7 @@ define [
   window.namespace "ThreeNodes",
     Connection: class Connection extends Backbone.Model
       # Create a static indexer used if the connection is not part of a nodes collection (tests)
-      @STATIC_INDEXER = false
-      @GET_INDEXER = () -> (@STATIC_INDEXER || @STATIC_INDEXER = new ThreeNodes.Indexer())
+      @STATIC_INDEXER: new ThreeNodes.Indexer()
       
       defaults:
         "cid": -1
@@ -18,7 +17,7 @@ define [
       
       initialize: (options) =>
         @options = options
-        indexer = options.indexer || @GET_INDEXER()
+        indexer = options.indexer || ThreeNodes.Connection.STATIC_INDEXER
         
         # Set a unique connection id
         if @get("cid") == -1 then @set({"cid": indexer.getUID()})
