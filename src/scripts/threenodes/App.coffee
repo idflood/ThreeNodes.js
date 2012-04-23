@@ -1,5 +1,5 @@
 #### App
-
+console.log "app loaded"
 define [
   'use!Underscore',
   'use!Backbone',
@@ -18,7 +18,7 @@ define [
   'jQuery',
 ], (_, Backbone) ->
   #"use strict"
-  
+  console.log "booting..."
   $ = window.jQuery
   namespace "ThreeNodes",
     App: class App
@@ -36,7 +36,7 @@ define [
         # Initialize some core classes
         @url_handler = new ThreeNodes.UrlHandler()
         @group_definitions = new ThreeNodes.GroupDefinitions([])
-        @nodes = new ThreeNodes.nodesCollection([], {settings: settings})
+        @nodes = new ThreeNodes.NodesCollection([], {settings: settings})
         @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
         @webgl = new ThreeNodes.WebglBase()
         @file_handler = new ThreeNodes.FileHandler(@nodes, @group_definitions)

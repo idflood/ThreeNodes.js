@@ -27,9 +27,11 @@ define [
         console.log "webgl init..."
         @current_scene = new THREE.Scene()
         @current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
-        @current_renderer = new THREE.WebGLRenderer
-          clearColor: 0x000000
-          preserveDrawingBuffer: true
+        @current_renderer = false
+        if window.WebGLRenderingContext
+          @current_renderer = new THREE.WebGLRenderer
+            clearColor: 0x000000
+            preserveDrawingBuffer: true
         @current_renderer.autoClear = false
         @effectScreen = new THREE.ShaderPass( THREE.ShaderExtras[ "screen" ] )
         @effectScreen.renderToScreen = true

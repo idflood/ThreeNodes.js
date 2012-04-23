@@ -11,7 +11,16 @@ require.config
     cs: "libs/require/cs"
     CoffeeScript: "libs/coffee-script"
     chai: "libs/chai"
+    treeJquery: "libs/tree.jquery"
+    RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame"
+    Raphael: "libs/raphael-min"
   use:
+    Three:
+      attach: "THREE"
+    RequestAnimationFrame:
+      attach: "requestAnimationFrame"
+    Raphael:
+      attach: "Raphael"
     'Underscore':
       attach: "_"
     'Backbone':
@@ -31,7 +40,7 @@ require [
   "use strict"
   mocha.setup("tdd")
   require [
-    'test/NodesTest2',
+    'cs!test/NodesTest2',
   ], () ->
     #mocha.globals(["ThreeNodes"]).run()
     console.log "tests loaded"

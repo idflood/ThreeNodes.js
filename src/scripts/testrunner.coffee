@@ -1,98 +1,57 @@
 run = ->
-  reporter = "dot"
   
-  # Configuration for require.js
-  conf =
-    baseUrl: __dirname
-    nodeRequire: require
-    paths:
-      jQuery: "libs/jquery-1.7.2"
-      jQueryUi: "libs/jquery-ui/js/jquery-ui-1.9m6"
-      Underscore: "libs/underscore"
-      underscore: "libs/underscore"
-      Backbone: "libs/backbone"
-      mocha: "libs/mocha2"
-      requirejs: "libs/require/require"
-      use: "libs/require/use"
-      text: "libs/require/text"
-      order: "libs/require/order"
-      cs: "libs/require/cs"
-      CoffeeScript: "libs/coffee-script"
-      chai: "libs/chai"
-
-    use:
-      Underscore:
-        attach: "_"
+  phantom = require 'phantom'
+  
+  phantom.create (ph) ->
+    ph.createPage (page) ->
       
-      # backbone looks for "underscore" while all custom classes looks for "Underscore"
-      # todo: maybe replace all Underscore to underscore
-      underscore:
-        attach: "_"
+      page.set "onConsoleMessage", (msg) ->
+        console.log msg
       
-      Backbone:
-        deps: [ "use!Underscore", "jQuery" ]
-        attach: "Backbone"
-
-      jQueryUi:
-        deps: [ "jQuery" ]
-        attach: "jQuery"
-
-  # Setup require.js
-  requirejs = require("requirejs")
-  requirejs.config(conf)
-  global.define = requirejs
+      page.open "http://localhost:3000/test", (status) ->
+        console.log "opened test page3? ", status
+        if status isnt "success"
+          console.log "Unable to access network: " + status
+          ph.exit 1
+        else
+          interval = false
+          checkTests = () ->
+            console.log "check..."
+            #page.evaluate (-> document.body.querySelectorAll('span.status > span')[0].innerHTML), (total) ->
+            page.evaluate (-> document), (total) ->
+              console.log "------------"
+              page.evaluate (-> document.body.querySelectorAll('span.status > span')[0].innerHTML), (total) ->
+                console.log "------------ok"
+                console.log total
+                #console.log total
+                #clearInterval(interval)
+                ph.exit(0)
+                return false
+              #if body.querySelectorAll('span.status > span')[0].innerHTML == 'Completed'
+              #  clearInterval(interval)
+              #  total = body.querySelectorAll('span.status > span.total')[0].innerHTML
+              #  passed = body.querySelectorAll('span.status > span.passed')[0].innerHTML
+              #  
+              #  phantom.exit(0)
+          
+          
+          checkTests()
+          #interval = setInterval(checkTests, 1000)
+          
+          #page.evaluate (-> window), (window) ->
+          #  console.log("ok")
+          #  output = JSON.stringify window.qunitDone
+          #  #ph.exit(0)
+          #  console.log window
+          #  ph.exit (if JSON.parse(output).failed > 0 then 1 else 0)
+          #page.evaluate (-> document.getElementById('qunit-testresult').innerText), (result) ->
+          #page.evaluate (-> window.QUnit), (result) ->
+          #page.evaluate (-> document.body.querySelectorAll('span.status > span.total')), (result) ->
+          #  console.log result
+            
+          #page.evaluate addLogging
+          
+          
   
-  # Loads the coffeescript module before setting the global.window since it relies on this to see if this is a browser or node.js
-  requirejs("cs")
-  requirejs("use")
-  requirejs("text")
-  requirejs("order")
-  
-  # Setup jsdom
-  jsdom = require("jsdom")
-  jsdom.defaultDocumentFeatures =
-    MutationEvents: '2.0'
-    QuerySelector: true
-  
-  # Create main DOM elements with jsdom
-  document = jsdom.jsdom()
-  window = document.createWindow()
-  
-  # Set global.window and global.document for Underscore/backbone/jquery/...
-  global.window = window
-  global.document = document
-  #global.ThreeNodes = {}
-  
-  # Get window.location for jQuery-UI
-  global.location = window.location
-  
-  # Set the global jQuery for jQuery-UI
-  requirejs("jQuery")
-  global.jQuery = global.$ = window.jQuery
-  
-  # Setup namespace.coffee
-  requirejs("libs/namespace")
-  global.namespace =  window.namespace
-  window.ThreeNodes = global.ThreeNodes = {}
-  
-  # Setup the tests
-  requirejs ["mocha", "chai"], (mocha, chai, ns) ->
-    suite = new mocha.Suite("", new mocha.Context)
-    ui = mocha.interfaces["tdd"]
-    mocha.useColors = true
-    ui suite
-    suite.emit "pre-require", root
-    
-    # Load and execute tests
-    requirejs [
-      "cs!threenodes/App",
-      "../../test/NodesTest2",
-    ], (tmp_test) ->
-      # todo: remove tmp_test when this is working...
-      suite.emit "run"
-      runner = new mocha.Runner(suite)
-      runner.ignoreLeaks = true
-      mocha_reporter = new mocha.reporters.Dot(runner)
-      runner.run()
-
+run()
 module.exports.run = run

@@ -1,11 +1,10 @@
-
 define [
   'use!Underscore', 
   'use!Backbone',
   "jQueryUi",
   'cs!threenodes/views/TreeView',
-  "order!libs/jquery.layout-latest",
-], (_, Backbone, jQueryUi) ->
+  #"order!libs/jquery.layout-latest",
+], (_, Backbone) ->
   #"use strict"
   
   ### Sidebar View ###
@@ -118,7 +117,7 @@ define [
             $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.nodes[node].node_name }</a></li>")
       
         # Make the list of nodes draggable
-        jQuery("a.button", $container).draggable
+        $("a.button", $container).draggable
           revert: "valid"
           opacity: 0.7
           helper: "clone"

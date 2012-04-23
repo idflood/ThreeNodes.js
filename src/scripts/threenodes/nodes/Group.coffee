@@ -25,7 +25,7 @@ define [
         @definition = options.definition
         
         # A group contains a sub-nodes (nodes)
-        @nodes = new ThreeNodes.nodesCollection([], {settings: @settings})
+        @nodes = new ThreeNodes.NodesCollection([], {settings: @settings})
         
         # Create the subnodes
         for node in @definition.get("nodes")

@@ -4,13 +4,31 @@ require.config({
     jQueryUi: 'libs/jquery-ui/js/jquery-ui-1.9m6',
     Underscore: 'libs/underscore',
     Backbone: 'libs/backbone',
+    namespace: 'libs/namespace',
     use: "libs/require/use",
     text: "libs/require/text",
     order: "libs/require/order",
     cs: "libs/require/cs",
-    CoffeeScript: "libs/coffee-script"
+    CoffeeScript: "libs/coffee-script",
+    chai: "libs/chai",
+    treeJquery: "libs/tree.jquery",
+    RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame",
+    Raphael: "libs/raphael-min"
   },
   use: {
+    'Three': {
+      attach: "THREE"
+    },
+    'RequestAnimationFrame': {
+      attach: "requestAnimationFrame"
+    },
+    'Raphael': {
+      attach: "Raphael"
+    },
+    'treeJquery': {
+      deps: ['jQueryUi'],
+      attach: "jQuery"
+    },
     'Underscore': {
       attach: "_"
     },
@@ -24,6 +42,7 @@ require.config({
     }
   }
 });
+
 require(["libs/namespace"]);
 require(['order!cs!threenodes/App', 
   'order!cs!tests/NodesTest', 

@@ -624,6 +624,8 @@ define [
           @create_popup_view()
       
       compute: =>
+        if !ThreeNodes.Webgl.current_renderer
+          return
         # help fix asynchronous bug with firefox when opening popup
         if @creating_popup == true && !@win
           return

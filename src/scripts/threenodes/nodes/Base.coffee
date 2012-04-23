@@ -3,10 +3,11 @@ define [
   'use!Backbone',
   'cs!threenodes/models/Node',
   "order!libs/colorpicker/js/colorpicker",
+  #"libs/Three",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   #"use strict"
-  
+  console.log "aaz"
   $ = window.jQuery
   
   namespace "ThreeNodes.nodes",

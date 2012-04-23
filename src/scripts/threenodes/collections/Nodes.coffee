@@ -1,4 +1,3 @@
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -23,7 +22,7 @@ define [
   $ = window.jQuery
   
   namespace "ThreeNodes",
-    nodesCollection: class nodesCollection extends Backbone.Collection
+    NodesCollection: class NodesCollection extends Backbone.Collection
       
       initialize: (models, options) =>
         @settings = options.settings

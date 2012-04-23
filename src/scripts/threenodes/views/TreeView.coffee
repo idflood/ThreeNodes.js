@@ -2,7 +2,7 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  "order!libs/tree.jquery",
+  "use!treeJquery",
 ], (_, Backbone) ->
   #"use strict"
   

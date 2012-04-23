@@ -8,9 +8,25 @@ require.config({
     text: "libs/require/text",
     order: "libs/require/order",
     cs: "libs/require/cs",
-    CoffeeScript: "libs/coffee-script"
+    CoffeeScript: "libs/coffee-script",
+    treeJquery: "libs/tree.jquery",
+    RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame",
+    Raphael: "libs/raphael-min"
   },
   use: {
+    'Three':{
+      attach: "THREE"
+    },
+    'RequestAnimationFrame':{
+      attach: "requestAnimationFrame"
+    },
+    'Raphael':{
+      attach: "Raphael"
+    },
+    'treeJquery': {
+      deps: ['jQueryUi'],
+      attach: "jQuery"
+    },
     'Underscore': {
       attach: "_"
     },

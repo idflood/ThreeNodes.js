@@ -16,19 +16,18 @@ requirejs = require('requirejs')
 
 is_build = (process.argv[2] == "build")
 
-
+delay = (ms, func) -> setTimeout func, ms
 exec_and_log = (command, on_complete = null) ->
   console.log "executing command: " + command
   exec command, (err, stdout, stderr) ->
     if err
       console.log "error: " + err
     console.log stdout + stderr
-    if on_complete then delay 100, () => on_complete()
+    if on_complete then delay 50, () => on_complete()
     
 # Require the external coffeescript and jade to build the static_output
 # todo: also remove the external dependencies
 if is_build
-  delay = (ms, func) -> setTimeout func, ms
   
   compile_jade = (filename) ->
     html = jade.compile(fs.readFileSync('views/' + filename + ".jade", 'utf8'), {pretty: true})
@@ -183,25 +182,22 @@ else
     res.render "test2",
       layout: false
   
+  # Start the server
   app.listen port
   console.log "ready: http://localhost:#{port}/"
-  #return
-  # Continuous integration
-  #testrunner = require("./public/misc/run_test")
-  testrunner = require("./src/scripts/testrunner")
+  
   runTests = () ->
-    console.log "run mocha tests"
-    testrunner.run()
-    
-    #exec_and_log "node public/misc/run_test.js"
-    console.log "mocha END"
+    console.log "starting mocha tests..."
+    exec_and_log "coffee --compile --output src/scripts/ src/scripts/testrunner.coffee"
+    #exec_and_log "coffee --compile --output src/scripts/ src/scripts/testrunner.coffee", () ->
+    #  exec_and_log "node src/scripts/testrunner.js", () ->
+    #    console.log "mocha END"
   
-  watch.watchTree "src/", {'ignoreDotFiles': true}, (f, curr, prev) ->
+  test_if_change = (f, curr, prev) ->
+    # Skip testrunner.js changes to avoid infinite compilation
+    if !f || f == "src/scripts/testrunner.js" then return
     if typeof f != "object" && prev != null && curr != null then runTests()
-  watch.watchTree "test/", {'ignoreDotFiles': true}, (f, curr, prev) ->
-    if typeof f != "object" && prev != null && curr != null then runTests()
+  watch.watchTree("src/scripts", {'ignoreDotFiles': true}, test_if_change)
+  watch.watchTree("test/", {'ignoreDotFiles': true}, test_if_change)
+  
   runTests()
-  
-  # Start the server
-  
-
