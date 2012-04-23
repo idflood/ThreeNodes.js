@@ -177,27 +177,24 @@ else
   app.get "/test", (req, res) ->
     res.render "test",
       layout: false
-      
-  app.get "/test2", (req, res) ->
-    res.render "test2",
-      layout: false
   
   # Start the server
   app.listen port
   console.log "ready: http://localhost:#{port}/"
   
-  runTests = () ->
-    console.log "starting mocha tests..."
-    exec_and_log "coffee --compile --output src/scripts/ src/scripts/testrunner.coffee"
-    #exec_and_log "coffee --compile --output src/scripts/ src/scripts/testrunner.coffee", () ->
-    #  exec_and_log "node src/scripts/testrunner.js", () ->
-    #    console.log "mocha END"
-  
-  test_if_change = (f, curr, prev) ->
-    # Skip testrunner.js changes to avoid infinite compilation
-    if !f || f == "src/scripts/testrunner.js" then return
-    if typeof f != "object" && prev != null && curr != null then runTests()
-  watch.watchTree("src/scripts", {'ignoreDotFiles': true}, test_if_change)
-  watch.watchTree("test/", {'ignoreDotFiles': true}, test_if_change)
-  
-  runTests()
+  enable_continuous_tests = false
+  if enable_continuous_tests
+    runTests = () ->
+      console.log "starting mocha tests..."
+      exec_and_log "coffee --compile --output src/scripts/ src/scripts/testrunner.coffee"
+      #exec_and_log "coffee --compile --output src/scripts/ src/scripts/testrunner.coffee", () ->
+      #  exec_and_log "node src/scripts/testrunner.js", () ->
+      #    console.log "mocha END"
+    
+    test_if_change = (f, curr, prev) ->
+      # Skip testrunner.js changes to avoid infinite compilation
+      if !f || f == "src/scripts/testrunner.js" then return
+      if typeof f != "object" && prev != null && curr != null then runTests()
+    watch.watchTree("src/scripts", {'ignoreDotFiles': true}, test_if_change)
+    
+    runTests()
