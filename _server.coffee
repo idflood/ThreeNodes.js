@@ -36,7 +36,7 @@ if is_build
   # Remove previous build
   wrench.rmdirSyncRecursive('output_static', true)
   # Create root directory
-  wrench.mkdirSyncRecursive('output_static', 0777)
+  wrench.mkdirSyncRecursive('output_static', 0o0777)
   # Copy public assets
   wrench.copyDirSyncRecursive('public/assets', 'output_static/assets')
   wrench.copyDirSyncRecursive('public/scripts', 'output_static/scripts')
