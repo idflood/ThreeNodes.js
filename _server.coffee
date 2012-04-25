@@ -45,8 +45,8 @@ if is_build
   wrench.copyDirSyncRecursive('public/assets', 'output_static/assets')
   wrench.copyDirSyncRecursive('public/scripts', 'output_static/scripts')
   wrench.copyDirSyncRecursive('public/examples', 'output_static/examples')
-  wrench.copyDirSyncRecursive('views/templates', 'output_static/scripts/templates')
-    
+  wrench.copyDirSyncRecursive('src/scripts/libs', 'output_static/scripts/libs')
+  
   # Copy the development css to the output_static dir
   # todo: use the node.js stylus module with compress option
   wrench.copyDirSyncRecursive('public/stylesheets', 'output_static/stylesheets')
@@ -60,37 +60,80 @@ if is_build
   #exec_and_log 'jade views/ --out output_static/', () ->
   # Compile coffeescript to js
   console.log "Compiling coffeescript files..."
+  
+  copyFileSync = (srcFile, destFile) ->
+    BUF_LENGTH = 64*1024
+    buff = new Buffer(BUF_LENGTH)
+    fdr = fs.openSync(srcFile, 'r')
+    fdw = fs.openSync(destFile, 'w')
+    bytesRead = 1
+    pos = 0
+    while bytesRead > 0
+      bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos)
+      fs.writeSync(fdw,buff,0,bytesRead)
+      pos += bytesRead
+    fs.closeSync(fdr)
+    fs.closeSync(fdw)
+  
   exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/', () ->
+    console.log "Coffeescript files compiled!"
+    # Temporary copy app.js to src for r.js optimizer
+    copyFileSync("output_static/scripts/threenodes/app.js", "src/scripts/threenodes/app.js")
+    
     console.log "Starting to optimize the javascripts..."
-    # optimize the js
+    # Optimize the js
     config =
-      baseUrl: 'output_static/scripts/'
+      baseUrl: 'src/scripts/'
       paths:
-        jQuery: 'libs/jquery-1.7.2'
-        jQueryUi: 'libs/jquery-ui/js/jquery-ui-1.9m6'
-        Underscore: 'libs/underscore'
-        Backbone: 'libs/backbone'
+        jQuery: "libs/jquery-1.7.2"
+        jQueryUi: "libs/jquery-ui/js/jquery-ui-1.9m6"
+        Underscore: "libs/underscore"
+        Backbone: "libs/backbone"
         use: "libs/require/use"
         text: "libs/require/text"
         order: "libs/require/order"
+        cs: "libs/require/cs"
+        CoffeeScript: "libs/coffee-script"
+        treeJquery: "libs/tree.jquery"
+        RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame"
+        Raphael: "libs/raphael-min"
+    
       use:
-        'Underscore':
+        Three:
+          attach: "THREE"
+    
+        RequestAnimationFrame:
+          attach: "requestAnimationFrame"
+    
+        Raphael:
+          attach: "Raphael"
+    
+        treeJquery:
+          deps: [ "jQueryUi" ]
+          attach: "jQuery"
+    
+        Underscore:
           attach: "_"
-        'Backbone':
-          deps: ['use!Underscore', 'jQuery']
+    
+        Backbone:
+          deps: [ "use!Underscore", "jQuery" ]
           attach: "Backbone"
-        'jQueryUi':
-          deps: ['jQuery']
-          attach: 'jQuery'
+    
+        jQueryUi:
+          deps: [ "jQuery" ]
+          attach: "jQuery"
       
       optimize: 'none'
-      name: 'threenodes/App'
-      out: 'output_static/scripts/threenodes/App.js'
+      name: 'boot'
+      out: 'output_static/scripts/boot_tmp.js'
     
     requirejs.optimize config, (buildResponse) ->
-      console.log "Optimization complete!"
-      console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
-      process.exit()
+      # Remove temporary file
+      fs.unlink "src/scripts/threenodes/app.js", (err) ->
+        # Done
+        console.log "Optimization complete!"
+        console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
+        process.exit()
 
 else
   # development environment
