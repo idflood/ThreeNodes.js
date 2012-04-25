@@ -13,7 +13,8 @@ require.config({
     chai: "libs/chai",
     treeJquery: "libs/tree.jquery",
     RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame",
-    Raphael: "libs/raphael-min"
+    Raphael: "libs/raphael-min",
+    colorpicker: "libs/colorpicker/js/colorpicker"
   },
   use: {
     'Three': {
@@ -37,6 +38,10 @@ require.config({
       attach: "Backbone"
     },
     'jQueryUi': {
+      deps: ['jQuery'],
+      attach: "jQuery"
+    },
+    'colorpicker': {
       deps: ['jQuery'],
       attach: "jQuery"
     }

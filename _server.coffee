@@ -78,7 +78,7 @@ if is_build
   exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/', () ->
     console.log "Coffeescript files compiled!"
     # Temporary copy app.js to src for r.js optimizer
-    copyFileSync("output_static/scripts/threenodes/app.js", "src/scripts/threenodes/app.js")
+    #copyFileSync("output_static/scripts/threenodes/app.js", "src/scripts/threenodes/app.js")
     
     console.log "Starting to optimize the javascripts..."
     # Optimize the js
@@ -97,43 +97,41 @@ if is_build
         treeJquery: "libs/tree.jquery"
         RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame"
         Raphael: "libs/raphael-min"
+        colorpicker: "libs/colorpicker/js/colorpicker"
     
       use:
         Three:
           attach: "THREE"
-    
         RequestAnimationFrame:
           attach: "requestAnimationFrame"
-    
         Raphael:
           attach: "Raphael"
-    
         treeJquery:
           deps: [ "jQueryUi" ]
           attach: "jQuery"
-    
         Underscore:
           attach: "_"
-    
         Backbone:
           deps: [ "use!Underscore", "jQuery" ]
           attach: "Backbone"
-    
         jQueryUi:
+          deps: [ "jQuery" ]
+          attach: "jQuery"
+        colorpicker:
           deps: [ "jQuery" ]
           attach: "jQuery"
       
       optimize: 'none'
       name: 'boot'
-      out: 'output_static/scripts/boot_tmp.js'
+      out: 'output_static/scripts/boot.js'
     
     requirejs.optimize config, (buildResponse) ->
       # Remove temporary file
-      fs.unlink "src/scripts/threenodes/app.js", (err) ->
-        # Done
-        console.log "Optimization complete!"
-        console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
-        process.exit()
+      #fs.unlink "src/scripts/threenodes/app.js", (err) ->
+      # Done
+      console.log "Optimization complete!"
+      console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
+      process.exit()
 
 else
   # development environment
