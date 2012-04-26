@@ -3,6 +3,7 @@ console.log "app loaded"
 define [
   'use!Underscore',
   'use!Backbone',
+  'order!jQuery',
   'libs/namespace'
   "cs!threenodes/utils/Utils",
   'cs!threenodes/collections/Nodes',
@@ -15,11 +16,11 @@ define [
   'cs!threenodes/utils/FileHandler',
   'cs!threenodes/utils/UrlHandler',
   "cs!threenodes/utils/WebglBase",
-  'jQuery',
 ], (_, Backbone) ->
   #"use strict"
   console.log "booting..."
-  $ = window.jQuery
+  window.$ = window.jQuery
+  
   namespace "ThreeNodes",
     App: class App
       constructor: (options) ->

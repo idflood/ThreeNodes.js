@@ -28,7 +28,19 @@ exec_and_log = (command, on_complete = null) ->
 # Require the external coffeescript and jade to build the static_output
 # todo: also remove the external dependencies
 if is_build
-  
+  copyFileSync = (srcFile, destFile) ->
+    BUF_LENGTH = 64*1024
+    buff = new Buffer(BUF_LENGTH)
+    fdr = fs.openSync(srcFile, 'r')
+    fdw = fs.openSync(destFile, 'w')
+    bytesRead = 1
+    pos = 0
+    while bytesRead > 0
+      bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos)
+      fs.writeSync(fdw,buff,0,bytesRead)
+      pos += bytesRead
+    fs.closeSync(fdr)
+    fs.closeSync(fdw)
   compile_jade = (filename) ->
     html = jade.compile(fs.readFileSync('views/' + filename + ".jade", 'utf8'), {pretty: true})
     if html
@@ -47,6 +59,12 @@ if is_build
   wrench.copyDirSyncRecursive('public/examples', 'output_static/examples')
   wrench.copyDirSyncRecursive('src/scripts/libs', 'output_static/scripts/libs')
   
+  # copy test, require-config and boot files (js)
+  #copyFileSync("src/scripts/boot.js", "output_static/scripts/boot.js")
+  copyFileSync("src/scripts/boot_test.js", "output_static/scripts/boot_test.js")
+  copyFileSync("src/scripts/boot_speedtest.js", "output_static/scripts/boot_speedtest.js")
+  copyFileSync("src/scripts/require-config.js", "output_static/scripts/require-config.js")
+  
   # Copy the development css to the output_static dir
   # todo: use the node.js stylus module with compress option
   wrench.copyDirSyncRecursive('public/stylesheets', 'output_static/stylesheets')
@@ -61,73 +79,25 @@ if is_build
   # Compile coffeescript to js
   console.log "Compiling coffeescript files..."
   
-  copyFileSync = (srcFile, destFile) ->
-    BUF_LENGTH = 64*1024
-    buff = new Buffer(BUF_LENGTH)
-    fdr = fs.openSync(srcFile, 'r')
-    fdw = fs.openSync(destFile, 'w')
-    bytesRead = 1
-    pos = 0
-    while bytesRead > 0
-      bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos)
-      fs.writeSync(fdw,buff,0,bytesRead)
-      pos += bytesRead
-    fs.closeSync(fdr)
-    fs.closeSync(fdw)
-  
   exec_and_log 'coffee -b -o output_static/scripts/ -c src/scripts/', () ->
     console.log "Coffeescript files compiled!"
     # Temporary copy app.js to src for r.js optimizer
-    #copyFileSync("output_static/scripts/threenodes/app.js", "src/scripts/threenodes/app.js")
+    #copyFileSync("output_static/scripts/threenodes/App.js", "src/scripts/threenodes/App.js")
     
     console.log "Starting to optimize the javascripts..."
     # Optimize the js
     config =
       baseUrl: 'src/scripts/'
-      paths:
-        jQuery: "libs/jquery-1.7.2"
-        jQueryUi: "libs/jquery-ui/js/jquery-ui-1.9m6"
-        Underscore: "libs/underscore"
-        Backbone: "libs/backbone"
-        use: "libs/require/use"
-        text: "libs/require/text"
-        order: "libs/require/order"
-        cs: "libs/require/cs"
-        CoffeeScript: "libs/coffee-script"
-        treeJquery: "libs/tree.jquery"
-        RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame"
-        Raphael: "libs/raphael-min"
-        colorpicker: "libs/colorpicker/js/colorpicker"
-    
-      use:
-        Three:
-          attach: "THREE"
-        RequestAnimationFrame:
-          attach: "requestAnimationFrame"
-        Raphael:
-          attach: "Raphael"
-        treeJquery:
-          deps: [ "jQueryUi" ]
-          attach: "jQuery"
-        Underscore:
-          attach: "_"
-        Backbone:
-          deps: [ "use!Underscore", "jQuery" ]
-          attach: "Backbone"
-        jQueryUi:
-          deps: [ "jQuery" ]
-          attach: "jQuery"
-        colorpicker:
-          deps: [ "jQuery" ]
-          attach: "jQuery"
-      
+      mainConfigFile: 'src/scripts/require-config.js'
       optimize: 'none'
+      #name: 'threenodes/App'
       name: 'boot'
+      #out: 'output_static/scripts/threenodes/App.js'
       out: 'output_static/scripts/boot.js'
     
     requirejs.optimize config, (buildResponse) ->
       # Remove temporary file
-      #fs.unlink "src/scripts/threenodes/app.js", (err) ->
+      fs.unlink "src/scripts/threenodes/App.js", (err) ->
       # Done
       console.log "Optimization complete!"
       console.log "ThreeNodes.js has successfuly been compiled to /output_static !"

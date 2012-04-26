@@ -7,7 +7,6 @@ define [
 ], (jQuery, _, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
   namespace "ThreeNodes.nodes",
     IfElse: class IfElse extends ThreeNodes.NodeBase
       @node_name = 'IfElse'

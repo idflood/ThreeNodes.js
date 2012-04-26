@@ -2,7 +2,7 @@
  * Copyright 2012, Tim Branyen (@tbranyen)
  * use.js may be freely distributed under the MIT license.
  */
-(function(window) {
+(function() {
 
 // Cache used to map configuration options between load and write.
 var buildMap = {};
@@ -62,13 +62,15 @@ define({
     var module = buildMap[moduleName];
     var deps = module.deps;
     var normalize = { attach: null, deps: "" };
-
+  
     // Normalize the attach to window[name] or function() { }
-    if (typeof attach === "function") {
-      normalize.attach = "return " + module.attach.toString() + ";";
+    if (typeof module.attach === "function") {
+      normalize.attach = module.attach.toString();
     } else {
-      normalize.attach = "return window['" + module.attach + "'];";
+      normalize.attach = "return typeof " + module.attach +
+        " !== \"undefined\" ? " + module.attach + " : void 0";
     }
+  
 
     // Normalize the dependencies to have proper string characters
     if (deps.length) {
@@ -79,14 +81,11 @@ define({
     write([
       "define('", pluginName, "!", moduleName, "', ",
         "[", normalize.deps, "],",
-
-        "function() {",
-          normalize.attach,
-        "}",
-
+        normalize.attach,
       ");\n"
     ].join(""));
   }
 });
 
-})(this);
+})();
+

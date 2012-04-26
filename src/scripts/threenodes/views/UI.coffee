@@ -1,4 +1,3 @@
-
 define [
   'use!Underscore', 
   'use!Backbone',
@@ -15,9 +14,6 @@ define [
   "order!libs/jquery-scrollview/jquery.scrollview",
   "order!libs/jquery.layout-latest",
 ], (_, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
-  #"use strict"
-  $ = window.jQuery
-  
   ### UI View ###
   
   namespace "ThreeNodes",
