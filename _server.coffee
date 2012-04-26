@@ -94,6 +94,8 @@ if is_build
       name: 'boot'
       #out: 'output_static/scripts/threenodes/App.js'
       out: 'output_static/scripts/boot.js'
+      pragmasOnSave:
+        excludeCoffeeScript: true
     
     requirejs.optimize config, (buildResponse) ->
       # Remove temporary file
