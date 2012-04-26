@@ -1,15 +1,13 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  "jQueryUi",
+  "use!jquery.ui",
   'cs!threenodes/views/TreeView',
   #"order!libs/jquery.layout-latest",
 ], (_, Backbone) ->
   #"use strict"
   
   ### Sidebar View ###
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     Sidebar: class Sidebar extends Backbone.View
       initialize: () ->

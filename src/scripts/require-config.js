@@ -1,7 +1,7 @@
 require.config({
   paths: {
-    jQuery: 'libs/jquery-1.7.2',
-    jQueryUi: 'libs/jquery-ui/js/jquery-ui-1.9m6',
+    jquery: 'libs/jquery-1.7.2',
+    "jquery.ui": 'libs/jquery-ui/js/jquery-ui-1.9m6',
     Underscore: 'libs/underscore',
     Backbone: 'libs/backbone',
     use: "libs/require/use",
@@ -25,23 +25,23 @@ require.config({
       attach: "Raphael"
     },
     'treeJquery': {
-      deps: ['jQueryUi'],
-      attach: "jQuery"
+      deps: ['jquery.ui'],
+      attach: "jquery"
     },
     'Underscore': {
       attach: "_"
     },
     'Backbone': {
-      deps: ['Underscore', 'jQuery'],
+      deps: ['Underscore', 'jquery'],
       attach: "Backbone"
     },
-    'jQueryUi': {
-      deps: ['jQuery'],
-      attach: "jQuery"
+    'jquery.ui': {
+      deps: ['jquery'],
+      attach: "jquery"
     },
     'colorpicker': {
-      deps: ['jQuery'],
-      attach: "jQuery"
+      deps: ['jquery'],
+      attach: "jquery"
     }
   }
 });

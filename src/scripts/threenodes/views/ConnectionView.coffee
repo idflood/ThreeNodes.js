@@ -3,12 +3,10 @@ define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/views/UI',
-  "use!jQueryUi",
+  "use!jquery.ui",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   #"use strict"
-  
-  $ = window.jQuery
   
   namespace "ThreeNodes",
     ConnectionView: class ConnectionView extends Backbone.View

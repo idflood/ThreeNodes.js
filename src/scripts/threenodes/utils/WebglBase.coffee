@@ -17,8 +17,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     Webgl: {}
     

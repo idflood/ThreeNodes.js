@@ -1,7 +1,7 @@
 define [
   'use!Underscore',
   'use!Backbone',
-  'order!jQuery',
+  'jquery',
   'libs/namespace',
   "cs!threenodes/utils/Utils",
   'cs!threenodes/collections/Nodes',

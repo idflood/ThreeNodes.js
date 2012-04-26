@@ -7,8 +7,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     Group: class Group extends ThreeNodes.NodeBase
       @node_name = 'Group'

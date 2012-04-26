@@ -9,8 +9,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     GroupDefinitions: class GroupDefinitions extends Backbone.Collection
       model: ThreeNodes.GroupDefinition

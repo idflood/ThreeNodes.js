@@ -6,7 +6,6 @@ define [
   'cs!threenodes/views/ConnectionView',
 ], (_, Backbone) ->
   #"use strict"
-  $ = window.jQuery
   
   namespace "ThreeNodes",
     Workspace: class Workspace extends Backbone.View

@@ -9,7 +9,7 @@ define [
   "use!RequestAnimationFrame",
   "use!Raphael",
   "order!libs/jquery.contextMenu",
-  "use!jQueryUi",
+  "use!jquery.ui",
   "order!libs/jquery.transform2d",
   "order!libs/jquery-scrollview/jquery.scrollview",
   "order!libs/jquery.layout-latest",

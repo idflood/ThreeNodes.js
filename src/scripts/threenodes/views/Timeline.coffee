@@ -6,7 +6,6 @@ define [
   "order!libs/timeline.js/timeline-gui",
 ], (_, Backbone) ->
   #"use strict"
-  $ = window.jQuery
   
   namespace "ThreeNodes",
     AppTimeline: class AppTimeline extends Backbone.View

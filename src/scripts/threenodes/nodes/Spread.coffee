@@ -6,8 +6,6 @@ define [
 ], (_, Backbone, Rc4Random) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     RandomSpread: class RandomSpread extends ThreeNodes.NodeBase
       @node_name = 'RandomSpread'

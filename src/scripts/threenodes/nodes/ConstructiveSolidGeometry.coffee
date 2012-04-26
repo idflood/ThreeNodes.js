@@ -9,7 +9,6 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = window.jQuery
   namespace "ThreeNodes.nodes",
     NodeCSG: class NodeCSG extends ThreeNodes.NodeBase
       setFields: =>

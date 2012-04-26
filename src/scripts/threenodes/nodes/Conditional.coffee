@@ -1,5 +1,5 @@
 define [
-  'jQuery',
+  'jquery',
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/models/Node',

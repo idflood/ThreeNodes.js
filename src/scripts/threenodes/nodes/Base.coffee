@@ -8,8 +8,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     Number: class Number extends ThreeNodes.NodeNumberSimple
       @node_name = 'Number'

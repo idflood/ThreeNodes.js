@@ -4,8 +4,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     UrlHandler: class UrlHandler extends Backbone.Router
       routes:

@@ -5,16 +5,14 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     CodeExporter: class CodeExporter
       toCode: (json) =>
         res = "//\n"
         res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
         res += "//\n\n"
-        res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});"
-        res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone'], function(App) {"
+        res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/Underscore-loader',Backbone: 'loaders/backbone-loader'}});"
+        res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/Underscore-min', 'order!libs/backbone'], function(App) {"
         res += "\n\n"
         res += '"use strict";\n'
         res += "var app = new App();\n"

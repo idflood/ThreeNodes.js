@@ -6,8 +6,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     Random: class Random extends ThreeNodes.NodeBase
       @node_name = 'Random'

@@ -6,8 +6,6 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     PlaneGeometry: class PlaneGeometry extends ThreeNodes.NodeBase
       @node_name = 'Plane'

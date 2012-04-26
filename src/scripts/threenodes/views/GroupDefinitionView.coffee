@@ -9,10 +9,8 @@ define [
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_template, _view_group_delete) ->
   #"use strict"
+  
   ### Node View ###
-  
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     GroupDefinitionView: class GroupDefinitionView extends Backbone.View
       @template = _view_template

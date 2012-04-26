@@ -6,8 +6,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     NodeMaterialBase: class NodeMaterialBase extends ThreeNodes.NodeBase
       setFields: =>

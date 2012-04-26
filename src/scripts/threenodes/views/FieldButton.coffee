@@ -11,8 +11,6 @@ define [
   #"use strict"
   
   ### FieldButton View ###
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     FieldButton: class FieldButton extends Backbone.View
       className: "field"

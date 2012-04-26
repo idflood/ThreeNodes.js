@@ -10,8 +10,6 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     ParticleSystem: class ParticleSystem extends ThreeNodes.nodes.Object3D
       @node_name = 'ParticleSystem'

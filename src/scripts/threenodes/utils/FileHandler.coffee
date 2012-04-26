@@ -9,7 +9,6 @@ define [
   "order!libs/json2",
 ], (_, Backbone, Utils) ->
   #"use strict"
-  $ = window.jQuery
   
   namespace "ThreeNodes",
     FileHandler: class FileHandler extends Backbone.Events

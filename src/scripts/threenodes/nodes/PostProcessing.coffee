@@ -6,8 +6,6 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     BloomPass: class BloomPass extends ThreeNodes.NodeBase
       @node_name = 'Bloom'

@@ -5,13 +5,12 @@ define [
   "text!templates/node.tmpl.html",
   'cs!threenodes/views/FieldsView',
   "order!libs/jquery.contextMenu",
-  "jQueryUi",
+  "use!jquery.ui",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_node_template) ->
   #"use strict"
-  ### Node View ###
-  $ = window.jQuery
   
+  ### Node View ###
   namespace "ThreeNodes",
     NodeView: class NodeView extends Backbone.View
       className: "node"

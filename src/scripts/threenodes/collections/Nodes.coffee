@@ -19,7 +19,6 @@ define [
   'cs!threenodes/collections/Connections',
 ], (_, Backbone) ->
   #"use strict"
-  $ = window.jQuery
   
   namespace "ThreeNodes",
     NodesCollection: class NodesCollection extends Backbone.Collection

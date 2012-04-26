@@ -3,14 +3,12 @@ define [
   'use!Underscore', 
   'use!Backbone',
   'cs!threenodes/views/FieldButton',
-  "jQueryUi",
+  "use!jquery.ui",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   #"use strict"
   
   ### Fields View ###
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     FieldsView: class FieldsView extends Backbone.View
       # Save some options in variables and bind events

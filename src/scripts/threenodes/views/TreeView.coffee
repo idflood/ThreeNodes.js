@@ -6,8 +6,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes",
     TreeView: class TreeView extends Backbone.View
       initialize: (options) ->

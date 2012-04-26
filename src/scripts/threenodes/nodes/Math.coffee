@@ -6,8 +6,6 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
-  $ = window.jQuery
-  
   namespace "ThreeNodes.nodes",
     MathSin: class MathSin extends ThreeNodes.NodeNumberSimple
       @node_name = 'Sin'
