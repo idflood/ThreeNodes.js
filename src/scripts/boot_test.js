@@ -8,8 +8,6 @@ require(['require-config', 'libs/namespace'], function () {
     'order!cs!tests/FileLoadTest', 
     'order!cs!tests/ThreeJsIntegrationTest', 
     'order!cs!tests/GroupTest', 
-    'use!Underscore', 
-    'use!Backbone', 
     "order!libs/qunit-git"], function(App, NodesTest, FieldTest, ConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) {
     "use strict";
     var app;
