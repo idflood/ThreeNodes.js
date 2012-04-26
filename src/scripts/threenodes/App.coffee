@@ -1,10 +1,8 @@
-#### App
-console.log "app loaded"
 define [
   'use!Underscore',
   'use!Backbone',
   'order!jQuery',
-  'libs/namespace'
+  'libs/namespace',
   "cs!threenodes/utils/Utils",
   'cs!threenodes/collections/Nodes',
   'cs!threenodes/collections/GroupDefinitions',
@@ -17,6 +15,8 @@ define [
   'cs!threenodes/utils/UrlHandler',
   "cs!threenodes/utils/WebglBase",
 ], (_, Backbone) ->
+  #### App
+  
   #"use strict"
   console.log "booting..."
   window.$ = window.jQuery

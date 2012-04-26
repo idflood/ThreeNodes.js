@@ -97,7 +97,7 @@ if is_build
     
     requirejs.optimize config, (buildResponse) ->
       # Remove temporary file
-      fs.unlink "src/scripts/threenodes/App.js", (err) ->
+      #fs.unlink "src/scripts/threenodes/App.js", (err) ->
       # Done
       console.log "Optimization complete!"
       console.log "ThreeNodes.js has successfuly been compiled to /output_static !"
