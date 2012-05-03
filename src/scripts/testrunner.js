@@ -1,47 +1,74 @@
-(function() {
-  var run;
+var phantom = require('phantom');
 
-  run = function() {
-    var phantom;
-    phantom = require('phantom');
-    return phantom.create(function(ph) {
-      return ph.createPage(function(page) {
-        page.set("onConsoleMessage", function(msg) {
-          return console.log(msg);
-        });
-        return page.open("http://localhost:3000/test", function(status) {
-          var checkTests, interval;
-          console.log("opened test page3? ", status);
-          if (status !== "success") {
-            console.log("Unable to access network: " + status);
-            return ph.exit(1);
-          } else {
-            interval = false;
-            checkTests = function() {
-              console.log("check...");
-              return page.evaluate((function() {
-                return document;
-              }), function(total) {
-                console.log("------------");
-                return page.evaluate((function() {
-                  return document.body.querySelectorAll('span.status > span')[0].innerHTML;
-                }), function(total) {
-                  console.log("------------ok");
-                  console.log(total);
-                  ph.exit(0);
-                  return false;
-                });
-              });
-            };
-            return checkTests();
-          }
-        });
-      });
+// Colored console output
+var sty = require('sty');
+
+var display_errors = function(errors) {
+  for (var i = 0; i < errors.length; i++) {
+    var error = errors[i];
+    console.log("  # " + error.module + " | " + error.test);
+    for (var j = 0; j < error.items.length; j++) {
+      var err2 = error.items[j];
+      console.log("  → " + err2.message);
+      if (err2.expected) {
+        console.log("    " + err2.expected);
+        console.log("    " + sty.red(err2.actual));
+      }
+    }
+    console.log("");
+  }
+};
+
+return phantom.create(function(ph) {
+  return ph.createPage(function(page) {
+    page.set("onConsoleMessage", function(msg) {
+      return console.log(msg);
     });
-  };
-
-  run();
-
-  module.exports.run = run;
-
-}).call(this);
+    return page.open("http://localhost:3000/test", function(status) {
+      if (status !== "success") {
+        console.log("Unable to access network: " + status);
+        return ph.exit(1);
+      } else {
+        var interval = false;
+        var checkTests = function() {
+          return page.evaluate((function(){
+            return document.qunitResult;
+          }), function(result){
+            if (!result) {
+              // waiting results
+            }
+            else {
+              var prefix = "✖ ";
+              if (result.failed == 0) prefix = "✓ ";
+              // force color output event if these console.log are redirected
+              sty.enable();
+              console.log("##########################");
+              console.log("");
+              if (result.failed > 0) {
+                console.log(sty.red(prefix + "Tests Failed!"));
+              }
+              else {
+                console.log(sty.green(prefix + "Tests completed!"));
+              }
+              
+              console.log("  Passed: " + result.passed);
+              console.log("  Total:  " + result.total);
+              
+              if (result.failed > 0) {
+                console.log(sty.bold("  Failed: " + result.failed));
+                console.log("");
+                display_errors(result.errors);
+              }
+              console.log("");
+              
+              clearInterval(interval);
+              ph.exit();
+            }
+          });
+        };
+        
+        interval = setInterval(checkTests, 250);
+      }
+    });
+  });
+});
