@@ -1,14 +1,14 @@
-/* RequireJS Use Plugin v0.2.0
+/* RequireJS Use Plugin v0.3.0
  * Copyright 2012, Tim Branyen (@tbranyen)
  * use.js may be freely distributed under the MIT license.
  */
-(function() {
+(function(global) {
 
 // Cache used to map configuration options between load and write.
 var buildMap = {};
 
 define({
-  version: "0.2.0",
+  version: "0.3.0",
 
   // Invoked by the AMD builder, passed the path to resolve, the require
   // function, done callback, and the configuration options.
@@ -46,11 +46,11 @@ define({
 
         // Return the correct attached object
         if (typeof attach === "function") {
-          return load(attach.apply(window, depArgs));
+          return load(attach.apply(global, depArgs));
         }
 
-        // Use window for now (maybe this?)
-        return load(window[attach]);
+        // Use global for now (maybe this?)
+        return load(global[attach]);
       });
     });
   },
@@ -63,14 +63,17 @@ define({
     var deps = module.deps;
     var normalize = { attach: null, deps: "" };
   
-    // Normalize the attach to window[name] or function() { }
+    // Normalize the attach to global[name] or function() { }
     if (typeof module.attach === "function") {
       normalize.attach = module.attach.toString();
     } else {
-      normalize.attach = "return typeof " + module.attach +
-        " !== \"undefined\" ? " + module.attach + " : void 0";
+      normalize.attach = [
+        "function() {",
+          "return typeof ", String(module.attach),
+            " !== \"undefined\" ? ", String(module.attach), " : void 0;",
+        "}"
+      ].join("");
     }
-  
 
     // Normalize the dependencies to have proper string characters
     if (deps.length) {
@@ -80,12 +83,10 @@ define({
     // Write out the actual definition
     write([
       "define('", pluginName, "!", moduleName, "', ",
-        "[", normalize.deps, "],",
-        normalize.attach,
+        "[", normalize.deps, "], ", normalize.attach,
       ");\n"
     ].join(""));
   }
 });
 
-})();
-
+})(this);
