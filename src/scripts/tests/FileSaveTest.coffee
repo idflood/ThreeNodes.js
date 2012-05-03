@@ -3,7 +3,7 @@ define [
   'use!Backbone',
   "order!libs/qunit-git",
 ], (_, Backbone) ->
-  "use strict"
+  #"use strict"
   
   $ = jQuery
   

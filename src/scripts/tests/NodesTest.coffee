@@ -4,9 +4,7 @@ define [
   "cs!threenodes/utils/Utils",
   "order!libs/qunit-git",
 ], (_, Backbone, Utils) ->
-  "use strict"
-  
-  $ = jQuery
+  #"use strict"
   
   class NodesTest
     constructor: (app) ->

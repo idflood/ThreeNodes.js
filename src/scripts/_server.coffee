@@ -115,8 +115,7 @@ app.get "/test", (req, res) ->
 app.listen port
 console.log "ready: http://localhost:#{port}/"
 
-enable_continuous_tests = false
-if enable_continuous_tests
+if process.argv[2] == "test"
   # Run continuous tests if "node server.js test"
   runTests = () -> exec_and_log "node ./src/scripts/testrunner.js"
   
