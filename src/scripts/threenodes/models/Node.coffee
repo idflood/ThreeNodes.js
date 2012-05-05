@@ -6,6 +6,10 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
+  ### Node model ###
+  
+  # Common base for all nodes.
+  
   namespace "ThreeNodes",
     NodeBase: class NodeBase extends Backbone.Model
       @node_name = ''

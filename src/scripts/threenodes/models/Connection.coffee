@@ -5,6 +5,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
+  ### Connection model ###
   namespace "ThreeNodes",
     Connection: class Connection extends Backbone.Model
       # Create a static indexer used if the connection is not part of a nodes collection (tests)

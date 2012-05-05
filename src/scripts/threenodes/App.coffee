@@ -19,7 +19,6 @@ define [
   
   #"use strict"
   console.log "booting..."
-  window.$ = window.jQuery
   
   namespace "ThreeNodes",
     App: class App

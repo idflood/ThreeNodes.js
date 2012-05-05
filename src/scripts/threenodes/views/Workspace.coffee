@@ -7,6 +7,12 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
+  ### Workspace View ###
+  
+  # A workspace consists of nodes and connections.
+  # There is a global workspace and possibly many workspaces
+  # from group nodes. There is always only one workspace displayed.
+  
   namespace "ThreeNodes",
     Workspace: class Workspace extends Backbone.View
       initialize: (options) =>

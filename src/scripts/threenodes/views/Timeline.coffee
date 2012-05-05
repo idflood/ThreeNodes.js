@@ -7,6 +7,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
+  ### Timeline View ###
   namespace "ThreeNodes",
     AppTimeline: class AppTimeline extends Backbone.View
       initialize: (options) =>

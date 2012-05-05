@@ -6,6 +6,10 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
   
+  ### GroupDefinition model ###
+  
+  # A GroupDefinition defines what is inside a group node, subnodes and internal connections.
+  
   namespace "ThreeNodes",
     GroupDefinition: class GroupDefinition extends Backbone.Model
       defaults:

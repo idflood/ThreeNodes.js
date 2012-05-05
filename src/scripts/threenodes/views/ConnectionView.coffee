@@ -8,6 +8,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
   
+  ### Connection View ###
   namespace "ThreeNodes",
     ConnectionView: class ConnectionView extends Backbone.View
       initialize: (options) ->
