@@ -11,3 +11,8 @@ output_static/*
 output_static/*/*
 output_static/*/*/*
 output_static/*/*/*/*
+dist/
+dist/*
+dist/*/*
+dist/*/*/*
+dist/*/*/*/*
