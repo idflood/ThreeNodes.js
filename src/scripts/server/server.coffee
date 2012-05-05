@@ -117,11 +117,11 @@ console.log "ready: http://localhost:#{port}/"
 
 if process.argv[2] == "test"
   # Run continuous tests if "node server.js test"
-  runTests = () -> exec_and_log "node ./src/scripts/testrunner.js"
+  runTests = () -> exec_and_log "node ./src/scripts/server/testrunner.js"
   
   test_if_change = (f, curr, prev) ->
     # Skip testrunner.js changes to avoid infinite compilation
-    if !f || f == "src/scripts/testrunner.js" then return
+    if !f || f == "src/scripts/server/testrunner.js" then return
     if typeof f != "object" && prev != null && curr != null then runTests()
   watch.watchTree("src/scripts", {'ignoreDotFiles': true}, test_if_change)
   
