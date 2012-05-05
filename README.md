@@ -36,7 +36,7 @@ This will automatically compile coffescript files to javascript, sass to css and
 ## Build / Deploy
 1. cd in ThreeNodes
 2. node server.js build
-3. a new /output_static should have been created
+3. a new /dist should have been created
 
 If there is an error when building see https://github.com/jrburke/r.js/issues/157#issuecomment-5402796
 This will be fixed with the next require.js release (2.0)

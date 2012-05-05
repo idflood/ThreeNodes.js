@@ -2,7 +2,7 @@
 define [
   'use!Underscore', 
   'use!Backbone',
-  'threenodes/views/UI',
+  'cs!threenodes/views/UI',
   "text!templates/node_field_input.tmpl.html",
   "text!templates/node_field_output.tmpl.html",
   'cs!threenodes/utils/Utils',

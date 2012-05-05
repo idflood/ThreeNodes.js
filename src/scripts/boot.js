@@ -8,6 +8,6 @@ require.config({
   }
 });
 
-require(['order!require-config', 'cs!threenodes/App'], function () {
+require(['order!require-config', 'order!cs!threenodes/App'], function () {
   return new ThreeNodes.App();
 });

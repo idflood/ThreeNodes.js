@@ -41,28 +41,29 @@ copyFileSync = (srcFile, destFile) ->
 compile_jade = (filename) ->
   html = jade.compile(fs.readFileSync('views/' + filename + ".jade", 'utf8'), {pretty: true})
   if html
-    fs.writeFileSync('output_static/' + filename + ".html", html())
+    fs.writeFileSync('dist/' + filename + ".html", html())
   else
     console.log "Can't compile: views/" + filename + ".jade"
 console.log "Building..."
 
 # Remove previous build
-wrench.rmdirSyncRecursive('output_static', true)
+wrench.rmdirSyncRecursive('dist', true)
 # Create root directory
-wrench.mkdirSyncRecursive('output_static/scripts', parseInt('777', 8))
+wrench.mkdirSyncRecursive('dist/scripts', parseInt('777', 8))
 # Copy public assets
-wrench.copyDirSyncRecursive('public/assets', 'output_static/assets')
-wrench.copyDirSyncRecursive('public/examples', 'output_static/examples')
-wrench.copyDirSyncRecursive('src/scripts/libs', 'output_static/scripts/libs')
+wrench.copyDirSyncRecursive('public/assets', 'dist/assets')
+wrench.copyDirSyncRecursive('public/examples', 'dist/examples')
+wrench.copyDirSyncRecursive('src/scripts/libs', 'dist/scripts/libs')
+wrench.copyDirSyncRecursive('src/scripts/threenodes', 'dist/scripts/threenodes')
 
 # copy test, require-config and boot file (js)
-copyFileSync("src/scripts/boot.js", "output_static/scripts/boot.js")
-copyFileSync("src/scripts/boot_test.js", "output_static/scripts/boot_test.js")
-copyFileSync("src/scripts/require-config.js", "output_static/scripts/require-config.js")
+copyFileSync("src/scripts/boot.js", "dist/scripts/boot.js")
+copyFileSync("src/scripts/boot_test.js", "dist/scripts/boot_test.js")
+copyFileSync("src/scripts/require-config.js", "dist/scripts/require-config.js")
 
-# Copy the development css to the output_static dir
+# Copy the development css to the dist dir
 # todo: use the node.js stylus module with compress option
-wrench.copyDirSyncRecursive('public/stylesheets', 'output_static/stylesheets')
+wrench.copyDirSyncRecursive('public/stylesheets', 'dist/stylesheets')
 
 # Compile jade to html
 console.log "Compiling jade files..."
@@ -78,12 +79,12 @@ config =
   pragmasOnSave:
     excludeCoffeeScript: true
   name: 'boot'
-  out: 'output_static/scripts/boot.js'
+  out: 'dist/scripts/boot.js'
 
 requirejs.config({ nodeRequire: require })
 
 requirejs.optimize config, (buildResponse) ->
   # Done
   console.log "Optimization complete!"
-  console.log "next-boilerplate.js has successfuly been compiled to /output_static !"
+  console.log "next-boilerplate.js has successfuly been compiled to /dist !"
   process.exit()
