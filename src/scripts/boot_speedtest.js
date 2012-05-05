@@ -11,7 +11,7 @@ require.config({
 require([
   'order!require-config',
   'cs!threenodes/App', 
-  'cs!speedtests/NodesSpeedTest',
+  'cs!tests/speedtests/NodesSpeedTest',
   "order!libs/JSLitmus"
   ], function(conf, App, NodesSpeedTest) {
   "use strict";
