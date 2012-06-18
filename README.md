@@ -16,6 +16,20 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - some kind of library panel like in flash to manage images/fonts/groups... 
 - preloader
 - maybe add processingjs.org as an alternative to three.js
+- sound nodes (Audiolet for instance)
+- server with possibility to login, save (public/private), browse, fork, +1, ... (a bit like audiotools)
+- script nodes (js). Create input/outputs from parsing js vars or simply define a standard way of doing it, 1 return, inputs injected in an array. Be careful when sharing if there is a server with login...
+- glsl nodes (vert/frag)
+- make threenodes.js compatible with other libraries (load/export vvvv file (or vvvv.js), meemoo, ...)
+- publish to chrome webstore
+- more three.js (and other) nodes...
+- native app based on chrome like adobe/brackets with "permissive" settings to easily allow image loading (CORS), ...
+- soundcloud node (or simply a way to put an url in the SoundInput node)
+- flickr image node when they allow CORS, google drive, ...
+- possibility to enable/disable plugins so the nodes list is not filled with unnecessary things
+- search in workspace nodes (quickly find a named node, search all time inputs, ...)
+- ...
+
 
 ## Development setup
 This will automatically compile coffescript files to javascript, sass to css and haml to html.
