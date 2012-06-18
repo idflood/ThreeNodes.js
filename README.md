@@ -28,6 +28,9 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - flickr image node when they allow CORS, google drive, ...
 - possibility to enable/disable plugins so the nodes list is not filled with unnecessary things
 - search in workspace nodes (quickly find a named node, search all time inputs, ...)
+- drag and drop image/movies from desktop to threenodes
+- "MIDI" timeline when sound generation is added
+- Curves in timeline like after effect?
 - ...
 
 
