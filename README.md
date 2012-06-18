@@ -29,8 +29,15 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - possibility to enable/disable plugins so the nodes list is not filled with unnecessary things
 - search in workspace nodes (quickly find a named node, search all time inputs, ...)
 - drag and drop image/movies from desktop to threenodes
-- "MIDI" timeline when sound generation is added
-- Curves in timeline like after effect?
+- "MIDI" timeline when sound generation is added (tempo, ...)
+- curves in timeline like after effect
+- websocket node with example of server/client in flash/processing/java/scala or other
+- ability to run an instance of a saved workspace from command line (send email alert when some inputs have a certain value for instance)
+- csv, xml, ... node parser (and possibly d3.js renderer)
+- MidiFileInput (and similar) when sound generation is done
+- directly select/move/rotate/scale objects in the renderer like any 3d software
+- gui button/knob/slider/textfield/bang/... nodes
+- key shortcuts
 - ...
 
 
