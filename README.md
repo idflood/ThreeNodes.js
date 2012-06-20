@@ -22,7 +22,7 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - when server + grouping are completed, ability to share custom group of nodes (tags, public repository, ...)
 - script nodes (js). Create input/outputs from parsing js vars or simply define a standard way of doing it, 1 return, inputs injected in an array. Be careful when sharing if there is a server with login...
 - glsl nodes (vert/frag)
-- make threenodes.js compatible with other libraries (load/export vvvv file (or vvvv.js), meemoo, ...)
+- make threenodes.js compatible with other programs (load/export vvvv file (or vvvv.js), meemoo, ...)
 - publish to chrome webstore
 - more three.js (and other) nodes...
 - native app based on chrome like adobe/brackets with "permissive" settings to easily allow image loading (CORS), ...
@@ -38,17 +38,20 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - ability to run an instance of a saved workspace from command line (send email alert when some inputs have a certain value for instance)
 - csv, xml, ... node parser (and possibly d3.js renderer, or others)
 - MidiFileInput (and similar) when sound generation is done
-- directly select/move/rotate/scale objects in the renderer like any 3d software
+- directly select/move/rotate/scale objects in the renderer like any 3d software (and selecting an object3d (or subclass) node should display a x/y/z axis in renderer window to allow move/rotate/scale)
 - gui button/knob/slider/textfield/bang/toggle/select/... nodes
 - key shortcuts + possibility to assign custom key bindings on toggle buttons, ... ?
 - more flexible webgl renderer (image in node or fixed in corner)
-- procedural texture (layers, canvas image, effects, ...)
+- procedural texture (layers with multiply/add/color..., canvas image, effects, ...)
 - more UI fun inspired by what other programs do (but stay in 2D and keep performance a priority)
 - make it easy to add a theme (+ add a white version, and make the dark one nicer)
 - record values while playing like it is done in music applications (automation)
 - when sound synthesis is done, add drum machine, sequencer, reverb, ... nodes
+- ability to change layout mode (vertical/horizontal/smaller nodes expanded on hover/...)
+- nice user & dev documentation
+- export sequence of png (or video if possible) like a render in ae (time start/end, fps, resolution, ...)
+- better "flow" highlight (when a node is selected, make the inputs and outputs nodes more visible (maybe optional))
 - ...
-
 
 ## Development setup
 This will automatically compile coffescript files to javascript, sass to css and haml to html.
