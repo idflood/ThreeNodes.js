@@ -51,6 +51,7 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - nice user & dev documentation
 - export sequence of png (or video if possible) like a render in ae (time start/end, fps, resolution, ...)
 - better "flow" highlight (when a node is selected, make the inputs and outputs nodes more visible (maybe optional))
+- display some attribute directly in the node (sliders/textfields/..., add a checkbox in the attribute editor to enable this)
 - ...
 
 ## Development setup
