@@ -48,10 +48,14 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - record values while playing like it is done in music applications (automation)
 - when sound synthesis is done, add drum machine, sequencer, reverb, ... nodes
 - ability to change layout mode (vertical/horizontal/smaller nodes expanded on hover/...)
+- menu to automatically arrange nodes (spring based solution or other)
 - nice user & dev documentation
 - export sequence of png (or video if possible) like a render in ae (time start/end, fps, resolution, ...)
 - better "flow" highlight (when a node is selected, make the inputs and outputs nodes more visible (maybe optional))
 - display some attribute directly in the node (sliders/textfields/..., add a checkbox in the attribute editor to enable this)
+- display scaled down subchilds of nodes inside a group node. Seeing the global workspace it should be possible to have an insight of the complexity of different group nodes (maybe optional)
+- different color of bullet for each field types (or more general classifications like number, string, vectors and others)
+- when dragging from one field to another, highlight only real possible connections (not all inputs like it is now, but based on field type)
 - ...
 
 ## Development setup
