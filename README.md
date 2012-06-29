@@ -24,6 +24,8 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - glsl nodes (vert/frag)
 - make threenodes.js compatible with other programs (load/export vvvv file (or vvvv.js), meemoo, ...)
 - publish to chrome webstore
+- use most chrome apps features (offline, chromeless renderer, ...)
+- use google drive api (save, load, simultaneous collaboration, ...)
 - more three.js (and other) nodes...
 - native app based on chrome like adobe/brackets with "permissive" settings to easily allow image loading (CORS), ...
 - soundcloud node (or simply a way to put an url in the SoundInput node)
