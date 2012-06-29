@@ -1,7 +1,7 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
-  "order!libs/qunit-git",
+  'Underscore', 
+  'Backbone',
+  "libs/qunit-git",
 ], (_, Backbone) ->
   "use strict"
   

@@ -1,7 +1,7 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/models/Connection',
 ], (_, Backbone) ->
   #"use strict"

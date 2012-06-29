@@ -1,11 +1,11 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
-  "order!libs/Three",
-  "order!libs/csg",
-  "order!libs/ThreeCSG",
+  "libs/Three",
+  "libs/csg",
+  "libs/ThreeCSG",
 ], (_, Backbone, Utils) ->
   #"use strict"
   

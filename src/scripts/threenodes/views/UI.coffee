@@ -1,18 +1,18 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
   "text!templates/app_ui.tmpl.html",
   'cs!threenodes/views/Sidebar',
   'cs!threenodes/views/MenuBar',
-  "use!RequestAnimationFrame",
-  "use!Raphael",
-  "order!libs/jquery.contextMenu",
-  "use!jquery.ui",
-  "order!libs/jquery.transform2d",
-  "order!libs/jquery-scrollview/jquery.scrollview",
-  "order!libs/jquery.layout-latest",
+  "RequestAnimationFrame",
+  "Raphael",
+  "libs/jquery.contextMenu",
+  "jquery.ui",
+  "libs/jquery.transform2d",
+  "libs/jquery-scrollview/jquery.scrollview",
+  "libs/jquery.layout-latest",
 ], (_, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
   ### UI View ###
   

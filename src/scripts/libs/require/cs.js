@@ -1,13 +1,15 @@
 /**
- * @license cs 0.4.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+ * @license cs 0.4.1 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/require-cs for details
  */
 
-/*jslint strict: false */
-/*global define, window, XMLHttpRequest, ActiveXObject, process, require */
+/*jslint */
+/*global define, window, XMLHttpRequest, importScripts, Packages, java,
+  ActiveXObject, process, require */
 
 define(['CoffeeScript'], function (CoffeeScript) {
+    'use strict';
     var fs, getXhr,
         progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
         fetchText = function () {
@@ -15,7 +17,15 @@ define(['CoffeeScript'], function (CoffeeScript) {
         },
         buildMap = {};
 
-    if ((typeof window !== "undefined" && window.navigator && window.document) || typeof importScripts !== "undefined") {
+    if (typeof process !== "undefined" &&
+               process.versions &&
+               !!process.versions.node) {
+        //Using special require.nodeRequire, something added by r.js.
+        fs = require.nodeRequire('fs');
+        fetchText = function (path, callback) {
+            callback(fs.readFileSync(path, 'utf8'));
+        };
+    } else if ((typeof window !== "undefined" && window.navigator && window.document) || typeof importScripts !== "undefined") {
         // Browser action
         getXhr = function () {
             //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
@@ -56,14 +66,6 @@ define(['CoffeeScript'], function (CoffeeScript) {
             xhr.send(null);
         };
         // end browser.js adapters
-    } else if (typeof process !== "undefined" &&
-               process.versions &&
-               !!process.versions.node) {
-        //Using special require.nodeRequire, something added by r.js.
-        fs = require.nodeRequire('fs');
-        fetchText = function (path, callback) {
-            callback(fs.readFileSync(path, 'utf8'));
-        };
     } else if (typeof Packages !== 'undefined') {
         //Why Java, why is this so awkward?
         fetchText = function (path, callback) {
@@ -110,13 +112,13 @@ define(['CoffeeScript'], function (CoffeeScript) {
         },
 
         write: function (pluginName, name, write) {
-            if (name in buildMap) {
+            if (buildMap.hasOwnProperty(name)) {
                 var text = buildMap[name];
                 write.asModule(pluginName + "!" + name, text);
             }
         },
 
-        version: '0.4.0',
+        version: '0.4.1',
 
         load: function (name, parentRequire, load, config) {
             var path = parentRequire.toUrl(name + '.coffee');
@@ -130,6 +132,7 @@ define(['CoffeeScript'], function (CoffeeScript) {
                   err.message = "In " + path + ", " + err.message;
                   throw(err);
                 }
+
                 //Hold on to the transformed text if a build.
                 if (config.isBuild) {
                     buildMap[name] = text;

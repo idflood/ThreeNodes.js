@@ -1,6 +1,6 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/utils/Rc4Random',
   'cs!threenodes/models/Node',
 ], (_, Backbone, Rc4Random) ->

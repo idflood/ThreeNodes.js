@@ -4,9 +4,7 @@ require.config({
     "jquery.ui": 'libs/jquery-ui/js/jquery-ui-1.9m6',
     Underscore: 'libs/underscore',
     Backbone: 'libs/backbone',
-    use: "libs/require/use",
     text: "libs/require/text",
-    order: "libs/require/order",
     cs: "libs/require/cs",
     CoffeeScript: "libs/coffee-script",
     treeJquery: "libs/tree.jquery",
@@ -14,34 +12,34 @@ require.config({
     Raphael: "libs/raphael-min",
     colorpicker: "libs/colorpicker/js/colorpicker"
   },
-  use: {
+  shim: {
     'Three':{
-      attach: "THREE"
+      exports: "THREE"
     },
     'RequestAnimationFrame':{
-      attach: "requestAnimationFrame"
+      exports: "requestAnimationFrame"
     },
     'Raphael':{
-      attach: "Raphael"
+      exports: "Raphael"
     },
     'treeJquery': {
       deps: ['jquery.ui'],
-      attach: "jquery"
+      exports: "jquery"
     },
     'Underscore': {
-      attach: "_"
+      exports: "_"
     },
     'Backbone': {
       deps: ['Underscore', 'jquery'],
-      attach: "Backbone"
+      exports: "Backbone"
     },
     'jquery.ui': {
       deps: ['jquery'],
-      attach: "jquery"
+      exports: "jquery"
     },
     'colorpicker': {
       deps: ['jquery'],
-      attach: "jquery"
+      exports: "jquery"
     }
   }
 });

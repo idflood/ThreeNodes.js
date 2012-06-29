@@ -1,8 +1,8 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/models/Node',
-  "use!colorpicker",
+  "colorpicker",
   #"libs/Three",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->

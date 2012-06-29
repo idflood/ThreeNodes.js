@@ -1,14 +1,14 @@
 require(['require-config', 'libs/namespace'], function () {
-  require(['order!cs!threenodes/App', 
-    'order!cs!tests/NodesTest', 
-    'order!cs!tests/FieldTest', 
-    'order!cs!tests/ConnectionTest', 
-    'order!cs!tests/MathTest', 
-    'order!cs!tests/FileSaveTest', 
-    'order!cs!tests/FileLoadTest', 
-    'order!cs!tests/ThreeJsIntegrationTest', 
-    'order!cs!tests/GroupTest', 
-    "order!libs/qunit-git"], function(App, NodesTest, FieldTest, ConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) {
+  require(['cs!threenodes/App', 
+    'cs!tests/NodesTest', 
+    'cs!tests/FieldTest', 
+    'cs!tests/ConnectionTest', 
+    'cs!tests/MathTest', 
+    'cs!tests/FileSaveTest', 
+    'cs!tests/FileLoadTest', 
+    'cs!tests/ThreeJsIntegrationTest', 
+    'cs!tests/GroupTest', 
+    "libs/qunit-git"], function(App, NodesTest, FieldTest, ConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) {
     "use strict";
     var app;
     app = new ThreeNodes.App({

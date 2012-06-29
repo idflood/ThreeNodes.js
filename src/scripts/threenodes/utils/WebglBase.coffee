@@ -1,19 +1,19 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
-  "order!libs/Three",
-  "order!libs/three-extras/js/ShaderExtras",
-  "order!libs/three-extras/js/postprocessing/EffectComposer",
-  "order!libs/three-extras/js/postprocessing/MaskPass",
-  "order!libs/three-extras/js/postprocessing/RenderPass",
-  "order!libs/three-extras/js/postprocessing/ShaderPass",
-  "order!libs/three-extras/js/postprocessing/BloomPass",
-  "order!libs/three-extras/js/postprocessing/FilmPass",
-  "order!libs/three-extras/js/postprocessing/DotScreenPass",
-  "order!libs/BlobBuilder.min",
-  "order!libs/FileSaver.min",
-  "order!libs/canvas-toBlob.min",
+  'Underscore', 
+  'Backbone',
+  "libs/Three",
+  "libs/three-extras/js/ShaderExtras",
+  "libs/three-extras/js/postprocessing/EffectComposer",
+  "libs/three-extras/js/postprocessing/MaskPass",
+  "libs/three-extras/js/postprocessing/RenderPass",
+  "libs/three-extras/js/postprocessing/ShaderPass",
+  "libs/three-extras/js/postprocessing/BloomPass",
+  "libs/three-extras/js/postprocessing/FilmPass",
+  "libs/three-extras/js/postprocessing/DotScreenPass",
+  "libs/BlobBuilder.min",
+  "libs/FileSaver.min",
+  "libs/canvas-toBlob.min",
 ], (_, Backbone) ->
   #"use strict"
   

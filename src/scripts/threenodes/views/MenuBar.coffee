@@ -1,7 +1,7 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   "text!templates/app_menubar.tmpl.html",
 ], (_, Backbone, _view_menubar) ->
   #"use strict"

@@ -1,7 +1,7 @@
 define [
   'jquery',
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
 ], (jQuery, _, Backbone) ->

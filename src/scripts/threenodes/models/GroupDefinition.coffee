@@ -1,7 +1,7 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, Utils) ->
   #"use strict"

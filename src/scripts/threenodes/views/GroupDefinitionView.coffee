@@ -1,11 +1,11 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   "text!templates/definition.tmpl.html",
   "text!templates/confirm_group_delete.tmpl.html",
-  "order!libs/jquery.contextMenu",
-  "order!libs/jquery-ui/js/jquery-ui-1.9m6.min",
+  "libs/jquery.contextMenu",
+  "libs/jquery-ui/js/jquery-ui-1.9m6.min",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_template, _view_group_delete) ->
   #"use strict"

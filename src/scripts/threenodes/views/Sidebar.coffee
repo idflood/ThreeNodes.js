@@ -1,9 +1,9 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
-  "use!jquery.ui",
+  'Underscore', 
+  'Backbone',
+  "jquery.ui",
   'cs!threenodes/views/TreeView',
-  #"order!libs/jquery.layout-latest",
+  #"libs/jquery.layout-latest",
 ], (_, Backbone) ->
   #"use strict"
   

@@ -1,7 +1,7 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/views/NodeView',
   'cs!threenodes/views/ConnectionView',
 ], (_, Backbone) ->

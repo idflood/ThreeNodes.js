@@ -1,12 +1,12 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/utils/CodeExporter',
-  "order!libs/BlobBuilder.min",
-  "order!libs/FileSaver.min",
-  "order!libs/json2",
+  "libs/BlobBuilder.min",
+  "libs/FileSaver.min",
+  "libs/json2",
 ], (_, Backbone, Utils) ->
   #"use strict"
   

@@ -1,7 +1,7 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/utils/Indexer',
   'cs!threenodes/models/GroupDefinition',
   'cs!threenodes/models/Connection',

@@ -1,7 +1,7 @@
 
 define [
-  'use!Underscore',
-  'use!Backbone',
+  'Underscore',
+  'Backbone',
 ], ($, _, Backbone) ->
   #"use strict"
   namespace "ThreeNodes",

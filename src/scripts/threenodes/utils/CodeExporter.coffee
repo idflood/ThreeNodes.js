@@ -1,7 +1,7 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
 ], (_, Backbone) ->
   #"use strict"
   
@@ -12,7 +12,7 @@ define [
         res += "// code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)\n"
         res += "//\n\n"
         res += "require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/Underscore-loader',Backbone: 'loaders/backbone-loader'}});"
-        res += "require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/Underscore-min', 'order!libs/backbone'], function(App) {"
+        res += "require(['threenodes/App', 'libs/jquery-1.6.4.min', 'libs/Underscore-min', 'libs/backbone'], function(App) {"
         res += "\n\n"
         res += '"use strict";\n'
         res += "var app = new App();\n"

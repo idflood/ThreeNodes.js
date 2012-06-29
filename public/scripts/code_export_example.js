@@ -2,7 +2,7 @@
 // code exported from ThreeNodes.js (github.com/idflood/ThreeNodes.js)
 //
 
-require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});require(['order!threenodes/App', 'order!libs/jquery-1.6.4.min', 'order!libs/underscore-min', 'order!libs/backbone'], function(App) {
+require.config({paths: {jQuery: 'loaders/jquery-loader',Underscore: 'loaders/underscore-loader',Backbone: 'loaders/backbone-loader'}});require(['threenodes/App', 'libs/jquery-1.6.4.min', 'libs/underscore-min', 'libs/backbone'], function(App) {
 
 "use strict";
 var app = new App();

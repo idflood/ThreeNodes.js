@@ -1,8 +1,8 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
-  "use!treeJquery",
+  'Underscore', 
+  'Backbone',
+  "treeJquery",
 ], (_, Backbone) ->
   #"use strict"
   

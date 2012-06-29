@@ -1,8 +1,8 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
-  "order!libs/sockjs-latest.min",
+  'Underscore', 
+  'Backbone',
+  "libs/sockjs-latest.min",
 ], (_, Backbone) ->
   #"use strict"
   namespace "ThreeNodes",

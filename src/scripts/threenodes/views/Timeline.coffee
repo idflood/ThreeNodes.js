@@ -1,9 +1,9 @@
 
 define [
-  'use!Underscore', 
-  'use!Backbone',
-  "order!libs/timeline.js/timeline",
-  "order!libs/timeline.js/timeline-gui",
+  'Underscore', 
+  'Backbone',
+  "libs/timeline.js/timeline",
+  "libs/timeline.js/timeline-gui",
 ], (_, Backbone) ->
   #"use strict"
   

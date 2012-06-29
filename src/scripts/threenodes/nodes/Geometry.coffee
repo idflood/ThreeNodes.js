@@ -1,6 +1,6 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
 ], (_, Backbone, Utils) ->

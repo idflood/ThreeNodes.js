@@ -1,8 +1,8 @@
 define [
-  'use!Underscore', 
-  'use!Backbone',
+  'Underscore', 
+  'Backbone',
   "cs!threenodes/utils/Utils",
-  "order!libs/qunit-git",
+  "libs/qunit-git",
 ], (_, Backbone, Utils) ->
   #"use strict"
   
