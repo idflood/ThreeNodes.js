@@ -542,8 +542,8 @@ define [
       add_mouse_handler: =>
         $(@ob.domElement).unbind "mousemove"
         $(@ob.domElement).bind "mousemove", (e) ->
-          WebGLRenderer.mouseX = e.clientX
-          WebGLRenderer.mouseY = e.clientY
+          ThreeNodes.renderer.mouseX = e.clientX
+          ThreeNodes.renderer.mouseY = e.clientY
         return this
       
       create_popup_view: ->

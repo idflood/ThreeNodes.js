@@ -7,6 +7,6 @@ require.config({
   }
 });
 
-require(['require-config', 'cs!threenodes/App'], function () {
+require(['cs!threenodes/App'], function () {
   return new ThreeNodes.App();
 });

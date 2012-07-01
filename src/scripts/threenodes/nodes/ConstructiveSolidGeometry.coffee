@@ -3,9 +3,9 @@ define [
   'Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
-  "libs/Three",
-  "libs/csg",
-  "libs/ThreeCSG",
+  "Three",
+  "csg",
+  "ThreeCSG",
 ], (_, Backbone, Utils) ->
   #"use strict"
   

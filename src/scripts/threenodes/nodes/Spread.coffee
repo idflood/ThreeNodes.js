@@ -3,7 +3,7 @@ define [
   'Backbone',
   'cs!threenodes/utils/Rc4Random',
   'cs!threenodes/models/Node',
-], (_, Backbone, Rc4Random) ->
+], (_, Backbone) ->
   #"use strict"
   
   namespace "ThreeNodes.nodes",
@@ -39,7 +39,7 @@ define [
         needs_rebuild = false
         if @seed != @fields.getField("seed").get("value") || @count != parseInt(@fields.getField("count").getValue(0)) || @width != @fields.getField("width").get("value") || @offset != @fields.getField("offset").get("value")
           @seed = @fields.getField("seed").get("value")
-          @rnd = new Rc4Random(@seed.toString())
+          @rnd = new ThreeNodes.Rc4Random(@seed.toString())
           
           @value = []
           @width = @fields.getField("width").getValue(0)

@@ -10,7 +10,19 @@ require.config({
     treeJquery: "libs/tree.jquery",
     RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame",
     Raphael: "libs/raphael-min",
-    colorpicker: "libs/colorpicker/js/colorpicker"
+    colorpicker: "libs/colorpicker/js/colorpicker",
+    Three: "libs/Three",
+    ThreeCSG: 'libs/ThreeCSG',
+    csg: 'libs/csg',
+    EffectComposer: 'libs/three-extras/js/postprocessing/EffectComposer',
+    RenderPass: 'libs/three-extras/js/postprocessing/RenderPass',
+    BloomPass: 'libs/three-extras/js/postprocessing/BloomPass',
+    FilmPass: 'libs/three-extras/js/postprocessing/FilmPass',
+    TexturePass: 'libs/three-extras/js/postprocessing/TexturePass',
+    ShaderPass: 'libs/three-extras/js/postprocessing/ShaderPass',
+    MaskPass: 'libs/three-extras/js/postprocessing/MaskPass',
+    DotScreenPass: 'libs/three-extras/js/postprocessing/DotScreenPass',
+    ShaderExtras: 'libs/three-extras/js/ShaderExtras'
   },
   shim: {
     'Three':{
@@ -40,6 +52,17 @@ require.config({
     'colorpicker': {
       deps: ['jquery'],
       exports: "jquery"
-    }
+    },
+    'ThreeCSG': ['Three'],
+    'csg': ['ThreeCSG'],
+    'EffectComposer': ['Three'],
+    'RenderPass': ['Three'],
+    'BloomPass': ['Three'],
+    'FilmPass': ['Three'],
+    'TexturePass': ['Three'],
+    'ShaderPass': ['Three'],
+    'MaskPass': ['Three'],
+    'DotScreenPass': ['Three'],
+    'ShaderExtras': ['Three']
   }
 });

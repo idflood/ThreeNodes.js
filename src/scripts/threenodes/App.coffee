@@ -29,6 +29,11 @@ define [
           player_mode: false
         @settings = $.extend(settings, options)
         
+        # Define renderer mouseX/Y for use in utils.Mouse node for instance
+        ThreeNodes.renderer = 
+          mouseX: 0
+          mouseY: 0
+        
         # Disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
         # this makes the soundinput node not working
         websocket_enabled = false

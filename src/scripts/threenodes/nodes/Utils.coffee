@@ -314,11 +314,8 @@ define [
             "y" : 0
         
       compute: =>
-        dx = 0
-        dy = 0
-        if WebGLRenderer && WebGLRenderer.mouseX
-          dx = WebGLRenderer.mouseX
-          dy = WebGLRenderer.mouseY
+        dx = ThreeNodes.renderer.mouseX
+        dy = ThreeNodes.renderer.mouseY
         @fields.setField("xy", new THREE.Vector2(dx, dy))
         @fields.setField("x", dx)
         @fields.setField("y", dy)
