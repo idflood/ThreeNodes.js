@@ -93,12 +93,18 @@ define [
         return true
 
       setWorkspaceFromDefinition: (definition) =>
-        # create a hidden temporary group node from this definition
-        @edit_node = @nodes.createGroup
-          type: "Group"
-          definition: definition
-          x: -9999
-        @workspace.render(@edit_node.nodes)
+        if definition == "global"
+          @edit_node = null
+          @workspace.render(@nodes)
+          @ui.breadcrumb.reset()
+        else
+          # create a hidden temporary group node from this definition
+          @edit_node = @nodes.createGroup
+            type: "Group"
+            definition: definition
+            x: -9999
+          @workspace.render(@edit_node.nodes)
+          @ui.breadcrumb.set([definition])
 
       initUI: () =>
         if @settings.test == false
@@ -125,6 +131,9 @@ define [
           @ui.on("CreateNode", @nodes.createNode)
           @nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
           @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
+
+          #breadcrumb
+          @ui.breadcrumb.on("click", @setWorkspaceFromDefinition)
         else
           # If the application is in test mode add a css class to the body
           $("body").addClass "test-mode"

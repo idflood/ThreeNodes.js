@@ -6,6 +6,7 @@ define [
   "text!templates/app_ui.tmpl.html",
   'cs!threenodes/views/Sidebar',
   'cs!threenodes/views/MenuBar',
+  'cs!threenodes/views/Breadcrumb',
   "RequestAnimationFrame",
   "Raphael",
   "libs/jquery.contextMenu",
@@ -35,6 +36,9 @@ define [
         # Create the ui dom elements from template
         ui_tmpl = _.template(_view_app_ui, {})
         @$el.append(ui_tmpl)
+
+        # Create breadcrumb view (for selecting current group/workspace)
+        @breadcrumb = new ThreeNodes.Breadcrumb({el: $("#breadcrumb")})
 
         # Setup SVG for drawing connections
         ThreeNodes.UI.svg = Raphael("graph", 4000, 4000)
