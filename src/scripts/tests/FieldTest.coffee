@@ -1,16 +1,16 @@
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   "libs/qunit-git",
 ], (_, Backbone) ->
   #"use strict"
-  
+
   $ = jQuery
-  
+
   class FieldTest
     constructor: (app) ->
       module "NodeFields"
-      
+
       test "Bool field", () ->
         nf = new ThreeNodes.fields.Bool
           name: "booltest"
@@ -43,7 +43,7 @@ define [
         strictEqual nf.getValue(), 0, "Floatfield converted FALSE value to 0"
         nf.setValue "42"
         strictEqual nf.getValue(), 42, "Floatfield converted string value to float"
-      
+
       test "Color field", () ->
         nf = new ThreeNodes.fields.Color
           name: "colortest"

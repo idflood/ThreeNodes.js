@@ -9,7 +9,7 @@ require.config({
 
 require([
   'require-config',
-  'cs!threenodes/App', 
+  'cs!threenodes/App',
   'cs!tests/speedtests/NodesSpeedTest',
   "libs/JSLitmus"
   ], function(conf, App, NodesSpeedTest) {

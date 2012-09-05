@@ -55,53 +55,53 @@ _c = 100
   min-width: 80px
   border-radius(8px)
   @extend .ratio-50-50
-  
+
   &.ui-selecting
     background: node_color - #050505
     border: 1px solid node_color + #222
-    
+
   &.ui-selected
     background: node_color + #050505
     border: 1px solid node_color + #333
-  
+
   .options
     clearfix()
     width: 100%
     .warning
       padding-top: 7px
-  
+
   .inner-field
     background: transparent
     cursor: pointer
     display: inline-block
-  
+
     span
       display: inline-block
       width: field-button-size
       height: field-button-size
       background: #555
       border-radius(field-button-size)
-  
+
     &:hover
       color: #fff
       span
         background: #fff
-  
+
   .field-possible-target .inner-field, .inner-field.ui-state-hover
     color: #aaa
     span
       background: #ccc
-  
+
   .inner-field.ui-state-hover
     color: main_color
     span
       background: main_color
-  
+
   .inputs, .outputs
     color: #777
     & > div
       height: 12px
-  
+
   .inputs, .outputs, .center
     @extend .inline-float
     & > div
@@ -109,7 +109,7 @@ _c = 100
       width: 100%
       vertical-align: middle
       line-height: 10px
-  
+
   .inputs .inner-field span
     margin-right: field-label-padding
   .outputs .inner-field span
@@ -130,7 +130,7 @@ animation_color = #f00
     margin-bottom: 0
     font-size: 10px
     font-weight: bold
-    
+
   .subnodes
     height: auto !important
   .outputs h3

@@ -1,12 +1,12 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   "libs/timeline.js/timeline",
   "libs/timeline.js/timeline-gui",
 ], (_, Backbone) ->
   #"use strict"
-  
+
   ### Timeline View ###
   namespace "ThreeNodes",
     AppTimeline: class AppTimeline extends Backbone.View
@@ -14,7 +14,7 @@ define [
         super
         # reset canvas height
         localStorage["timeline.js.settings.canvasHeight"] = @$el.innerHeight()
-      
+
         @$el.html("")
         self = this
         @timeline = new Timeline
@@ -47,50 +47,50 @@ define [
           onTrackRebuild: () => @trigger("trackRebuild")
           onStop: () => @trigger("stopSound")
           onPlay: (time) => @trigger("startSound", time)
-      
+
         Timeline.globalInstance = @timeline
-      
+
         @timeline.loop(-1)
         @time = 0
-      
+
         if options.ui
           @ui = options.ui
           @ui.on("render", @update)
           @ui.on("selectAnims", @selectAnims)
           @ui.on("timelineResize", @resize)
-      
+
         @trigger("OnUIResize")
-    
+
       selectAnims: (nodes) =>
         if @timeline
           @timeline.selectAnims(nodes)
-    
+
       onNodeRemove: (node) =>
         @selectAnims([])
-    
+
       remove: () =>
         @undelegateEvents()
-      
+
         if @ui
           @ui.off("render", @update)
           @ui.off("selectAnims", @selectAnims)
           @ui.off("timelineResize", @resize)
           delete @ui
-      
+
         @timeline.destroy()
         delete @timeline
         @time = null
         # we don't want to remove the el since it is used by jquery-template
         # that's why we will not call super there
         #super
-    
+
       resize: (height) =>
         if @timeline
           @timeline.canvasHeight = height
           @timeline.tracksScrollY = 0
           @timeline.tracksScrollThumbPos = 0
           @timeline.save()
-    
+
       update: () =>
         n = Date.now()
         if @timeline

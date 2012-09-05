@@ -1,6 +1,6 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   "text!templates/definition.tmpl.html",
   "text!templates/confirm_group_delete.tmpl.html",
@@ -9,12 +9,12 @@ define [
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_template, _view_group_delete) ->
   #"use strict"
-  
+
   ### Node View ###
   namespace "ThreeNodes",
     GroupDefinitionView: class GroupDefinitionView extends Backbone.View
       @template = _view_template
-        
+
       initialize: () ->
         @$el.draggable
           revert: "valid"
@@ -25,22 +25,22 @@ define [
           containment: "document"
         @$el.data("model", @model)
         @model.bind('remove', () => @remove())
-      
+
         # Trigger edit/remove events when these buttons are clicked
         $(".edit", @$el).click (e) =>
           e.preventDefault()
           @trigger("edit", @model)
-      
+
         $(".remove", @$el).click (e) =>
           e.preventDefault()
           @createConfirmModal()
-        
-      
+
+
       createConfirmModal: () =>
         # Remove any previously created modal
         if @$confirm then @$confirm.dialog("destroy")
         $("#confirm-groupdefinition-delete").remove()
-      
+
         # Create the group definition remove confirmation dialog
         self = this
         grp_confirm_tmpl = _.template(_view_group_delete, {})

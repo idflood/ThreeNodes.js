@@ -1,5 +1,5 @@
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/utils/Utils',
   'cs!threenodes/models/Node',
@@ -8,7 +8,7 @@ define [
   "ThreeCSG",
 ], (_, Backbone, Utils) ->
   #"use strict"
-  
+
   namespace "ThreeNodes.nodes",
     NodeCSG: class NodeCSG extends ThreeNodes.NodeBase
       setFields: =>
@@ -26,9 +26,9 @@ define [
           outputs:
             "geometry": {type: "Any", val: @ob}
         @cached = []
-      
+
       comput_csg_geometry: (a, b) => a.union(b)
-      
+
       get_cache_array: =>
         a = @fields.getField("a").getValue()
         pos_a = @fields.getField("position_a").getValue()
@@ -38,12 +38,12 @@ define [
         rot_b = @fields.getField("rotation_b").getValue()
         if !a || !b then return []
         [a.id, b.id, pos_a.x, pos_a.y, pos_a.z, rot_a.x, rot_a.y, rot_a.z, pos_b.x, pos_b.y, pos_b.z, rot_b.x, rot_b.y, rot_b.z]
-      
+
       remove: =>
         delete @ob
         delete @cached
         super
-      
+
       compute: =>
         a = @fields.getField("a").getValue()
         pos_a = @fields.getField("position_a").getValue()
@@ -61,21 +61,21 @@ define [
           @ob = THREE.CSG.fromCSG(csg_geom)
           @cached = new_cache
         @fields.setField("geometry", @ob)
-        
+
     CsgUnion: class CsgUnion extends NodeCSG
       @node_name = 'Union'
       @group_name = 'Constructive-Geometry'
-    
+
     CsgSubtract: class CsgSubtract extends NodeCSG
       @node_name = 'Subtract'
       @group_name = 'Constructive-Geometry'
-      
+
       comput_csg_geometry: (a, b) => a.subtract(b)
-    
+
     CsgIntersect: class CsgIntersect extends NodeCSG
       @node_name = 'Intersect'
       @group_name = 'Constructive-Geometry'
-      
+
       comput_csg_geometry: (a, b) => a.intersect(b)
-    
-  
+
+

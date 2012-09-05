@@ -11,7 +11,7 @@ define [
         @keySchedule = []
         @keySchedule_i = 0
         @keySchedule_j = 0
-        
+
         for i in [0..256 - 1]
           @keySchedule[i] = i
         j = 0
@@ -20,16 +20,16 @@ define [
           t = @keySchedule[i]
           @keySchedule[i] = @keySchedule[j]
           @keySchedule[j] = t
-      
+
       getRandomByte: () =>
         @keySchedule_i = (@keySchedule_i + 1) % 256
         @keySchedule_j = (@keySchedule_j + @keySchedule[@keySchedule_i]) % 256
-        
+
         t = @keySchedule[@keySchedule_i]
         @keySchedule[@keySchedule_i] = @keySchedule[@keySchedule_j]
         @keySchedule[@keySchedule_j] = t
         return @keySchedule[(@keySchedule[@keySchedule_i] + @keySchedule[@keySchedule_j]) % 256]
-      
+
       getRandomNumber: () =>
         number =  0
         multiplier = 1
@@ -37,4 +37,4 @@ define [
           number += @getRandomByte() * multiplier
           multiplier *= 256
         return number / 18446744073709551616
-      
+

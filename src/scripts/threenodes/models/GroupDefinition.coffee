@@ -1,15 +1,15 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, Utils) ->
   #"use strict"
-  
+
   ### GroupDefinition model ###
-  
+
   # A GroupDefinition defines what is inside a group node, subnodes and internal connections.
-  
+
   namespace "ThreeNodes",
     GroupDefinition: class GroupDefinition extends Backbone.Model
       defaults:
@@ -17,24 +17,24 @@ define [
         connections: []
         name: "Group"
         gid: -1
-      
+
       sync: () =>
-      
+
       getUID: () =>
         @internal_uid += 1
         return @internal_uid
-      
+
       initialize: (options) =>
         super
         @internal_uid = 0
         indexer = options.indexer
-        
+
         if @get("gid") == -1
           @set("gid", indexer.getUID())
-        
+
         if options.fromSelectedNodes && options.fromSelectedNodes != false
           @fromSelectedNodes(options.fromSelectedNodes)
-      
+
       fromSelectedNodes: (selected_nodes) =>
         internal_connections = []
         for node in selected_nodes
@@ -52,7 +52,7 @@ define [
                   internal_connections.push(connection)
         @attributes.nodes = jQuery.map(selected_nodes, (n, i) -> n.toJSON())
         @attributes.connections = jQuery.map(internal_connections, (c, i) -> c.toJSON())
-      
+
       toJSON: () ->
         res =
           gid: @get("gid")
@@ -60,7 +60,7 @@ define [
           connections: @get("connections")
           nodes: @get("nodes")
         res
-      
+
       toCode: () ->
         # todo: export group definition to code
         res = ""

@@ -1,13 +1,13 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/views/FieldButton',
   "jquery.ui",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   #"use strict"
-  
+
   ### Fields View ###
   namespace "ThreeNodes",
     FieldsView: class FieldsView extends Backbone.View
@@ -19,43 +19,43 @@ define [
         @collection.bind("addCenterTextfield", @addCenterTextfield)
         @collection.bind("addCustomHtml", @addCustomHtml)
         @collection.bind("add", @onFieldCreated)
-    
+
       # Create the field dom element and add events to it
       onFieldCreated: (field) =>
         target = if field.get("is_output") == false then ".inputs" else ".outputs"
         view = new ThreeNodes.FieldButton
           model: field
-      
+
         view.$el.appendTo($(target, @$el))
-      
+
         # Save a reference of the field DOM element for ConnectionView
         # todo: remove this... but how?
         field.button = view.$el
-      
+
         @subviews.push(view)
-    
+
       # Unbind events, destroy jquery-ui widgets, remove dom elements
       # and delete variables
       remove: () =>
         @undelegateEvents()
-      
+
         # Remove all FieldButton subviews
         views = @subviews.concat()
         _.each views, (view) => view.remove()
-      
+
         # Remove elements which may have events attached
         $("input", $(@el)).remove()
-      
+
         # Delete references
         delete @collection
         delete @node
         delete @subviews
         super
-    
+
       addCustomHtml: ($element, target = ".center") =>
         $element.appendTo($(target, @$el))
         return this
-    
+
       addCenterTextfield: (field) =>
         container = $("<div><input type='text' data-fid='#{field.get('fid')}' /></div>").appendTo($(".center", @$el))
         f_in = $("input", container)
@@ -72,4 +72,4 @@ define [
               field.setValue($(this).val())
               $(this).blur()
         @
-    
+

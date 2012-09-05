@@ -1,5 +1,5 @@
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   "text!templates/node.tmpl.html",
   'cs!threenodes/views/FieldsView',
@@ -8,27 +8,27 @@ define [
   'cs!threenodes/utils/Utils',
 ], (_, Backbone, _view_node_template) ->
   #"use strict"
-  
+
   ### Node View ###
   namespace "ThreeNodes",
     NodeView: class NodeView extends Backbone.View
       className: "node"
-      
+
       initialize: (options) ->
         # Setup the view DOM element
         @makeElement()
-      
+
         # Initialize mouse events
         @makeDraggable()
         @initNodeClick()
         @initTitleClick()
-      
+
         # Initialize the fields view
         @fields_view = new ThreeNodes.FieldsView
           node: @model
           collection: @model.fields
           el: $(".options", @$el)
-      
+
         # Bind events
         @model.bind('change', @render)
         @model.bind('postInit', @postInit)
@@ -37,29 +37,29 @@ define [
         @model.bind("node:renderConnections", @renderConnections)
         @model.bind("node:showAnimations", @highlighAnimations)
         @model.bind("node:addSelectedClass", @addSelectedClass)
-      
+
         # Render the node and "post init" the model
         @render()
         @model.postInit()
-    
+
       makeElement: () =>
         # Compile the template file
         @template = _.template(_view_node_template, @model)
         @$el.html(@template)
-      
+
         # Add the node group name as a class to the node element for easier styling
         @$el.addClass("type-" + @model.constructor.group_name)
-      
+
         # Add other dynamic classes
         @$el.addClass("node-" + @model.typename())
-    
+
       render: () =>
         @$el.css
           left: parseInt @model.get("x")
           top: parseInt @model.get("y")
         $(".head span", @$el).text(@model.get("name"))
         $(".head span", @$el).show()
-    
+
       highlighAnimations: () =>
         nodeAnimation = false
         for propTrack in @model.anim.objectTrack.propertyTracks
@@ -74,20 +74,20 @@ define [
         else
           @$el.removeClass "node-has-animation"
         true
-    
+
       addSelectedClass: () =>
         @$el.addClass("ui-selected")
-    
+
       renderConnections: () =>
         @model.fields.renderConnections()
-    
+
       computeNodePosition: () =>
         pos = $(@el).position()
         offset = $("#container-wrapper").offset()
         @model.set
           x: pos.left + $("#container-wrapper").scrollLeft()
           y: pos.top + $("#container-wrapper").scrollTop()
-    
+
       remove: () =>
         $(".field", this.el).destroyContextMenu()
         if @$el.data("draggable") then @$el.draggable("destroy")
@@ -96,7 +96,7 @@ define [
         if @fields_view then @fields_view.remove()
         @fields_view = null
         super
-    
+
       initNodeClick: () ->
         self = this
         $(@el).click (e) ->
@@ -113,7 +113,7 @@ define [
           selectable._mouseStop(null)
           self.model.fields.renderSidebar()
         return @
-    
+
       initTitleClick: () ->
         self = this
         $(".head span", @el).dblclick (e) ->
@@ -122,29 +122,29 @@ define [
           $(this).hide()
           $input = $(".head input", self.el)
           $input.val(prev)
-        
+
           apply_input_result = () ->
             self.model.set('name', $input.val())
             $input.remove()
-        
+
           $input.blur (e) ->
             apply_input_result()
-        
+
           $("#graph").click (e) ->
             apply_input_result()
-        
+
           $input.keydown (e) ->
             # on enter
             if e.keyCode == 13
               apply_input_result()
         return @
-    
+
       makeDraggable: () =>
         self = this
-      
+
         nodes_offset = {top: 0, left: 0}
         selected_nodes = $([])
-      
+
         $(this.el).draggable
           start: (ev, ui) ->
             if $(this).hasClass("ui-selected")
@@ -155,7 +155,7 @@ define [
               $(".node").removeClass("ui-selected")
             nodes_offset = $(this).offset()
           drag: (ev, ui) ->
-          
+
             dt = ui.position.top - nodes_offset.top
             dl = ui.position.left - nodes_offset.left
             selected_nodes.not(this).each () ->
@@ -168,7 +168,7 @@ define [
                 left: dy
               el.data("object").trigger("node:computePosition")
               el.data("object").trigger("node:renderConnections")
-            
+
             self.renderConnections()
           stop: () ->
             selected_nodes.not(this).each () ->

@@ -1,11 +1,11 @@
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   #"use strict"
-  
+
   namespace "ThreeNodes",
     NodeMaterialBase: class NodeMaterialBase extends ThreeNodes.NodeBase
       setFields: =>
@@ -33,7 +33,7 @@ define [
                 "Subtractive": THREE.SubtractiveBlending
                 "Multiply": THREE.MultiplyBlending
                 "AdditiveAlpha": THREE.AdditiveAlphaBlending
-      
+
       rebuildShader: () =>
         if !@ob
           return @
@@ -44,19 +44,19 @@ define [
         else
           @ob.program = false
         @
-      
+
       remove: () =>
         delete @ob
         delete @material_cache
         delete @material_class
         super
-      
+
       compute: =>
         needs_rebuild = false
         numItems = @fields.getMaxInputSliceCount()
         if @inputValueHasChanged(@vars_rebuild_shader_on_change) || @last_slice_count != numItems
           needs_rebuild = true
-        
+
         if needs_rebuild == true
           @ob = []
           for i in [0..numItems]
@@ -64,15 +64,15 @@ define [
         for i in [0..numItems]
           @applyFieldsToVal(@fields.inputs, @ob[i], [], i)
         @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
-        
+
         @last_slice_count = numItems
         @fields.setField("out", @ob)
-        
+
   namespace "ThreeNodes.nodes",
     MeshBasicMaterial: class MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshBasic'
       @group_name = 'Materials'
-      
+
       setFields: =>
         super
         @ob = []
@@ -92,11 +92,11 @@ define [
             "out": {type: "Any", val: @ob}
         @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
         @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
-    
+
     LineBasicMaterial: class LineBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'LineBasic'
       @group_name = 'Materials'
-      
+
       setFields: =>
         super
         @ob = []
@@ -109,11 +109,11 @@ define [
             "out": {type: "Any", val: @ob}
         @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
         @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
-    
+
     MeshLambertMaterial: class MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshLambert'
       @group_name = 'Materials'
-      
+
       setFields: =>
         super
         @ob = []
@@ -133,11 +133,11 @@ define [
             "out": {type: "Any", val: @ob}
         @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
         @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
-    
+
     MeshPhongMaterial: class MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshPhong'
       @group_name = 'Materials'
-      
+
       setFields: =>
         super
         @ob = []

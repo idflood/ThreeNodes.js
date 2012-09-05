@@ -1,6 +1,6 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/views/UI',
   "text!templates/node_field_input.tmpl.html",
@@ -9,7 +9,7 @@ define [
   "libs/jquery.contextMenu",
 ], (_, Backbone, UiView, _view_node_field_in, _view_node_field_out) ->
   #"use strict"
-  
+
   ### FieldButton View ###
   namespace "ThreeNodes",
     FieldButton: class FieldButton extends Backbone.View
@@ -19,49 +19,49 @@ define [
         super
         @makeElement()
         @render()
-    
+
       remove: () =>
         $inner = $(".inner-field", @$el)
         # Remove drag & drop events
         if $inner.data("droppable") then $inner.droppable("destroy")
         if $inner.data("draggable") then $inner.draggable("destroy")
-      
+
         # Remove the inner DOM element to also unbind some possible events
         $inner.remove()
         super
-    
+
       makeElement: () =>
         layout = if @model.get("is_output") then _view_node_field_out else _view_node_field_in
-      
+
         bt = _.template layout,
           fid: @model.get("fid")
           name: @model.get("name")
         @$el.html(bt)
-    
+
       render: () =>
         @$el.attr("rel", @model.get("name"))
         @$el.addClass("field-" + @model.get("name"))
-      
+
         @$el.data("object", @model)
         @$el.data("fid", @model.get("fid"))
-      
+
         @initContextMenu()
         @addFieldListener()
-    
+
       initContextMenu: () ->
         @$el.contextMenu {menu: "field-context-menu"}, (action, el, pos) =>
           if action == "removeConnection" then @model.removeConnections()
         return @
-    
+
       addFieldListener: () ->
         self = this
         field = @model
-      
+
         getPath = (start, end, offset) ->
           ofx = $("#container-wrapper").scrollLeft()
           ofy = $("#container-wrapper").scrollTop()
           "M#{start.left + offset.left + ofx + 2} #{start.top + offset.top + ofy + 2} L#{end.left + offset.left + ofx} #{end.top + offset.top + ofy}"
-      
+
         highlight_possible_targets = () ->
           target = ".outputs .field"
           if field.get("is_output") == true
@@ -69,7 +69,7 @@ define [
           $(target).filter () ->
             $(this).parent().parent().parent().data("nid") != field.node.get("nid")
           .addClass "field-possible-target"
-      
+
         $(".inner-field", @$el).draggable
           helper: () ->
             $("<div class='ui-widget-drag-helper'></div>")
@@ -93,11 +93,11 @@ define [
               UiView.connecting_line.attr
                 path: getPath(pos, ui.position, node_pos)
               return true
-      
+
         accept_class = ".outputs .inner-field"
         if field && field.get("is_output") == true
           accept_class = ".inputs .inner-field"
-      
+
         $(".inner-field", @$el).droppable
           accept: accept_class
           activeClass: "ui-state-active"
@@ -106,5 +106,5 @@ define [
             origin = $(ui.draggable).parent()
             field2 = origin.data("object")
             field.node.createConnection(field, field2)
-      
+
         return this

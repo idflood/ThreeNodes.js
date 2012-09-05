@@ -1,9 +1,9 @@
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
 ], (_, Backbone) ->
   #"use strict"
-  
+
   namespace "ThreeNodes",
     UrlHandler: class UrlHandler extends Backbone.Router
       routes:
@@ -11,13 +11,13 @@ define [
         "play": "onPlay"
         "example/:file": "onExample"
         "play/example/:file": "onPlayExample"
-      
+
       onDefault: () =>
         @trigger("SetDisplayModeCommand", false)
-      
+
       onPlay: () =>
         @trigger("SetDisplayModeCommand", true)
-      
+
       onExample: (file, player_mode = false) =>
         self = this
         @trigger("SetDisplayModeCommand", player_mode)
@@ -27,6 +27,6 @@ define [
           dataType: 'text'
           success: (data) ->
             self.trigger("LoadJSON", data)
-      
+
       onPlayExample: (file) =>
         @onExample(file, true)

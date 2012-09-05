@@ -1,6 +1,6 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   "Three",
   "ShaderExtras",
@@ -16,10 +16,10 @@ define [
   "libs/canvas-toBlob.min",
 ], (_, Backbone) ->
   #"use strict"
-  
+
   namespace "ThreeNodes",
     Webgl: {}
-    
+
     WebglBase: class WebglBase
       constructor: () ->
         console.log "webgl init..."
@@ -35,17 +35,16 @@ define [
         @effectScreen.renderToScreen = true
         @renderModel = new THREE.RenderPass( @current_scene, @current_camera )
         @composer = new THREE.EffectComposer( @current_renderer )
-        
+
         ThreeNodes.Webgl.current_renderer = @current_renderer
         ThreeNodes.Webgl.current_scene = @current_scene
         ThreeNodes.Webgl.current_camera = @current_camera
         ThreeNodes.Webgl.composer = @composer
         ThreeNodes.Webgl.renderModel = @renderModel
         ThreeNodes.Webgl.effectScreen = @effectScreen
-      
+
       exportImage: (fname) =>
         canvas = @current_renderer.domElement
         on_write = (blob) ->
           saveAs(blob, fname)
         canvas.toBlob(on_write, "image/png")
-    

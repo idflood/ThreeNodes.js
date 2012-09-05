@@ -1,17 +1,17 @@
 define [
   'jquery',
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
 ], (jQuery, _, Backbone) ->
   #"use strict"
-  
+
   namespace "ThreeNodes.nodes",
     IfElse: class IfElse extends ThreeNodes.NodeBase
       @node_name = 'IfElse'
       @group_name = 'Conditional'
-      
+
       setFields: =>
         super
         @fields.addFields
@@ -21,7 +21,7 @@ define [
             "val2" : {type: "Any", val: 1.0}
           outputs:
             "out" : {type: "Any", val: false}
-    
+
       compute: =>
         cond = @fields.getField("condition").getValue()
         if cond == false
@@ -29,11 +29,11 @@ define [
         else
           res = @fields.getField("val2").attributes.value
         @fields.setField("out", res)
-    
+
     And: class And extends ThreeNodes.NodeBase
       @node_name = 'And'
       @group_name = 'Conditional'
-      
+
       setFields: =>
         super
         @fields.addFields
@@ -42,15 +42,15 @@ define [
             "val2" : false
           outputs:
             "out" : false
-    
+
       compute: =>
         res = @fields.getField("val1").getValue() != false && @fields.getField("val2").getValue() != false
         @fields.setField("out", res)
-    
+
     Or: class Or extends ThreeNodes.NodeBase
       @node_name = 'Or'
       @group_name = 'Conditional'
-      
+
       setFields: =>
         super
         @fields.addFields
@@ -59,15 +59,15 @@ define [
             "val2" : false
           outputs:
             "out" : false
-    
+
       compute: =>
         res = @fields.getField("val1").getValue() != false || @fields.getField("val2").getValue() != false
         @fields.setField("out", res)
-    
+
     Equal: class Equal extends ThreeNodes.NodeBase
       @node_name = 'Equal'
       @group_name = 'Conditional'
-      
+
       setFields: =>
         super
         @fields.addFields
@@ -76,15 +76,15 @@ define [
             "val2" : {type: "Any", val: 1.0}
           outputs:
             "out" : false
-    
+
       compute: =>
         res = @fields.getField("val1").getValue(0) == @fields.getField("val2").getValue(0)
         @fields.setField("out", res)
-    
+
     Smaller: class Smaller extends ThreeNodes.NodeBase
       @node_name = 'Smaller'
       @group_name = 'Conditional'
-      
+
       setFields: =>
         super
         @fields.addFields
@@ -93,15 +93,15 @@ define [
             "val2" : {type: "Float", val: 1.0}
           outputs:
             "out" : false
-    
+
       compute: =>
         res = @fields.getField("val1").getValue(0) < @fields.getField("val2").getValue(0)
         @fields.setField("out", res)
-    
+
     Greater: class Greater extends ThreeNodes.NodeBase
       @node_name = 'Greater'
       @group_name = 'Conditional'
-      
+
       setFields: =>
         super
         @fields.addFields
@@ -110,7 +110,7 @@ define [
             "val2" : {type: "Float", val: 1.0}
           outputs:
             "out" : false
-    
+
       compute: =>
         res = @fields.getField("val1").getValue(0) > @fields.getField("val2").getValue(0)
         @fields.setField("out", res)

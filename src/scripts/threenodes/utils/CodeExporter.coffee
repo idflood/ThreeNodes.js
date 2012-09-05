@@ -1,10 +1,10 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
 ], (_, Backbone) ->
   #"use strict"
-  
+
   namespace "ThreeNodes",
     CodeExporter: class CodeExporter
       toCode: (json) =>
@@ -20,24 +20,24 @@ define [
         res += "//\n"
         res += "// nodes\n"
         res += "//\n"
-        
+
         for node in json.nodes
           res += @nodeToCode(node)
-        
+
         res += "\n"
         res += "//\n"
         res += "// connections\n"
         res += "//\n\n"
-        
+
         for connection in json.connections
           res += @connectionToCode(connection)
-          
+
         res += "\n\n"
         res += "// set player mode\n"
         res += "app.setDisplayMode('SetDisplayModeCommand', true);\n"
         res += "});"
         return res
-      
+
       nodeToCode: (node) =>
         anim_to_code = (anims) ->
           res = "{\n"
@@ -48,7 +48,7 @@ define [
             res += "\t\t" + "],\n"
           res += "\t}"
           return res
-        
+
         fields_to_code = (fields) ->
           res = "{'in': [\n"
           for field in fields.in
@@ -58,7 +58,7 @@ define [
               res += "\t\t{name: '#{field.name}'},\n"
           res += "\t]}"
           res
-        
+
         res = "\n// node: #{node.name}\n"
         res += "var node_#{node.nid}_data = {\n"
         res += "\t" + "nid: #{node.nid},\n"
@@ -71,7 +71,7 @@ define [
         res += "};\n"
         res += "var node_#{node.nid} = nodes.createNode(node_#{node.nid}_data);\n"
         return res
-      
+
       connectionToCode: (connection) ->
         res = "var connection_#{connection.id}_data = {\n"
         res += "\t" + "id: #{connection.id},\n"

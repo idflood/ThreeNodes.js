@@ -1,16 +1,16 @@
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   #"use strict"
-  
+
   namespace "ThreeNodes.nodes",
     Random: class Random extends ThreeNodes.NodeBase
       @node_name = 'Random'
       @group_name = 'Utils'
-      
+
       setFields: =>
         super
         @auto_evaluate = true
@@ -21,16 +21,16 @@ define [
           outputs:
             "out" : 0
         @fields.add_center_textfield(@fields.getField("out", true))
-    
+
       compute: =>
         value = @fields.getField("min").getValue() + Math.random() * (@fields.getField("max").getValue() - @fields.getField("min").getValue())
         @fields.setField("out", value)
-    
+
     # based on http://www.cycling74.com/forums/topic.php?id=7821
     LFO: class LFO extends ThreeNodes.NodeBase
       @node_name = 'LFO'
       @group_name = 'Utils'
-      
+
       setFields: =>
         super
         @auto_evaluate = true
@@ -42,13 +42,13 @@ define [
         @taskintervalhold = 20
         @clock = 0
         @PI = 3.14159
-        
+
         @fields.addFields
           inputs:
             "min" : 0
             "max" : 1
             "duration" : 1000
-            "mode": 
+            "mode":
               type: "Float"
               val: 0
               values:
@@ -61,13 +61,13 @@ define [
           outputs:
             "out" : 0
         @fields.add_center_textfield(@fields.getField("out", true))
-    
+
       compute: =>
         duration = @fields.getField("duration").getValue()
         min = @fields.getField("min").getValue()
         max = @fields.getField("max").getValue()
         mode = @fields.getField("mode").getValue()
-        
+
         @clock = Date.now()
         time = (@taskinterval * @clock) % duration
         src = time / duration
@@ -103,13 +103,13 @@ define [
               @rndB = range * Math.random() + min
               @rndrange = @rndB - @rndA
             src * @rndrange + @rndA
-        
+
         @fields.setField("out", lfout)
-    
+
     Merge: class Merge extends ThreeNodes.NodeBase
       @node_name = 'Merge'
       @group_name = 'Utils'
-      
+
       setFields: =>
         #super
         @auto_evaluate = true
@@ -123,7 +123,7 @@ define [
             "in5" : {type: "Any", val: null}
           outputs:
             "out" : {type: "Array", val: []}
-    
+
       compute: =>
         result = []
         for f of @fields.inputs
@@ -136,11 +136,11 @@ define [
             else
               result[result.length] = subval
         @fields.setField("out", result)
-    
+
     Get: class Get extends ThreeNodes.NodeBase
       @node_name = 'Get'
       @group_name = 'Utils'
-      
+
       setFields: =>
         super
         @fields.addFields
@@ -149,7 +149,7 @@ define [
             "index" : 0
           outputs:
             "out" : {type: "Any", val: null}
-    
+
       compute: =>
         old = @fields.getField("out", true).getValue()
         @value = false
@@ -159,13 +159,13 @@ define [
           @value = arr[ind % arr.length]
         if @value != old
           @fields.setField("out", @value)
-    
+
     Mp3Input: class Mp3Input extends ThreeNodes.NodeBase
       @node_name = 'Mp3Input'
       @group_name = 'Utils'
-      
+
       is_chrome: => navigator.userAgent.toLowerCase().indexOf('chrome') > -1
-      
+
       setFields: =>
         super
         @auto_evaluate = true
@@ -179,51 +179,51 @@ define [
             "low" : 0
             "medium" : 0
             "high" : 0
-            
+
         if @is_chrome()
           @audioContext = new window.webkitAudioContext()
         else
           $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
         @url_cache = @fields.getField("url").getValue()
-      
+
       remove: () =>
         @stopSound()
         delete @audioContext
         delete @url_cache
         super
-      
+
       onRegister: () ->
         super
         if @fields.getField("url").getValue() != ""
           @loadAudio(@fields.getField("url").getValue())
-      
+
       stopSound: () ->
         if @source
           @source.noteOff(0.0)
           @source.disconnect(0)
           console.log "stop sound"
-      
+
       playSound: (time) ->
         if @source && @audioContext && @audioBuffer
           @stopSound()
           @source = @createSound()
           @source.noteGrainOn(0, time, @audioBuffer.duration - time)
-      
+
       finishLoad: () =>
         @source.buffer = @audioBuffer
         @source.looping = true
-        
+
         @onSoundLoad()
-        
+
         Timeline.getGlobalInstance().maxTime = @audioBuffer.duration;
-        
+
         # looks like the sound is not immediatly ready so add a little delay
         delay = (ms, func) -> setTimeout func, ms
         delay 1000, () =>
           # reset the global timeline when the sound is loaded
           Timeline.getGlobalInstance().stop();
           Timeline.getGlobalInstance().play();
-      
+
       createSound: () =>
         src = @audioContext.createBufferSource()
         if @audioBuffer
@@ -231,17 +231,17 @@ define [
         src.connect(@analyser)
         @analyser.connect(@audioContext.destination)
         return src
-      
+
       loadAudio: (url) =>
         # stop the main timeline when we start to load
         Timeline.getGlobalInstance().stop();
-        
+
         @analyser = @audioContext.createAnalyser()
         @analyser.fftSize = 1024
-        
+
         @source = @createSound()
         @loadAudioBuffer(url)
-      
+
       loadAudioBuffer: (url) =>
         request = new XMLHttpRequest()
         request.open("GET", url, true)
@@ -251,11 +251,11 @@ define [
           @finishLoad()
         request.send()
         this
-      
+
       onSoundLoad: () =>
         @freqByteData = new Uint8Array(@analyser.frequencyBinCount)
         @timeByteData = new Uint8Array(@analyser.frequencyBinCount)
-      
+
       getAverageLevel: (start = 0, max = 512) =>
         if !@freqByteData
           return 0
@@ -266,7 +266,7 @@ define [
         for i in [start..max]
           sum += @freqByteData[i]
         return sum / length
-      
+
       remove: () =>
         super
         if @source
@@ -277,8 +277,8 @@ define [
         @audioBuffer = false
         @audioContext = false
         @source = false
-        
-        
+
+
       compute: () =>
         if !@is_chrome()
           return
@@ -289,21 +289,21 @@ define [
           @analyser.smoothingTimeConstant = @fields.getField("smoothingTime").getValue()
           @analyser.getByteFrequencyData(@freqByteData)
           @analyser.getByteTimeDomainData(@timeByteData)
-        
+
         if @freqByteData
           length = @freqByteData.length
           length3rd = length / 3
-          
+
           @fields.setField("average", @getAverageLevel(0, length - 1))
           @fields.setField("low", @getAverageLevel(0, length3rd - 1))
           @fields.setField("medium", @getAverageLevel(length3rd, (length3rd * 2) - 1))
           @fields.setField("high", @getAverageLevel(length3rd * 2, length - 1))
         return true
-    
+
     Mouse: class Mouse extends ThreeNodes.NodeBase
       @node_name = 'Mouse'
       @group_name = 'Utils'
-      
+
       setFields: =>
         super
         @auto_evaluate = true
@@ -312,18 +312,18 @@ define [
             "xy": {type: "Vector2", val: new THREE.Vector2()}
             "x" : 0
             "y" : 0
-        
+
       compute: =>
         dx = ThreeNodes.renderer.mouseX
         dy = ThreeNodes.renderer.mouseY
         @fields.setField("xy", new THREE.Vector2(dx, dy))
         @fields.setField("x", dx)
         @fields.setField("y", dy)
-    
+
     Timer: class Timer extends ThreeNodes.NodeBase
       @node_name = 'Timer'
       @group_name = 'Utils'
-      
+
       setFields: =>
         super
         @auto_evaluate = true
@@ -337,9 +337,9 @@ define [
           outputs:
             "out" : 0
         @fields.add_center_textfield(@fields.getField("out", true))
-      
+
       get_time: => new Date().getTime()
-        
+
       compute: =>
         oldval = @fields.getField("out", true).getValue()
         now = @get_time()
@@ -347,18 +347,18 @@ define [
           @counter += now - @old
         if @fields.getField("reset").getValue() == true
           @counter = 0
-        
+
         diff = @fields.getField("max").getValue() - @counter
         if diff <= 0
           #@counter = diff * -1
           @counter = 0
         @old = now
         @fields.setField("out", @counter)
-    
+
     Font: class Font extends ThreeNodes.NodeBase
       @node_name = 'Font'
       @group_name = 'Utils'
-      
+
       setFields: =>
         super
         @auto_evaluate = true
@@ -382,7 +382,7 @@ define [
             "bold": dir + "droid/droid_serif_bold.typeface"
         @fields.addFields
           inputs:
-            "font": 
+            "font":
               type: "Float"
               val: 0
               values:
@@ -399,24 +399,24 @@ define [
                 "bold": 1
           outputs:
             "out": {type: "Any", val: @ob}
-        
+
         @reverseFontMap = {}
         @reverseWeightMap = {}
-        
+
         for i of @fields.getField("weight").get("possibilities")
           @reverseWeightMap[@fields.getField("weight").get("possibilities")[i]] = i
         for i of @fields.getField("font").get("possibilities")
           @reverseFontMap[@fields.getField("font").get("possibilities")[i]] = i
-        
+
         @fontcache = -1
         @weightcache = -1
-      
+
       remove: () =>
         delete @reverseFontMap
         delete @reverseWeightMap
         delete @ob
         super
-        
+
       compute: =>
         findex = parseInt(@fields.getField("font").getValue())
         windex = parseInt(@fields.getField("weight").getValue())
@@ -426,14 +426,14 @@ define [
           windex = 0
         font = @reverseFontMap[findex]
         weight = @reverseWeightMap[windex]
-        
+
         if findex != @fontcache || windex != @weightcache
           # load the font file
           require [@files[font][weight]], () =>
             @ob =
               font: font
               weight: weight
-        
+
         @fontcache = findex
         @weightcache = windex
         @fields.setField("out", @ob)

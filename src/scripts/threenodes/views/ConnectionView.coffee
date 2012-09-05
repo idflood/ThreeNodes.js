@@ -1,13 +1,13 @@
 
 define [
-  'Underscore', 
+  'Underscore',
   'Backbone',
   'cs!threenodes/views/UI',
   "jquery.ui",
   'cs!threenodes/utils/Utils',
 ], (_, Backbone) ->
   #"use strict"
-  
+
   ### Connection View ###
   namespace "ThreeNodes",
     ConnectionView: class ConnectionView extends Backbone.View
@@ -22,19 +22,19 @@ define [
         @model.bind("render", () => @render())
         @model.bind("destroy", () => @remove())
         @render()
-    
+
       remove: ->
         if ThreeNodes.UI.svg && @line
           @line.remove()
           @line = false
         return true
-    
+
       render: () ->
         if ThreeNodes.UI.svg && @line && @line.attrs
           @line.attr
             path: @getPath()
         @
-    
+
       getFieldPosition: (field) ->
         if !field.button
           console.log "no button"
@@ -48,11 +48,11 @@ define [
         o1.top += diff
         o1.left += diff
         return o1
-    
+
       getPath: () ->
         f1 = @getFieldPosition(@model.from_field)
         f2 = @getFieldPosition(@model.to_field)
-      
+
         offset = $("#container-wrapper").offset()
         ofx = $("#container-wrapper").scrollLeft() - offset.left
         ofy = $("#container-wrapper").scrollTop() - offset.top
@@ -63,11 +63,11 @@ define [
         min_diff = 42
         diffx = Math.max(min_diff, x4 - x1)
         diffy = Math.max(min_diff, y4 - y1)
-      
+
         x2 = x1 + diffx * 0.5
         y2 = y1
         x3 = x4 - diffx * 0.5
         y3 = y4
-      
+
         ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
-    
+
