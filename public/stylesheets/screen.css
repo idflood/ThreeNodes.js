@@ -1181,6 +1181,27 @@ div {
   height: 1000px;
   overflow: auto;
 }
+#breadcrumb {
+  position: absolute;
+  top: 8px;
+  left: 0px;
+  font-size: 8px;
+  line-height: 12px;
+}
+#breadcrumb a {
+  cursor: pointer;
+  background: #444;
+  padding: 3px 6px;
+  margin: 0 4px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+#breadcrumb a:hover,
+#breadcrumb a:focus {
+  background: #fff;
+  color: #333;
+}
 #sidebar {
   background: #333;
 }
