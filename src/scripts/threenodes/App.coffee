@@ -94,6 +94,9 @@ define [
 
       setWorkspaceFromDefinition: (definition) =>
         if definition == "global"
+          if @edit_node
+            @edit_node.remove()
+            # maybe sync new modifications...
           @edit_node = null
           @workspace.render(@nodes)
           @ui.breadcrumb.reset()

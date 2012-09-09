@@ -30,13 +30,13 @@ define [
           el: $(".options", @$el)
 
         # Bind events
-        @model.bind('change', @render)
-        @model.bind('postInit', @postInit)
-        @model.bind('remove', () => @remove())
-        @model.bind("node:computePosition", @computeNodePosition)
-        @model.bind("node:renderConnections", @renderConnections)
-        @model.bind("node:showAnimations", @highlighAnimations)
-        @model.bind("node:addSelectedClass", @addSelectedClass)
+        @model.on('change', @render)
+        @model.on('postInit', @postInit)
+        @model.on('remove', () => @remove())
+        @model.on("node:computePosition", @computeNodePosition)
+        @model.on("node:renderConnections", @renderConnections)
+        @model.on("node:showAnimations", @highlighAnimations)
+        @model.on("node:addSelectedClass", @addSelectedClass)
 
         # Render the node and "post init" the model
         @render()

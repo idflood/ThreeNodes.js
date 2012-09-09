@@ -1,4 +1,3 @@
-
 define [
   'Underscore',
   'Backbone',
@@ -16,9 +15,9 @@ define [
         super
         @node = options.node
         @subviews = []
-        @collection.bind("addCenterTextfield", @addCenterTextfield)
-        @collection.bind("addCustomHtml", @addCustomHtml)
-        @collection.bind("add", @onFieldCreated)
+        @collection.on("addCenterTextfield", @addCenterTextfield)
+        @collection.on("addCustomHtml", @addCustomHtml)
+        @collection.on("add", @onFieldCreated)
 
       # Create the field dom element and add events to it
       onFieldCreated: (field) =>
@@ -38,6 +37,10 @@ define [
       # and delete variables
       remove: () =>
         @undelegateEvents()
+
+        @collection.off("addCenterTextfield", @addCenterTextfield)
+        @collection.off("addCustomHtml", @addCustomHtml)
+        @collection.off("add", @onFieldCreated)
 
         # Remove all FieldButton subviews
         views = @subviews.concat()
