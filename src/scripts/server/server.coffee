@@ -24,7 +24,7 @@ exec_and_log = (command, on_complete = null) ->
       console.log "error: " + err
     console.log stdout + stderr
     if on_complete then delay 50, () => on_complete()
-    
+
 
 # development environment
 
@@ -51,42 +51,42 @@ app.use express.static(__dirname + "/public")
 app.get "/scripts/*.coffee", (req, res) ->
   file = req.params[0]
   return_static = () ->
-    path.exists "src/scripts/" + file + ".coffee", (exists) ->
+    fs.exists "src/scripts/" + file + ".coffee", (exists) ->
       if exists
         res.header("Content-Type", "application/x-javascript")
         cs = fs.readFileSync("src/scripts/" + file + ".coffee", "utf8")
         res.send(cs)
       else
         # attempt to serve test file before doing a 404
-        path.exists file + ".coffee", (exists) ->
+        fs.exists file + ".coffee", (exists) ->
           if exists
             res.header("Content-Type", "application/x-javascript")
             cs = fs.readFileSync(file + ".coffee", "utf8")
             res.send(cs)
           else
             res.send("Cannot GET " + "src/scripts/" + file + ".coffee", 404)
-  
+
   return_static()
 
 app.get "/scripts/*.js", (req, res) ->
   file = req.params[0]
-  
+
   return_static = () ->
-    path.exists "src/scripts/" + file + ".js", (exists) ->
+    fs.exists "src/scripts/" + file + ".js", (exists) ->
       if exists
         res.header("Content-Type", "application/x-javascript")
         cs = fs.readFileSync("src/scripts/" + file + ".js", "utf8")
         res.send(cs)
       else
         res.send("Cannot GET " + "/scripts/" + file + ".js", 404)
-  
+
   return_static()
 
 
 # Pseudo link for js templates (src/html/templates -> assets/js/templates/)
 app.get "/scripts/templates/*", (req, res) ->
   file = req.params[0]
-  path.exists "src/scripts/templates/" + file, (exists) ->
+  fs.exists "src/scripts/templates/" + file, (exists) ->
     if exists
       res.header("Content-Type", "text/html")
       cs = fs.readFileSync("src/scripts/templates/" + file, "utf8")
@@ -118,11 +118,11 @@ console.log "ready: http://localhost:#{port}/"
 if process.argv[2] == "test"
   # Run continuous tests if "node server.js test"
   runTests = () -> exec_and_log "node ./src/scripts/server/testrunner.js"
-  
+
   test_if_change = (f, curr, prev) ->
     # Skip testrunner.js changes to avoid infinite compilation
     if !f || f == "src/scripts/server/testrunner.js" then return
     if typeof f != "object" && prev != null && curr != null then runTests()
   watch.watchTree("src/scripts", {'ignoreDotFiles': true}, test_if_change)
-  
+
   runTests()

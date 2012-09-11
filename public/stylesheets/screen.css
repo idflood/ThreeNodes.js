@@ -148,7 +148,7 @@ body,
 .node .outputs,
 .node .center,
 .node-Color .center {
-  display: inline;
+  display: inline !important;
   float: left;
 }
 html {
@@ -709,12 +709,12 @@ button.ui-button::-moz-focus-inner {
   background: url("../assets/images/icon-trash.png") no-repeat center center;
   font-size: 0;
   text-indent: -9999px;
-  opacity: 0.4 ;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40) ;
-  filter: alpha(opacity=40) ;
+  opacity: 0.4;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
+  filter: alpha(opacity=40);
 }
 #keyEditDialogDelete:hover {
-  opacity: 1 ;
+  opacity: 1;
   -ms-filter: none;
   filter: none;
 }
@@ -749,7 +749,7 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-selectable-helper {
   border: 1px solid #aaa;
-  background: rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.1);
   position: absolute;
   z-index: 9998;
 }
@@ -769,7 +769,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-overlay {
   position: absolute;
   top: 0;
-  background: rgba(0,0,0,0.40);
+  background: rgba(0,0,0,0.4);
 }
 .ui-dialog {
   background: #333;
@@ -817,9 +817,9 @@ a.ui-dialog-titlebar-close span {
   display: block;
   float: left;
   text-indent: -9999px;
-  opacity: 0.9 ;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90) ;
-  filter: alpha(opacity=90) ;
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+  filter: alpha(opacity=90);
 }
 #sidebar ul.tree span,
 #sidebar ul.tree a {
@@ -838,9 +838,9 @@ a.ui-dialog-titlebar-close span {
 #sidebar ul.tree span span.dragging {
   color: #fff;
   background: #000;
-  opacity: 0.6 ;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60) ;
-  filter: alpha(opacity=60) ;
+  opacity: 0.6;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
+  filter: alpha(opacity=60);
   cursor: pointer;
   padding: 2px 8px;
 }
@@ -889,12 +889,12 @@ a.ui-dialog-titlebar-close span {
   background: #eee;
 }
 .ui-layout-resizer-sliding {
-  opacity: 0.1 ;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=10) ;
-  filter: alpha(opacity=10) ;
+  opacity: 0.1;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=10);
+  filter: alpha(opacity=10);
 }
 .ui-layout-resizer-sliding-hover {
-  opacity: 1 ;
+  opacity: 1;
   -ms-filter: none;
   filter: none;
 }
@@ -916,14 +916,14 @@ a.ui-dialog-titlebar-close span {
 }
 .ui-layout-resizer-hover .ui-layout-toggler {
   background-color: #ddd;
-  opacity: 0.5 ;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50) ;
-  filter: alpha(opacity=50) ;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  filter: alpha(opacity=50);
 }
 .ui-layout-toggler-hover,
 .ui-layout-resizer-hover .ui-layout-toggler-hover {
   background-color: #ddd;
-  opacity: 1 ;
+  opacity: 1;
   -ms-filter: none;
   filter: none;
 }
@@ -1408,7 +1408,7 @@ body > header h1 {
   cursor: text;
 }
 .ui-tabs .ui-tabs-hide {
-  display: none;
+  display: none !important;
 }
 #sidebar li.ui-tabs-selected {
   background: #eee;

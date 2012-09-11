@@ -50,23 +50,23 @@ return phantom.create(function(ph) {
               else {
                 console.log(sty.green(prefix + "Tests completed!"));
               }
-              
+
               console.log("  Passed: " + result.passed);
               console.log("  Total:  " + result.total);
-              
+
               if (result.failed > 0) {
                 console.log(sty.bold("  Failed: " + result.failed));
                 console.log("");
                 display_errors(result.errors);
               }
               console.log("");
-              
+
               clearInterval(interval);
               ph.exit();
             }
           });
         };
-        
+
         interval = setInterval(checkTests, 250);
       }
     });

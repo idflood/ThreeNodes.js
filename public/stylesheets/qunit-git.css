@@ -70,7 +70,7 @@
   padding: 0.5em 0 0.5em 2.5em;
   background-color: #2b81af;
   color: #fff;
-  text-shadow: rgba(0,0,0,0.50) 2px 2px 1px;
+  text-shadow: rgba(0,0,0,0.5) 2px 2px 1px;
 }
 /** Tests: Pass/Fail */
 #qunit-tests {

@@ -18,8 +18,6 @@ define [
   #### App
 
   #"use strict"
-  console.log "booting..."
-
   namespace "ThreeNodes",
     App: class App
       constructor: (options) ->
