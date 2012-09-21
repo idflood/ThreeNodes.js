@@ -22,7 +22,9 @@ require.config({
     ShaderPass: 'libs/three-extras/js/postprocessing/ShaderPass',
     MaskPass: 'libs/three-extras/js/postprocessing/MaskPass',
     DotScreenPass: 'libs/three-extras/js/postprocessing/DotScreenPass',
-    ShaderExtras: 'libs/three-extras/js/ShaderExtras'
+    ShaderExtras: 'libs/three-extras/js/ShaderExtras',
+    timeline: "libs/timeline.js/timeline",
+    'timeline-gui': "libs/timeline.js/timeline-gui"
   },
   shim: {
     'Three':{
@@ -52,6 +54,9 @@ require.config({
     'colorpicker': {
       deps: ['jquery'],
       exports: "jquery"
+    },
+    'timeline-gui': {
+      deps: ['timeline'],
     },
     'ThreeCSG': ['Three'],
     'csg': ['ThreeCSG'],
