@@ -91,11 +91,13 @@ define [
         return true
 
       setWorkspaceFromDefinition: (definition) =>
-        if definition == "global"
-          if @edit_node
+        # always remove current edit node if it exists
+        if @edit_node
             @edit_node.remove()
+            delete @edit_node
             # maybe sync new modifications...
-          @edit_node = null
+
+        if definition == "global"
           @workspace.render(@nodes)
           @ui.breadcrumb.reset()
         else

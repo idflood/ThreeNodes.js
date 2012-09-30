@@ -20,6 +20,8 @@ define [
         @settings = options.settings
 
       render: (nodes) =>
+        console.log "should remove"
+        console.log @views
         # Remove all existing views before displaying new ones
         _.each(@views, (view) -> view.remove())
 

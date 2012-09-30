@@ -26,7 +26,7 @@ define [
       remove: ->
         if ThreeNodes.UI.svg && @line
           @line.remove()
-          @line = false
+          delete @line
         return true
 
       render: () ->
@@ -41,6 +41,7 @@ define [
           console.log field
           return {left: 0, top: 0}
         o1 = $(".inner-field span", field.button).offset()
+        #console.log field.button
         if !o1
           console.log "no o1"
           return {left: 0, top: 0}

@@ -31,7 +31,7 @@ define [
 
         # Bind events
         @model.on('change', @render)
-        @model.on('postInit', @postInit)
+        #@model.on('postInit', @postInit)
         @model.on('remove', () => @remove())
         @model.on("node:computePosition", @computeNodePosition)
         @model.on("node:renderConnections", @renderConnections)
@@ -40,7 +40,8 @@ define [
 
         # Render the node and "post init" the model
         @render()
-        @model.postInit()
+
+        #@model.postInit()
 
       makeElement: () =>
         # Compile the template file
@@ -94,7 +95,7 @@ define [
         $(this.el).unbind()
         @undelegateEvents()
         if @fields_view then @fields_view.remove()
-        @fields_view = null
+        delete @fields_view
         super
 
       initNodeClick: () ->

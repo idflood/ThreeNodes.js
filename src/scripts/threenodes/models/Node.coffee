@@ -23,6 +23,7 @@ define [
 
       initialize: (options) =>
         super
+
         # Define common node properties defining how the node should be updated
         @auto_evaluate = false
         @delays_output = false
@@ -51,9 +52,7 @@ define [
 
         # Create the fields collections
         @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
-        @
 
-      postInit: () =>
         # Init fields
         @setFields()
 
@@ -68,7 +67,6 @@ define [
           @loadAnimation()
 
         @showNodeAnimation()
-        @trigger("postInit")
         @
 
       typename: => String(@constructor.name)
@@ -84,6 +82,10 @@ define [
         delete @options
         delete @settings
         delete @indexer
+
+        # todo : remove when @model.postInit is removed in NodeView
+        delete @fully_inited
+
         @destroy()
 
       # Load the animation from json data

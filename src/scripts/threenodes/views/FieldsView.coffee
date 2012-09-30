@@ -19,6 +19,9 @@ define [
         @collection.on("addCustomHtml", @addCustomHtml)
         @collection.on("add", @onFieldCreated)
 
+        # create already existing fields
+        @collection.each(@onFieldCreated)
+
       # Create the field dom element and add events to it
       onFieldCreated: (field) =>
         target = if field.get("is_output") == false then ".inputs" else ".outputs"
@@ -44,7 +47,7 @@ define [
 
         # Remove all FieldButton subviews
         views = @subviews.concat()
-        _.each views, (view) => view.remove()
+        _.each views, (view) -> view.remove()
 
         # Remove elements which may have events attached
         $("input", $(@el)).remove()

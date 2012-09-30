@@ -50,7 +50,6 @@ define [
 
       initialize: (options) =>
         self = this
-
         # Keep reference to some variables
         @node = options.node
         @subfield = options.subfield
