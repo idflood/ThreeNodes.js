@@ -14,6 +14,7 @@ define [
         @indexer = options.indexer
         @inputs = {}
         @outputs = {}
+        @special_elements = {left: [], center: [], right: []}
 
       # Remove connections, fields and delete variables
       destroy: () =>
@@ -24,6 +25,7 @@ define [
         delete @inputs
         delete @outputs
         delete @indexer
+        delete @special_elements
 
       # Load saved fields values
       load: (data) =>
@@ -178,10 +180,6 @@ define [
 
       renderSidebar: () =>
         @trigger("renderSidebar")
-        @
-
-      add_center_textfield: (field) =>
-        @trigger("addCenterTextfield", field)
         @
 
       getFieldValueObject: (default_value) ->

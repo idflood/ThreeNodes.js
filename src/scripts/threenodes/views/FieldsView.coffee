@@ -15,12 +15,14 @@ define [
         super
         @node = options.node
         @subviews = []
-        @collection.on("addCenterTextfield", @addCenterTextfield)
         @collection.on("addCustomHtml", @addCustomHtml)
         @collection.on("add", @onFieldCreated)
 
         # create already existing fields
         @collection.each(@onFieldCreated)
+
+        for desc in @collection.special_elements.center
+          @addCenterTextfield(desc.field)
 
       # Create the field dom element and add events to it
       onFieldCreated: (field) =>
@@ -41,7 +43,6 @@ define [
       remove: () =>
         @undelegateEvents()
 
-        @collection.off("addCenterTextfield", @addCenterTextfield)
         @collection.off("addCustomHtml", @addCustomHtml)
         @collection.off("add", @onFieldCreated)
 

@@ -15,7 +15,8 @@ define [
 
       setFields: =>
         super
-        @fields.add_center_textfield(@v_in)
+        @fields.special_elements.center.push({type: "textfield", field: @v_in})
+
 
     Boolean: class Boolean extends ThreeNodes.NodeBase
       @node_name = 'Boolean'
@@ -50,7 +51,7 @@ define [
           outputs:
             "out": {type: "Any", val: @value}
 
-        @fields.add_center_textfield(@fields.getField("string"))
+        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("string")})
 
       compute: =>
         @fields.setField("out", @fields.getField("string").getValue())

@@ -20,7 +20,7 @@ define [
             "max" : 1
           outputs:
             "out" : 0
-        @fields.add_center_textfield(@fields.getField("out", true))
+        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
 
       compute: =>
         value = @fields.getField("min").getValue() + Math.random() * (@fields.getField("max").getValue() - @fields.getField("min").getValue())
@@ -60,7 +60,7 @@ define [
                 "random triangle": 5
           outputs:
             "out" : 0
-        @fields.add_center_textfield(@fields.getField("out", true))
+        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
 
       compute: =>
         duration = @fields.getField("duration").getValue()
@@ -336,7 +336,7 @@ define [
             "max" : 99999999999
           outputs:
             "out" : 0
-        @fields.add_center_textfield(@fields.getField("out", true))
+        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
 
       get_time: => new Date().getTime()
 
