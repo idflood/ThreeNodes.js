@@ -70,6 +70,13 @@ define [
         @indexer.reset()
         return this
 
+      destroy: () =>
+        @removeConnections()
+        @removeAll()
+        delete @materials
+        delete @indexer
+        delete @connections
+
       bindTimelineEvents: (timeline) =>
         if @timeline
           @timeline.off("tfieldsRebuild", @showNodesAnimation)

@@ -93,9 +93,9 @@ define [
       setWorkspaceFromDefinition: (definition) =>
         # always remove current edit node if it exists
         if @edit_node
-            @edit_node.remove()
-            delete @edit_node
-            # maybe sync new modifications...
+          @edit_node.remove()
+          delete @edit_node
+          # maybe sync new modifications...
 
         if definition == "global"
           @workspace.render(@nodes)

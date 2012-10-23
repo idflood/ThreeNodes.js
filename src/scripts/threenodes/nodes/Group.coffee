@@ -59,7 +59,7 @@ define [
 
       remove: () =>
         if @nodes
-          @nodes.removeAll()
+          @nodes.destroy()
           # todo: create a destroy method and properly clean the sub-nodes
           delete @nodes
         delete @definition

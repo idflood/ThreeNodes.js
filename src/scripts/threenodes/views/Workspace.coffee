@@ -20,7 +20,7 @@ define [
         @settings = options.settings
 
       render: (nodes) =>
-        console.log "should remove"
+        console.log "should remove " + @views.length
         console.log @views
         # Remove all existing views before displaying new ones
         _.each(@views, (view) -> view.remove())
@@ -28,7 +28,7 @@ define [
         # Keep a reference of the current nodes
         @nodes = nodes
 
-        console.log "Workspace.render"
+        console.log "Workspace.render " + nodes.length
 
         # Create the views for already created nodes and connections
         _.each(@nodes.models, @renderNode)
