@@ -229,14 +229,11 @@ define [
           model: @
           name: name
           el: $("#tab-attribute")
-        #$cont = $("#tab-attribute")
-        #$target = $("<div data-fid='" + @get("fid") + "' class='field-wrapper'></div>").appendTo($cont)
-        #$target.append("<h3>#{name}</h3>")
 
         $target = sidebar_container.container
         return $target
 
-      addRextfieldSlider: ($el) =>
+      addTextfieldSlider: ($el) =>
         $parent = $el.parent()
         on_slider_change = (e, ui) ->
           $el.val(ui.value)
@@ -273,7 +270,7 @@ define [
         $el = $("input", container)
         if type == "float" && link_to_val == true
           $el.val(@getValue())
-          @addRextfieldSlider($el)
+          @addTextfieldSlider($el)
         return $el
 
       linkTextfieldToVal: (f_input, type = "float") =>
@@ -318,7 +315,7 @@ define [
         f_in = @createTextfield($target, type, false)
         @linkTextfieldToSubval(f_in, subval, type)
         if type == "float"
-          @addRextfieldSlider(f_in)
+          @addTextfieldSlider(f_in)
         return false
 
   namespace "ThreeNodes.fields",
