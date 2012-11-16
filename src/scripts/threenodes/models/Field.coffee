@@ -2,6 +2,9 @@ define [
   'Underscore',
   'Backbone',
   'cs!threenodes/utils/Indexer',
+  # todo: remove the following... just wrong to create view from model
+  # but going step by step to not break everything
+  'cs!threenodes/views/SidebarField',
 ], (_, Backbone) ->
   #"use strict"
 
@@ -221,9 +224,16 @@ define [
         return @computeValue(val)
 
       createSidebarContainer: (name = @get("name")) =>
-        $cont = $("#tab-attribute")
-        $target = $("<div data-fid='" + @get("fid") + "' class='field-wrapper'></div>").appendTo($cont)
-        $target.append("<h3>#{name}</h3>")
+        sidebar_container = new ThreeNodes.SidebarField
+          fid: @get("fid")
+          model: @
+          name: name
+          el: $("#tab-attribute")
+        #$cont = $("#tab-attribute")
+        #$target = $("<div data-fid='" + @get("fid") + "' class='field-wrapper'></div>").appendTo($cont)
+        #$target.append("<h3>#{name}</h3>")
+
+        $target = sidebar_container.container
         return $target
 
       addRextfieldSlider: ($el) =>
