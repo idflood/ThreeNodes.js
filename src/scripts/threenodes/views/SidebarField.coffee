@@ -16,5 +16,4 @@ define [
         # Compile the template file
         @container = $(_.template(_view_field_sidebar_container, @options))
         @$el.append(@container)
-        console.log @container
         return @
