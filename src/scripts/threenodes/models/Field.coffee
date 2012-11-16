@@ -5,6 +5,7 @@ define [
   # todo: remove the following... just wrong to create view from model
   # but going step by step to not break everything
   'cs!threenodes/views/SidebarField',
+  'cs!threenodes/views/FieldTextField',
 ], (_, Backbone) ->
   #"use strict"
 
@@ -266,13 +267,19 @@ define [
         create_slider()
 
       createTextfield: ($target, type = "float", link_to_val = true) =>
-        container = $("<div class='input-container'><input type='text' class='field-#{type}' /></div>").appendTo($target)
-        $el = $("input", container)
+        textField = new ThreeNodes.FieldTextField
+          model: @
+          el: $target
+          type: type
+          link_to_val: link_to_val
+
+        $el = $("input", textField.container)
         if type == "float" && link_to_val == true
           $el.val(@getValue())
           @addTextfieldSlider($el)
         return $el
 
+      # todo: move linkTextfieldToVal / linkTextfieldToSubval into views/FieldTextField
       linkTextfieldToVal: (f_input, type = "float") =>
         self = this
         @on_value_update_hooks.update_sidebar_textfield = (v) ->
