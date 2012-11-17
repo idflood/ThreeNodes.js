@@ -38,10 +38,10 @@ define [
 
       createSubvalTextinput: (subval, type = "float") =>
         $target = @createSidebarContainer(subval)
-        f_in = @createTextfield($target, type, false)
-        f_in.linkTextfieldToSubval(f_in, subval, type)
+        textfield = @createTextfield($target, type, false)
+        textfield.linkTextfieldToSubval(textfield.$input, subval, type)
         if type == "float"
-          f_in.addTextfieldSlider(f_in)
+          textfield.addTextfieldSlider(textfield.$input)
         return false
 
       createSidebarFieldTitle: (name = @model.get("name")) =>

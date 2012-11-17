@@ -40,16 +40,14 @@ define [
 
       # TODO: maybe remove f_input param
       linkTextfieldToSubval: (f_input, subval, type = "float") =>
-        self = this
-
         # TODO: use the event instead of the hook
-        @on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
+        @model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
           f_input.val(v[subval])
 
-        f_input.val(self.getValue()[subval])
+        f_input.val(@model.getValue()[subval])
         f_input.keypress (e) =>
           if e.which == 13
-            dval = $(this).val()
+            dval = f_input.val()
             if type == "float" then dval = parseFloat(dval)
             if $.type(@model.attributes.value) == "array"
               @model.attributes.value[0][subval] = dval
