@@ -11,7 +11,7 @@ define [
       initialize: (options) ->
         super
 
-      renderSidebar: () =>
+      render: () =>
         $target = @createSidebarContainer()
         if @model.possible_values
           @create_sidebar_select($target)

@@ -17,7 +17,7 @@ define [
         else
           @$checkbox.removeAttr('checked')
 
-      renderSidebar: () =>
+      render: () =>
         $target = @createSidebarContainer()
         id = "side-field-checkbox-#{@model.get('fid')}"
         $target.append("<div><input type='checkbox' id='#{id}'/></div>")

@@ -18,7 +18,7 @@ define [
         else
           @$checkbox.removeAttr('checked')
 
-      renderSidebar: () =>
+      render: () =>
         $target = @createSidebarContainer()
         @textfield = @createTextfield($target, "string")
         @$input = @textfield.$input

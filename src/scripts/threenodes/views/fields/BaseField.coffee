@@ -12,20 +12,24 @@ define [
       initialize: (options) ->
         super
         @model.on "value_updated", @on_value_updated
+        @render()
 
       on_value_updated: (new_val) => return @
 
-      renderSidebar: () => return @
+      render: () =>
+        return @
 
       createSidebarContainer: (name = @model.get("name")) =>
         options =
           fid: @model.get("fid")
           model: @
           name: name
-        target = $(_.template(_view_field_sidebar_container, options))
-        $("#tab-attribute").append(target)
+        @container = $(_.template(_view_field_sidebar_container, options))
+        @$el.append(@container)
+        #$("#tab-attribute").append(target)
 
-        return target
+        #return target
+        return @container
 
       createTextfield: ($target, type = "float", link_to_val = true) =>
         textField = new ThreeNodes.FieldTextField

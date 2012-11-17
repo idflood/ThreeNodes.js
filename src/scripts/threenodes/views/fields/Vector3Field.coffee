@@ -8,7 +8,7 @@ define [
   ### Vector3Field View ###
   namespace "ThreeNodes.views.fields",
     Vector3Field: class Vector3Field extends ThreeNodes.views.fields.BaseField
-      renderSidebar: () =>
+      render: () =>
         @createSidebarFieldTitle()
         @createSubvalTextinput("x")
         @createSubvalTextinput("y")
