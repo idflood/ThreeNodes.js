@@ -49,6 +49,5 @@ define [
         return false
 
       createSidebarFieldTitle: (name = @model.get("name")) =>
-        $cont = $("#tab-attribute")
-        $cont.append("<h3>#{name}</h3>")
-        return $cont
+        @$el.append("<h3>#{name}</h3>")
+        return @$el
