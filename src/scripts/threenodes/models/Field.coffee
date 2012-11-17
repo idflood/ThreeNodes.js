@@ -120,7 +120,10 @@ define [
         # Set the value
         @attributes["value"] = new_val
 
+        @trigger("value_updated", new_val)
+
         # Call the on_value_update hooks
+        # TODO: remove this when all fields have their own view...
         for hook of @on_value_update_hooks
           @on_value_update_hooks[hook](new_val)
 
@@ -224,107 +227,6 @@ define [
 
         return @computeValue(val)
 
-      createSidebarContainer: (name = @get("name")) =>
-        sidebar_container = new ThreeNodes.SidebarField
-          fid: @get("fid")
-          model: @
-          name: name
-          el: $("#tab-attribute")
-
-        $target = sidebar_container.container
-        return $target
-
-      addTextfieldSlider: ($el) =>
-        $parent = $el.parent()
-        on_slider_change = (e, ui) ->
-          $el.val(ui.value)
-          # simulate a keypress to apply value
-          press = jQuery.Event("keypress")
-          press.which = 13
-          $el.trigger(press)
-        remove_slider = () ->
-          $(".slider-container", $parent).remove()
-        create_slider = () ->
-          remove_slider()
-          $parent.append('<div class="slider-container"><div class="slider"></div></div>')
-          current_val = parseFloat($el.val())
-          min_diff = 0.5
-          diff = Math.max(min_diff, Math.abs(current_val * 4))
-          $(".slider-container", $parent).append("<span class='min'>#{(current_val - diff).toFixed(2)}</span>")
-          $(".slider-container", $parent).append("<span class='max'>#{(current_val + diff).toFixed(2)}</span>")
-
-          $(".slider", $parent).slider
-            min: current_val - diff
-            max: current_val + diff
-            value: current_val
-            step: 0.01
-            change: on_slider_change
-            slide: on_slider_change
-        # recreate slider on focus
-        $el.focus (e) =>
-          create_slider()
-        # create first slider
-        create_slider()
-
-      createTextfield: ($target, type = "float", link_to_val = true) =>
-        textField = new ThreeNodes.FieldTextField
-          model: @
-          el: $target
-          type: type
-          link_to_val: link_to_val
-
-        $el = $("input", textField.container)
-        if type == "float" && link_to_val == true
-          $el.val(@getValue())
-          @addTextfieldSlider($el)
-        return $el
-
-      # todo: move linkTextfieldToVal / linkTextfieldToSubval into views/FieldTextField
-      linkTextfieldToVal: (f_input, type = "float") =>
-        self = this
-        @on_value_update_hooks.update_sidebar_textfield = (v) ->
-          f_input.val(v)
-        f_input.val(@getValue())
-        f_input.keypress (e) ->
-          if e.which == 13
-            if type == "float"
-              self.setValue(parseFloat($(this).val()))
-            else
-              self.setValue($(this).val())
-            $(this).blur()
-        f_input
-
-      linkTextfieldToSubval: (f_input, subval, type = "float") =>
-        self = this
-
-        @on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
-          f_input.val(v[subval])
-
-        f_input.val(self.getValue()[subval])
-        f_input.keypress (e) ->
-          if e.which == 13
-            dval = $(this).val()
-            if type == "float" then dval = parseFloat(dval)
-            if $.type(self.attributes.value) == "array"
-              self.attributes.value[0][subval] = dval
-            else
-              self.attributes.value[subval] = dval
-            $(this).blur()
-        f_input
-
-      createSidebarFieldTitle: (name = @get("name")) =>
-        $cont = $("#tab-attribute")
-        $cont.append("<h3>#{name}</h3>")
-        return $cont
-
-      createSubvalTextinput: (subval, type = "float") =>
-        $target = @createSidebarContainer(subval)
-        f_in = @createTextfield($target, type, false)
-        @linkTextfieldToSubval(f_in, subval, type)
-        if type == "float"
-          @addTextfieldSlider(f_in)
-        return false
-
   namespace "ThreeNodes.fields",
     Any: class Any extends NodeField
       computeValue : (val) =>
@@ -353,28 +255,6 @@ define [
       getValue: (index = 0) => @get("value")
 
     Bool: class Bool extends NodeField
-      renderSidebar: =>
-        self = this
-        $target = @createSidebarContainer()
-        id = "side-field-checkbox-#{@get('fid')}"
-        $target.append("<div><input type='checkbox' id='#{id}'/></div>")
-        f_in = $("#" + id)
-
-        @on_value_update_hooks.update_sidebar_textfield = (v) ->
-          if self.getValue() == true
-            f_in.attr('checked', 'checked')
-          else
-            f_in.removeAttr('checked')
-
-        if @getValue() == true
-          f_in.attr('checked', 'checked')
-        f_in.change (e) ->
-          if $(this).is(':checked')
-            self.setValue(true)
-          else
-            self.setValue(false)
-        true
-
       computeValue : (val) =>
         switch $.type(val)
           when "boolean" then return val
@@ -383,18 +263,6 @@ define [
         return null
 
     String: class String extends NodeField
-      renderSidebar: =>
-        self = this
-        $target = @createSidebarContainer()
-        f_in = @createTextfield($target, "string")
-        @on_value_update_hooks.update_sidebar_textfield = (v) ->
-          f_in.val(v.toString())
-        f_in.val(@getValue())
-        f_in.keypress (e) ->
-          if e.which == 13
-            self.setValue($(this).val())
-            $(this).blur()
-        true
       computeValue : (val) =>
         switch $.type(val)
           when "array" then return val
@@ -403,33 +271,6 @@ define [
         return null
 
     Float: class Float extends NodeField
-      create_sidebar_select: ($target) =>
-        self = this
-        input = "<div><select>"
-        for f of @possible_values
-          dval = @possible_values[f]
-          if dval == @val
-            input += "<option value='#{dval}' selected='selected'>#{f}</option>"
-          else
-            input += "<option value='#{dval}'>#{f}</option>"
-        input += "</select></div>"
-        $target.append(input)
-        $("select", $target).change (e) ->
-          self.setValue($(this).val())
-        return true
-
-      create_sidebar_input: ($target) =>
-        f_in = @createTextfield($target)
-        @linkTextfieldToVal(f_in)
-
-      renderSidebar: =>
-        $target = @createSidebarContainer()
-        if @possible_values
-          @create_sidebar_select($target)
-        else
-          @create_sidebar_input($target)
-        true
-
       computeValue : (val) =>
         switch $.type(val)
           when "number", "string" then return parseFloat(val)
@@ -450,12 +291,6 @@ define [
             return val
         return null
 
-      renderSidebar: =>
-        @createSidebarFieldTitle()
-        @createSubvalTextinput("x")
-        @createSubvalTextinput("y")
-        true
-
     Vector3: class Vector3 extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
@@ -463,27 +298,12 @@ define [
             return val
         return null
 
-      renderSidebar: =>
-        @createSidebarFieldTitle()
-        @createSubvalTextinput("x")
-        @createSubvalTextinput("y")
-        @createSubvalTextinput("z")
-        true
-
     Vector4: class Vector4 extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
           if val.constructor == THREE.Vector4
             return val
         return null
-
-      renderSidebar: =>
-        @createSidebarFieldTitle()
-        @createSubvalTextinput("x")
-        @createSubvalTextinput("y")
-        @createSubvalTextinput("z")
-        @createSubvalTextinput("w")
-        true
 
     Quaternion: class Quaternion extends NodeField
       computeValue : (val) =>

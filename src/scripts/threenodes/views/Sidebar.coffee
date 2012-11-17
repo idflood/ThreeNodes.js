@@ -3,6 +3,7 @@ define [
   'Backbone',
   "jquery.ui",
   'cs!threenodes/views/TreeView',
+  'cs!threenodes/views/NodeSidebarView',
   #"libs/jquery.layout-latest",
 ], (_, Backbone) ->
   #"use strict"
@@ -12,6 +13,9 @@ define [
     Sidebar: class Sidebar extends Backbone.View
       initialize: () ->
         super
+        # Keep subviews of node attributes
+        @node_views = []
+
         @initNewNode()
         @initSearch()
         @initTabs()
@@ -49,6 +53,13 @@ define [
 
       # Display fields attributes in sidebar when nodes are selected
       renderNodesAttributes: (nodes) =>
+        removeExistingNodes = () =>
+          if @node_views.length > 0
+            _.each @node_views, (view) -> view.remove()
+            @node_views = []
+
+        removeExistingNodes()
+
         # Always start with an empty element
         $target = $("#tab-attribute")
         $target.html("");
@@ -58,9 +69,12 @@ define [
           return this
 
         for node in nodes
-          $target.append("<h2>#{node.get('name')}</h2>")
-          for f of node.fields.inputs
-            node.fields.inputs[f].renderSidebar()
+          view = new ThreeNodes.NodeSidebarView
+            model: node
+            #el: $target
+          $target.append(view.el)
+          @node_views.push view
+
         return this
 
       filterListItem: ($item, value) =>
