@@ -12,9 +12,10 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 
 ## Some ideas
 - local timelines ?
+- automatic layout of node graph
 - grouping (multiple nodes in one, possibility to have multiple instances)
 - ability to take a group, ungroup it, make some changes an regroup it so there are 2 slightly different group definitions (and maybe easier workflow, like 'make this a new group definition')
-- some kind of library panel like in flash to manage images/fonts/groups... 
+- some kind of library panel like in flash to manage images/fonts/groups...
 - preloader (+preloader node so the preloader can be customized)
 - maybe add processingjs.org as an alternative to three.js
 - sound nodes (Audiolet for instance)
@@ -66,7 +67,7 @@ This will automatically compile coffescript files to javascript, sass to css and
 1. install node.js 0.6.x (http://nodejs.org/)
 2. install npm (https://github.com/isaacs/npm)
 3. install coffeescript (http://jashkenas.github.com/coffee-script/)
-4. install jade globally: sudo npm install -g jade 
+4. install jade globally: sudo npm install -g jade
 5. cd in ThreeNodes
 6. npm install -d
 
