@@ -34,6 +34,5 @@ define [
           if view_class != false
             view = new view_class
               model: field
-            #view.renderSidebar()
             @$el.append(view.el)
         return @

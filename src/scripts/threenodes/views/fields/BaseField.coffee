@@ -26,9 +26,7 @@ define [
           name: name
         @container = $(_.template(_view_field_sidebar_container, options))
         @$el.append(@container)
-        #$("#tab-attribute").append(target)
 
-        #return target
         return @container
 
       createTextfield: ($target, type = "float", link_to_val = true) =>
