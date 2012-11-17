@@ -2,10 +2,6 @@ define [
   'Underscore',
   'Backbone',
   'cs!threenodes/utils/Indexer',
-  # todo: remove the following... just wrong to create view from model
-  # but going step by step to not break everything
-  'cs!threenodes/views/SidebarField',
-  'cs!threenodes/views/FieldTextField',
 ], (_, Backbone) ->
   #"use strict"
 
@@ -192,9 +188,6 @@ define [
         for connection in @connections
           connection.render()
         true
-
-      renderSidebar: =>
-        false
 
       computeValue : (val) =>
         val

@@ -10,7 +10,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  ### SidebarField View ###
+  ### NodeSidebarView ###
   namespace "ThreeNodes",
     NodeSidebarView: class NodeSidebarView extends Backbone.View
       initialize: (options) ->

@@ -1,12 +1,12 @@
 define [
   'Underscore',
   'Backbone',
-  'cs!threenodes/views/SidebarField',
+  "text!templates/field_sidebar_container.tmpl.html",
   'cs!threenodes/views/FieldTextField',
-], (_, Backbone) ->
+], (_, Backbone, _view_field_sidebar_container) ->
   #"use strict"
 
-  ### SidebarField View ###
+  ### BaseField View ###
   namespace "ThreeNodes.views.fields",
     BaseField: class BaseField extends Backbone.View
       initialize: (options) ->
@@ -18,14 +18,14 @@ define [
       renderSidebar: () => return @
 
       createSidebarContainer: (name = @model.get("name")) =>
-        sidebar_container = new ThreeNodes.SidebarField
+        options =
           fid: @model.get("fid")
           model: @
           name: name
-          el: $("#tab-attribute")
+        target = $(_.template(_view_field_sidebar_container, options))
+        $("#tab-attribute").append(target)
 
-        $target = sidebar_container.container
-        return $target
+        return target
 
       createTextfield: ($target, type = "float", link_to_val = true) =>
         textField = new ThreeNodes.FieldTextField
