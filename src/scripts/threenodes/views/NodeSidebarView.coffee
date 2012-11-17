@@ -35,6 +35,5 @@ define [
             view = new view_class
               model: field
             view.renderSidebar()
-          else
-            field.renderSidebar()
+
         return @
