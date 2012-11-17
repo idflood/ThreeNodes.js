@@ -3,7 +3,7 @@ define [
   'Backbone',
   "jquery.ui",
   'cs!threenodes/views/TreeView',
-  'cs!threenodes/views/NodeSidebarView',
+  'cs!threenodes/views/sidebar/NodeSidebarView',
   #"libs/jquery.layout-latest",
 ], (_, Backbone) ->
   #"use strict"

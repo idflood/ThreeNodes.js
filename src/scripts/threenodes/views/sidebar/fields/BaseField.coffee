@@ -2,7 +2,7 @@ define [
   'Underscore',
   'Backbone',
   "text!templates/field_sidebar_container.tmpl.html",
-  'cs!threenodes/views/FieldTextField',
+  'cs!threenodes/views/sidebar/SidebarTextfield',
 ], (_, Backbone, _view_field_sidebar_container) ->
   #"use strict"
 
@@ -30,7 +30,7 @@ define [
         return @container
 
       createTextfield: ($target, type = "float", link_to_val = true) =>
-        textField = new ThreeNodes.FieldTextField
+        textField = new ThreeNodes.SidebarTextfield
           model: @model
           el: $target
           type: type

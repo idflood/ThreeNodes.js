@@ -4,7 +4,7 @@ define [
   "text!templates/field_context_menu.tmpl.html",
   "text!templates/node_context_menu.tmpl.html",
   "text!templates/app_ui.tmpl.html",
-  'cs!threenodes/views/Sidebar',
+  'cs!threenodes/views/sidebar/Sidebar',
   'cs!threenodes/views/MenuBar',
   'cs!threenodes/views/Breadcrumb',
   "RequestAnimationFrame",

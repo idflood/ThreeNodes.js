@@ -1,12 +1,12 @@
 define [
   'Underscore',
   'Backbone',
-  'cs!threenodes/views/fields/BoolField',
-  'cs!threenodes/views/fields/StringField',
-  'cs!threenodes/views/fields/FloatField',
-  'cs!threenodes/views/fields/Vector2Field',
-  'cs!threenodes/views/fields/Vector3Field',
-  'cs!threenodes/views/fields/Vector4Field',
+  'cs!threenodes/views/sidebar/fields/BoolField',
+  'cs!threenodes/views/sidebar/fields/StringField',
+  'cs!threenodes/views/sidebar/fields/FloatField',
+  'cs!threenodes/views/sidebar/fields/Vector2Field',
+  'cs!threenodes/views/sidebar/fields/Vector3Field',
+  'cs!threenodes/views/sidebar/fields/Vector4Field',
 ], (_, Backbone) ->
   #"use strict"
 

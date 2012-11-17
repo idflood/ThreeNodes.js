@@ -1,7 +1,7 @@
 define [
   'Underscore',
   'Backbone',
-  'cs!threenodes/views/fields/BaseField',
+  'cs!threenodes/views/sidebar/fields/BaseField',
 ], (_, Backbone) ->
   #"use strict"
 

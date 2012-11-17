@@ -5,9 +5,9 @@ define [
 ], (_, Backbone, _view_field_textfield) ->
   #"use strict"
 
-  ### FieldTextField View ###
+  ### SidebarTextfield View ###
   namespace "ThreeNodes",
-    FieldTextField: class FieldTextField extends Backbone.View
+    SidebarTextfield: class SidebarTextfield extends Backbone.View
       initialize: (options) ->
         super
         @render()
