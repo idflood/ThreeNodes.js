@@ -13,7 +13,7 @@ define [
     Sidebar: class Sidebar extends Backbone.View
       initialize: () ->
         super
-        # Keep subviews of node attributes
+        # Keep references of node attributes subviews
         @node_views = []
 
         @initNewNode()
