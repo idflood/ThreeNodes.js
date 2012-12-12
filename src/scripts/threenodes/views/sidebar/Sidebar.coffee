@@ -111,7 +111,25 @@ define [
         self = this
         $container = $("#tab-new")
         result = []
-        nodes_by_group = {}
+        # nodes_by_group could be an empty object but we define
+        # inital groups to have a coherent ordering in sidebar
+        nodes_by_group =
+          Base: []
+          Conditional: []
+          Math: []
+          Utils: []
+          Three: []
+          Geometry: []
+          Materials: []
+          Lights: []
+          PostProcessing: []
+          Spread: []
+          Particle: []
+          "Particle-sparks": []
+          "Particle-sparks-initializers": []
+          "Particle-sparks-actions": []
+          "Particle-sparks-zone": []
+          "Constructive-Geometry": []
 
         # Organize each node types by group
         for node of ThreeNodes.nodes
