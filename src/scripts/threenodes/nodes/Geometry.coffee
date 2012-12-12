@@ -10,12 +10,15 @@ define [
     PlaneGeometry: class PlaneGeometry extends ThreeNodes.NodeBase
       @node_name = 'Plane'
       @group_name = 'Geometry'
-
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1)
-        @fields.addFields
+        @cached = @get_cache_array()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "width": 100,
             "height": 100,
@@ -23,7 +26,7 @@ define [
             "segments_height": 1,
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -44,11 +47,15 @@ define [
       @node_name = 'Cube'
       @group_name = 'Geometry'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
-        @fields.addFields
+        @cached = @get_cache_array()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "flip": -1
             "width": 100,
@@ -59,7 +66,7 @@ define [
             "segments_depth": 1,
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -80,18 +87,22 @@ define [
       @node_name = 'Sphere'
       @group_name = 'Geometry'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.SphereGeometry(100, 20, 20)
-        @fields.addFields
+        @cached = @get_cache_array()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "radius": 100
             "segments_width": 1
             "segments_height": 1
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -113,13 +124,15 @@ define [
       @node_name = 'Cylinder'
       @group_name = 'Geometry'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false)
+        @cached = @get_cache_array()
 
-        #@value = 0
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "radiusTop": 100
             "radiusBottom": 100
@@ -129,7 +142,7 @@ define [
             "openEnded": false
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -157,11 +170,15 @@ define [
       @node_name = 'Torus'
       @group_name = 'Geometry'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2)
-        @fields.addFields
+        @cached = @get_cache_array()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "radius": 100
             "tube": 40
@@ -170,7 +187,7 @@ define [
             "arc": Math.PI * 2
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -198,11 +215,15 @@ define [
       @node_name = 'TorusKnot'
       @group_name = 'Geometry'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.TorusKnotGeometry(200, 40, 64, 8, 2, 3, 1)
-        @fields.addFields
+        @cached = @get_cache_array()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "radius": 200
             "tube": 40
@@ -213,7 +234,7 @@ define [
             "heightScale": 1
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -241,17 +262,21 @@ define [
       @node_name = 'Octahedron'
       @group_name = 'Geometry'
 
-      setFields: =>
+      constructor: () ->
         super
         @auto_evaluate = true
         @ob = new THREE.OctahedronGeometry(100, 0)
-        @fields.addFields
+        @cached = @get_cache_array()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "radius": 100
             "detail": 0
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -273,11 +298,13 @@ define [
       @node_name = 'Text'
       @group_name = 'Geometry'
 
-      setFields: =>
-        super
+      constructor: () ->
         @ob = false
+        @cached = @get_cache_array()
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "text": "Example"
             "font": {type: "Any", val: {}}
@@ -289,7 +316,7 @@ define [
             "bevelSize": 0
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @get_cache_array()
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob

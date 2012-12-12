@@ -53,6 +53,7 @@ define [
 
         res
 
+      # TODO: convert this...
       setFields: =>
         @fields.createNodesProxyFields(@nodes.models)
         return this

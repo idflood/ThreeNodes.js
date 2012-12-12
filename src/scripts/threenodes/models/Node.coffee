@@ -54,7 +54,7 @@ define [
         @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
 
         # Init fields
-        @setFields()
+        #@setFields()
 
         # Load saved data after the fields have been set
         @fields.load(@options.fields)
@@ -125,8 +125,9 @@ define [
             return true
         false
 
-      setFields: =>
+      getFields: =>
         # to implement
+        return {}
 
       hasOutConnection: () =>
         @out_connections.length != 0

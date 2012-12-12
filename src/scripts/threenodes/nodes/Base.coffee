@@ -13,9 +13,15 @@ define [
       @node_name = 'Number'
       @group_name = 'Base'
 
-      setFields: =>
-        super
-        @fields.special_elements.center.push({type: "textfield", field: @v_in})
+      getFields: =>
+        base_fields = super
+        fields =
+          center:
+            "num": {type: "textfield", field: "in"}
+
+        return $.extend(true, base_fields, fields)
+        #super
+        #@fields.special_elements.center.push({type: "textfield", field: @v_in})
 
 
     Boolean: class Boolean extends ThreeNodes.NodeBase
@@ -26,12 +32,14 @@ define [
         super
         @value = true
 
-      setFields: =>
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "bool": true
           outputs:
             "out": {type: "Bool", val: @value}
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         @fields.setField("out", @fields.getField("bool").getValue())
@@ -44,14 +52,19 @@ define [
         super
         @value = ""
 
-      setFields: =>
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "string": ""
           outputs:
             "out": {type: "Any", val: @value}
+          center:
+            # create a textfield component linked to the "string" input field
+            "text": {type: "textfield", field: "string"}
 
-        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("string")})
+        return $.extend(true, base_fields, fields)
+        #@fields.special_elements.center.push({type: "textfield", field: @fields.getField("string")})
 
       compute: =>
         @fields.setField("out", @fields.getField("string").getValue())
@@ -60,10 +73,9 @@ define [
       @node_name = 'Vector2'
       @group_name = 'Base'
 
-      setFields: =>
-        super
-        @vec = new THREE.Vector2(0, 0)
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "x" : 0
             "y" : 0
@@ -71,10 +83,7 @@ define [
             "xy" : {type: "Vector2", val: false}
             "x" : 0
             "y" : 0
-
-      remove: () =>
-        delete @vec
-        super
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         res = []
@@ -95,9 +104,9 @@ define [
       @node_name = 'Vector3'
       @group_name = 'Base'
 
-      setFields: =>
-        super
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "x" : 0
             "y" : 0
@@ -107,6 +116,7 @@ define [
             "x" : 0
             "y" : 0
             "z" : 0
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         res = []
@@ -161,9 +171,9 @@ define [
         delete @$picker_el
         super
 
-      setFields: =>
-        super
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "r": 0
             "g": 0
@@ -173,7 +183,9 @@ define [
             "r": 0
             "g": 0
             "b": 0
-        @init_preview()
+        return $.extend(true, base_fields, fields)
+        # TODO: move the following to constructor if possible
+        #@init_preview()
 
       compute: =>
         res = []

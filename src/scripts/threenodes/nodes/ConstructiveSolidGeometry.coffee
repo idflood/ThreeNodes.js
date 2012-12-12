@@ -11,11 +11,15 @@ define [
 
   namespace "ThreeNodes.nodes",
     NodeCSG: class NodeCSG extends ThreeNodes.NodeBase
-      setFields: =>
+      constructor: () ->
         super
         @auto_evaluate = true
         @ob = false
-        @fields.addFields
+        @cached = []
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "a": {type: "Any", val: false},
             "position_a": {type: "Vector3", val: new THREE.Vector3()}
@@ -25,7 +29,7 @@ define [
             "rotation_b": {type: "Vector3", val: new THREE.Vector3()}
           outputs:
             "geometry": {type: "Any", val: @ob}
-        @cached = []
+        return $.extend(true, base_fields, fields)
 
       comput_csg_geometry: (a, b) => a.union(b)
 
