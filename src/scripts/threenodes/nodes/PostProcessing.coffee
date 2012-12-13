@@ -6,7 +6,7 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     BloomPass: class BloomPass extends ThreeNodes.NodeBase
       @node_name = 'Bloom'
       @group_name = 'PostProcessing'

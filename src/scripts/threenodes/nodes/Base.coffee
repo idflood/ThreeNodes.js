@@ -8,7 +8,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     Number: class Number extends ThreeNodes.NodeNumberSimple
       @node_name = 'Number'
       @group_name = 'Base'

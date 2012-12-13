@@ -6,7 +6,7 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     PlaneGeometry: class PlaneGeometry extends ThreeNodes.NodeBase
       @node_name = 'Plane'
       @group_name = 'Geometry'

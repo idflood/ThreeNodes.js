@@ -101,12 +101,12 @@ define [
         options.indexer = @indexer
 
         # Print error if the node type is not found and return false
-        if !ThreeNodes.nodes[options.type]
+        if !ThreeNodes.nodes.models[options.type]
           console.error("Node type doesn't exists: " + options.type)
           return false
 
         # Create the node and pass the options
-        n = new ThreeNodes.nodes[options.type](options)
+        n = new ThreeNodes.nodes.models[options.type](options)
 
         # Add the node to the collection
         @add(n)

@@ -6,7 +6,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     MathSin: class MathSin extends ThreeNodes.NodeNumberSimple
       @node_name = 'Sin'
       @group_name = 'Math'

@@ -7,7 +7,7 @@ define [
 ], (jQuery, _, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     IfElse: class IfElse extends ThreeNodes.NodeBase
       @node_name = 'IfElse'
       @group_name = 'Conditional'

@@ -9,7 +9,7 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     NodeCSG: class NodeCSG extends ThreeNodes.NodeBase
       constructor: () ->
         super

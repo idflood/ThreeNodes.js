@@ -7,7 +7,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     Group: class Group extends ThreeNodes.NodeBase
       @node_name = 'Group'
       @group_name = false

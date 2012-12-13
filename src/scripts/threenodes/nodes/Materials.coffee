@@ -68,7 +68,7 @@ define [
         @last_slice_count = numItems
         @fields.setField("out", @ob)
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     MeshBasicMaterial: class MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshBasic'
       @group_name = 'Materials'

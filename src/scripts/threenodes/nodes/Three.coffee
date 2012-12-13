@@ -7,7 +7,7 @@ define [
 ], (jQuery, _, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     Object3D: class Object3D extends ThreeNodes.NodeBase
       @node_name = 'Object3D'
       @group_name = 'Three'

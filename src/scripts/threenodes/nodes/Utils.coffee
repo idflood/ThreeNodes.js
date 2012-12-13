@@ -6,7 +6,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     Random: class Random extends ThreeNodes.NodeBase
       @node_name = 'Random'
       @group_name = 'Utils'
