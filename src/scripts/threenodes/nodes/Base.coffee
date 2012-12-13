@@ -12,22 +12,19 @@ define [
   namespace "ThreeNodes.nodes.views",
     Number: class Number extends ThreeNodes.nodes.views.NodeWithCenterTextfield
 
+    String: class String extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("string")
+
   namespace "ThreeNodes.nodes.models",
     Number: class Number extends ThreeNodes.NodeNumberSimple
       @node_name = 'Number'
       @group_name = 'Base'
 
-      getFields: =>
-        super
-        # TODO: special element
-        #@fields.special_elements.center.push({type: "textfield", field: @v_in})
-
-
     Boolean: class Boolean extends ThreeNodes.NodeBase
       @node_name = 'Boolean'
       @group_name = 'Base'
 
-      init: =>
+      initialize: (options) =>
         super
         @value = true
 
@@ -47,7 +44,7 @@ define [
       @node_name = 'String'
       @group_name = 'Base'
 
-      init: =>
+      initialize: (options) =>
         super
         @value = ""
 
@@ -58,12 +55,7 @@ define [
             "string": ""
           outputs:
             "out": {type: "Any", val: @value}
-          center:
-            # create a textfield component linked to the "string" input field
-            "text": {type: "textfield", field: "string"}
-
         return $.extend(true, base_fields, fields)
-        #@fields.special_elements.center.push({type: "textfield", field: @fields.getField("string")})
 
       compute: =>
         @fields.setField("out", @fields.getField("string").getValue())
@@ -139,6 +131,9 @@ define [
       @node_name = 'Color'
       @group_name = 'Base'
 
+      initialize: (options) =>
+        @init_preview()
+
       init_preview: () =>
         @$picker_el = $("<div class='color_preview'></div>")
         col = @fields.getField("rgb", true).getValue(0)
@@ -183,8 +178,6 @@ define [
             "g": 0
             "b": 0
         return $.extend(true, base_fields, fields)
-        # TODO: move the following to constructor if possible
-        #@init_preview()
 
       compute: =>
         res = []
