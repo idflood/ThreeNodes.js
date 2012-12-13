@@ -255,7 +255,7 @@ define [
       @group_name = 'Three'
 
       initialize: (options) =>
-        @ob = [new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial({color: 0xff0000})]
+        @ob = [new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial({color: 0xff0000}))]
         @last_slice_count = 1
         @compute()
 
@@ -316,7 +316,7 @@ define [
       @group_name = 'Three'
 
       initialize: (options) =>
-        @ob = [new THREE.Line(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.LineBasicMaterial({color: 0xffffff})]
+        @ob = [new THREE.Line(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.LineBasicMaterial({color: 0xffffff}))]
         @last_slice_count = 1
         @compute()
 

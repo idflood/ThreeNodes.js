@@ -11,13 +11,13 @@ define [
   #"use strict"
 
   namespace "ThreeNodes.nodes.models",
-    ParticleSystem: class ParticleSystem extends ThreeNodes.nodes.Object3D
+    ParticleSystem: class ParticleSystem extends ThreeNodes.nodes.models.Object3D
       @node_name = 'ParticleSystem'
       @group_name = 'Particle'
 
       initialize: () =>
         super
-        @ob = new THREE.ParticleSystem(@fields.getField('geometry').getValue(), @fields.getField('material').getValue())
+        @ob = new THREE.ParticleSystem(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.ParticleBasicMaterial())
         @ob.dynamic = true
         @geometry_cache = false
         @material_cache = false

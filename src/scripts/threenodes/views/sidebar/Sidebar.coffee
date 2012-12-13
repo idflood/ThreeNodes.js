@@ -132,10 +132,10 @@ define [
           "Constructive-Geometry": []
 
         # Organize each node types by group
-        for node of ThreeNodes.nodes
+        for node of ThreeNodes.nodes.models
           # don't show hidden nodes types (group_name = false)
-          if ThreeNodes.nodes[node].group_name
-            group_name = (ThreeNodes.nodes[node].group_name).replace(/\./g, "-")
+          if ThreeNodes.nodes.models[node].group_name
+            group_name = (ThreeNodes.nodes.models[node].group_name).replace(/\./g, "-")
             if !nodes_by_group[group_name]
               nodes_by_group[group_name] = []
             nodes_by_group[group_name].push(node)
@@ -144,7 +144,7 @@ define [
         for group of nodes_by_group
           $container.append("<h3>#{group}</h3><ul id='nodetype-#{group}'></ul>")
           for node in nodes_by_group[group]
-            $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.nodes[node].node_name }</a></li>")
+            $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.nodes.models[node].node_name }</a></li>")
 
         # Make the list of nodes draggable
         $("a.button", $container).draggable

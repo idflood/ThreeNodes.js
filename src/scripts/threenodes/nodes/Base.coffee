@@ -20,7 +20,7 @@ define [
             "num": {type: "textfield", field: "in"}
 
         return $.extend(true, base_fields, fields)
-        #super
+        # TODO: special element
         #@fields.special_elements.center.push({type: "textfield", field: @v_in})
 
 
