@@ -100,9 +100,14 @@ define [
       @node_name = 'Mod'
       @group_name = 'Math'
 
-      setFields: =>
-        super
-        @v_factor = @fields.addField("y", {type: "Float", val: 2})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 2}
+        #@v_factor = @fields.addField("y", {type: "Float", val: 2})
+        return $.extend(true, base_fields, fields)
+
       process_val: (num, numb, i) =>
         num % numb
 
@@ -110,9 +115,14 @@ define [
       @node_name = 'Add'
       @group_name = 'Math'
 
-      setFields: =>
-        super
-        @v_factor = @fields.addField("y", {type: "Float", val: 1})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 1}
+        #@v_factor = @fields.addField("y", {type: "Float", val: 1})
+        return $.extend(true, base_fields, fields)
+
       process_val: (num, numb, i) =>
         num + numb
 
@@ -120,9 +130,14 @@ define [
       @node_name = 'Subtract'
       @group_name = 'Math'
 
-      setFields: =>
-        super
-        @v_factor = @fields.addField("y", {type: "Float", val: 1})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 1}
+        #@v_factor = @fields.addField("y", {type: "Float", val: 1})
+        return $.extend(true, base_fields, fields)
+
       process_val: (num, numb, i) =>
         num - numb
 
@@ -130,9 +145,13 @@ define [
       @node_name = 'Mult'
       @group_name = 'Math'
 
-      setFields: =>
-        super
-        @v_factor = @fields.addField("factor", {type: "Float", val: 2})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 2}
+        #@v_factor = @fields.addField("factor", {type: "Float", val: 2})
+        return $.extend(true, base_fields, fields)
 
       process_val: (num, numb, i) =>
         num * numb
@@ -142,9 +161,13 @@ define [
       @node_name = 'Divide'
       @group_name = 'Math'
 
-      setFields: =>
-        super
-        @v_factor = @fields.addField("y", {type: "Float", val: 2})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 2}
+        #@v_factor = @fields.addField("y", {type: "Float", val: 2})
+        return $.extend(true, base_fields, fields)
       process_val: (num, numb, i) =>
         num / numb
 
@@ -152,9 +175,13 @@ define [
       @node_name = 'Min'
       @group_name = 'Math'
 
-      setFields: =>
-        super
-        @v_factor = @fields.addField("in2", {type: "Float", val: 0})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "in2": {type: "Float", val: 0}
+        #@v_factor = @fields.addField("in2", {type: "Float", val: 0})
+        return $.extend(true, base_fields, fields)
 
       process_val: (num, numb, i) =>
         Math.min(num, numb)
@@ -163,9 +190,13 @@ define [
       @node_name = 'Max'
       @group_name = 'Math'
 
-      setFields: =>
-        super
-        @v_factor = @fields.addField("in2", {type: "Float", val: 0})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "in2": {type: "Float", val: 0}
+        #@v_factor = @fields.addField("in2", {type: "Float", val: 0})
+        return $.extend(true, base_fields, fields)
 
       process_val: (num, numb, i) =>
         Math.max(num, numb)
@@ -174,12 +205,23 @@ define [
       @node_name = 'Attenuation'
       @group_name = 'Math'
 
-      setFields: =>
+      initialize: (options) =>
         super
-        @def_val = @fields.addField("default", 0)
-        @reset_val = @fields.addField("reset", false)
-        @v_factor = @fields.addField("factor", 0.8)
-        @val = @def_val.getValue()
+        @val = 0
+
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "default": 0
+            "reset": false
+            "factor": 0.8
+        #@def_val = @fields.addField("default", 0)
+        #@reset_val = @fields.addField("reset", false)
+        #@v_factor = @fields.addField("factor", 0.8)
+        #@val = @def_val.getValue()
+        return $.extend(true, base_fields, fields)
+
       process_val: (num, numb, i) =>
         if @reset_val.getValue(i) == true
           @val = @def_val.getValue(i)

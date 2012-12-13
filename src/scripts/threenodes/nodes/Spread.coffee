@@ -11,7 +11,7 @@ define [
       @node_name = 'RandomSpread'
       @group_name = 'Spread'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @rnd = false
@@ -20,7 +20,10 @@ define [
         @count = false
         @width = false
         @offset = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "count": 1
             "seed" : 1
@@ -29,7 +32,8 @@ define [
           outputs:
             "out" : 0
 
-        @v_out = @fields.getField("out", true)
+        #@v_out = @fields.getField("out", true)
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @v_out
@@ -53,7 +57,7 @@ define [
       @node_name = 'LinearSpread'
       @group_name = 'Spread'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @value = false
@@ -61,7 +65,10 @@ define [
         @width = false
         @phase = false
         @offset = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "count": 1
             "width" : 1
@@ -70,7 +77,8 @@ define [
           outputs:
             "out" : 0
 
-        @v_out = @fields.getField("out", true)
+        #@v_out = @fields.getField("out", true)
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @v_out

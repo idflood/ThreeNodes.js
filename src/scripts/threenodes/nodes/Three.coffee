@@ -12,11 +12,19 @@ define [
       @node_name = 'Object3D'
       @group_name = 'Three'
 
-      setFields: =>
-        #super
+      initialize: (options) =>
+        super
         @auto_evaluate = true
         @ob = new THREE.Object3D()
-        @fields.addFields
+        @vars_shadow_options = ["castShadow", "receiveShadow"]
+        @shadow_cache = @createCacheObject(@vars_shadow_options)
+
+        @vars_shadow_options = ["castShadow", "receiveShadow"]
+      setFields: =>
+        # We don't want to have the basic input / output
+        # so don't call super neither extend fields with base_fields
+
+        fields =
           inputs:
             "children": {type: "Object3D", val: [], default: []}
             "position": {type: "Vector3", val: new THREE.Vector3()}
@@ -28,8 +36,7 @@ define [
             "receiveShadow": false
           outputs:
             "out": {type: "Any", val: @ob}
-        @vars_shadow_options = ["castShadow", "receiveShadow"]
-        @shadow_cache = @createCacheObject(@vars_shadow_options)
+        return fields
 
       deleteObjectAttributes: (ob) =>
         if ob
@@ -90,11 +97,13 @@ define [
       @node_name = 'Scene'
       @group_name = 'Three'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = new THREE.Scene()
-        @v_fog = @fields.addField("fog", {type: 'Any', val: null})
-        current_scene = @ob
+
+      #setFields: =>
+      #  super
+      #  @v_fog = @fields.addField("fog", {type: 'Any', val: null})
 
       remove: () =>
         if @ob
@@ -112,7 +121,7 @@ define [
         @fields.setField("out", @ob)
 
     Object3DwithMeshAndMaterial: class Object3DwithMeshAndMaterial extends Object3D
-      setFields: =>
+      initialize: (options) =>
         super
         @material_cache = false
         @geometry_cache = false
@@ -155,16 +164,19 @@ define [
       @node_name = 'ColladaLoader'
       @group_name = 'Three'
 
-      setFields: =>
-        super
-        @fields.addFields
-          inputs:
-            "file_url": ""
+      initialize: (options) =>
         @ob = [new THREE.Object3D()]
-        @file_url = @fields.getField('file_url').getValue(0)
+        @file_url = ""
         @vars_shadow_options = ["castShadow", "receiveShadow"]
         @shadow_cache = @createCacheObject(@vars_shadow_options)
         @compute()
+
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "file_url": ""
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         if @ob
@@ -242,16 +254,19 @@ define [
       @node_name = 'Mesh'
       @group_name = 'Three'
 
-      setFields: =>
-        super
-        @fields.addFields
+      initialize: (options) =>
+        @ob = [new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial({color: 0xff0000})]
+        @last_slice_count = 1
+        @compute()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "geometry": {type: "Geometry", val: new THREE.CubeGeometry( 200, 200, 200 )}
             "material": {type: "Material", val: new THREE.MeshBasicMaterial({color: 0xff0000})}
             "overdraw": false
-        @ob = [new THREE.Mesh(@fields.getField('geometry').getValue(), @fields.getField('material').getValue())]
-        @last_slice_count = 1
-        @compute()
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         if @ob
@@ -300,9 +315,14 @@ define [
       @node_name = 'Line'
       @group_name = 'Three'
 
-      setFields: =>
-        super
-        @fields.addFields
+      initialize: (options) =>
+        @ob = [new THREE.Line(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.LineBasicMaterial({color: 0xffffff})]
+        @last_slice_count = 1
+        @compute()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "geometry": {type: "Geometry", val: new THREE.CubeGeometry( 200, 200, 200 )}
             "material": {type: "Material", val: new THREE.LineBasicMaterial({color: 0xffffff})}
@@ -312,9 +332,7 @@ define [
               values:
                 "LineStrip": THREE.LineStrip
                 "LinePieces": THREE.LinePieces
-        @ob = [new THREE.Line(@fields.getField('geometry').getValue(), @fields.getField('material').getValue())]
-        @last_slice_count = 1
-        @compute()
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         needs_rebuild = false
@@ -354,10 +372,13 @@ define [
       @node_name = 'Camera'
       @group_name = 'Three'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "fov": 50
             "aspect": 1
@@ -368,6 +389,7 @@ define [
             "useTarget": false
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       deleteObjectAttributes: (ob) =>
         if ob
@@ -395,15 +417,19 @@ define [
       @node_name = 'Texture'
       @group_name = 'Three'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = false
         @cached = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "image": {type: "String", val: false}
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -426,16 +452,20 @@ define [
       @node_name = 'Fog'
       @group_name = 'Three'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xffffff)}
             "near": 1
             "far": 1000
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -451,15 +481,19 @@ define [
       @node_name = 'FogExp2'
       @group_name = 'Three'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xffffff)}
             "density": 0.00025
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -479,7 +513,7 @@ define [
       @mouseX: 0
       @mouseY: 0
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @preview_mode = true
@@ -489,22 +523,7 @@ define [
         @height = 0
         $("body").append("<div id='webgl-window'></div>")
         @webgl_container = $("#webgl-window")
-        @fields.addFields
-          inputs:
-            "width": 800
-            "height": 600
-            "scene": {type: "Scene", val: new THREE.Scene()}
-            "camera": {type: "Camera", val: new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)}
-            "bg_color": {type: "Color", val: new THREE.Color(0, 0, 0)}
-            "postfx": {type: "Array", val: []}
-            "shadowCameraNear": 3
-            "shadowCameraFar": 3000
-            "shadowMapWidth": 512
-            "shadowMapHeight": 512
-            "shadowMapEnabled": false
-            "shadowMapSoft": true
 
-        @fields.getField("camera").attributes.value.position.z = 1000
         @win = false
         @apply_size()
         @old_bg = false
@@ -516,7 +535,27 @@ define [
           console.log "webgl.click"
           if @settings.player_mode == false
             @create_popup_view()
-        return this
+
+      getFields: =>
+        camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
+        camera.attributes.value.position.z = 1000
+        base_fields = super
+        fields =
+          inputs:
+            "width": 800
+            "height": 600
+            "scene": {type: "Scene", val: new THREE.Scene()}
+            "camera": {type: "Camera", val: camera}
+            "bg_color": {type: "Color", val: new THREE.Color(0, 0, 0)}
+            "postfx": {type: "Array", val: []}
+            "shadowCameraNear": 3
+            "shadowCameraFar": 3000
+            "shadowMapWidth": 512
+            "shadowMapHeight": 512
+            "shadowMapEnabled": false
+            "shadowMapSoft": true
+
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         if @win && @win != false
