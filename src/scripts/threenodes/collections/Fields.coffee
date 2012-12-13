@@ -10,11 +10,14 @@ define [
   namespace "ThreeNodes",
     FieldsCollection: class FieldsCollection extends Backbone.Collection
       initialize: (models, options) =>
+        super
         @node = options.node
         @indexer = options.indexer
         @inputs = {}
         @outputs = {}
         @special_elements = {left: [], center: [], right: []}
+
+        @addFields(@node.getFields())
 
       # Remove connections, fields and delete variables
       destroy: () =>
@@ -166,7 +169,6 @@ define [
           # In group nodes we want to have a unique field index
           field_index += "-" + field.subfield.node.get("nid")
         @[target][field_index] = field
-
         @add(field)
         field
 

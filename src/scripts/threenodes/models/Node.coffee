@@ -51,10 +51,10 @@ define [
           @indexer.uid = @get('nid')
 
         # Create the fields collections
-        @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
+        @fields = new ThreeNodes.FieldsCollection(false, {node: this, indexer: @indexer})
 
-        # Init fields
-        #@setFields()
+        # Call onFieldsCreated so that nodes can alias fields
+        @onFieldsCreated()
 
         # Load saved data after the fields have been set
         @fields.load(@options.fields)
@@ -67,9 +67,13 @@ define [
           @loadAnimation()
 
         @showNodeAnimation()
-        @
+        return this
 
       typename: => String(@constructor.name)
+
+      onFieldsCreated: () =>
+        # This is where fields can get aliased ex:
+        # @v_in = @fields.getField("in")
 
       # Cleanup the variables and destroy internal anims and fields for garbage collection
       remove: () =>
@@ -209,9 +213,18 @@ define [
         return res
 
     NodeNumberSimple: class NodeNumberSimple extends NodeBase
-      setFields: =>
-        @v_in = @fields.addField("in", {type: "Float", val: 0})
-        @v_out = @fields.addField("out", {type: "Float", val: 0}, "outputs")
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "in": {type: "Float", val: 0}
+          outputs:
+            "out": {type: "Float", val: 0}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        @v_in = @fields.getField("in")
+        @v_out = @fields.getField("out", true)
 
       process_val: (num, i) => num
 

@@ -14,12 +14,7 @@ define [
       @group_name = 'Base'
 
       getFields: =>
-        base_fields = super
-        fields =
-          center:
-            "num": {type: "textfield", field: "in"}
-
-        return $.extend(true, base_fields, fields)
+        super
         # TODO: special element
         #@fields.special_elements.center.push({type: "textfield", field: @v_in})
 
