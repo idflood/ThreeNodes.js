@@ -299,9 +299,10 @@ define [
       @node_name = 'Text'
       @group_name = 'Geometry'
 
-      constructor: () ->
+      initialize: (options) =>
+        super
         @ob = false
-        @cached = @get_cache_array()
+        @cached = []
 
       getFields: =>
         base_fields = super
