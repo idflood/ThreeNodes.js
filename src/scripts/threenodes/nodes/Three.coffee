@@ -18,9 +18,9 @@ define [
         @ob = new THREE.Object3D()
         @vars_shadow_options = ["castShadow", "receiveShadow"]
         @shadow_cache = @createCacheObject(@vars_shadow_options)
-
         @vars_shadow_options = ["castShadow", "receiveShadow"]
-      setFields: =>
+
+      getFields: =>
         # We don't want to have the basic input / output
         # so don't call super neither extend fields with base_fields
         fields =
@@ -62,6 +62,8 @@ define [
         return childs
 
       apply_children: =>
+        if !@fields.getField("children") then return false
+
         # no connections means no children
         if @fields.getField("children").connections.length == 0 && @ob.children.length != 0
           @ob.remove(@ob.children[0]) while @ob.children.length > 0
@@ -100,9 +102,15 @@ define [
         super
         @ob = new THREE.Scene()
 
-      #setFields: =>
-      #  super
-      #  @v_fog = @fields.addField("fog", {type: 'Any', val: null})
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "fog": {type: 'Any', val: null}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        @v_fog = @fields.getField("fog")
 
       remove: () =>
         if @ob
@@ -254,6 +262,7 @@ define [
       @group_name = 'Three'
 
       initialize: (options) =>
+        super
         @ob = [new THREE.Mesh(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial({color: 0xff0000}))]
         @last_slice_count = 1
         @compute()
@@ -537,7 +546,7 @@ define [
 
       getFields: =>
         camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
-        camera.attributes.value.position.z = 1000
+        camera.position.z = 1000
         base_fields = super
         fields =
           inputs:

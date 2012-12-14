@@ -119,14 +119,19 @@ define [
       createCacheObject: (values) =>
         res = {}
         for v in values
-          res[v] = @fields.getField(v).attributes["value"]
+          field = @fields.getField(v)
+          res[v] = if !field then false else field.attributes["value"]
         res
 
       inputValueHasChanged: (values, cache = @material_cache) =>
         for v in values
-          v2 = @fields.getField(v).attributes["value"]
-          if v2 != cache[v]
-            return true
+          field = @fields.getField(v)
+          if !field
+            return false
+          else
+            v2 = field.attributes["value"]
+            if v2 != cache[v]
+              return true
         false
 
       getFields: =>

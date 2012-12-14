@@ -92,7 +92,6 @@ define [
                     when "number" then res[i] = @apply_num_to_vec3(ref, refb, i)
                     when "object" then res[i] = new THREE.Vector3(@process_val(ref.x, refb.x, i), @process_val(ref.y, refb.y, i), @process_val(ref.z, refb.z, i))
 
-        #if @v_out.get() != res
         @v_out.setValue res
         true
 
@@ -105,8 +104,11 @@ define [
         fields =
           inputs:
             "y": {type: "Float", val: 2}
-        #@v_factor = @fields.addField("y", {type: "Float", val: 2})
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @v_factor = @fields.getField("y")
 
       process_val: (num, numb, i) =>
         num % numb
@@ -120,8 +122,11 @@ define [
         fields =
           inputs:
             "y": {type: "Float", val: 1}
-        #@v_factor = @fields.addField("y", {type: "Float", val: 1})
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @v_factor = @fields.getField("y")
 
       process_val: (num, numb, i) =>
         num + numb
@@ -135,8 +140,11 @@ define [
         fields =
           inputs:
             "y": {type: "Float", val: 1}
-        #@v_factor = @fields.addField("y", {type: "Float", val: 1})
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @v_factor = @fields.getField("y")
 
       process_val: (num, numb, i) =>
         num - numb
@@ -149,13 +157,15 @@ define [
         base_fields = super
         fields =
           inputs:
-            "y": {type: "Float", val: 2}
-        #@v_factor = @fields.addField("factor", {type: "Float", val: 2})
+            "factor": {type: "Float", val: 2}
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @v_factor = @fields.getField("factor")
 
       process_val: (num, numb, i) =>
         num * numb
-
 
     MathDivide: class MathDivide extends NodeNumberParam1
       @node_name = 'Divide'
@@ -166,8 +176,12 @@ define [
         fields =
           inputs:
             "y": {type: "Float", val: 2}
-        #@v_factor = @fields.addField("y", {type: "Float", val: 2})
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @v_factor = @fields.getField("y")
+
       process_val: (num, numb, i) =>
         num / numb
 
@@ -180,8 +194,11 @@ define [
         fields =
           inputs:
             "in2": {type: "Float", val: 0}
-        #@v_factor = @fields.addField("in2", {type: "Float", val: 0})
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @v_factor = @fields.getField("in2")
 
       process_val: (num, numb, i) =>
         Math.min(num, numb)
@@ -195,8 +212,11 @@ define [
         fields =
           inputs:
             "in2": {type: "Float", val: 0}
-        #@v_factor = @fields.addField("in2", {type: "Float", val: 0})
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @v_factor = @fields.getField("in2")
 
       process_val: (num, numb, i) =>
         Math.max(num, numb)
@@ -216,11 +236,14 @@ define [
             "default": 0
             "reset": false
             "factor": 0.8
-        #@def_val = @fields.addField("default", 0)
-        #@reset_val = @fields.addField("reset", false)
-        #@v_factor = @fields.addField("factor", 0.8)
-        #@val = @def_val.getValue()
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @def_val = @fields.getField("default")
+        @reset_val = @fields.getField("reset")
+        @v_factor = @fields.getField("factor")
+        @val = @def_val.getValue()
 
       process_val: (num, numb, i) =>
         if @reset_val.getValue(i) == true

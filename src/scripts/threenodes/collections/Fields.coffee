@@ -56,7 +56,8 @@ define [
         return @[target][key]
 
       setField: (key, value) =>
-        @outputs[key].setValue(value)
+        if @outputs[key]
+          @outputs[key].setValue(value)
 
       getMaxInputSliceCount: () =>
         result = 1
