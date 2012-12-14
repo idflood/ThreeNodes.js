@@ -172,10 +172,11 @@ define [
       @group_name = 'Three'
 
       initialize: (options) =>
+        super
         @ob = [new THREE.Object3D()]
         @file_url = ""
         @vars_shadow_options = ["castShadow", "receiveShadow"]
-        @shadow_cache = @createCacheObject(@vars_shadow_options)
+        @shadow_cache = []
         @compute()
 
       getFields: =>
