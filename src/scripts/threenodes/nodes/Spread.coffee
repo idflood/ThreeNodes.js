@@ -31,9 +31,10 @@ define [
             "offset": 0
           outputs:
             "out" : 0
-
-        #@v_out = @fields.getField("out", true)
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        @v_out = @fields.getField("out", true)
 
       remove: () =>
         delete @v_out
@@ -76,9 +77,10 @@ define [
             "offset": 0
           outputs:
             "out" : 0
-
-        #@v_out = @fields.getField("out", true)
         return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        @v_out = @fields.getField("out", true)
 
       remove: () =>
         delete @v_out

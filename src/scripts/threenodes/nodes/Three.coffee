@@ -23,7 +23,6 @@ define [
       setFields: =>
         # We don't want to have the basic input / output
         # so don't call super neither extend fields with base_fields
-
         fields =
           inputs:
             "children": {type: "Object3D", val: [], default: []}
