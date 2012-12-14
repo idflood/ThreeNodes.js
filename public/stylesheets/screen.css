@@ -382,7 +382,7 @@ select {
 }
 @media (-webkit-min-device-pixel-ratio: 0) {
   select {
-    background-image: url("../images/select_arrow_white.png");
+    background-image: url("../assets/images/select_arrow_white.png");
     background-repeat: no-repeat;
     background-position: right center;
     padding-right: 20px;
