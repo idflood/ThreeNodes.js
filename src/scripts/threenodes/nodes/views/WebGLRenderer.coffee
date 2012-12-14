@@ -82,11 +82,9 @@ define [
         return this
 
       create_preview_view: =>
-        console.log "preview"
         @preview_mode = true
         @webgl_container.append( @model.ob.domElement )
         @apply_bg_color(true)
-        console.log "..."
         @apply_size(true)
         @add_mouse_handler()
         return this
@@ -126,7 +124,6 @@ define [
           dh = dw / r
         if dw != @model.width || dh != @model.height || force_refresh
           @model.ob.setSize(dw, dh)
-          console.log [dw, dh]
           if @win && @win != false
             console.log "..."
             # todo: implement the same with ".innerWidth =" and ".innerHeight =" when chrome support this
