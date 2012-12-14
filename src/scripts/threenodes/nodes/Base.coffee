@@ -2,7 +2,6 @@ define [
   'Underscore',
   'Backbone',
   'cs!threenodes/models/Node',
-  "colorpicker",
   #"libs/Three",
   'cs!threenodes/utils/Utils',
   'cs!threenodes/nodes/views/NodeWithCenterTextfield',
@@ -130,40 +129,6 @@ define [
     Color: class Color extends ThreeNodes.NodeBase
       @node_name = 'Color'
       @group_name = 'Base'
-
-      initialize: (options) =>
-        @init_preview()
-
-      init_preview: () =>
-        @$picker_el = $("<div class='color_preview'></div>")
-        col = @fields.getField("rgb", true).getValue(0)
-        @$picker_el.ColorPicker
-          color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
-          onChange: (hsb, hex, rgb) =>
-            @fields.getField("r").setValue(rgb.r / 255)
-            @fields.getField("g").setValue(rgb.g / 255)
-            @fields.getField("b").setValue(rgb.b / 255)
-
-        @fields.trigger("addCustomHtml", @$picker_el, ".center")
-
-        # on output value change set preview color
-        @fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>
-          @$picker_el.css
-            background: v[0].getContextStyle()
-
-      remove: () =>
-        @$picker_el.each () ->
-          if $(this).data('colorpickerId')
-            cal = $('#' + $(this).data('colorpickerId'))
-            picker = cal.data('colorpicker')
-            if picker
-              delete picker.onChange
-            # remove colorpicker dom element
-            cal.remove()
-        @$picker_el.unbind()
-        @$picker_el.remove()
-        delete @$picker_el
-        super
 
       getFields: =>
         base_fields = super

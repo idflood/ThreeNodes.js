@@ -3,6 +3,7 @@ define [
   'Backbone',
   'cs!threenodes/views/NodeView',
   'cs!threenodes/views/ConnectionView',
+  'cs!threenodes/nodes/views/Color',
 ], (_, Backbone) ->
   #"use strict"
 
