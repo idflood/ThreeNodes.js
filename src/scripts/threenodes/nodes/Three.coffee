@@ -518,32 +518,12 @@ define [
       @node_name = 'WebGLRenderer'
       @group_name = 'Three'
 
-      # Mouse position  over webgl renderer
-      @mouseX: 0
-      @mouseY: 0
-
       initialize: (options) =>
         super
         @auto_evaluate = true
-        @preview_mode = true
-        @creating_popup = false
         @ob = ThreeNodes.Webgl.current_renderer
         @width = 0
         @height = 0
-        $("body").append("<div id='webgl-window'></div>")
-        @webgl_container = $("#webgl-window")
-
-        @win = false
-        @apply_size()
-        @old_bg = false
-        @apply_bg_color()
-        self = this
-
-        @add_mouse_handler()
-        @webgl_container.bind "click", (e) =>
-          console.log "webgl.click"
-          if @settings.player_mode == false
-            @create_popup_view()
 
       getFields: =>
         camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
@@ -567,9 +547,6 @@ define [
         return $.extend(true, base_fields, fields)
 
       remove: () =>
-        if @win && @win != false
-          @win.close()
-
         if ThreeNodes.Webgl.current_camera == @fields.getField("camera").getValue()
           ThreeNodes.Webgl.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
           ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
@@ -577,83 +554,11 @@ define [
           ThreeNodes.Webgl.current_scene = new THREE.Scene()
           ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
 
-        @webgl_container.unbind()
         $(@ob.domElement).unbind()
-        @webgl_container.remove()
         delete @ob
         delete @width
         delete @height
-        delete @webgl_container
-        delete @win
         super
-
-      add_mouse_handler: =>
-        $(@ob.domElement).unbind "mousemove"
-        $(@ob.domElement).bind "mousemove", (e) ->
-          ThreeNodes.renderer.mouseX = e.clientX
-          ThreeNodes.renderer.mouseY = e.clientY
-        return this
-
-      create_popup_view: ->
-        @preview_mode = false
-        @creating_popup = true
-
-        w = @fields.getField('width').getValue()
-        h = @fields.getField('height').getValue()
-
-        @win = window.open('', 'win' + @nid, "width=#{w},height=#{h},scrollbars=false,location=false,status=false,menubar=false")
-        $("body", $(@win.document)).append( @ob.domElement )
-        $("*", $(@win.document)).css
-          padding: 0
-          margin: 0
-        @apply_bg_color(true)
-        @apply_size(true)
-        @add_mouse_handler()
-        return this
-
-      create_preview_view: ->
-        @preview_mode = true
-        @webgl_container.append( @ob.domElement )
-        @apply_bg_color(true)
-        @apply_size(true)
-        @add_mouse_handler()
-        return this
-
-      apply_bg_color: (force_refresh = false) ->
-        new_val = @fields.getField('bg_color').getValue().getContextStyle()
-
-        if @old_bg == new_val && force_refresh == false
-          return false
-
-        @ob.setClearColor( @fields.getField('bg_color').getValue(), 1 )
-        @webgl_container.css
-          background: new_val
-
-        if @win
-          $(@win.document.body).css
-            background: new_val
-
-        @old_bg = new_val
-
-      apply_size: (force_refresh = false) =>
-        w = @fields.getField('width').getValue()
-        h = @fields.getField('height').getValue()
-        dw = w
-        dh = h
-        if @win == false && @settings.player_mode == false
-          maxw = 220
-          r = w / h
-          dw = maxw
-          dh = dw / r
-        if dw != @width || dh != @height || force_refresh
-          @ob.setSize(dw, dh)
-          if @win && @win != false
-            console.log "..."
-            # todo: implement the same with ".innerWidth =" and ".innerHeight =" when chrome support this
-            # resize to beacame buggy on some chrome versions
-            #@win.resizeTo(dw, dh + 52)
-        @width = dw
-        @height = dh
 
       apply_post_fx: =>
         # work on a copy of the incoming array
@@ -663,29 +568,12 @@ define [
         fxs.push ThreeNodes.Webgl.effectScreen
         ThreeNodes.Webgl.composer.passes = fxs
 
-      add_renderer_to_dom: =>
-        if @preview_mode && $("canvas", @webgl_container).length == 0
-          @create_preview_view()
-        if @preview_mode == false && @win == false
-          @create_popup_view()
-
       compute: =>
         if !ThreeNodes.Webgl.current_renderer
           return
-        # help fix asynchronous bug with firefox when opening popup
-        if @creating_popup == true && !@win
-          return
 
-        @creating_popup = false
-        if @win != false
-          if @win.closed && @preview_mode == false
-            @preview_mode = true
-            @win = false
-        if !@settings.test
-          @add_renderer_to_dom()
+        @trigger("on_compute")
 
-        @apply_size()
-        @apply_bg_color()
         @applyFieldsToVal(@fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
         ThreeNodes.Webgl.current_camera = @fields.getField("camera").getValue()
         ThreeNodes.Webgl.current_scene = @fields.getField("scene").getValue()
