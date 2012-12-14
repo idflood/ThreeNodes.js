@@ -3,8 +3,19 @@ define [
   'Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
+  'cs!threenodes/nodes/views/NodeWithCenterTextfield',
 ], (_, Backbone) ->
   #"use strict"
+
+  namespace "ThreeNodes.nodes.views",
+    Random: class Random extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("out", true)
+
+    LFO: class LFO extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("out", true)
+
+    Timer: class Timer extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("out", true)
 
   namespace "ThreeNodes.nodes.models",
     Random: class Random extends ThreeNodes.NodeBase
@@ -23,8 +34,6 @@ define [
             "max" : 1
           outputs:
             "out" : 0
-        # TODO: special element ...
-        #@fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
         return $.extend(true, base_fields, fields)
 
       compute: =>
@@ -67,8 +76,6 @@ define [
                 "random triangle": 5
           outputs:
             "out" : 0
-        # TODO: special element ...
-        #@fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
         return $.extend(true, base_fields, fields)
 
       compute: =>
@@ -364,8 +371,6 @@ define [
           outputs:
             "out" : 0
         return $.extend(true, base_fields, fields)
-        # TODO: special element
-        #@fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
 
       get_time: => new Date().getTime()
 
