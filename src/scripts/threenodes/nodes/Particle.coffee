@@ -482,6 +482,7 @@ define [
       @group_name = 'Particle.sparks'
 
       initialize: (options) =>
+        super
         @auto_evaluate = true
         @geom = false
 
