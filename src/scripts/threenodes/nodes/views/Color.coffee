@@ -24,7 +24,7 @@ define [
             fields.getField("g").setValue(rgb.g / 255)
             fields.getField("b").setValue(rgb.b / 255)
 
-        fields.trigger("addCustomHtml", @$picker_el, ".center")
+        $(".center", @$el).append(@$picker_el)
 
         # on output value change set preview color
         fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>

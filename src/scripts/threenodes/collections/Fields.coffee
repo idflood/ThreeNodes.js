@@ -137,6 +137,7 @@ define [
           return this
 
         setSubfields = (node, direction = "inputs") =>
+          # TODO: addCustomHtml doesn't exists anymore, create a view for the group node
           @trigger("addCustomHtml", $("<h3>#{node.get('name')}</h3>"), "." + direction)
           for name, field of node.fields[direction]
             # We hide subfields inputs with internal connection
