@@ -298,7 +298,7 @@ define [
 
         # Calculate the bottom and right margins if the corresponding panels are not closed
         if @layout.south.state.isClosed == false then margin_bottom += $("#timeline").innerHeight()
-        if @layout.east.state.isClosed == false then margin_right += $("#library").innerWidth()
+        #if @layout.east.state.isClosed == false then margin_right += $("#library").innerWidth()
 
         # Apply the margins to some DOM elements
         $("#bottom-toolbox").attr("style", "bottom: #{margin_bottom}px !important; right: #{margin_right}px")
