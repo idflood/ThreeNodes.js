@@ -37,9 +37,9 @@ define [
         grp = ng.models[0]
         equals grp.nodes.length, 3, "The group node has 3 subnodes"
 
-        nbr_in1 = grp.fields.inputs["in-1"]
-        mult_out1 = grp.fields.outputs["out-12"]
-        mult_fact1 = grp.fields.inputs["factor-12"]
+        nbr_in1 = grp.nodes.models[0].fields.inputs["in"]
+        mult_out1 = grp.nodes.models[2].fields.outputs["out"]
+        mult_fact1 = grp.nodes.models[2].fields.inputs["factor"]
 
         # Add a 4th node, external to the group, connected to a group field
         n3 = ng.createNode("Number")
@@ -74,9 +74,9 @@ define [
         grp2 = ng.models[3]
         equals grp2.nodes.length, 3, "The group2 has 3 subnodes"
 
-        nbr_in2 = grp2.fields.inputs["in-1"]
-        mult_out2 = grp2.fields.outputs["out-12"]
-        mult_fact2 = grp2.fields.inputs["factor-12"]
+        nbr_in2 = grp2.nodes.models[0].fields.inputs["in"]
+        mult_out2 = grp2.nodes.models[2].fields.outputs["out"]
+        mult_fact2 = grp2.nodes.models[2].fields.inputs["factor"]
 
         # Set different values for the second group but don't touch the first one
 
@@ -95,6 +95,7 @@ define [
         # 2 * 2
         equals mult_out2.getValue(), 4, "Group 2 sends correct value (2/2)"
 
+        equals nbr_in1.getValue(), 7, "Group 1 input value still 7"
         # Save current group in json for next test
         @saved_grp = filehandler.getLocalJson()
 
@@ -120,12 +121,12 @@ define [
         equals grp.nodes.length, 3, "The group node has 3 subnodes"
 
         # Verify the output values of the group nodes
-        nbr_in1 = grp.fields.inputs["in-1"]
-        mult_out1 = grp.fields.outputs["out-12"]
-        mult_fact1 = grp.fields.inputs["factor-12"]
-        nbr_in2 = grp2.fields.inputs["in-1"]
-        mult_out2 = grp2.fields.outputs["out-12"]
-        mult_fact2 = grp2.fields.inputs["factor-12"]
+        nbr_in1 = grp.nodes.models[0].fields.inputs["in"]
+        mult_out1 = grp.nodes.models[2].fields.outputs["out"]
+        mult_fact1 = grp.nodes.models[2].fields.inputs["factor"]
+        nbr_in2 = grp2.nodes.models[0].fields.inputs["in"]
+        mult_out2 = grp2.nodes.models[2].fields.outputs["out"]
+        mult_fact2 = grp2.nodes.models[2].fields.inputs["factor"]
 
         equals nbr_in1.getValue(), 7, "Group 1 input value is loaded"
         equals nbr_in2.getValue(), 2, "Group 2 input value is loaded"
