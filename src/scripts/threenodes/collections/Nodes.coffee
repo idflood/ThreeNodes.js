@@ -182,11 +182,17 @@ define [
 
         # Recreate the external connections
         for connection in external_objects
+          from = false
+          to = false
           if connection.to_subfield
             from = @getNodeByNid(connection.from_node).fields.getField(connection.from, true)
-            to = grp.fields.getField(connection.to + "-" + connection.to_node)
+            target_node = @getNodeByNid(connection.to_node)
+            if target_node
+              to = target_node.fields.getField(connection.to, false)
           else
-            from = grp.fields.getField(connection.from + "-" + connection.from_node, true)
+            target_node = @getNodeByNid(connection.from_node)
+            if target_node
+              from = target_node.fields.getField(connection.from, true)
             to = @getNodeByNid(connection.to_node).fields.getField(connection.to)
 
           c = @connections.create
