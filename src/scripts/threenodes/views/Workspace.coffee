@@ -5,6 +5,7 @@ define [
   'cs!threenodes/views/ConnectionView',
   'cs!threenodes/nodes/views/Color',
   'cs!threenodes/nodes/views/WebGLRenderer',
+  'cs!threenodes/nodes/views/Group',
 ], (_, Backbone) ->
   #"use strict"
 

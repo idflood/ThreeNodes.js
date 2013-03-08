@@ -58,7 +58,6 @@ define [
       validate: (attrs, options) =>
         @from_field = attrs.from_field
         @to_field = attrs.to_field
-
         # make sure we have input and output
         if !@from_field || !@to_field
           return true

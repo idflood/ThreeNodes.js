@@ -35,6 +35,9 @@ define [
         # Create the connections collection
         @connections = new ThreeNodes.ConnectionsCollection([], {indexer: @indexer})
 
+        # Parent node, used for groups
+        @parent = options.parent
+
         @connections.bind "add", (connection) ->
           self.trigger "nodeslist:rebuild", self
 
@@ -100,6 +103,8 @@ define [
         # Save a reference of the nodes indexer
         options.indexer = @indexer
 
+        options.parent = @parent
+
         # Print error if the node type is not found and return false
         if !ThreeNodes.nodes.models[options.type]
           console.error("Node type doesn't exists: " + options.type)
@@ -117,11 +122,17 @@ define [
         invalidNodes = {}
         terminalNodes = {}
 
+        # Flatten the array of nodes.
+        # Nodes from groups will appear in the invalidNodes and/or terminalNodes too
         # Get all root nodes and nodes requiring an update
-        for node in @models
-          if node.hasOutConnection() == false || node.auto_evaluate || node.delays_output
-            terminalNodes[node.attributes["nid"]] = node
-          invalidNodes[node.attributes["nid"]] = node
+        buildNodeArrays = (nodes) ->
+          for node in nodes
+            if node.hasOutConnection() == false || node.auto_evaluate || node.delays_output
+              terminalNodes[node.attributes["nid"]] = node
+            invalidNodes[node.attributes["nid"]] = node
+            if node.nodes
+              buildNodeArrays(node.nodes.models)
+        buildNodeArrays(@models)
 
         # Update a node and his parents
         evaluateSubGraph = (node) ->

@@ -20,18 +20,13 @@ define [
         # Now that subnodes are created we can safely init the group node
         super
 
-        # Set auto evaluate to true since we want to be sure to update subnodes
-        # There could be no incoming connection but an auto evaluated subnode,
-        # if we don't evaluate the group the subnode will never update
-        @auto_evaluate = true
-
         # Recreate the connections between internal subnodes
         for connection in @definition.get("connections")
           @nodes.createConnectionFromObject(connection)
 
       initSubnodes: (options) =>
         # A group contains a sub-nodes (nodes)
-        @nodes = new ThreeNodes.NodesCollection([], {settings: options.settings})
+        @nodes = new ThreeNodes.NodesCollection([], {settings: options.settings, parent: this})
 
         # Save the group definition reference
         @definition = options.definition
@@ -53,10 +48,9 @@ define [
 
         res
 
-      # TODO: convert this...
-      setFields: =>
-        @fields.createNodesProxyFields(@nodes.models)
-        return this
+      getFields: =>
+        # don't return any fields, we will render each subnodes
+        return false
 
       remove: () =>
         if @nodes
@@ -67,11 +61,7 @@ define [
         super
 
       compute: =>
-        if !@nodes then return false
-        # Since we are using proxy fields the upstream nodes are 'automatically' handled.
-        # For inputs we simply need to copy value from fields to subfield (proxy->field)
-        # For outputs we copy subfield value to the field (field->proxy)
-        # The value propagation is directly handled in field.setValue
-        @nodes.render()
+        # no need to do special things since the subnodes are
+        # "merged in the main arrays" in nodes.render
         return this
 

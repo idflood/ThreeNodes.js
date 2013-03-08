@@ -39,6 +39,9 @@ define [
         @indexer = options.indexer
         @options = options
 
+        # Parent node, used to detect if a node is part of a group
+        @parent = options.parent
+
         # Set a default node name if none is provided
         if @get('name') == '' then @set('name', @typename())
 
@@ -254,7 +257,6 @@ define [
                   res[i].x = @process_val(ref.x, i)
                   res[i].y = @process_val(ref.y, i)
                   res[i].z = @process_val(ref.z, i)
-
         @v_out.setValue res
         true
 

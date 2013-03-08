@@ -105,6 +105,17 @@ define [
           drop: (event, ui) ->
             origin = $(ui.draggable).parent()
             field2 = origin.data("object")
-            field.node.createConnection(field, field2)
+            # We need to find the most global @connections
+            # For a connection between a normal node and one in a group
+            # we want to find the global @connections
+            #
+            # For now we simply get the node from the second field if the
+            # first one has a parent node
+            #
+            # TODO: fix this for nested groups (try to connect to in ins and outs)
+            if field.node.parent
+              field2.node.createConnection(field, field2)
+            else
+              field.node.createConnection(field, field2)
 
         return this
