@@ -206,7 +206,15 @@ define [
         @connections.remove(c)
 
       getNodeByNid: (nid) =>
-        @find (node) -> node.get("nid").toString() == nid.toString()
+        for node in @models
+          if node.get("nid").toString() == nid.toString()
+            return node
+          # special case for group
+          if node.nodes
+            res = node.nodes.getNodeByNid(nid)
+            if res then return res
+
+        return false
 
       showNodesAnimation: () =>
         @invoke "showNodeAnimation"
