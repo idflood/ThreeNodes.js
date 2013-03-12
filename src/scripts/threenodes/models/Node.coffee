@@ -39,6 +39,9 @@ define [
         @indexer = options.indexer
         @options = options
 
+        # Parent node, used to detect if a node is part of a group
+        @parent = options.parent
+
         # Set a default node name if none is provided
         if @get('name') == '' then @set('name', @typename())
 
@@ -51,10 +54,10 @@ define [
           @indexer.uid = @get('nid')
 
         # Create the fields collections
-        @fields = new ThreeNodes.FieldsCollection([], {node: this, indexer: @indexer})
+        @fields = new ThreeNodes.FieldsCollection(false, {node: this, indexer: @indexer})
 
-        # Init fields
-        @setFields()
+        # Call onFieldsCreated so that nodes can alias fields
+        @onFieldsCreated()
 
         # Load saved data after the fields have been set
         @fields.load(@options.fields)
@@ -67,9 +70,13 @@ define [
           @loadAnimation()
 
         @showNodeAnimation()
-        @
+        return this
 
       typename: => String(@constructor.name)
+
+      onFieldsCreated: () =>
+        # This is where fields can get aliased ex:
+        # @v_in = @fields.getField("in")
 
       # Cleanup the variables and destroy internal anims and fields for garbage collection
       remove: () =>
@@ -115,18 +122,24 @@ define [
       createCacheObject: (values) =>
         res = {}
         for v in values
-          res[v] = @fields.getField(v).attributes["value"]
+          field = @fields.getField(v)
+          res[v] = if !field then false else field.attributes["value"]
         res
 
       inputValueHasChanged: (values, cache = @material_cache) =>
         for v in values
-          v2 = @fields.getField(v).attributes["value"]
-          if v2 != cache[v]
-            return true
+          field = @fields.getField(v)
+          if !field
+            return false
+          else
+            v2 = field.attributes["value"]
+            if v2 != cache[v]
+              return true
         false
 
-      setFields: =>
+      getFields: =>
         # to implement
+        return {}
 
       hasOutConnection: () =>
         @out_connections.length != 0
@@ -208,9 +221,18 @@ define [
         return res
 
     NodeNumberSimple: class NodeNumberSimple extends NodeBase
-      setFields: =>
-        @v_in = @fields.addField("in", {type: "Float", val: 0})
-        @v_out = @fields.addField("out", {type: "Float", val: 0}, "outputs")
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "in": {type: "Float", val: 0}
+          outputs:
+            "out": {type: "Float", val: 0}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        @v_in = @fields.getField("in")
+        @v_out = @fields.getField("out", true)
 
       process_val: (num, i) => num
 
@@ -235,7 +257,6 @@ define [
                   res[i].x = @process_val(ref.x, i)
                   res[i].y = @process_val(ref.y, i)
                   res[i].z = @process_val(ref.z, i)
-
         @v_out.setValue res
         true
 

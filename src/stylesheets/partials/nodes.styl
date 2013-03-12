@@ -115,6 +115,17 @@ _c = 100
   .outputs .inner-field span
     margin-left: field-label-padding
 
+// nodes inside a group node
+.node .node
+  position: relative !important
+  padding: 0
+  border-radius(0px)
+  width: 100% !important
+  left: auto !important
+  top: auto !important
+  background: none !important
+  border: 0 !important
+
 animation_color = #f00
 .node-has-animation
   box-shadow(animation_color 0 0 1px inset)
@@ -126,6 +137,8 @@ animation_color = #f00
 .node-Group
   @extend .width-200
   @extend .ratio-50-50
+  > .head span
+    color: #fff
   h3
     margin-bottom: 0
     font-size: 10px

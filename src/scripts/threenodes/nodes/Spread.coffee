@@ -6,12 +6,12 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     RandomSpread: class RandomSpread extends ThreeNodes.NodeBase
       @node_name = 'RandomSpread'
       @group_name = 'Spread'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @rnd = false
@@ -20,7 +20,10 @@ define [
         @count = false
         @width = false
         @offset = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "count": 1
             "seed" : 1
@@ -28,7 +31,9 @@ define [
             "offset": 0
           outputs:
             "out" : 0
+        return $.extend(true, base_fields, fields)
 
+      onFieldsCreated: () =>
         @v_out = @fields.getField("out", true)
 
       remove: () =>
@@ -53,7 +58,7 @@ define [
       @node_name = 'LinearSpread'
       @group_name = 'Spread'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @value = false
@@ -61,7 +66,10 @@ define [
         @width = false
         @phase = false
         @offset = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "count": 1
             "width" : 1
@@ -69,7 +77,9 @@ define [
             "offset": 0
           outputs:
             "out" : 0
+        return $.extend(true, base_fields, fields)
 
+      onFieldsCreated: () =>
         @v_out = @fields.getField("out", true)
 
       remove: () =>

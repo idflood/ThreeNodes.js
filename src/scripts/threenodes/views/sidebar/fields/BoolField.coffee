@@ -8,9 +8,6 @@ define [
   ### SidebarField View ###
   namespace "ThreeNodes.views.fields",
     BoolField: class BoolField extends ThreeNodes.views.fields.BaseField
-      initialize: (options) ->
-        super
-
       on_value_updated: (new_val) =>
         if @model.getValue() == true
           @$checkbox.attr('checked', 'checked')
@@ -18,10 +15,11 @@ define [
           @$checkbox.removeAttr('checked')
 
       render: () =>
+        console.log "check.."
         $target = @createSidebarContainer()
         id = "side-field-checkbox-#{@model.get('fid')}"
-        $target.append("<div><input type='checkbox' id='#{id}'/></div>")
-        @$checkbox = $("#" + id)
+        $container = $("<div><input type='checkbox' id='#{id}'/></div>").appendTo($target)
+        @$checkbox = $("input", $container)
 
         # Set the inital state of the checkbox
         if @model.getValue() == true

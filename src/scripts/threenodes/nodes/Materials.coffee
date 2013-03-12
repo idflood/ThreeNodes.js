@@ -8,14 +8,17 @@ define [
 
   namespace "ThreeNodes",
     NodeMaterialBase: class NodeMaterialBase extends ThreeNodes.NodeBase
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = false
         @auto_evaluate = true
         @material_class = false
         @last_slice_count = -1
         @is_material = true
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "opacity": 1
             "transparent": false
@@ -33,6 +36,7 @@ define [
                 "Subtractive": THREE.SubtractiveBlending
                 "Multiply": THREE.MultiplyBlending
                 "AdditiveAlpha": THREE.AdditiveAlphaBlending
+        return $.extend(true, base_fields, fields)
 
       rebuildShader: () =>
         if !@ob
@@ -68,16 +72,21 @@ define [
         @last_slice_count = numItems
         @fields.setField("out", @ob)
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     MeshBasicMaterial: class MeshBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshBasic'
       @group_name = 'Materials'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = []
         @material_class = THREE.MeshBasicMaterial
-        @fields.addFields
+        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
+        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xff0000)}
             "map": {type: "Any", val: false}
@@ -90,35 +99,43 @@ define [
             "fog": true
           outputs:
             "out": {type: "Any", val: @ob}
-        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+        return $.extend(true, base_fields, fields)
 
     LineBasicMaterial: class LineBasicMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'LineBasic'
       @group_name = 'Materials'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = []
         @material_class = THREE.LineBasicMaterial
-        @fields.addFields
+        @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
+        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xff0000)}
             "linewidth": 1
           outputs:
             "out": {type: "Any", val: @ob}
-        @vars_rebuild_shader_on_change = ["transparent", "depthTest"]
-        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+        return $.extend(true, base_fields, fields)
 
     MeshLambertMaterial: class MeshLambertMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshLambert'
       @group_name = 'Materials'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = []
         @material_class = THREE.MeshLambertMaterial
-        @fields.addFields
+        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
+        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xff0000)}
             "ambient": {type: "Color", val: new THREE.Color(0x050505)}
@@ -131,18 +148,22 @@ define [
             "fog": true
           outputs:
             "out": {type: "Any", val: @ob}
-        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+        return $.extend(true, base_fields, fields)
 
     MeshPhongMaterial: class MeshPhongMaterial extends ThreeNodes.NodeMaterialBase
       @node_name = 'MeshPhong'
       @group_name = 'Materials'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = []
         @material_class = THREE.MeshPhongMaterial
-        @fields.addFields
+        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
+        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xff0000)}
             "map": {type: "Any", val: false}
@@ -157,5 +178,4 @@ define [
             "fog": true
           outputs:
             "out": {type: "Any", val: @ob}
-        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+        return $.extend(true, base_fields, fields)

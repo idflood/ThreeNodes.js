@@ -10,11 +10,14 @@ define [
   namespace "ThreeNodes",
     FieldsCollection: class FieldsCollection extends Backbone.Collection
       initialize: (models, options) =>
+        super
         @node = options.node
         @indexer = options.indexer
         @inputs = {}
         @outputs = {}
         @special_elements = {left: [], center: [], right: []}
+
+        @addFields(@node.getFields())
 
       # Remove connections, fields and delete variables
       destroy: () =>
@@ -53,7 +56,8 @@ define [
         return @[target][key]
 
       setField: (key, value) =>
-        @outputs[key].setValue(value)
+        if @outputs[key]
+          @outputs[key].setValue(value)
 
       getMaxInputSliceCount: () =>
         result = 1
@@ -106,44 +110,6 @@ define [
       removeConnections: =>
         @invoke "removeConnections"
 
-      cloneSubField: (field) =>
-        options =
-          type: field.constructor.name
-          value: field.attributes.value
-          possibilities: field.get("values")
-          node: @node
-          default: field.get("default")
-          subfield: field
-        direction = if field.get("is_output") then "outputs" else "inputs"
-        proxy_field = @addField(field.get('name'), options, direction)
-        # Save a reference of the proxy field in the subfield
-        field.proxy = proxy_field
-
-        # set the initial value of input proxy
-        if field.get("is_output") == false
-          proxy_field.setValue(field.attributes.value)
-          # save it in the nodefields array
-          @inputs[proxy_field.get('name') + "-" + field.get("node").get("nid")] = proxy_field
-
-        return proxy_field
-
-      createNodesProxyFields: (nodes) =>
-        if $.type(nodes) != "array"
-          @createNodesProxyFields([nodes])
-          return this
-
-        setSubfields = (node, direction = "inputs") =>
-          @trigger("addCustomHtml", $("<h3>#{node.get('name')}</h3>"), "." + direction)
-          for name, field of node.fields[direction]
-            # We hide subfields inputs with internal connection
-            if field.connections.length == 0 || field.attributes.is_output == true
-              @cloneSubField(field)
-
-        for node in nodes
-          if node.fields.hasUnconnectedInputs() == true then setSubfields(node, "inputs")
-          # We want to be able to retrieve all outputs
-          setSubfields(node, "outputs")
-        return this
 
       addField: (name, value, direction = "inputs") =>
         f = false
@@ -166,7 +132,6 @@ define [
           # In group nodes we want to have a unique field index
           field_index += "-" + field.subfield.node.get("nid")
         @[target][field_index] = field
-
         @add(field)
         field
 

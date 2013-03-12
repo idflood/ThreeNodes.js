@@ -19,7 +19,8 @@ define [
         @makeElement()
 
         # Initialize mouse events
-        @makeDraggable()
+        if !options.isSubNode
+          @makeDraggable()
         @initNodeClick()
         @initTitleClick()
 
@@ -58,8 +59,8 @@ define [
         @$el.css
           left: parseInt @model.get("x")
           top: parseInt @model.get("y")
-        $(".head span", @$el).text(@model.get("name"))
-        $(".head span", @$el).show()
+        @$el.find("> .head span").text(@model.get("name"))
+        @$el.find("> .head span").show()
 
       highlighAnimations: () =>
         nodeAnimation = false
@@ -81,6 +82,9 @@ define [
 
       renderConnections: () =>
         @model.fields.renderConnections()
+        if @model.nodes
+          _.each @model.nodes.models, (n) ->
+            n.fields.renderConnections()
 
       computeNodePosition: () =>
         pos = $(@el).position()
@@ -117,11 +121,11 @@ define [
 
       initTitleClick: () ->
         self = this
-        $(".head span", @el).dblclick (e) ->
+        @$el.find("> .head span").dblclick (e) ->
           prev = $(this).html()
-          $(".head", self.el).append("<input type='text' />")
+          self.$el.find("> .head").append("<input type='text' />")
           $(this).hide()
-          $input = $(".head input", self.el)
+          $input = self.$el.find("> .head input", )
           $input.val(prev)
 
           apply_input_result = () ->

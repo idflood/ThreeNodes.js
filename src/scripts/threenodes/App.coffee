@@ -121,7 +121,7 @@ define [
           @ui.on("renderConnections", @nodes.renderAllConnections)
 
           # Setup the main menu events
-          @ui.menubar.on("RmoveSelectedNodes", @nodes.removeSelectedNodes)
+          @ui.menubar.on("RemoveSelectedNodes", @nodes.removeSelectedNodes)
           @ui.menubar.on("ClearWorkspace", @clearWorkspace)
           @ui.menubar.on("SaveFile", @file_handler.saveLocalFile)
           @ui.menubar.on("ExportCode", @file_handler.exportCode)

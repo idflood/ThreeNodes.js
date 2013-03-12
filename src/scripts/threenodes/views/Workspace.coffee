@@ -3,6 +3,9 @@ define [
   'Backbone',
   'cs!threenodes/views/NodeView',
   'cs!threenodes/views/ConnectionView',
+  'cs!threenodes/nodes/views/Color',
+  'cs!threenodes/nodes/views/WebGLRenderer',
+  'cs!threenodes/nodes/views/Group',
 ], (_, Backbone) ->
   #"use strict"
 
@@ -44,7 +47,15 @@ define [
         @nodes.connections.bind("add", @renderConnection)
 
       renderNode: (node) =>
-        view = new ThreeNodes.NodeView
+        nodename = node.constructor.name
+
+        if ThreeNodes.nodes.views[nodename]
+          # If there is a view associated with the node model use it
+          viewclass = ThreeNodes.nodes.views[nodename]
+        else
+          # Use the default view class
+          viewclass = ThreeNodes.NodeView
+        view = new viewclass
           model: node
 
         view.$el.appendTo(@$el)

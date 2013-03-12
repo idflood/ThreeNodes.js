@@ -2,36 +2,39 @@ define [
   'Underscore',
   'Backbone',
   'cs!threenodes/models/Node',
-  "colorpicker",
   #"libs/Three",
   'cs!threenodes/utils/Utils',
+  'cs!threenodes/nodes/views/NodeWithCenterTextfield',
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.views",
+    Number: class Number extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+
+    String: class String extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("string")
+
+  namespace "ThreeNodes.nodes.models",
     Number: class Number extends ThreeNodes.NodeNumberSimple
       @node_name = 'Number'
       @group_name = 'Base'
-
-      setFields: =>
-        super
-        @fields.special_elements.center.push({type: "textfield", field: @v_in})
-
 
     Boolean: class Boolean extends ThreeNodes.NodeBase
       @node_name = 'Boolean'
       @group_name = 'Base'
 
-      init: =>
+      initialize: (options) =>
         super
         @value = true
 
-      setFields: =>
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "bool": true
           outputs:
             "out": {type: "Bool", val: @value}
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         @fields.setField("out", @fields.getField("bool").getValue())
@@ -40,18 +43,18 @@ define [
       @node_name = 'String'
       @group_name = 'Base'
 
-      init: =>
+      initialize: (options) =>
         super
         @value = ""
 
-      setFields: =>
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "string": ""
           outputs:
             "out": {type: "Any", val: @value}
-
-        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("string")})
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         @fields.setField("out", @fields.getField("string").getValue())
@@ -60,10 +63,9 @@ define [
       @node_name = 'Vector2'
       @group_name = 'Base'
 
-      setFields: =>
-        super
-        @vec = new THREE.Vector2(0, 0)
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "x" : 0
             "y" : 0
@@ -71,10 +73,7 @@ define [
             "xy" : {type: "Vector2", val: false}
             "x" : 0
             "y" : 0
-
-      remove: () =>
-        delete @vec
-        super
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         res = []
@@ -95,9 +94,9 @@ define [
       @node_name = 'Vector3'
       @group_name = 'Base'
 
-      setFields: =>
-        super
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "x" : 0
             "y" : 0
@@ -107,6 +106,7 @@ define [
             "x" : 0
             "y" : 0
             "z" : 0
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         res = []
@@ -130,40 +130,9 @@ define [
       @node_name = 'Color'
       @group_name = 'Base'
 
-      init_preview: () =>
-        @$picker_el = $("<div class='color_preview'></div>")
-        col = @fields.getField("rgb", true).getValue(0)
-        @$picker_el.ColorPicker
-          color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
-          onChange: (hsb, hex, rgb) =>
-            @fields.getField("r").setValue(rgb.r / 255)
-            @fields.getField("g").setValue(rgb.g / 255)
-            @fields.getField("b").setValue(rgb.b / 255)
-
-        @fields.trigger("addCustomHtml", @$picker_el, ".center")
-
-        # on output value change set preview color
-        @fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>
-          @$picker_el.css
-            background: v[0].getContextStyle()
-
-      remove: () =>
-        @$picker_el.each () ->
-          if $(this).data('colorpickerId')
-            cal = $('#' + $(this).data('colorpickerId'))
-            picker = cal.data('colorpicker')
-            if picker
-              delete picker.onChange
-            # remove colorpicker dom element
-            cal.remove()
-        @$picker_el.unbind()
-        @$picker_el.remove()
-        delete @$picker_el
-        super
-
-      setFields: =>
-        super
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "r": 0
             "g": 0
@@ -173,7 +142,7 @@ define [
             "r": 0
             "g": 0
             "b": 0
-        @init_preview()
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         res = []

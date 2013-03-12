@@ -6,17 +6,19 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     PointLight: class PointLight extends ThreeNodes.NodeBase
       @node_name = 'PointLight'
       @group_name = 'Lights'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.PointLight(0xffffff)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xffffff)}
             "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
@@ -24,6 +26,7 @@ define [
             "distance": 0
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -37,12 +40,14 @@ define [
       @node_name = 'SpotLight'
       @group_name = 'Lights'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.SpotLight(0xffffff)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xffffff)}
             "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
@@ -59,6 +64,7 @@ define [
             "shadowMapHeight": 512
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -74,12 +80,14 @@ define [
       @node_name = 'DirectionalLight'
       @group_name = 'Lights'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.DirectionalLight(0xffffff)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xffffff)}
             "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
@@ -87,6 +95,7 @@ define [
             "distance": 0
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob
@@ -100,17 +109,20 @@ define [
       @node_name = 'AmbientLight'
       @group_name = 'Lights'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.AmbientLight(0xffffff)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xffffff)}
             "position": {type: "Vector3", val: new THREE.Vector3(0, 300, 0)}
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: =>
         delete @ob

@@ -6,7 +6,7 @@ define [
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     MathSin: class MathSin extends ThreeNodes.NodeNumberSimple
       @node_name = 'Sin'
       @group_name = 'Math'
@@ -92,7 +92,6 @@ define [
                     when "number" then res[i] = @apply_num_to_vec3(ref, refb, i)
                     when "object" then res[i] = new THREE.Vector3(@process_val(ref.x, refb.x, i), @process_val(ref.y, refb.y, i), @process_val(ref.z, refb.z, i))
 
-        #if @v_out.get() != res
         @v_out.setValue res
         true
 
@@ -100,9 +99,17 @@ define [
       @node_name = 'Mod'
       @group_name = 'Math'
 
-      setFields: =>
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 2}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
         super
-        @v_factor = @fields.addField("y", {type: "Float", val: 2})
+        @v_factor = @fields.getField("y")
+
       process_val: (num, numb, i) =>
         num % numb
 
@@ -110,9 +117,17 @@ define [
       @node_name = 'Add'
       @group_name = 'Math'
 
-      setFields: =>
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 1}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
         super
-        @v_factor = @fields.addField("y", {type: "Float", val: 1})
+        @v_factor = @fields.getField("y")
+
       process_val: (num, numb, i) =>
         num + numb
 
@@ -120,9 +135,17 @@ define [
       @node_name = 'Subtract'
       @group_name = 'Math'
 
-      setFields: =>
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 1}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
         super
-        @v_factor = @fields.addField("y", {type: "Float", val: 1})
+        @v_factor = @fields.getField("y")
+
       process_val: (num, numb, i) =>
         num - numb
 
@@ -130,21 +153,35 @@ define [
       @node_name = 'Mult'
       @group_name = 'Math'
 
-      setFields: =>
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "factor": {type: "Float", val: 2}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
         super
-        @v_factor = @fields.addField("factor", {type: "Float", val: 2})
+        @v_factor = @fields.getField("factor")
 
       process_val: (num, numb, i) =>
         num * numb
-
 
     MathDivide: class MathDivide extends NodeNumberParam1
       @node_name = 'Divide'
       @group_name = 'Math'
 
-      setFields: =>
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "y": {type: "Float", val: 2}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
         super
-        @v_factor = @fields.addField("y", {type: "Float", val: 2})
+        @v_factor = @fields.getField("y")
+
       process_val: (num, numb, i) =>
         num / numb
 
@@ -152,9 +189,16 @@ define [
       @node_name = 'Min'
       @group_name = 'Math'
 
-      setFields: =>
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "in2": {type: "Float", val: 0}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
         super
-        @v_factor = @fields.addField("in2", {type: "Float", val: 0})
+        @v_factor = @fields.getField("in2")
 
       process_val: (num, numb, i) =>
         Math.min(num, numb)
@@ -163,9 +207,16 @@ define [
       @node_name = 'Max'
       @group_name = 'Math'
 
-      setFields: =>
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "in2": {type: "Float", val: 0}
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
         super
-        @v_factor = @fields.addField("in2", {type: "Float", val: 0})
+        @v_factor = @fields.getField("in2")
 
       process_val: (num, numb, i) =>
         Math.max(num, numb)
@@ -174,12 +225,26 @@ define [
       @node_name = 'Attenuation'
       @group_name = 'Math'
 
-      setFields: =>
+      initialize: (options) =>
         super
-        @def_val = @fields.addField("default", 0)
-        @reset_val = @fields.addField("reset", false)
-        @v_factor = @fields.addField("factor", 0.8)
+        @val = 0
+
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "default": 0
+            "reset": false
+            "factor": 0.8
+        return $.extend(true, base_fields, fields)
+
+      onFieldsCreated: () =>
+        super
+        @def_val = @fields.getField("default")
+        @reset_val = @fields.getField("reset")
+        @v_factor = @fields.getField("factor")
         @val = @def_val.getValue()
+
       process_val: (num, numb, i) =>
         if @reset_val.getValue(i) == true
           @val = @def_val.getValue(i)

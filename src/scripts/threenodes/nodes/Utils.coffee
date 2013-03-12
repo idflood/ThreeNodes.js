@@ -3,24 +3,38 @@ define [
   'Backbone',
   'cs!threenodes/models/Node',
   'cs!threenodes/utils/Utils',
+  'cs!threenodes/nodes/views/NodeWithCenterTextfield',
 ], (_, Backbone) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.views",
+    Random: class Random extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("out", true)
+
+    LFO: class LFO extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("out", true)
+
+    Timer: class Timer extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+      getCenterField: () => @model.fields.getField("out", true)
+
+  namespace "ThreeNodes.nodes.models",
     Random: class Random extends ThreeNodes.NodeBase
       @node_name = 'Random'
       @group_name = 'Utils'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "min" : 0
             "max" : 1
           outputs:
             "out" : 0
-        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         value = @fields.getField("min").getValue() + Math.random() * (@fields.getField("max").getValue() - @fields.getField("min").getValue())
@@ -31,7 +45,7 @@ define [
       @node_name = 'LFO'
       @group_name = 'Utils'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @rndB = Math.random()
@@ -43,7 +57,9 @@ define [
         @clock = 0
         @PI = 3.14159
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "min" : 0
             "max" : 1
@@ -60,7 +76,7 @@ define [
                 "random triangle": 5
           outputs:
             "out" : 0
-        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         duration = @fields.getField("duration").getValue()
@@ -110,10 +126,14 @@ define [
       @node_name = 'Merge'
       @group_name = 'Utils'
 
-      setFields: =>
-        #super
+      initialize: (options) =>
+        super
         @auto_evaluate = true
-        @fields.addFields
+
+      getFields: =>
+        # Don't extend with base fields
+
+        fields =
           inputs:
             "in0" : {type: "Any", val: null}
             "in1" : {type: "Any", val: null}
@@ -123,6 +143,7 @@ define [
             "in5" : {type: "Any", val: null}
           outputs:
             "out" : {type: "Array", val: []}
+        return fields
 
       compute: =>
         result = []
@@ -141,14 +162,15 @@ define [
       @node_name = 'Get'
       @group_name = 'Utils'
 
-      setFields: =>
-        super
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "array" : {type: "Array", val: null}
             "index" : 0
           outputs:
             "out" : {type: "Any", val: null}
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         old = @fields.getField("out", true).getValue()
@@ -166,11 +188,21 @@ define [
 
       is_chrome: => navigator.userAgent.toLowerCase().indexOf('chrome') > -1
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @counter = 0
-        @fields.addFields
+
+        # TODO: move this in a view
+        if @is_chrome()
+          @audioContext = new window.webkitAudioContext()
+        else
+          $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
+        @url_cache = ""
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "url": ""
             "smoothingTime": 0.1
@@ -179,12 +211,7 @@ define [
             "low" : 0
             "medium" : 0
             "high" : 0
-
-        if @is_chrome()
-          @audioContext = new window.webkitAudioContext()
-        else
-          $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
-        @url_cache = @fields.getField("url").getValue()
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         @stopSound()
@@ -304,14 +331,18 @@ define [
       @node_name = 'Mouse'
       @group_name = 'Utils'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           outputs:
             "xy": {type: "Vector2", val: new THREE.Vector2()}
             "x" : 0
             "y" : 0
+        return $.extend(true, base_fields, fields)
 
       compute: =>
         dx = ThreeNodes.renderer.mouseX
@@ -324,19 +355,22 @@ define [
       @node_name = 'Timer'
       @group_name = 'Utils'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @old = @get_time()
         @counter = 0
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "reset" : false
             "pause" : false
             "max" : 99999999999
           outputs:
             "out" : 0
-        @fields.special_elements.center.push({type: "textfield", field: @fields.getField("out", true)})
+        return $.extend(true, base_fields, fields)
 
       get_time: => new Date().getTime()
 
@@ -359,7 +393,7 @@ define [
       @node_name = 'Font'
       @group_name = 'Utils'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = ""
@@ -380,7 +414,20 @@ define [
           "droid serif":
             "normal": dir + "droid/droid_serif_regular.typeface"
             "bold": dir + "droid/droid_serif_bold.typeface"
-        @fields.addFields
+        @reverseFontMap = {}
+        @reverseWeightMap = {}
+        # todo: fix this
+        for i of @fields.getField("weight").get("possibilities")
+          @reverseWeightMap[@fields.getField("weight").get("possibilities")[i]] = i
+        for i of @fields.getField("font").get("possibilities")
+          @reverseFontMap[@fields.getField("font").get("possibilities")[i]] = i
+
+        @fontcache = -1
+        @weightcache = -1
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "font":
               type: "Float"
@@ -399,17 +446,7 @@ define [
                 "bold": 1
           outputs:
             "out": {type: "Any", val: @ob}
-
-        @reverseFontMap = {}
-        @reverseWeightMap = {}
-
-        for i of @fields.getField("weight").get("possibilities")
-          @reverseWeightMap[@fields.getField("weight").get("possibilities")[i]] = i
-        for i of @fields.getField("font").get("possibilities")
-          @reverseFontMap[@fields.getField("font").get("possibilities")[i]] = i
-
-        @fontcache = -1
-        @weightcache = -1
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @reverseFontMap

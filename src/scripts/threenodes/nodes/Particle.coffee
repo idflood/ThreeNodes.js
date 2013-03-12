@@ -10,23 +10,27 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
-    ParticleSystem: class ParticleSystem extends ThreeNodes.nodes.Object3D
+  namespace "ThreeNodes.nodes.models",
+    ParticleSystem: class ParticleSystem extends ThreeNodes.nodes.models.Object3D
       @node_name = 'ParticleSystem'
       @group_name = 'Particle'
 
-      setFields: =>
+      initialize: () =>
         super
-        @fields.addFields
-          inputs:
-            "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
-            "material": {type: "Any", val: new THREE.ParticleBasicMaterial()}
-            "sortParticles": false
-        @ob = new THREE.ParticleSystem(@fields.getField('geometry').getValue(), @fields.getField('material').getValue())
+        @ob = new THREE.ParticleSystem(new THREE.CubeGeometry( 200, 200, 200 ), new THREE.ParticleBasicMaterial())
         @ob.dynamic = true
         @geometry_cache = false
         @material_cache = false
         @compute()
+
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "geometry": {type: "Any", val: new THREE.CubeGeometry( 200, 200, 200 )}
+            "material": {type: "Any", val: new THREE.ParticleBasicMaterial()}
+            "sortParticles": false
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         super
@@ -65,11 +69,16 @@ define [
       @node_name = 'ParticleBasicMaterial'
       @group_name = 'Materials'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = []
         @material_class = THREE.ParticleBasicMaterial
-        @fields.addFields
+        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
+        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "color": {type: "Color", val: new THREE.Color(0xff0000)}
             "map": {type: "Any", val: false}
@@ -78,20 +87,23 @@ define [
             "vertexColors": false
           outputs:
             "out": {type: "Any", val: @ob}
-        @vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"]
-        @material_cache = @createCacheObject(@vars_rebuild_shader_on_change)
+        return $.extend(true, base_fields, fields)
 
     SparksEmitter: class SparksEmitter extends ThreeNodes.NodeBase
       @node_name = 'Emitter'
       @group_name = 'Particle.sparks'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
-
         @geom = new THREE.Geometry()
         @target_initializer = new SPARKS.Target( null, @setTargetParticle )
-        @fields.addFields
+        @pool = @fields.getField("pool").getValue()
+        @ob = new SPARKS.Emitter(@fields.getField("counter").getValue())
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "counter": {type: "Any", val: new SPARKS.SteadyCounter(50)}
             "pool": {type: "Any", val: false}
@@ -99,10 +111,7 @@ define [
             "actions": {type: "Array", val: []}
           outputs:
             "out": {type: "Any", val: @ob}
-        @pool = @fields.getField("pool").getValue()
-        @ob = new SPARKS.Emitter(@fields.getField("counter").getValue())
-        #@ob._velocityVerlet = true
-        #@ob.start()
+        return $.extend(true, base_fields, fields)
 
       setTargetParticle: (p) =>
         if @pool && @pool.pool
@@ -151,16 +160,19 @@ define [
       @node_name = 'Age'
       @group_name = 'Particle.sparks.actions'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.Age(TWEEN.Easing.Linear.EaseNone)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "easing": {type: "Any", val: TWEEN.Easing.Linear.EaseNone}
           outputs:
             "action": {type: "Any", val: @ob}
-        @ob = new SPARKS.Age(@fields.getField("easing").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -174,13 +186,17 @@ define [
       @node_name = 'Move'
       @group_name = 'Particle.sparks.actions'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
-        @fields.addFields
+        @ob = new SPARKS.Move()
+
+      getFields: =>
+        base_fields = super
+        fields =
           outputs:
             "action": {type: "Any", val: @ob}
-        @ob = new SPARKS.Move()
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -193,16 +209,19 @@ define [
       @node_name = 'Accelerate'
       @group_name = 'Particle.sparks.actions'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.Accelerate(new THREE.Vector3(0, 1, 0))
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "vector": {type: "Vector3", val: new THREE.Vector3(0, 1, 0)}
           outputs:
             "action": {type: "Any", val: @ob}
-        @ob = new SPARKS.Accelerate(@fields.getField("vector").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -216,16 +235,19 @@ define [
       @node_name = 'AccelerateFactor'
       @group_name = 'Particle.sparks.actions'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.AccelerateFactor(2.0)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "factor": 2.0
           outputs:
             "action": {type: "Any", val: @ob}
-        @ob = new SPARKS.AccelerateFactor(@fields.getField("factor").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -239,16 +261,19 @@ define [
       @node_name = 'AccelerateVelocity'
       @group_name = 'Particle.sparks.actions'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.AccelerateVelocity(2.0)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "factor": 2.0
           outputs:
             "action": {type: "Any", val: @ob}
-        @ob = new SPARKS.AccelerateVelocity(@fields.getField("factor").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -262,16 +287,19 @@ define [
       @node_name = 'RandomDrift'
       @group_name = 'Particle.sparks.actions'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.RandomDrift(new THREE.Vector3(0, 1, 0))
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "vector": {type: "Vector3", val: new THREE.Vector3(0, 1, 0)}
           outputs:
             "action": {type: "Any", val: @ob}
-        @ob = new SPARKS.RandomDrift(@fields.getField("vector").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -285,17 +313,20 @@ define [
       @node_name = 'Lifetime'
       @group_name = 'Particle.sparks.initializers'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.Lifetime(4, 7)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "min": 4
             "max": 7
           outputs:
             "initializer": {type: "Any", val: @ob}
-        @ob = new SPARKS.Lifetime(@fields.getField("min").getValue(), @fields.getField("max").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -310,16 +341,19 @@ define [
       @node_name = 'Position'
       @group_name = 'Particle.sparks.initializers'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.Position(new SPARKS.PointZone( new THREE.Vector3(0,0,0)))
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
-            "zone": {type: "Any", val: new SPARKS.PointZone( new THREE.Vector3(0,0,0) )}
+            "zone": {type: "Any", val: new SPARKS.PointZone( new THREE.Vector3(0,0,0))}
           outputs:
             "initializer": {type: "Any", val: @ob}
-        @ob = new SPARKS.Position(@fields.getField("zone").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -333,16 +367,19 @@ define [
       @node_name = 'PointZone'
       @group_name = 'Particle.sparks.zone'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.PointZone(new THREE.Vector3())
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "pos": {type: "Vector3", val: new THREE.Vector3()}
           outputs:
             "zone": {type: "Any", val: @ob}
-        @ob = new SPARKS.PointZone(@fields.getField("pos").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -356,17 +393,20 @@ define [
       @node_name = 'LineZone'
       @group_name = 'Particle.sparks.zone'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.LineZone(new THREE.Vector3(), new THREE.Vector3(100, 0, 0))
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "start": {type: "Vector3", val: new THREE.Vector3()}
             "end": {type: "Vector3", val: new THREE.Vector3(100, 0, 0)}
           outputs:
             "zone": {type: "Any", val: @ob}
-        @ob = new SPARKS.LineZone(@fields.getField("start").getValue(), @fields.getField("end").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -383,11 +423,14 @@ define [
       @node_name = 'CubeZone'
       @group_name = 'Particle.sparks.zone'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.CubeZone(new THREE.Vector3(), 0, 0, 0)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "position": {type: "Vector3", val: new THREE.Vector3()}
             "x": 0
@@ -395,7 +438,7 @@ define [
             "z": 0
           outputs:
             "zone": {type: "Any", val: @ob}
-        @ob = new SPARKS.CubeZone(@fields.getField("position").getValue(), @fields.getField("x").getValue(), @fields.getField("y").getValue(), @fields.getField("z").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -412,16 +455,19 @@ define [
       @node_name = 'SteadyCounter'
       @group_name = 'Particle.sparks'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
+        @ob = new SPARKS.SteadyCounter(100)
 
-        @fields.addFields
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "rate": 100
           outputs:
             "counter": {type: "Any", val: @ob}
-        @ob = new SPARKS.SteadyCounter(@fields.getField("rate").getValue())
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -435,15 +481,19 @@ define [
       @node_name = 'ParticlePool'
       @group_name = 'Particle.sparks'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @geom = false
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "maxParticles": 10000
           outputs:
             "pool": {type: "Any", val: this}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @pool
@@ -497,11 +547,16 @@ define [
       @node_name = 'RandomCloudGeometry'
       @group_name = 'Particle'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @auto_evaluate = true
         @ob = new THREE.Geometry()
-        @fields.addFields
+        @cache = @get_cache_array()
+        @generate()
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "nbrParticles": 20000
             "radius": 2000
@@ -509,8 +564,7 @@ define [
             "linearVelocity": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
           outputs:
             "out": {type: "Any", val: @ob}
-        @cache = @get_cache_array()
-        @generate()
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob

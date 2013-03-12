@@ -6,15 +6,19 @@ define [
 ], (_, Backbone, Utils) ->
   #"use strict"
 
-  namespace "ThreeNodes.nodes",
+  namespace "ThreeNodes.nodes.models",
     BloomPass: class BloomPass extends ThreeNodes.NodeBase
       @node_name = 'Bloom'
       @group_name = 'PostProcessing'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = new THREE.BloomPass(1.6)
-        @fields.addFields
+        @cached = @createCacheObject ['kernelSize', 'sigma', 'resolution']
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "strength": 1.6
             "kernelSize": 25
@@ -22,7 +26,7 @@ define [
             "resolution": 256
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @createCacheObject ['kernelSize', 'sigma', 'resolution']
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -46,17 +50,21 @@ define [
       @node_name = 'DotScreen'
       @group_name = 'PostProcessing'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = new THREE.DotScreenPass(new THREE.Vector2( 0.5, 0.5 ))
-        @fields.addFields
+        @cached = @createCacheObject ['center', 'angle', 'scale']
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "center": {type: "Vector2", val: new THREE.Vector2( 0.5, 0.5 )}
             "angle": 1.57
             "scale": 1.0
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @createCacheObject ['center', 'angle', 'scale']
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -79,10 +87,14 @@ define [
       @node_name = 'Film'
       @group_name = 'PostProcessing'
 
-      setFields: =>
+      initialize: (options) =>
         super
         @ob = new THREE.FilmPass( 0.5, 0.125, 2048, false )
-        @fields.addFields
+        @cached = @createCacheObject ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "noiseIntensity": 0.5
             "scanlinesIntensity": 0.125
@@ -90,7 +102,7 @@ define [
             "grayscale": false
           outputs:
             "out": {type: "Any", val: @ob}
-        @cached = @createCacheObject ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -115,16 +127,20 @@ define [
       @node_name = 'Vignette'
       @group_name = 'PostProcessing'
 
-      setFields: =>
+      initialize: (options) =>
         super
         shader = THREE.ShaderExtras[ "vignette" ]
         @ob = new THREE.ShaderPass( shader )
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "offset": 1.0
             "darkness": 1.0
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -139,15 +155,19 @@ define [
       @node_name = 'HorizontalBlur'
       @group_name = 'PostProcessing'
 
-      setFields: =>
+      initialize: (options) =>
         super
         shader = THREE.ShaderExtras[ "horizontalBlur" ]
         @ob = new THREE.ShaderPass( shader )
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "delta": 1.0 / 512.0
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -161,15 +181,19 @@ define [
       @node_name = 'VerticalBlur'
       @group_name = 'PostProcessing'
 
-      setFields: =>
+      initialize: (options) =>
         super
         shader = THREE.ShaderExtras[ "verticalBlur" ]
         @ob = new THREE.ShaderPass( shader )
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "delta": 1.0 / 512.0
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob
@@ -183,15 +207,19 @@ define [
       @node_name = 'Bleach'
       @group_name = 'PostProcessing'
 
-      setFields: =>
+      initialize: (options) =>
         super
         shader = THREE.ShaderExtras[ "bleachbypass" ]
         @ob = new THREE.ShaderPass( shader )
-        @fields.addFields
+
+      getFields: =>
+        base_fields = super
+        fields =
           inputs:
             "opacity": 0.95
           outputs:
             "out": {type: "Any", val: @ob}
+        return $.extend(true, base_fields, fields)
 
       remove: () =>
         delete @ob

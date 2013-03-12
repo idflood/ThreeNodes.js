@@ -13,7 +13,8 @@ define [
 
       render: () =>
         $target = @createSidebarContainer()
-        if @model.possible_values
+        console.log @model
+        if @model.attributes.possibilities
           @create_sidebar_select($target)
         else
           @create_sidebar_input($target)
@@ -22,8 +23,8 @@ define [
       create_sidebar_select: ($target) =>
         self = this
         input = "<div><select>"
-        for f of @model.possible_values
-          dval = @model.possible_values[f]
+        for f of @model.get("possibilities")
+          dval = @model.get("possibilities")[f]
           if dval == @val
             input += "<option value='#{dval}' selected='selected'>#{f}</option>"
           else

@@ -382,7 +382,7 @@ select {
 }
 @media (-webkit-min-device-pixel-ratio: 0) {
   select {
-    background-image: url("../images/select_arrow_white.png");
+    background-image: url("../assets/images/select_arrow_white.png");
     background-repeat: no-repeat;
     background-position: right center;
     padding-right: 20px;
@@ -1689,12 +1689,26 @@ body > header h1 {
 .node .outputs .inner-field span {
   margin-left: 4px;
 }
+.node .node {
+  position: relative !important;
+  padding: 0;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  width: 100% !important;
+  left: auto !important;
+  top: auto !important;
+  background: none !important;
+  border: 0 !important;
+}
 .node-has-animation {
   -webkit-box-shadow: #f00 0 0 1px inset;
   box-shadow: #f00 0 0 1px inset;
 }
 .has-animation {
   color: #f00;
+}
+.node-Group > .head span {
+  color: #fff;
 }
 .node-Group h3 {
   margin-bottom: 0;

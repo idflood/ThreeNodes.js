@@ -56,7 +56,6 @@ define [
         indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER
 
         # Common field variables
-        @proxy = false
         @changed = true
 
         # Array containing all connections from and to this field
@@ -81,14 +80,18 @@ define [
         delete @node
         delete @connections
         delete @button
-        delete @proxy
         delete @subfield
         @destroy()
 
       setValue: (v) =>
         # Set the 'changed' flag on the field and on the node
         @changed = true
-        if @node then @node.dirty = true
+        # recursive function to set group node dirty if child become dirty
+        setNodeDirty = (node) ->
+          node.dirty = true
+          if node.parent then setNodeDirty(node.parent)
+
+        if @node then setNodeDirty(@node)
 
         # Define references to the previous and current value
         prev_val = @attributes["value"]
@@ -115,7 +118,6 @@ define [
 
         # Set the value
         @attributes["value"] = new_val
-
         @trigger("value_updated", new_val)
 
         # Call the on_value_update hooks
@@ -128,13 +130,6 @@ define [
           for connection in @connections
             connection.to_field.setValue(new_val)
 
-        # Handle relation between field and subfields (for grouping)
-        if @subfield && @attributes["is_output"] == false
-          # propagate the value to the subfield
-          @subfield.setValue(new_val)
-        else if @proxy && @attributes["is_output"] == true
-          # propagate the value to the proxy field
-          @proxy.setValue(new_val)
         return true
 
       getValue: (index = 0) =>
