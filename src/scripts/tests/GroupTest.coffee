@@ -41,6 +41,9 @@ define [
         mult_out1 = grp.nodes.models[2].fields.outputs["out"]
         mult_fact1 = grp.nodes.models[2].fields.inputs["factor"]
 
+        console.log "SAVED JSON"
+        console.log JSON.parse(filehandler.getLocalJson())
+
         # Add a 4th node, external to the group, connected to a group field
         n3 = ng.createNode("Number")
         n4 = ng.createNode("Number")
@@ -104,6 +107,8 @@ define [
         equals ng.length, 0, "The workspace is empty"
         equals app.group_definitions.length, 0, "The group definition has been removed"
 
+        console.log "SAVED JSON"
+        console.log JSON.parse(@saved_grp)
         # Load the previous workspace which had 2 groups
         filehandler.loadFromJsonData(@saved_grp)
         ng.render()
