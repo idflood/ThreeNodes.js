@@ -155,11 +155,13 @@ define [
         true
 
       createConnectionFromObject: (connection) =>
+
         # Get variables from their id
-        console.log connection
-        from_node = @getNodeByNid(connection.from_node.toString(), connection.from_node_gid.toString())
+        from_gid = if connection.from_node_gid then connection.from_node_gid.toString() else "-1"
+        from_node = @getNodeByNid(connection.from_node.toString(), from_gid)
         from = from_node.fields.outputs[connection.from.toString()]
-        to_node = @getNodeByNid(connection.to_node.toString(), connection.to_node_gid.toString())
+        to_gid = if connection.to_node_gid then connection.to_node_gid.toString() else "-1"
+        to_node = @getNodeByNid(connection.to_node.toString(), to_gid)
         to = to_node.fields.inputs[connection.to.toString()]
 
         # If a field is missing try to switch from/to

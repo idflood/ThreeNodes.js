@@ -17,6 +17,7 @@ define [
       # Save some options in variables and bind events
       initialize: (options) ->
         super
+        console.log options
         @makeElement()
         @render()
 
