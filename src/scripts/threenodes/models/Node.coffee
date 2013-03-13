@@ -17,6 +17,7 @@ define [
 
       defaults:
         nid: -1
+        gid: -1 # group id, set on subnodes of group == group.nid
         x: 0
         y: 0
         name: ""

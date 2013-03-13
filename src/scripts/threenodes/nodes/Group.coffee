@@ -21,6 +21,10 @@ define [
         # Now that subnodes are created we can safely init the group node
         super
 
+        # set the subnodes gid
+        @nodes.each (node) => node.set("gid", @get("nid"))
+        console.log @nodes.models
+
         # Recreate the connections between internal subnodes
         for connection in @definition.get("connections")
           @nodes.createConnectionFromObject(connection)
@@ -36,6 +40,8 @@ define [
         #for node in @definition.get("nodes")
         # To test.... what if we load saved nodes if any, or the definition
         nds = if options.nodes then options.nodes else @definition.get("nodes")
+        console.log "init subnodes"
+        console.log nds
         for node in nds
           n = @nodes.createNode(node)
 

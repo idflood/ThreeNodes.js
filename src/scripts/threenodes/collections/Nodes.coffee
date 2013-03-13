@@ -128,8 +128,8 @@ define [
         buildNodeArrays = (nodes) ->
           for node in nodes
             if node.hasOutConnection() == false || node.auto_evaluate || node.delays_output
-              terminalNodes[node.attributes["nid"]] = node
-            invalidNodes[node.attributes["nid"]] = node
+              terminalNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node
+            invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node
             if node.nodes
               buildNodeArrays(node.nodes.models)
         buildNodeArrays(@models)
@@ -138,14 +138,14 @@ define [
         evaluateSubGraph = (node) ->
           upstreamNodes = node.getUpstreamNodes()
           for upnode in upstreamNodes
-            if invalidNodes[upnode.attributes["nid"]] && !upnode.delays_output
+            if invalidNodes[upnode.attributes["nid"] + "/" + upnode.attributes["gid"]] && !upnode.delays_output
               evaluateSubGraph(upnode)
           if node.dirty || node.auto_evaluate
             node.compute()
             node.dirty = false
             node.fields.setFieldInputUnchanged()
 
-          delete invalidNodes[node.attributes["nid"]]
+          delete invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]]
           true
 
         # Process all root nodes which require an update
@@ -156,9 +156,10 @@ define [
 
       createConnectionFromObject: (connection) =>
         # Get variables from their id
-        from_node = @getNodeByNid(connection.from_node.toString())
+        console.log connection
+        from_node = @getNodeByNid(connection.from_node.toString(), connection.from_node_gid.toString())
         from = from_node.fields.outputs[connection.from.toString()]
-        to_node = @getNodeByNid(connection.to_node.toString())
+        to_node = @getNodeByNid(connection.to_node.toString(), connection.to_node_gid.toString())
         to = to_node.fields.inputs[connection.to.toString()]
 
         # If a field is missing try to switch from/to
@@ -211,13 +212,14 @@ define [
       removeConnection: (c) ->
         @connections.remove(c)
 
-      getNodeByNid: (nid) =>
+      getNodeByNid: (nid, gid = "-1") =>
         for node in @models
           if node.get("nid").toString() == nid.toString()
-            return node
+            if gid == "-1" || node.get("gid").toString() == gid.toString()
+              return node
           # special case for group
           if node.nodes
-            res = node.nodes.getNodeByNid(nid)
+            res = node.nodes.getNodeByNid(nid, gid)
             if res then return res
 
         return false

@@ -120,6 +120,7 @@ define [
         equals def1.get("connections").length, 1, "The group definition has 1 connection"
         equals ng.length, 4, "The two group nodes + the two number nodes have been loaded"
         equals ng.connections.length, 2, "The external connections has been loaded"
+        console.log ng.connections
         grp = ng.models[0]
         node_number_out = ng.models[2]
         grp2 = ng.models[3]
