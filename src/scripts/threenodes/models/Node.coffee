@@ -83,7 +83,8 @@ define [
       remove: () =>
         if @anim
           @anim.destroy()
-        @fields.destroy()
+        if @fields
+          @fields.destroy()
         delete @fields
         delete @apptimeline
         delete @anim
