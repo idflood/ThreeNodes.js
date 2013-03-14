@@ -176,9 +176,18 @@ define [
             # Add the nodes and their anims container to some arrays
             $selected.each () ->
               ob = $(this).data("object")
-              ob.anim.objectTrack.name = ob.get("name")
-              anims.push(ob.anim)
-              nodes.push(ob)
+              if !ob.get("parent")
+                ob.anim.objectTrack.name = ob.get("name")
+                anims.push(ob.anim)
+                nodes.push(ob)
+              else
+                # if this is a subnode we only select the group
+                obgrp = ob.get("parent")
+                obgrp.anim.objectTrack.name = ob.get("name")
+                # add the object only once
+                if !_.find(nodes, (n) -> n.cid == obgrp.cid)
+                  anims.push(obgrp.anim)
+                  nodes.push(obgrp)
             # Display the selected nodes attributes in the sidebar
             @sidebar.renderNodesAttributes(nodes)
             # Display the selected nodes in the timeline
