@@ -69,11 +69,16 @@ define [
           return this
 
         for node in nodes
-          view = new ThreeNodes.NodeSidebarView
-            model: node
-            #el: $target
-          $target.append(view.el)
-          @node_views.push view
+          if node.get("type") != "Group"
+            view = new ThreeNodes.NodeSidebarView
+              model: node
+              #el: $target
+            $target.append(view.el)
+            @node_views.push view
+          else
+            # We render a group of subnodes
+            nodes_grp = node.nodes.models
+            @renderNodesAttributes(nodes_grp)
 
         return this
 
