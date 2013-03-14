@@ -80,6 +80,7 @@ define [
             @node_views.push view
           else
             # We render a group of subnodes
+            $target.append("<h3>#{node.get("name")}</h3>")
             nodes_grp = node.nodes.models
             @renderNodesAttributes(nodes_grp)
 
