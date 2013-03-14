@@ -189,6 +189,7 @@ define [
                   anims.push(obgrp.anim)
                   nodes.push(obgrp)
             # Display the selected nodes attributes in the sidebar
+            @sidebar.clearNodesAttributes()
             @sidebar.renderNodesAttributes(nodes)
             # Display the selected nodes in the timeline
             @trigger("selectAnims", anims)

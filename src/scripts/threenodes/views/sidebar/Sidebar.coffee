@@ -51,8 +51,7 @@ define [
             duration: 100
         return this
 
-      # Display fields attributes in sidebar when nodes are selected
-      renderNodesAttributes: (nodes) =>
+      clearNodesAttributes: () =>
         removeExistingNodes = () =>
           if @node_views.length > 0
             _.each @node_views, (view) -> view.remove()
@@ -63,7 +62,11 @@ define [
         # Always start with an empty element
         $target = $("#tab-attribute")
         $target.html("");
+        return this
 
+      # Display fields attributes in sidebar when nodes are selected
+      renderNodesAttributes: (nodes) =>
+        $target = $("#tab-attribute")
         # If there is no nodes to show abort now
         if !nodes || nodes.length < 1
           return this
