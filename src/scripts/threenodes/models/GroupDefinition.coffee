@@ -36,8 +36,6 @@ define [
           @fromSelectedNodes(options.fromSelectedNodes)
 
       fromSelectedNodes: (selected_nodes) =>
-        console.log "fromSelectedNodes"
-        console.log selected_nodes
         internal_connections = []
         for node in selected_nodes
           # check each node fields

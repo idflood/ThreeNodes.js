@@ -19,9 +19,6 @@ define [
 
         # Now that subnodes are created we can safely init the group node
         super
-        console.log "init group"
-        console.log @
-        console.log options
 
         # set the subnodes gid
         @nodes.each (node) => node.set("gid", @get("nid"))
@@ -41,8 +38,7 @@ define [
         #for node in @definition.get("nodes")
         # To test.... what if we load saved nodes if any, or the definition
         nds = if options.nodes then options.nodes else @definition.get("nodes")
-        console.log "init subnodes"
-        console.log nds
+
         for node in nds
           n = @nodes.createNode(node)
 

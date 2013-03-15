@@ -57,8 +57,6 @@ define [
           fromSelectedNodes: selected_nodes
           indexer: @indexer
         @add(group_def)
-        console.log "new goup definition"
-        console.log group_def
 
         # Save the connection going out or in the group of nodes
         # the connections have one extenal node linked to one selected node
