@@ -19,36 +19,33 @@ define [
     Workspace: class Workspace extends Backbone.View
       initialize: (options) =>
         super
-        @views = []
         @settings = options.settings
 
       render: (nodes) =>
-        console.log "should remove " + @views.length
-        console.log @views
-        console.log nodes.length
-        # Remove all existing views before displaying new ones
-        _.each(@views, (view) -> view.remove())
-
         # Keep a reference of the current nodes
         @nodes = nodes
 
         console.log "Workspace.render " + nodes.length
+        @views = []
 
         # Create the views for already created nodes and connections
         _.each(@nodes.models, @renderNode)
         _.each(@nodes.connections.models, @renderConnection)
 
-        # Reset the array of views
-        @views = []
-
         # Create views when a new node is created
         @nodes.bind("add", @renderNode)
-        # Remove the view from the array whan a node is deleted
-        #@nodes.bind("remove", @removeNode)
 
         # Create a connection view when a connection is created
         @nodes.connections.bind("add", @renderConnection)
-        #@nodes.connections.bind("remove", @removeConnection)
+
+      destroy: () =>
+        # Remove all existing views before displaying new ones
+        _.each(@views, (view) -> view.remove())
+        @nodes.unbind("add", @renderNode)
+        @nodes.connections.unbind("add", @renderConnection)
+        delete @views
+        delete @settings
+        @remove()
 
       renderNode: (node) =>
         nodename = node.constructor.name
@@ -69,21 +66,9 @@ define [
         view.$el.data("object", node)
         @views.push(view)
 
-      removeNode: (node) =>
-        for view in @views
-          if view.model.cid == node.cid
-            index = @views.indexOf(view)
-            @views.splice(index, 1)
-
       renderConnection: (connection) =>
         if @settings.test == true
           return false
         view = new ThreeNodes.ConnectionView
           model: connection
         @views.push(view)
-
-      removeConnection: (connection) =>
-        for view in @views
-          if view.model.cid == connection.cid
-            index = @views.indexOf(view)
-            @views.splice(index, 1)

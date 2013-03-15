@@ -74,9 +74,7 @@ define [
         @initTimeline()
 
         # Initialize the workspace view
-        @workspace = new ThreeNodes.Workspace
-          el: "#container"
-          settings: @settings
+        @createWorkspace()
         # Make the workspace display the global nodes and connections
         @workspace.render(@nodes)
 
@@ -90,7 +88,15 @@ define [
 
         return true
 
+      createWorkspace: () =>
+        if @workspace then @workspace.destroy()
+        @workspace = new ThreeNodes.Workspace
+          el: jQuery("<div class='nodes-container'></div>").appendTo("#container")
+          settings: @settings
+
       setWorkspaceFromDefinition: (definition) =>
+        @createWorkspace()
+
         # always remove current edit node if it exists
         if @edit_node
           console.log "remove edit node"
