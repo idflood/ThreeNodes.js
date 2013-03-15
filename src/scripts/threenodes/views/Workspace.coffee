@@ -1,6 +1,7 @@
 define [
   'Underscore',
   'Backbone',
+  "jquery.ui",
   'cs!threenodes/views/NodeView',
   'cs!threenodes/views/ConnectionView',
   'cs!threenodes/nodes/views/Color',
@@ -20,6 +21,7 @@ define [
       initialize: (options) =>
         super
         @settings = options.settings
+        @initDrop()
 
       render: (nodes) =>
         # Keep a reference of the current nodes
@@ -72,3 +74,31 @@ define [
         view = new ThreeNodes.ConnectionView
           model: connection
         @views.push(view)
+
+      initDrop: () =>
+        self = this
+        # Setup the drop area for the draggables created above
+        $("#container").droppable
+          accept: "#tab-new a.button, #library .definition"
+          activeClass: "ui-state-active"
+          hoverClass: "ui-state-hover"
+          drop: (event, ui) ->
+            offset = $("#container-wrapper").offset()
+            definition = false
+
+            if ui.draggable.hasClass("definition")
+              nodename = "Group"
+              container =  $("#library")
+              definition = ui.draggable.data("model")
+              offset.left -= container.offset().left
+            else
+              nodename = ui.draggable.attr("rel")
+              container =  $("#sidebar .ui-layout-center")
+
+            dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
+            dy = ui.position.top + $("#container-wrapper").scrollTop() - container.scrollTop() - offset.top
+            if self.nodes
+              self.nodes.createNode({type: nodename, x: dx, y: dy, definition: definition})
+            $("#sidebar").show()
+
+        return this

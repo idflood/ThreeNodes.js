@@ -138,7 +138,6 @@ define [
           @ui.menubar.on("GroupSelectedNodes", @group_definitions.groupSelectedNodes)
 
           # Special events
-          @ui.on("CreateNode", @nodes.createNode)
           @nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
           @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
 
