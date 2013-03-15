@@ -28,7 +28,7 @@ define [
         @fields_view = new ThreeNodes.FieldsView
           node: @model
           collection: @model.fields
-          el: $(".options", @$el)
+          el: $("> .options", @$el)
 
         # Bind events
         @model.on('change', @render)

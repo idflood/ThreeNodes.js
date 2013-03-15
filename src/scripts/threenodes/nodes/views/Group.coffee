@@ -24,11 +24,15 @@ define [
         else
           # Use the default view class
           viewclass = ThreeNodes.NodeView
+
+        # same as Workspace.renderNode
+        $nodeEl = $("<div class='node'></div>").appendTo(@$el.find("> .options"))
         view = new viewclass
           model: node
           isSubNode: true
+          el: $nodeEl
 
-        view.$el.appendTo(@$el.find("> .options"))
+        #view.$el.appendTo(@$el.find("> .options"))
 
         # Save the nid and model in the data attribute
         view.$el.data("nid", node.get("nid"))

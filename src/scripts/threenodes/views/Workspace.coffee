@@ -58,10 +58,13 @@ define [
         else
           # Use the default view class
           viewclass = ThreeNodes.NodeView
+
+        # Add directly the node element to the dom so that the view can
+        # access the .parent() directly. (@see FieldsView.onFieldCreated)
+        $nodeEl = $("<div class='node'></div>").appendTo(@$el)
         view = new viewclass
           model: node
-
-        view.$el.appendTo(@$el)
+          el: $nodeEl
 
         # Save the nid and model in the data attribute
         view.$el.data("nid", node.get("nid"))
