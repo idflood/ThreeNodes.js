@@ -93,6 +93,7 @@ define [
       setWorkspaceFromDefinition: (definition) =>
         # always remove current edit node if it exists
         if @edit_node
+          console.log "remove edit node"
           @edit_node.remove()
           delete @edit_node
           # maybe sync new modifications...
