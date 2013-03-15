@@ -42,8 +42,10 @@ define [
         @add(model, options)
         return model
 
-      groupSelectedNodes: () =>
-        selected_nodes = @getSelectedNodes()
+      groupSelectedNodes: (selected_nodes = false) =>
+        # selected_nodes parameter is only given in GroupTest
+        if !selected_nodes
+          selected_nodes = @getSelectedNodes()
 
         # compute the center node position
         average_position = @getNodesAveragePosition(selected_nodes)
@@ -55,6 +57,8 @@ define [
           fromSelectedNodes: selected_nodes
           indexer: @indexer
         @add(group_def)
+        console.log "new goup definition"
+        console.log group_def
 
         # Save the connection going out or in the group of nodes
         # the connections have one extenal node linked to one selected node

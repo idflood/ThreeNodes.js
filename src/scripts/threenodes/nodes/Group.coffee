@@ -16,10 +16,12 @@ define [
         # First create the subnodes so that when the group node is inited
         # the fields are accessible
         @initSubnodes(options)
-        console.log "init group"
-        console.log options
+
         # Now that subnodes are created we can safely init the group node
         super
+        console.log "init group"
+        console.log @
+        console.log options
 
         # set the subnodes gid
         @nodes.each (node) => node.set("gid", @get("nid"))
