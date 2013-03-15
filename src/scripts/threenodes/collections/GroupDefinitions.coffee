@@ -42,7 +42,9 @@ define [
         @add(model, options)
         return model
 
-      groupSelectedNodes: (selected_nodes = []) =>
+      groupSelectedNodes: () =>
+        selected_nodes = @getSelectedNodes()
+
         # compute the center node position
         average_position = @getNodesAveragePosition(selected_nodes)
         dx = average_position.x
@@ -89,6 +91,16 @@ define [
 
         return group_def
 
+      getSelectedNodes: () ->
+        selected_nodes = []
+        # Selected nodes jquery selector
+        $selected = $(".node.ui-selected").not(".node .node")
+        $selected.each () ->
+          node = $(this).data("object")
+          selected_nodes.push(node)
+
+        return selected_nodes
+
       getNodesAveragePosition: (selected_nodes) ->
         # Get the average position of selected nodes
         min_x = 0
@@ -104,22 +116,18 @@ define [
           return false
 
         # Get selected nodes
-        if selected_nodes.length == 0
-          $selected.each () ->
-            node = $(this).data("object")
-            # get the x/y node min and max to place the new node at the center
-            min_x = Math.min(min_x, node.get("x"))
-            max_x = Math.max(max_x, node.get("x"))
-            min_y = Math.min(min_y, node.get("y"))
-            max_y = Math.max(max_y, node.get("y"))
-
-            # add the node model to the selected array
-            selected_nodes.push(node)
+        for node in selected_nodes
+          # get the x/y node min and max to place the new node at the center
+          min_x = Math.min(min_x, node.get("x"))
+          max_x = Math.max(max_x, node.get("x"))
+          min_y = Math.min(min_y, node.get("y"))
+          max_y = Math.max(max_y, node.get("y"))
 
         # compute the center node position
         dx = (min_x + max_x) / 2
         dy = (min_y + max_y) / 2
         return {x: dx, y: dy}
+
       removeAll: () =>
         @remove(@models)
 

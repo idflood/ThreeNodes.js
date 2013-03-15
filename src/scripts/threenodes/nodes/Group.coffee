@@ -23,7 +23,6 @@ define [
 
         # set the subnodes gid
         @nodes.each (node) => node.set("gid", @get("nid"))
-        console.log @nodes.models
 
         # Recreate the connections between internal subnodes
         for connection in @definition.get("connections")
