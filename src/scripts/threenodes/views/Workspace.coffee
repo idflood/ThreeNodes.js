@@ -44,11 +44,11 @@ define [
         # Create views when a new node is created
         @nodes.bind("add", @renderNode)
         # Remove the view from the array whan a node is deleted
-        @nodes.bind("remove", @removeNode)
+        #@nodes.bind("remove", @removeNode)
 
         # Create a connection view when a connection is created
         @nodes.connections.bind("add", @renderConnection)
-        @nodes.connections.bind("remove", @removeConnection)
+        #@nodes.connections.bind("remove", @removeConnection)
 
       renderNode: (node) =>
         nodename = node.constructor.name
