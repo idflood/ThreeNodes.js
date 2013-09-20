@@ -2,8 +2,8 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
+  Rc4Random = require 'cs!threenodes/utils/Rc4Random'
 
-  require 'cs!threenodes/utils/Rc4Random'
   require 'cs!threenodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
@@ -44,7 +44,7 @@ define (require) ->
         needs_rebuild = false
         if @seed != @fields.getField("seed").get("value") || @count != parseInt(@fields.getField("count").getValue(0)) || @width != @fields.getField("width").get("value") || @offset != @fields.getField("offset").get("value")
           @seed = @fields.getField("seed").get("value")
-          @rnd = new ThreeNodes.Rc4Random(@seed.toString())
+          @rnd = new Rc4Random(@seed.toString())
 
           @value = []
           @width = @fields.getField("width").getValue(0)

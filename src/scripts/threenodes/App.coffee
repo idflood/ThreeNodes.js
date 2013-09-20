@@ -5,15 +5,15 @@ define (require) ->
   UI = require 'cs!threenodes/views/UI'
   Workspace = require 'cs!threenodes/views/Workspace'
   AppTimeline = require 'cs!threenodes/views/AppTimeline'
+  UrlHandler = require 'cs!threenodes/utils/UrlHandler'
+  FileHandler = require 'cs!threenodes/utils/FileHandler'
+  AppWebsocket = require 'cs!threenodes/utils/AppWebsocket'
 
   require 'jquery'
   require 'libs/namespace'
   require 'cs!threenodes/collections/Nodes'
   require 'cs!threenodes/collections/GroupDefinitions'
   require 'cs!threenodes/views/GroupDefinitionView'
-  require 'cs!threenodes/utils/AppWebsocket'
-  require 'cs!threenodes/utils/FileHandler'
-  require 'cs!threenodes/utils/UrlHandler'
   require 'cs!threenodes/utils/WebglBase'
 
   #### App
@@ -36,12 +36,12 @@ define (require) ->
         websocket_enabled = false
 
         # Initialize some core classes
-        @url_handler = new ThreeNodes.UrlHandler()
+        @url_handler = new UrlHandler()
         @group_definitions = new ThreeNodes.GroupDefinitions([])
         @nodes = new ThreeNodes.NodesCollection([], {settings: settings})
-        @socket = new ThreeNodes.AppWebsocket(websocket_enabled)
+        @socket = new AppWebsocket(websocket_enabled)
         @webgl = new ThreeNodes.WebglBase()
-        @file_handler = new ThreeNodes.FileHandler(@nodes, @group_definitions)
+        @file_handler = new FileHandler(@nodes, @group_definitions)
 
         # Create a group node when selected nodes are grouped
         @group_definitions.bind "definition:created", @nodes.createGroup
