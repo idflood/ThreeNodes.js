@@ -2,7 +2,7 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-  UiView = require 'cs!threenodes/views/UI'
+  UI = require 'cs!threenodes/views/UI'
   _view_node_field_in = require 'text!templates/node_field_input.tmpl.html'
   _view_node_field_out = require 'text!templates/node_field_output.tmpl.html'
 
@@ -79,17 +79,17 @@ define (require) ->
             top: 0
           start: (event, ui) ->
             highlight_possible_targets()
-            if UiView.connecting_line then UiView.connecting_line.attr({opacity: 1})
+            if UI.connecting_line then UI.connecting_line.attr({opacity: 1})
           stop: (event, ui) ->
             $(".field").removeClass "field-possible-target"
-            if UiView.connecting_line then UiView.connecting_line.attr({opacity: 0})
+            if UI.connecting_line then UI.connecting_line.attr({opacity: 0})
           drag: (event, ui) ->
-            if UiView.connecting_line
+            if UI.connecting_line
               pos = $(this).position()
               node_pos =
                 left: field.node.get("x")
                 top: field.node.get("y")
-              UiView.connecting_line.attr
+              UI.connecting_line.attr
                 path: getPath(pos, ui.position, node_pos)
               return true
 

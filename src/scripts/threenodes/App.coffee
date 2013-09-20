@@ -2,15 +2,15 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
+  UI = require 'cs!threenodes/views/UI'
+  Workspace = require 'cs!threenodes/views/Workspace'
 
   require 'jquery'
   require 'libs/namespace'
   require 'cs!threenodes/collections/Nodes'
   require 'cs!threenodes/collections/GroupDefinitions'
-  require 'cs!threenodes/views/UI'
   require 'cs!threenodes/views/Timeline'
   require 'cs!threenodes/views/GroupDefinitionView'
-  require 'cs!threenodes/views/Workspace'
   require 'cs!threenodes/utils/AppWebsocket'
   require 'cs!threenodes/utils/FileHandler'
   require 'cs!threenodes/utils/UrlHandler'
@@ -89,7 +89,7 @@ define (require) ->
 
       createWorkspace: () =>
         if @workspace then @workspace.destroy()
-        @workspace = new ThreeNodes.Workspace
+        @workspace = new Workspace
           el: jQuery("<div class='nodes-container'></div>").appendTo("#container")
           settings: @settings
 
@@ -118,7 +118,7 @@ define (require) ->
       initUI: () =>
         if @settings.test == false
           # Create the main user interface view
-          @ui = new ThreeNodes.UI
+          @ui = new UI
             el: $("body")
             settings: @settings
 

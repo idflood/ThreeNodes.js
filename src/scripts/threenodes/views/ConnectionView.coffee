@@ -3,7 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
 
-  require 'cs!threenodes/views/UI'
+  UI = require 'cs!threenodes/views/UI'
   require 'jquery.ui'
 
   ### Connection View ###
@@ -12,7 +12,7 @@ define (require) ->
       initialize: (options) ->
         super
         @container = $("#graph")
-        @line = ThreeNodes.UI.svg.path().attr
+        @line = UI.svg.path().attr
           stroke: "#555"
           fill: "none"
         # set the dom element
@@ -22,13 +22,13 @@ define (require) ->
         @render()
 
       remove: ->
-        if ThreeNodes.UI.svg && @line
+        if UI.svg && @line
           @line.remove()
           delete @line
         return true
 
       render: () ->
-        if ThreeNodes.UI.svg && @line && @line.attrs
+        if UI.svg && @line && @line.attrs
           @line.attr
             path: @getPath()
         @
