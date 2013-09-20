@@ -1,8 +1,6 @@
-define [
-  'Underscore',
-  'Backbone',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  Backbone = require 'Backbone'
 
   namespace "ThreeNodes",
     UrlHandler: class UrlHandler extends Backbone.Router

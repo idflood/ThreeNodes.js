@@ -1,14 +1,14 @@
-define [
-  'Underscore',
-  'Backbone',
-  "jquery.ui",
-  'cs!threenodes/views/NodeView',
-  'cs!threenodes/views/ConnectionView',
-  'cs!threenodes/nodes/views/Color',
-  'cs!threenodes/nodes/views/WebGLRenderer',
-  'cs!threenodes/nodes/views/Group',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'jquery.ui'
+  require 'cs!threenodes/views/NodeView'
+  require 'cs!threenodes/views/ConnectionView'
+  require 'cs!threenodes/nodes/views/Color'
+  require 'cs!threenodes/nodes/views/WebGLRenderer'
+  require 'cs!threenodes/nodes/views/Group'
 
   ### Workspace View ###
 

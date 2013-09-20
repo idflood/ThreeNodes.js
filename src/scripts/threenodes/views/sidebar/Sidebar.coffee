@@ -1,12 +1,11 @@
-define [
-  'Underscore',
-  'Backbone',
-  "jquery.ui",
-  'cs!threenodes/views/TreeView',
-  'cs!threenodes/views/sidebar/NodeSidebarView',
-  #"libs/jquery.layout-latest",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'jquery.ui'
+  require 'cs!threenodes/views/TreeView'
+  require 'cs!threenodes/views/sidebar/NodeSidebarView'
 
   ### Sidebar View ###
   namespace "ThreeNodes",

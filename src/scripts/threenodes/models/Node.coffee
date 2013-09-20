@@ -1,10 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Utils',
-  'cs!threenodes/collections/Fields',
-], (_, Backbone, Utils) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  Utils = require 'cs!threenodes/utils/Utils'
+
+  require 'cs!threenodes/collections/Fields'
 
   ### Node model ###
 

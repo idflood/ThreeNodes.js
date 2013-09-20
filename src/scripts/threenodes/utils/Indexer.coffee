@@ -1,9 +1,7 @@
-
-define [
-  'Underscore',
-  'Backbone',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
 
   namespace "ThreeNodes",
     Indexer: class Indexer

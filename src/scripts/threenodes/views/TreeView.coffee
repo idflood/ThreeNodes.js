@@ -1,10 +1,9 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  "treeJquery",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'treeJquery'
 
   namespace "ThreeNodes",
     TreeView: class TreeView extends Backbone.View

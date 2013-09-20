@@ -1,14 +1,13 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Utils',
-  'cs!threenodes/utils/CodeExporter',
-  "libs/BlobBuilder.min",
-  "libs/FileSaver.min",
-  "libs/json2",
-], (_, Backbone, Utils) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  Utils = require 'cs!threenodes/utils/Utils'
+
+  require 'cs!threenodes/utils/CodeExporter'
+  require 'libs/BlobBuilder.min'
+  require 'libs/FileSaver.min'
+  require 'libs/json2'
 
   namespace "ThreeNodes",
     FileHandler: class FileHandler extends Backbone.Events

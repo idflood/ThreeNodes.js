@@ -1,10 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Utils',
-  'cs!threenodes/models/Node',
-], (_, Backbone, Utils) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  Utils = require 'cs!threenodes/utils/Utils'
+
+  require 'cs!threenodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
     PlaneGeometry: class PlaneGeometry extends ThreeNodes.NodeBase

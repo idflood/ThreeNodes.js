@@ -1,9 +1,9 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Indexer',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/utils/Indexer'
 
   ### Field model ###
   namespace "ThreeNodes",

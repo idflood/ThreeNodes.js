@@ -1,10 +1,8 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Connection',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/models/Connection'
 
   namespace "ThreeNodes",
     ConnectionsCollection: class ConnectionsCollection extends Backbone.Collection

@@ -1,10 +1,8 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Utils',
-], (_, Backbone, Utils) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  Utils = require 'cs!threenodes/utils/Utils'
 
   ### GroupDefinition model ###
 

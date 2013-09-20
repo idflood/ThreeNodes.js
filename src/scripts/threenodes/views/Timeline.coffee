@@ -1,11 +1,10 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  "timeline",
-  "timeline-gui",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'timeline'
+  require 'timeline-gui'
 
   ### Timeline View ###
   namespace "ThreeNodes",

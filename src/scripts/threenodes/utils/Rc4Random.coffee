@@ -1,8 +1,4 @@
-
-define [
-  'Underscore',
-  'Backbone',
-], ($, _, Backbone) ->
+define (require) ->
   #"use strict"
   namespace "ThreeNodes",
     Rc4Random: class Rc4Random

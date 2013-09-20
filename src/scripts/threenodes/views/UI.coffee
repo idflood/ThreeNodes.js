@@ -1,21 +1,21 @@
-define [
-  'Underscore',
-  'Backbone',
-  "text!templates/field_context_menu.tmpl.html",
-  "text!templates/node_context_menu.tmpl.html",
-  "text!templates/app_ui.tmpl.html",
-  'cs!threenodes/views/sidebar/Sidebar',
-  'cs!threenodes/views/MenuBar',
-  'cs!threenodes/views/Breadcrumb',
-  "RequestAnimationFrame",
-  "Raphael",
-  "libs/jquery.contextMenu",
-  "jquery.ui",
-  "libs/jquery.transform2d",
-  "libs/jquery-scrollview/jquery.scrollview",
-  "libs/jquery.layout-latest",
-], (_, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
+define (require) ->
   ### UI View ###
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  _view_field_context_menu = require 'text!templates/field_context_menu.tmpl.html'
+  _view_node_context_menu = require 'text!templates/node_context_menu.tmpl.html'
+  _view_app_ui = require 'text!templates/app_ui.tmpl.html'
+
+  require 'cs!threenodes/views/sidebar/Sidebar'
+  require 'cs!threenodes/views/MenuBar'
+  require 'cs!threenodes/views/Breadcrumb'
+  require 'RequestAnimationFrame'
+  require 'Raphael'
+  require 'libs/jquery.contextMenu'
+  require 'jquery.ui'
+  require 'libs/jquery.transform2d'
+  require 'libs/jquery-scrollview/jquery.scrollview'
+  require 'libs/jquery.layout-latest'
 
   namespace "ThreeNodes",
     UI: class UI extends Backbone.View

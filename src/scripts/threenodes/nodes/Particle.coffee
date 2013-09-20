@@ -1,14 +1,14 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Utils',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/nodes/Three',
-  'cs!threenodes/nodes/Materials',
-  "libs/Tween",
-  "libs/Sparks",
-], (_, Backbone, Utils) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  Utils = require 'cs!threenodes/utils/Utils'
+
+  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/nodes/Three'
+  require 'cs!threenodes/nodes/Materials'
+  require 'libs/Tween'
+  require 'libs/Sparks'
 
   namespace "ThreeNodes.nodes.models",
     ParticleSystem: class ParticleSystem extends ThreeNodes.nodes.models.Object3D
