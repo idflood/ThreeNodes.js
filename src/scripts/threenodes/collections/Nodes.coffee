@@ -3,6 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Indexer = require 'cs!threenodes/utils/Indexer'
+  Connections = require 'cs!threenodes/collections/Connections'
 
   require 'cs!threenodes/models/Node'
   require 'cs!threenodes/nodes/Base'
@@ -18,7 +19,6 @@ define (require) ->
   require 'cs!threenodes/nodes/Spread'
   require 'cs!threenodes/nodes/Particle'
   require 'cs!threenodes/nodes/Group'
-  require 'cs!threenodes/collections/Connections'
 
   namespace "ThreeNodes",
     NodesCollection: class NodesCollection extends Backbone.Collection
@@ -33,7 +33,7 @@ define (require) ->
         @indexer = new Indexer()
 
         # Create the connections collection
-        @connections = new ThreeNodes.ConnectionsCollection([], {indexer: @indexer})
+        @connections = new Connections([], {indexer: @indexer})
 
         # Parent node, used for groups
         @parent = options.parent
