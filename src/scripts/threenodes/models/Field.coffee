@@ -2,14 +2,13 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/utils/Indexer'
+  Indexer = require 'cs!threenodes/utils/Indexer'
 
   ### Field model ###
   namespace "ThreeNodes",
     NodeField: class NodeField extends Backbone.Model
       # Create a static indexer used if the field is not part of a nodes collection (tests)
-      @STATIC_INDEXER: new ThreeNodes.Indexer()
+      @STATIC_INDEXER: new Indexer()
 
       defaults: () ->
         fid: -1

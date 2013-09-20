@@ -2,8 +2,8 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
   UI = require 'cs!threenodes/views/UI'
+
   require 'jquery.ui'
 
   ### Connection View ###

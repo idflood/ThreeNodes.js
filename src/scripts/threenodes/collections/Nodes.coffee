@@ -17,7 +17,7 @@ define [
   'cs!threenodes/nodes/Particle',
   'cs!threenodes/nodes/Group',
   'cs!threenodes/collections/Connections',
-], (_, Backbone) ->
+], (_, Backbone, Indexer) ->
   #"use strict"
 
   namespace "ThreeNodes",
@@ -30,7 +30,7 @@ define [
         @materials = []
 
         # Each node collections has it's own indexer, used to get unique id
-        @indexer = new ThreeNodes.Indexer()
+        @indexer = new Indexer()
 
         # Create the connections collection
         @connections = new ThreeNodes.ConnectionsCollection([], {indexer: @indexer})

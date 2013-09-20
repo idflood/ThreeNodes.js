@@ -1,13 +1,11 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Indexer',
-  'cs!threenodes/models/GroupDefinition',
-  'cs!threenodes/models/Connection',
-  'cs!threenodes/views/ConnectionView',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  Indexer = require 'cs!threenodes/utils/Indexer'
+
+  require 'cs!threenodes/models/GroupDefinition'
+  require 'cs!threenodes/models/Connection'
 
   namespace "ThreeNodes",
     GroupDefinitions: class GroupDefinitions extends Backbone.Collection
@@ -15,7 +13,7 @@ define [
 
       initialize: () =>
         # The group definitions have their own indexer, used to get unique id
-        @indexer = new ThreeNodes.Indexer()
+        @indexer = new Indexer()
 
         @bind "group:removed", (c) =>
           @remove(c)
