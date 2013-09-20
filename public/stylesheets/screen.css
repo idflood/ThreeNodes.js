@@ -1635,9 +1635,11 @@ body > header h1 {
   padding-top: 7px;
 }
 .node .inner-field {
-  background: transparent;
   cursor: pointer;
   display: inline-block;
+  min-width: 100%;
+  min-height: 16px;
+  background: transparent;
 }
 .node .inner-field span {
   display: inline-block;
