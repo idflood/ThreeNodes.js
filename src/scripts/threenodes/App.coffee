@@ -4,7 +4,7 @@ define (require) ->
   Backbone = require 'Backbone'
   UI = require 'cs!threenodes/views/UI'
   Workspace = require 'cs!threenodes/views/Workspace'
-  AppTimeline = require 'cs!threenodes/views/Timeline'
+  AppTimeline = require 'cs!threenodes/views/AppTimeline'
 
   require 'jquery'
   require 'libs/namespace'
