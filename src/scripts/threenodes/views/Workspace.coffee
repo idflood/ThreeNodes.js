@@ -2,10 +2,10 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
+  ConnectionView = require 'cs!threenodes/views/ConnectionView'
 
   require 'jquery.ui'
   require 'cs!threenodes/views/NodeView'
-  require 'cs!threenodes/views/ConnectionView'
   require 'cs!threenodes/nodes/views/Color'
   require 'cs!threenodes/nodes/views/WebGLRenderer'
   require 'cs!threenodes/nodes/views/Group'
@@ -73,7 +73,7 @@ define (require) ->
     renderConnection: (connection) =>
       if @settings.test == true
         return false
-      view = new ThreeNodes.ConnectionView
+      view = new ConnectionView
         model: connection
       @views.push(view)
 
