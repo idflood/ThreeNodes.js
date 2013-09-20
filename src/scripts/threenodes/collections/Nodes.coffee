@@ -1,24 +1,24 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Indexer',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/nodes/Base',
-  'cs!threenodes/nodes/Conditional',
-  'cs!threenodes/nodes/Geometry',
-  'cs!threenodes/nodes/Lights',
-  'cs!threenodes/nodes/Materials',
-  'cs!threenodes/nodes/Math',
-  'cs!threenodes/nodes/PostProcessing',
-  'cs!threenodes/nodes/Three',
-  'cs!threenodes/nodes/ConstructiveSolidGeometry',
-  'cs!threenodes/nodes/Utils',
-  'cs!threenodes/nodes/Spread',
-  'cs!threenodes/nodes/Particle',
-  'cs!threenodes/nodes/Group',
-  'cs!threenodes/collections/Connections',
-], (_, Backbone, Indexer) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  Indexer = require 'cs!threenodes/utils/Indexer'
+
+  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/nodes/Base'
+  require 'cs!threenodes/nodes/Conditional'
+  require 'cs!threenodes/nodes/Geometry'
+  require 'cs!threenodes/nodes/Lights'
+  require 'cs!threenodes/nodes/Materials'
+  require 'cs!threenodes/nodes/Math'
+  require 'cs!threenodes/nodes/PostProcessing'
+  require 'cs!threenodes/nodes/Three'
+  require 'cs!threenodes/nodes/ConstructiveSolidGeometry'
+  require 'cs!threenodes/nodes/Utils'
+  require 'cs!threenodes/nodes/Spread'
+  require 'cs!threenodes/nodes/Particle'
+  require 'cs!threenodes/nodes/Group'
+  require 'cs!threenodes/collections/Connections'
 
   namespace "ThreeNodes",
     NodesCollection: class NodesCollection extends Backbone.Collection
