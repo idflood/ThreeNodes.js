@@ -57,7 +57,7 @@ define [
         rot_b = @fields.getField("rotation_b").getValue()
         new_cache = @get_cache_array()
         # todo: recompute if a or b change
-        if (a && b) && (ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false)
+        if (a && b) && (Utils.flatArraysAreEquals(new_cache, @cached) == false)
           console.log "csg operation"
           csg_a = THREE.CSG.toCSG(a, pos_a, rot_a)
           csg_b = THREE.CSG.toCSG(b, pos_b, rot_b)

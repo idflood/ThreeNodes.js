@@ -609,7 +609,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cache) == false
+        if Utils.flatArraysAreEquals(new_cache, @cache) == false
           @generate()
 
         @move_particles()

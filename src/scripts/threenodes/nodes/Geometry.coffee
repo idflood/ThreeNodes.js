@@ -39,7 +39,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.PlaneGeometry(@fields.getField("width").getValue(), @fields.getField("height").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue())
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
@@ -79,7 +79,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.CubeGeometry(@fields.getField("width").getValue(), @fields.getField("height").getValue(), @fields.getField("depth").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue(), @fields.getField("segments_depth").getValue(), @fields.getField("flip").getValue())
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
@@ -115,7 +115,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.SphereGeometry(@fields.getField("radius").getValue(), @fields.getField("segments_width").getValue(), @fields.getField("segments_height").getValue())
           @cached = new_cache
         @applyFieldsToVal(@fields.inputs, @ob)
@@ -158,7 +158,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.CylinderGeometry(
             @fields.getField("radiusTop").getValue(), @fields.getField("radiusBottom").getValue(), @fields.getField("height").getValue(),
             @fields.getField("segmentsRadius").getValue(), @fields.getField("segmentsHeight").getValue(), @fields.getField("openEnded").getValue()
@@ -203,7 +203,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.TorusGeometry(
             @fields.getField("radius").getValue(), @fields.getField("tube").getValue(), @fields.getField("segmentsR").getValue(),
             @fields.getField("segmentsT").getValue(), @fields.getField("arc").getValue()
@@ -250,7 +250,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.TorusKnotGeometry(
             @fields.getField("radius").getValue(), @fields.getField("tube").getValue(), @fields.getField("segmentsR").getValue(),
             @fields.getField("segmentsT").getValue(), @fields.getField("p").getValue(), @fields.getField("q").getValue(), @fields.getField("heightScale").getValue()
@@ -289,7 +289,7 @@ define [
 
       compute: =>
         new_cache = @get_cache_array()
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           @ob = new THREE.OctahedronGeometry(@fields.getField("radius").getValue(), @fields.getField("detail").getValue())
           @cached = new_cache
         @applyFieldsToVal(@fields.inputs, @ob)
@@ -341,7 +341,7 @@ define [
           @ob = false
           @fields.setField("out", @ob)
           return false
-        if ThreeNodes.Utils.flatArraysAreEquals(new_cache, @cached) == false
+        if Utils.flatArraysAreEquals(new_cache, @cached) == false
           console.log "building text #{font.font} / #{font.weight}"
           @ob = new THREE.TextGeometry @fields.getField("text").getValue(),
             size: @fields.getField("size").getValue()
