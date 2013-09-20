@@ -1,14 +1,13 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/views/UI',
-  "text!templates/node_field_input.tmpl.html",
-  "text!templates/node_field_output.tmpl.html",
-  'cs!threenodes/utils/Utils',
-  "libs/jquery.contextMenu",
-], (_, Backbone, UiView, _view_node_field_in, _view_node_field_out) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  UiView = require 'cs!threenodes/views/UI'
+  _view_node_field_in = require 'text!templates/node_field_input.tmpl.html'
+  _view_node_field_out = require 'text!templates/node_field_output.tmpl.html'
+
+  require 'cs!threenodes/utils/Utils'
+  require 'libs/jquery.contextMenu'
 
   ### FieldButton View ###
   namespace "ThreeNodes",

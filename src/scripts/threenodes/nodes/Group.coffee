@@ -1,11 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/utils/Utils',
-  'cs!threenodes/models/GroupDefinition',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/models/GroupDefinition'
 
   namespace "ThreeNodes.nodes.models",
     Group: class Group extends ThreeNodes.NodeBase

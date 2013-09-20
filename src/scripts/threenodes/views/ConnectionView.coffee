@@ -1,12 +1,10 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/views/UI',
-  "jquery.ui",
-  'cs!threenodes/utils/Utils',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/views/UI'
+  require 'jquery.ui'
 
   ### Connection View ###
   namespace "ThreeNodes",

@@ -1,11 +1,11 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/views/NodeView',
-  "colorpicker",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/views/NodeView'
+  require 'colorpicker'
 
   namespace "ThreeNodes.nodes.views",
     Color: class Color extends ThreeNodes.NodeView

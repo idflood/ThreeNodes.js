@@ -1,21 +1,20 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  "Three",
-  "ShaderExtras",
-  "EffectComposer",
-  "MaskPass",
-  "RenderPass",
-  "ShaderPass",
-  "BloomPass",
-  "FilmPass",
-  "DotScreenPass",
-  "libs/BlobBuilder.min",
-  "libs/FileSaver.min",
-  "libs/canvas-toBlob.min",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'Three'
+  require 'ShaderExtras'
+  require 'EffectComposer'
+  require 'MaskPass'
+  require 'RenderPass'
+  require 'ShaderPass'
+  require 'BloomPass'
+  require 'FilmPass'
+  require 'DotScreenPass'
+  require 'libs/BlobBuilder.min'
+  require 'libs/FileSaver.min'
+  require 'libs/canvas-toBlob.min'
 
   namespace "ThreeNodes",
     Webgl: {}

@@ -1,12 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  #"libs/Three",
-  'cs!threenodes/utils/Utils',
-  'cs!threenodes/nodes/views/NodeWithCenterTextfield',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
 
   namespace "ThreeNodes.nodes.views",
     Number: class Number extends ThreeNodes.nodes.views.NodeWithCenterTextfield

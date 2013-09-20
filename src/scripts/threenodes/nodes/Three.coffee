@@ -1,11 +1,10 @@
-define [
-  'jquery',
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/utils/Utils',
-], (jQuery, _, Backbone) ->
+define (require) ->
   #"use strict"
+  jQuery = require 'jquery'
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
     Object3D: class Object3D extends ThreeNodes.NodeBase

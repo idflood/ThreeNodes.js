@@ -1,10 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/views/NodeView',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/views/NodeView'
 
   namespace "ThreeNodes.nodes.views",
     NodeWithCenterTextfield: class NodeWithCenterTextfield extends ThreeNodes.NodeView

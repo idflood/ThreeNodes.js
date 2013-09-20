@@ -1,10 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  "text!templates/field_sidebar_container.tmpl.html",
-  'cs!threenodes/views/sidebar/SidebarTextfield',
-], (_, Backbone, _view_field_sidebar_container) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  _view_field_sidebar_container = require 'text!templates/field_sidebar_container.tmpl.html'
+
+  require 'cs!threenodes/views/sidebar/SidebarTextfield'
 
   ### BaseField View ###
   namespace "ThreeNodes.views.fields",

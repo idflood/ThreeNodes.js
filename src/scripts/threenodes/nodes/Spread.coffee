@@ -1,10 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/utils/Rc4Random',
-  'cs!threenodes/models/Node',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/utils/Rc4Random'
+  require 'cs!threenodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
     RandomSpread: class RandomSpread extends ThreeNodes.NodeBase

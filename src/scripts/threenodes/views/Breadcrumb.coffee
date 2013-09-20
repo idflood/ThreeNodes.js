@@ -1,8 +1,7 @@
-define [
-  'Underscore',
-  'Backbone',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
 
   namespace "ThreeNodes",
     Breadcrumb: class Breadcrumb extends Backbone.View

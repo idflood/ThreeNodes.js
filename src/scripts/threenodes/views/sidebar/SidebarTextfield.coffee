@@ -1,9 +1,8 @@
-define [
-  'Underscore',
-  'Backbone',
-  "text!templates/field_textfield.tmpl.html",
-], (_, Backbone, _view_field_textfield) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  _view_field_textfield = require 'text!templates/field_textfield.tmpl.html'
 
   ### SidebarTextfield View ###
   namespace "ThreeNodes",

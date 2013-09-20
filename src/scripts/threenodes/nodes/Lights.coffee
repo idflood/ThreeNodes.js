@@ -1,10 +1,9 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/utils/Utils',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
     PointLight: class PointLight extends ThreeNodes.NodeBase

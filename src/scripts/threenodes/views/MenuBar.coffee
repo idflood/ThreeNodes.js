@@ -1,10 +1,8 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  "text!templates/app_menubar.tmpl.html",
-], (_, Backbone, _view_menubar) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  _view_menubar = require 'text!templates/app_menubar.tmpl.html'
 
   namespace "ThreeNodes",
     MenuBar: class MenuBar extends Backbone.View

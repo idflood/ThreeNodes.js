@@ -1,23 +1,22 @@
-define [
-  'Underscore',
-  'Backbone',
-  'jquery',
-  'libs/namespace',
-  "cs!threenodes/utils/Utils",
-  'cs!threenodes/collections/Nodes',
-  'cs!threenodes/collections/GroupDefinitions',
-  'cs!threenodes/views/UI',
-  'cs!threenodes/views/Timeline',
-  'cs!threenodes/views/GroupDefinitionView',
-  'cs!threenodes/views/Workspace',
-  'cs!threenodes/utils/AppWebsocket',
-  'cs!threenodes/utils/FileHandler',
-  'cs!threenodes/utils/UrlHandler',
-  "cs!threenodes/utils/WebglBase",
-], (_, Backbone) ->
-  #### App
-
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'jquery'
+  require 'libs/namespace'
+  require 'cs!threenodes/collections/Nodes'
+  require 'cs!threenodes/collections/GroupDefinitions'
+  require 'cs!threenodes/views/UI'
+  require 'cs!threenodes/views/Timeline'
+  require 'cs!threenodes/views/GroupDefinitionView'
+  require 'cs!threenodes/views/Workspace'
+  require 'cs!threenodes/utils/AppWebsocket'
+  require 'cs!threenodes/utils/FileHandler'
+  require 'cs!threenodes/utils/UrlHandler'
+  require 'cs!threenodes/utils/WebglBase'
+
+  #### App
   namespace "ThreeNodes",
     App: class App
       constructor: (options) ->

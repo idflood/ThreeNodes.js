@@ -1,10 +1,10 @@
-
-define [
-  'Underscore',
-  'Backbone',
-  "libs/sockjs-latest.min",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'libs/sockjs-latest.min'
+
   namespace "ThreeNodes",
     AppWebsocket: class AppWebsocket
       constructor: (websocket_enabled = false) ->

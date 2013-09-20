@@ -1,14 +1,14 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/views/sidebar/fields/BoolField',
-  'cs!threenodes/views/sidebar/fields/StringField',
-  'cs!threenodes/views/sidebar/fields/FloatField',
-  'cs!threenodes/views/sidebar/fields/Vector2Field',
-  'cs!threenodes/views/sidebar/fields/Vector3Field',
-  'cs!threenodes/views/sidebar/fields/Vector4Field',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/views/sidebar/fields/BoolField'
+  require 'cs!threenodes/views/sidebar/fields/StringField'
+  require 'cs!threenodes/views/sidebar/fields/FloatField'
+  require 'cs!threenodes/views/sidebar/fields/Vector2Field'
+  require 'cs!threenodes/views/sidebar/fields/Vector3Field'
+  require 'cs!threenodes/views/sidebar/fields/Vector4Field'
 
   ### NodeSidebarView ###
   namespace "ThreeNodes",

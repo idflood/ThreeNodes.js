@@ -1,13 +1,12 @@
-define [
-  'Underscore',
-  'Backbone',
-  "text!templates/node.tmpl.html",
-  'cs!threenodes/views/FieldsView',
-  "libs/jquery.contextMenu",
-  "jquery.ui",
-  'cs!threenodes/utils/Utils',
-], (_, Backbone, _view_node_template) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  _view_node_template = require 'text!templates/node.tmpl.html'
+
+  require 'cs!threenodes/views/FieldsView'
+  require 'libs/jquery.contextMenu'
+  require 'jquery.ui'
 
   ### Node View ###
   namespace "ThreeNodes",

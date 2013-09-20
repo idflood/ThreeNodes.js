@@ -1,11 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/views/FieldButton',
-  "jquery.ui",
-  'cs!threenodes/utils/Utils',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!threenodes/views/FieldButton'
+  require 'jquery.ui'
 
   ### Fields View ###
   namespace "ThreeNodes",
