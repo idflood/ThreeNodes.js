@@ -4,12 +4,12 @@ define (require) ->
   Backbone = require 'Backbone'
   UI = require 'cs!threenodes/views/UI'
   Workspace = require 'cs!threenodes/views/Workspace'
+  AppTimeline = require 'cs!threenodes/views/Timeline'
 
   require 'jquery'
   require 'libs/namespace'
   require 'cs!threenodes/collections/Nodes'
   require 'cs!threenodes/collections/GroupDefinitions'
-  require 'cs!threenodes/views/Timeline'
   require 'cs!threenodes/views/GroupDefinitionView'
   require 'cs!threenodes/utils/AppWebsocket'
   require 'cs!threenodes/utils/FileHandler'
@@ -159,7 +159,7 @@ define (require) ->
             @timelineView.off("TimelineCreated", @ui.onUiWindowResize)
 
         # Create a new timeline
-        @timelineView = new ThreeNodes.AppTimeline
+        @timelineView = new AppTimeline
           el: $("#timeline")
           ui: @ui
 

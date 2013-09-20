@@ -3,9 +3,9 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   NodeSidebarView = require 'cs!threenodes/views/sidebar/NodeSidebarView'
+  TreeView = require 'cs!threenodes/views/TreeView'
 
   require 'jquery.ui'
-  require 'cs!threenodes/views/TreeView'
 
   ### Sidebar View ###
   class Sidebar extends Backbone.View
@@ -32,7 +32,7 @@ define (require) ->
           size: "100%"
 
     initTreeView: () =>
-      @treeview = new ThreeNodes.TreeView
+      @treeview = new TreeView
         el: $("#tab-list")
       return this
 
