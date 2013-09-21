@@ -4,7 +4,7 @@ define (require) ->
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
 
-  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
     BloomPass: class BloomPass extends ThreeNodes.NodeBase

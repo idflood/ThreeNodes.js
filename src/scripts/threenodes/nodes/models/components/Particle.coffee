@@ -4,9 +4,9 @@ define (require) ->
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
 
-  require 'cs!threenodes/models/Node'
-  require 'cs!threenodes/nodes/Three'
-  require 'cs!threenodes/nodes/Materials'
+  require 'cs!threenodes/nodes/models/Node'
+  require 'cs!./Three'
+  require 'cs!./Materials'
   require 'libs/Tween'
   require 'libs/Sparks'
 

@@ -11,7 +11,7 @@ define (require) ->
 
   require 'jquery'
   require 'libs/namespace'
-  require 'cs!threenodes/collections/Nodes'
+  require 'cs!threenodes/nodes/collections/Nodes'
   require 'cs!threenodes/collections/GroupDefinitions'
   require 'cs!threenodes/views/GroupDefinitionView'
   require 'cs!threenodes/utils/WebglBase'

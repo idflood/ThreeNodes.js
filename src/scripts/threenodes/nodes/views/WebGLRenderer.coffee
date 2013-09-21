@@ -3,8 +3,8 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
 
-  require 'cs!threenodes/models/Node'
-  require 'cs!threenodes/views/NodeView'
+  require 'cs!../models/Node'
+  require 'cs!./NodeView'
 
   namespace "ThreeNodes.nodes.views",
     WebGLRenderer: class WebGLRenderer extends ThreeNodes.NodeView

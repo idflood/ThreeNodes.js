@@ -4,7 +4,7 @@ define (require) ->
   Backbone = require 'Backbone'
   Rc4Random = require 'cs!threenodes/utils/Rc4Random'
 
-  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
     RandomSpread: class RandomSpread extends ThreeNodes.NodeBase

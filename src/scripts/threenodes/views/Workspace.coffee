@@ -5,7 +5,7 @@ define (require) ->
   ConnectionView = require 'cs!threenodes/views/ConnectionView'
 
   require 'jquery.ui'
-  require 'cs!threenodes/views/NodeView'
+  require 'cs!threenodes/nodes/views/NodeView'
   require 'cs!threenodes/nodes/views/Color'
   require 'cs!threenodes/nodes/views/WebGLRenderer'
   require 'cs!threenodes/nodes/views/Group'

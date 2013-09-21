@@ -4,7 +4,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
 
-  require 'cs!threenodes/models/Node'
+  require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
     IfElse: class IfElse extends ThreeNodes.NodeBase
