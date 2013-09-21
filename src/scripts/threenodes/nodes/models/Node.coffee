@@ -4,7 +4,7 @@ define (require) ->
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
 
-  require 'cs!threenodes/collections/Fields'
+  require 'cs!threenodes/fields/collections/Fields'
 
   ### Node model ###
 

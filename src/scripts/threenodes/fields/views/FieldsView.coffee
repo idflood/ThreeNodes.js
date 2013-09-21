@@ -3,7 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
 
-  require 'cs!threenodes/views/FieldButton'
+  require 'cs!./FieldButton'
   require 'jquery.ui'
 
   ### Fields View ###

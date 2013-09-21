@@ -3,7 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   _view_node_template = require 'text!templates/node.tmpl.html'
-  FieldsView = require 'cs!threenodes/views/FieldsView'
+  FieldsView = require 'cs!threenodes/fields/views/FieldsView'
 
   require 'libs/jquery.contextMenu'
   require 'jquery.ui'
