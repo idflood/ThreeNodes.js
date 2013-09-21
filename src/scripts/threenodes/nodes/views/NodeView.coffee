@@ -3,8 +3,8 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   _view_node_template = require 'text!templates/node.tmpl.html'
+  FieldsView = require 'cs!threenodes/views/FieldsView'
 
-  require 'cs!threenodes/views/FieldsView'
   require 'libs/jquery.contextMenu'
   require 'jquery.ui'
 
@@ -24,7 +24,7 @@ define (require) ->
         @initTitleClick()
 
         # Initialize the fields view
-        @fields_view = new ThreeNodes.FieldsView
+        @fields_view = new FieldsView
           node: @model
           collection: @model.fields
           el: $("> .options", @$el)
