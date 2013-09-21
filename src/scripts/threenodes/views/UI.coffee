@@ -2,8 +2,6 @@ define (require) ->
   ### UI View ###
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-  _view_field_context_menu = require 'text!templates/field_context_menu.tmpl.html'
-  _view_node_context_menu = require 'text!templates/node_context_menu.tmpl.html'
   _view_app_ui = require 'text!templates/app_ui.tmpl.html'
   Sidebar = require 'cs!threenodes/views/sidebar/Sidebar'
 
@@ -11,7 +9,6 @@ define (require) ->
   require 'cs!threenodes/views/Breadcrumb'
   require 'RequestAnimationFrame'
   require 'Raphael'
-  require 'libs/jquery.contextMenu'
   require 'jquery.ui'
   require 'libs/jquery.transform2d'
   require 'libs/jquery-scrollview/jquery.scrollview'
@@ -90,7 +87,6 @@ define (require) ->
     initLayout: () =>
       @makeSelectable()
       @setupMouseScroll()
-      @initContextMenus()
       @initBottomToolbox()
       @initDisplayModeSwitch()
 
@@ -250,13 +246,6 @@ define (require) ->
         value: 100
         change: (event, ui) -> scale_graph(ui.value)
         slide: (event, ui) -> scale_graph(ui.value)
-
-    initContextMenus: () =>
-      menu_field_menu = _.template(_view_field_context_menu, {})
-      $("body").append(menu_field_menu)
-
-      node_menu = _.template(_view_node_context_menu, {})
-      $("body").append(node_menu)
 
     # Display the app and hide the intro
     showApplication: () =>

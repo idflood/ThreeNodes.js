@@ -5,6 +5,7 @@ define (require) ->
   UI = require 'cs!threenodes/views/UI'
   _view_node_field_in = require 'text!templates/node_field_input.tmpl.html'
   _view_node_field_out = require 'text!templates/node_field_output.tmpl.html'
+  _view_field_context_menu = require 'text!templates/field_context_menu.tmpl.html'
 
   require 'cs!threenodes/utils/Utils'
   require 'libs/jquery.contextMenu'
@@ -48,6 +49,9 @@ define (require) ->
         @addFieldListener()
 
       initContextMenu: () ->
+        if $("#field-context-menu").length < 1
+          menu_field_menu = _.template(_view_field_context_menu, {})
+          $("body").append(menu_field_menu)
         @$el.contextMenu {menu: "field-context-menu"}, (action, el, pos) =>
           if action == "removeConnection" then @model.removeConnections()
         return @

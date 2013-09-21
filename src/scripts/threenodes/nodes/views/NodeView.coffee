@@ -3,6 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   _view_node_template = require 'text!templates/node.tmpl.html'
+  _view_node_context_menu = require 'text!templates/node_context_menu.tmpl.html'
   FieldsView = require 'cs!threenodes/fields/views/FieldsView'
 
   require 'libs/jquery.contextMenu'
@@ -40,8 +41,16 @@ define (require) ->
 
         # Render the node and "post init" the model
         @render()
-
+        @initContextMenus()
         #@model.postInit()
+
+      initContextMenus: () =>
+        if $("#node-context-menu").length < 1
+          node_menu = _.template(_view_node_context_menu, {})
+          $("body").append(node_menu)
+        @$el.find(".head").contextMenu {menu: "node-context-menu"}, (action, el, pos) =>
+          if action == "remove_node" then @model.remove()
+        return @
 
       makeElement: () =>
         # Compile the template file
