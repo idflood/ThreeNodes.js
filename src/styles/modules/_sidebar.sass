@@ -16,10 +16,10 @@
     text-transform: uppercase
 
   ul
-    no-bullets()
+    +no-bullets()
 
   ul, li
-    reset-box-model()
+    +reset-box-model()
 
   > div
     padding-right: 20px
@@ -115,11 +115,11 @@
   width: 188px
   border: #333
   background: #2a2a2a
-  box-shadow(#222, 0, 1px, 14px, false, inset)
+  +box-shadow(#222, 0, 1px, 14px, false, inset)
   &:focus
     outline: 0
     border: #444
-    box-shadow(#222, 0, 1px, 6px, false, inset)
+    +box-shadow(#222, 0, 1px, 6px, false, inset)
     background: #222
   &:hover
     border: #3a3a3a

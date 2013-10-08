@@ -1,23 +1,26 @@
-c1 = #aaa
-c2 =  #fff
+$c1: #aaa
+$c2:  #fff
 
 
-@import 'blueprint/typography'
+@import blueprint/typography
 
-.mono-font
+%mono-font
   font-family: mono
 
 body
+  font-size: blueprint-font-size
+  font-family: blueprint-font-family
+  line-height: 1.4em
   color: #999
   a, .ui-widget-content a
     text-decoration: none
-    link-colors(c1, c2, c1, c1, c2)
+    +link-colors(c1, c2, c1, c1, c2)
 
   h2, h3
     color: #aaa
 
   h3
-    @extend .mono-font
+    @extend %mono-font
     font-weight: normal
 
 .node
@@ -28,7 +31,7 @@ body
     font-weight: normal
     letter-spacing: 1px
     text-align: center
-    @extend .mono-font
+    @extend %mono-font
 
   .outputs > div
     text-align: right

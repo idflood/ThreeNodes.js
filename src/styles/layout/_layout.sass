@@ -3,18 +3,18 @@ html, body
   overflow: hidden
 
 body
-  @extend .relative
-  background-color: background_color
+  position: relative
+  background-color: $background_color
   overflow: hidden
   margin-top: 0
 
 // add a background color to some layout elements
 // important when a pane is closed and then 'quick toggled'
 #sidebar, #library, #timeline
-  background-color: background_color
+  background-color: $background_color
 
 #main-menu-bar
-  clearfix()
+  +clearfix
   z-index: 999 !important
   overflow: visible !important
 
@@ -30,7 +30,7 @@ body
   -moz-user-select: none
   -webkit-user-select: none
 
-_c = background_color - #050505
+$c: (background_color - #050505)
 #container
   width: 4000px
   height: 4000px
@@ -41,7 +41,7 @@ _c = background_color - #050505
     padding: 0
 
 #container-wrapper
-  @extend .relative
+  position: relative
   width: 100%
   height: 1000px
   overflow: auto
@@ -55,7 +55,7 @@ _c = background_color - #050505
   line-height: 12px
   a
     cursor: pointer
-    background: background_color + #111
+    background: ($background_color + #111)
     padding: 3px 6px
     margin: 0 4px
     border-radius: 3px
@@ -65,7 +65,7 @@ _c = background_color - #050505
       color: #333
 
 #sidebar
-  background: background_color
+  background: $background_color
 
 .ui-layout-resizer-west
   border-right: 1px solid #3a3a3a

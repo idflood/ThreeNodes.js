@@ -1,10 +1,10 @@
-bg = #333
+$bg: #333
 #main-menu-bar
-  background: bg
+  background: $bg
   height: 23px
   border-bottom: 1px solid #444
   ul
-    background: bg
+    background: $bg
     border: 1px solid #444
     border-top: 0
     //border-top: 1px solid #444
@@ -67,7 +67,7 @@ bg = #333
 
     &.expanded > a
       padding-left: 20px
-      background: url("../images/menu-expanded.png") no-repeat 9px 7px
+      background: image-url("menu-expanded.png") no-repeat 9px 7px
 
   li.ui-state-disabled
     font-weight: normal
@@ -77,9 +77,9 @@ bg = #333
 
 
 .ui-menu-icons
-  @extend .relative
+  position: relative
   .ui-menu-item a
-    @extend .relative
+    position: relative
     padding-left: 2em
 
 .ui-menu
@@ -92,7 +92,7 @@ bg = #333
     float: right
 
 .ui-button
-  @extend .relative
+  position: relative
   display: inline-block
   padding: 0
   margin-right: .1em

@@ -8,12 +8,12 @@
   background: #111
   border-radius: 5px
   z-index: 999
-  no-bullets()
-  reset-box-model()
+  +no-bullets()
+  +reset-box-model()
   li a
     padding: 2px 10px
     display: block
-    @extend .mono-font
+    @extend %mono-font
 
 .colorpicker
   z-index: 9999
@@ -45,7 +45,7 @@
   background: rgba(0,0,0, 0.4)
 
 .ui-dialog
-  background: background_color
+  background: $background_color
   border-radius: 10px
   padding: 10px
 
@@ -65,4 +65,4 @@ a.ui-dialog-titlebar-close
     font-size: 0
     line-height: 0
     text-indent: -9999px
-    background: url(../assets/images/dialog-close.png) no-repeat
+    background: image-url("dialog-close.png") no-repeat

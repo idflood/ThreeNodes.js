@@ -1,9 +1,9 @@
-field-label-padding = 4px
-field-button-size = 4px
+$field-label-padding: 4px
+$field-button-size: 4px
 
-_c = 100
+$c: 100
 .connection
-  stroke: rgb(_c, _c, _c)
+  stroke: rgb($c, $c, $c)
   stroke-width: 1
 
 // utility classes
@@ -49,23 +49,23 @@ _c = 100
 
 .node
   position: absolute !important
-  background: node_color
+  background: $node_color
   padding: 4px
-  clearfix()
+  +clearfix
   min-width: 80px
-  border-radius(8px)
+  +border-radius(8px)
   @extend .ratio-50-50
 
   &.ui-selecting
-    background: node_color - #050505
-    border: 1px solid node_color + #222
+    background: ($node_color - #050505)
+    border: 1px solid ($node_color + #222)
 
   &.ui-selected
-    background: node_color + #050505
-    border: 1px solid node_color + #333
+    background: ($node_color + #050505)
+    border: 1px solid ($node_color + #333)
 
   .options
-    clearfix()
+    +clearfix
     width: 100%
     .warning
       padding-top: 7px
@@ -80,10 +80,10 @@ _c = 100
 
     span
       display: inline-block
-      width: field-button-size
-      height: field-button-size
+      width: $field-button-size
+      height: $field-button-size
       background: #555
-      border-radius(field-button-size)
+      +border-radius($field-button-size)
 
     &:hover
       color: #fff
@@ -96,9 +96,9 @@ _c = 100
       background: #ccc
 
   .inner-field.ui-state-hover
-    color: main_color
+    color: $main_color
     span
-      background: main_color
+      background: $main_color
 
   .inputs, .outputs
     color: #777
@@ -106,7 +106,8 @@ _c = 100
       height: 12px
 
   .inputs, .outputs, .center
-    @extend .inline-float
+    display: inline
+    float: left
     & > div
       display: inline-block
       width: 100%
@@ -115,27 +116,27 @@ _c = 100
   .outputs
     float: right
   .inputs .inner-field span
-    margin-right: field-label-padding
+    margin-right: $field-label-padding
   .outputs .inner-field span
-    margin-left: field-label-padding
+    margin-left: $field-label-padding
 
 // nodes inside a group node
 .node .node
   position: relative !important
   padding: 0
-  border-radius(0px)
+  +border-radius(0px)
   width: 100% !important
   left: auto !important
   top: auto !important
   background: none !important
   border: 0 !important
 
-animation_color = #f00
+$animation_color: #f00
 .node-has-animation
-  box-shadow(animation_color 0 0 1px inset)
+  +box-shadow($animation_color 0 0 1px inset)
 
 .has-animation
-  color: animation_color
+  color: $animation_color
 
 
 .node-Group
@@ -224,10 +225,10 @@ animation_color = #f00
   .center
     @extend .inline-float
     width: 30%
-  _s = 17px
+  $s: 17px
   .center .color_preview
-    width: _s
-    height: _s
+    width: $s
+    height: $s
     border: 1px solid #444
     margin-top: 6px
     margin-left: 2px

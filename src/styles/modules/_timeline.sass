@@ -8,7 +8,7 @@
   font-size: 12px
   margin-top: -42px
   z-index: 970
-  box-shadow(#000 0 1px 4px)
+  +box-shadow(#000 0 1px 4px)
 
   input
     display: inline
@@ -35,13 +35,13 @@
 #keyEditDialogCancel
   text-transform: uppercase
 
-_p = 1px
-_w = 16px
+$p: 1px
+$w: 16px
 #keyEditDialogDelete
   float: right
-  width: _w + _p * 2
-  height: _w + _p * 2
-  background: url(../assets/images/icon-trash.png) no-repeat center center
+  width: ($w + $p * 2)
+  height: ($w + $p * 2)
+  background: image-url("icon-trash.png") no-repeat center center
   font-size: 0
   text-indent: -9999px
 

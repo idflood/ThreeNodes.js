@@ -1,18 +1,3 @@
-/*
- * Default Layout Theme
- *
- * Created for jquery.layout
- *
- * Copyright (c) 2010
- *   Fabrizio Balliano (http://www.fabrizioballiano.net)
- *   Kevin Dalman (http://allpro.net)
- *
- * Dual licensed under the GPL (http://www.gnu.org/licenses/gpl.html)
- * and MIT (http://www.opensource.org/licenses/mit-license.php) licenses.
- *
- * Last Updated: 2010-02-10
- */
-
 .ui-layout-pane
   border: 1px solid #333
   overflow: auto
@@ -27,26 +12,26 @@
   border: 1px solid #222
   border-width: 0
 
-_hover = #555
-_limit = #eee
-_toggler_normal = #666
-_toggler_hover = #ddd
+$hover: #555
+$limit: #eee
+$toggler_normal: #666
+$toggler_hover: #ddd
 .ui-layout-resizer-open-hover
-  background: _hover
+  background: $hover
 
 .ui-layout-resizer-dragging
-  background: _hover
+  background: $hover
   border: 1px solid #222
 
 .ui-layout-resizer-dragging-limit, .ui-layout-resizer-closed-hover
-  background: _limit
+  background: $limit
 
 
 .ui-layout-resizer-sliding
-  opacity(0.1)
+  +opacity(0.1)
 
 .ui-layout-resizer-sliding-hover
-  opacity(1)
+  +opacity(1)
 
 .ui-layout-resizer-north-sliding-hover
   border-bottom-width: 1px
@@ -62,16 +47,16 @@ _toggler_hover = #ddd
 
 
 .ui-layout-toggler
-  border: 1px solid _toggler_normal
-  background-color: _toggler_normal
+  border: 1px solid $toggler_normal
+  background-color: $toggler_normal
 
 .ui-layout-resizer-hover .ui-layout-toggler
-  background-color: _toggler_hover
-  opacity(0.5)
+  background-color: $toggler_hover
+  +opacity(0.5)
 
 .ui-layout-toggler-hover, .ui-layout-resizer-hover .ui-layout-toggler-hover
-  background-color: _toggler_hover
-  opacity(1)
+  background-color: $toggler_hover
+  +opacity(1)
 
 .ui-layout-toggler-north, .ui-layout-toggler-south
   border-width: 0 1px
