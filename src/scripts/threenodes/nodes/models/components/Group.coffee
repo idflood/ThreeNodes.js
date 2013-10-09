@@ -4,7 +4,6 @@ define (require) ->
   Backbone = require 'Backbone'
 
   require 'cs!threenodes/nodes/models/Node'
-  require 'cs!threenodes/models/GroupDefinition'
 
   namespace "ThreeNodes.nodes.models",
     Group: class Group extends ThreeNodes.NodeBase
