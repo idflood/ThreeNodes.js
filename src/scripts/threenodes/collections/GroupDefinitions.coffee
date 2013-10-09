@@ -3,12 +3,12 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Indexer = require 'cs!threenodes/utils/Indexer'
+  GroupDefinition = require 'cs!threenodes/models/GroupDefinition'
 
-  require 'cs!threenodes/models/GroupDefinition'
   require 'cs!threenodes/models/Connection'
 
   class GroupDefinitions extends Backbone.Collection
-    model: ThreeNodes.GroupDefinition
+    model: GroupDefinition
 
     initialize: () =>
       # The group definitions have their own indexer, used to get unique id
@@ -50,7 +50,7 @@ define (require) ->
       dy = average_position.y
 
       # Create a new GroupDefinition from the selected nodes and connections
-      group_def = new ThreeNodes.GroupDefinition
+      group_def = new GroupDefinition
         fromSelectedNodes: selected_nodes
         indexer: @indexer
       @add(group_def)
