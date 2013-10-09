@@ -10,16 +10,16 @@ require(['cs!threenodes/App',
 "libs/qunit-git",
 'cs!node-types'], function(App, NodesTest, FieldTest, ConnectionTest, MathTest, FileSaveTest, FileLoadTest, ThreeJsIntegrationTest, GroupTest) {
 "use strict";
-var app;
-app = new ThreeNodes.App({
+var appl;
+appl = new App({
   test: true
 });
-new NodesTest(app);
-new FieldTest(app);
-new ConnectionTest(app);
-new MathTest(app);
-new FileSaveTest(app);
-new FileLoadTest(app);
-new ThreeJsIntegrationTest(app);
-return new GroupTest(app);
+new NodesTest(appl);
+new FieldTest(appl);
+new ConnectionTest(appl);
+new MathTest(appl);
+new FileSaveTest(appl);
+new FileLoadTest(appl);
+new ThreeJsIntegrationTest(appl);
+return new GroupTest(appl);
 });

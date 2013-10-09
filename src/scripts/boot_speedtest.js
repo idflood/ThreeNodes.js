@@ -5,8 +5,8 @@ require([
   'cs!node-types'
   ], function(App, NodesSpeedTest) {
   "use strict";
-  var app = new ThreeNodes.App({
+  var appl = new App({
     test: true
   });
-  return new NodesSpeedTest(app);
+  return new NodesSpeedTest(appl);
 });

@@ -1,3 +1,3 @@
-require(['cs!node-types', 'cs!threenodes/App'], function () {
-  return new ThreeNodes.App();
+require(['cs!node-types', 'cs!threenodes/App'], function (types, App) {
+  return new App();
 });
