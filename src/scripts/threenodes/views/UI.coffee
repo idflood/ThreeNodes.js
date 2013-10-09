@@ -4,9 +4,9 @@ define (require) ->
   Backbone = require 'Backbone'
   _view_app_ui = require 'text!templates/app_ui.tmpl.html'
   Sidebar = require 'cs!threenodes/views/sidebar/Sidebar'
+  Breadcrumb = require 'cs!threenodes/views/Breadcrumb'
   MenuBar = require 'cs!threenodes/views/MenuBar'
 
-  require 'cs!threenodes/views/Breadcrumb'
   require 'RequestAnimationFrame'
   require 'Raphael'
   require 'jquery.ui'
@@ -34,7 +34,7 @@ define (require) ->
       @$el.append(ui_tmpl)
 
       # Create breadcrumb view (for selecting current group/workspace)
-      @breadcrumb = new ThreeNodes.Breadcrumb({el: $("#breadcrumb")})
+      @breadcrumb = new Breadcrumb({el: $("#breadcrumb")})
 
       # Setup SVG for drawing connections
       UI.svg = Raphael("graph", 4000, 4000)
