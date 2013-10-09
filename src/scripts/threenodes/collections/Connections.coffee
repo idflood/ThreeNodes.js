@@ -1,11 +1,10 @@
 define (require) ->
   #"use strict"
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/models/Connection'
+  Connection = require 'cs!threenodes/models/Connection'
 
   class Connections extends Backbone.Collection
-    model: ThreeNodes.Connection
+    model: Connection
 
     initialize: (models, options) =>
       @indexer = options.indexer
