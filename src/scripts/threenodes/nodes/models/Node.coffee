@@ -3,8 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
-
-  require 'cs!threenodes/fields/collections/Fields'
+  Fields = require 'cs!threenodes/fields/collections/Fields'
 
   ### Node model ###
 
@@ -55,7 +54,7 @@ define (require) ->
           @indexer.uid = @get('nid')
 
         # Create the fields collections
-        @fields = new ThreeNodes.FieldsCollection(false, {node: this, indexer: @indexer})
+        @fields = new Fields(false, {node: this, indexer: @indexer})
 
         # Call onFieldsCreated so that nodes can alias fields
         @onFieldsCreated()
