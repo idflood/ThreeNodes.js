@@ -3,8 +3,8 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
+  CodeExporter = require 'cs!threenodes/utils/CodeExporter'
 
-  require 'cs!threenodes/utils/CodeExporter'
   require 'libs/BlobBuilder.min'
   require 'libs/FileSaver.min'
   require 'libs/json2'
@@ -22,7 +22,7 @@ define (require) ->
     exportCode: () =>
       # get the json export and convert it to code
       json = @getLocalJson(false)
-      exporter = new ThreeNodes.CodeExporter()
+      exporter = new CodeExporter()
       res = exporter.toCode(json)
 
       bb = new BlobBuilder()
