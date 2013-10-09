@@ -8,14 +8,13 @@ define (require) ->
   UrlHandler = require 'cs!threenodes/utils/UrlHandler'
   FileHandler = require 'cs!threenodes/utils/FileHandler'
   AppWebsocket = require 'cs!threenodes/utils/AppWebsocket'
-
+  Nodes = require 'cs!threenodes/nodes/collections/Nodes'
   GroupDefinitions = require 'cs!threenodes/collections/GroupDefinitions'
   GroupDefinitionView = require 'cs!threenodes/views/GroupDefinitionView'
   WebglBase = require 'cs!threenodes/utils/WebglBase'
 
   require 'jquery'
   require 'libs/namespace'
-  require 'cs!threenodes/nodes/collections/Nodes'
 
   #### App
   namespace "ThreeNodes",
@@ -39,7 +38,7 @@ define (require) ->
         # Initialize some core classes
         @url_handler = new UrlHandler()
         @group_definitions = new GroupDefinitions([])
-        @nodes = new ThreeNodes.NodesCollection([], {settings: settings})
+        @nodes = new Nodes([], {settings: settings})
         @socket = new AppWebsocket(websocket_enabled)
         @webgl = new WebglBase()
         @file_handler = new FileHandler(@nodes, @group_definitions)

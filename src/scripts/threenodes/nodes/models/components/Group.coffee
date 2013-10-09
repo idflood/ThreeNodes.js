@@ -2,6 +2,7 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
+  Nodes = require 'cs!threenodes/nodes/collections/Nodes'
 
   require 'cs!threenodes/nodes/models/Node'
 
@@ -27,7 +28,7 @@ define (require) ->
 
       initSubnodes: (options) =>
         # A group contains a sub-nodes (nodes)
-        @nodes = new ThreeNodes.NodesCollection([], {settings: options.settings, parent: this})
+        @nodes = new Nodes([], {settings: options.settings, parent: this})
 
         # Save the group definition reference
         @definition = options.definition

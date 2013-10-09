@@ -3,7 +3,12 @@
   <head>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type">
     <title>ThreeNodes.js::tests</title>
-    <script data-main="src/scripts/boot_test.js" src="src/scripts/libs/require/require.js"></script>
+    <script src="src/scripts/libs/require/require.js"></script>
+    <script src="src/scripts/require-config.js"></script>
+    <script>
+      require.config({baseUrl : 'src/scripts'});
+      require(['boot_test']);
+    </script>
     <link href="assets/styles/qunit-git.css" media="all" rel="stylesheet" type="text/css">
     <link href="assets/styles/reset_test.css" media="all" rel="stylesheet" type="text/css">
     <link href="favicon2.ico" rel="shortcut icon" type="image/x-icon">
