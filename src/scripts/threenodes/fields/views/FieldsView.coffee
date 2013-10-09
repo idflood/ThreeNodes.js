@@ -2,8 +2,8 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
+  FieldButton = require 'cs!./FieldButton'
 
-  require 'cs!./FieldButton'
   require 'jquery.ui'
 
   ### Fields View ###
@@ -35,7 +35,7 @@ define (require) ->
           if from_gid != "-1" && to_gid != "-1" && from_gid == to_gid
             # stop there
             return
-      view = new ThreeNodes.FieldButton
+      view = new FieldButton
         model: field
 
       view.$el.appendTo($(target, @$el))
