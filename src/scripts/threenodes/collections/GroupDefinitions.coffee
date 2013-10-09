@@ -5,8 +5,6 @@ define (require) ->
   Indexer = require 'cs!threenodes/utils/Indexer'
   GroupDefinition = require 'cs!threenodes/models/GroupDefinition'
 
-  require 'cs!threenodes/models/Connection'
-
   class GroupDefinitions extends Backbone.Collection
     model: GroupDefinition
 
