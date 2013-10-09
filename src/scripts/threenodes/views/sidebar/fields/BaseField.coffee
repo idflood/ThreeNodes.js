@@ -4,7 +4,7 @@ define (require) ->
   Backbone = require 'Backbone'
   _view_field_sidebar_container = require 'text!templates/field_sidebar_container.tmpl.html'
 
-  require 'cs!threenodes/views/sidebar/SidebarTextfield'
+  SidebarTextfield = require 'cs!threenodes/views/sidebar/SidebarTextfield'
 
   ### BaseField View ###
   namespace "ThreeNodes.views.fields",
@@ -30,7 +30,7 @@ define (require) ->
         return @container
 
       createTextfield: ($target, type = "float", link_to_val = true) =>
-        textField = new ThreeNodes.SidebarTextfield
+        textField = new SidebarTextfield
           model: @model
           el: $target
           type: type
