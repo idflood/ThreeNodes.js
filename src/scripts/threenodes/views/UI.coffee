@@ -4,8 +4,8 @@ define (require) ->
   Backbone = require 'Backbone'
   _view_app_ui = require 'text!templates/app_ui.tmpl.html'
   Sidebar = require 'cs!threenodes/views/sidebar/Sidebar'
+  MenuBar = require 'cs!threenodes/views/MenuBar'
 
-  require 'cs!threenodes/views/MenuBar'
   require 'cs!threenodes/views/Breadcrumb'
   require 'RequestAnimationFrame'
   require 'Raphael'
@@ -72,9 +72,9 @@ define (require) ->
 
     # Setup menubar
     initMenubar: () =>
-      menu_tmpl = _.template(ThreeNodes.MenuBar.template, {})
+      menu_tmpl = _.template(MenuBar.template, {})
       $menu_tmpl = $(menu_tmpl).prependTo("body")
-      @menubar = new ThreeNodes.MenuBar
+      @menubar = new MenuBar
         el: $menu_tmpl
 
       @menubar.on "ToggleAttributes", () => if @layout then @layout.toggle("west")
