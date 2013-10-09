@@ -9,11 +9,12 @@ define (require) ->
   FileHandler = require 'cs!threenodes/utils/FileHandler'
   AppWebsocket = require 'cs!threenodes/utils/AppWebsocket'
 
+  GroupDefinitions = require 'cs!threenodes/collections/GroupDefinitions'
+  GroupDefinitionView = require 'cs!threenodes/views/GroupDefinitionView'
+
   require 'jquery'
   require 'libs/namespace'
   require 'cs!threenodes/nodes/collections/Nodes'
-  require 'cs!threenodes/collections/GroupDefinitions'
-  require 'cs!threenodes/views/GroupDefinitionView'
   require 'cs!threenodes/utils/WebglBase'
 
   #### App
@@ -37,7 +38,7 @@ define (require) ->
 
         # Initialize some core classes
         @url_handler = new UrlHandler()
-        @group_definitions = new ThreeNodes.GroupDefinitions([])
+        @group_definitions = new GroupDefinitions([])
         @nodes = new ThreeNodes.NodesCollection([], {settings: settings})
         @socket = new AppWebsocket(websocket_enabled)
         @webgl = new ThreeNodes.WebglBase()
@@ -53,11 +54,11 @@ define (require) ->
         if @settings.test == false
           # Create group definition views when a new one is created
           @group_definitions.bind "add", (definition) =>
-            template = ThreeNodes.GroupDefinitionView.template
+            template = GroupDefinitionView.template
             tmpl = _.template(template, definition)
             $tmpl = $(tmpl).appendTo("#library")
 
-            view = new ThreeNodes.GroupDefinitionView
+            view = new GroupDefinitionView
               model: definition
               el: $tmpl
             view.bind "edit", @setWorkspaceFromDefinition
