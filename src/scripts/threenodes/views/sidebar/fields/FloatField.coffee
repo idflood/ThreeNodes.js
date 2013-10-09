@@ -3,11 +3,11 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
 
-  require 'cs!threenodes/views/sidebar/fields/BaseField'
+  BaseField = require 'cs!threenodes/views/sidebar/fields/BaseField'
 
   ### FloatField View ###
   namespace "ThreeNodes.views.fields",
-    FloatField: class FloatField extends ThreeNodes.views.fields.BaseField
+    FloatField: class FloatField extends BaseField
       initialize: (options) ->
         super
 

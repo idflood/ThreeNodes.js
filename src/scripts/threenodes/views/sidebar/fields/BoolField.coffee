@@ -3,11 +3,11 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
 
-  require 'cs!threenodes/views/sidebar/fields/BaseField'
+  BaseField = require 'cs!threenodes/views/sidebar/fields/BaseField'
 
   ### SidebarField View ###
   namespace "ThreeNodes.views.fields",
-    BoolField: class BoolField extends ThreeNodes.views.fields.BaseField
+    BoolField: class BoolField extends BaseField
       on_value_updated: (new_val) =>
         if @model.getValue() == true
           @$checkbox.attr('checked', 'checked')
