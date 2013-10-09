@@ -11,11 +11,11 @@ define (require) ->
 
   GroupDefinitions = require 'cs!threenodes/collections/GroupDefinitions'
   GroupDefinitionView = require 'cs!threenodes/views/GroupDefinitionView'
+  WebglBase = require 'cs!threenodes/utils/WebglBase'
 
   require 'jquery'
   require 'libs/namespace'
   require 'cs!threenodes/nodes/collections/Nodes'
-  require 'cs!threenodes/utils/WebglBase'
 
   #### App
   namespace "ThreeNodes",
@@ -41,7 +41,7 @@ define (require) ->
         @group_definitions = new GroupDefinitions([])
         @nodes = new ThreeNodes.NodesCollection([], {settings: settings})
         @socket = new AppWebsocket(websocket_enabled)
-        @webgl = new ThreeNodes.WebglBase()
+        @webgl = new WebglBase()
         @file_handler = new FileHandler(@nodes, @group_definitions)
 
         # Create a group node when selected nodes are grouped
