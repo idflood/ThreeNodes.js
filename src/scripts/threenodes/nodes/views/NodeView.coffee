@@ -2,8 +2,8 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-  _view_node_template = require 'text!templates/node.tmpl.html'
-  _view_node_context_menu = require 'text!templates/node_context_menu.tmpl.html'
+  _view_node_template = require 'text!../templates/node.tmpl.html'
+  _view_node_context_menu = require 'text!../templates/node_context_menu.tmpl.html'
   FieldsView = require 'cs!threenodes/fields/views/FieldsView'
 
   require 'libs/jquery.contextMenu'

@@ -3,9 +3,9 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   UI = require 'cs!threenodes/views/UI'
-  _view_node_field_in = require 'text!templates/node_field_input.tmpl.html'
-  _view_node_field_out = require 'text!templates/node_field_output.tmpl.html'
-  _view_field_context_menu = require 'text!templates/field_context_menu.tmpl.html'
+  _view_node_field_in = require 'text!../templates/node_field_input.tmpl.html'
+  _view_node_field_out = require 'text!../templates/node_field_output.tmpl.html'
+  _view_field_context_menu = require 'text!../templates/field_context_menu.tmpl.html'
 
   require 'cs!threenodes/utils/Utils'
   require 'libs/jquery.contextMenu'
