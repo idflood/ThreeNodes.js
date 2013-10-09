@@ -5,11 +5,11 @@ $c2:  #fff
 @import blueprint/typography
 
 %mono-font
-  font-family: mono
+  font-family: $mono
+
 
 body
-  font-size: blueprint-font-size
-  font-family: blueprint-font-family
+  +blueprint-typography(true)
   line-height: 1.4em
   color: #999
   a, .ui-widget-content a
