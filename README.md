@@ -11,6 +11,7 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 - should be possible to switch interface for live performance (selection of buttons/toggle)
 
 ## Some ideas
+- Field array input could have multiple input connections.
 - local timelines ?
 - automatic layout of node graph
 - grouping (multiple nodes in one, possibility to have multiple instances)
