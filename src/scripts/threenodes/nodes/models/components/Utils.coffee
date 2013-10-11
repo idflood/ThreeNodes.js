@@ -3,16 +3,16 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Node = require 'cs!threenodes/nodes/models/Node'
-  require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
+  NodeWithCenterTextfield = require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
 
   namespace "ThreeNodes.nodes.views",
-    Random: class Random extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+    Random: class Random extends NodeWithCenterTextfield
       getCenterField: () => @model.fields.getField("out", true)
 
-    LFO: class LFO extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+    LFO: class LFO extends NodeWithCenterTextfield
       getCenterField: () => @model.fields.getField("out", true)
 
-    Timer: class Timer extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+    Timer: class Timer extends NodeWithCenterTextfield
       getCenterField: () => @model.fields.getField("out", true)
 
   namespace "ThreeNodes.nodes.models",

@@ -4,12 +4,12 @@ define (require) ->
   Backbone = require 'Backbone'
   Node = require 'cs!threenodes/nodes/models/Node'
   NodeNumberSimple = require 'cs!threenodes/nodes/models/NodeNumberSimple'
-  require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
+  NodeWithCenterTextfield = require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
 
   namespace "ThreeNodes.nodes.views",
-    Number: class Number extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+    Number: class Number extends NodeWithCenterTextfield
 
-    String: class String extends ThreeNodes.nodes.views.NodeWithCenterTextfield
+    String: class String extends NodeWithCenterTextfield
       getCenterField: () => @model.fields.getField("string")
 
   namespace "ThreeNodes.nodes.models",
