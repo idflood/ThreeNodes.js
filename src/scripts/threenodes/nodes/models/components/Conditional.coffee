@@ -3,11 +3,10 @@ define (require) ->
   jQuery = require 'jquery'
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
-    IfElse: class IfElse extends ThreeNodes.NodeBase
+    IfElse: class IfElse extends Node
       @node_name = 'IfElse'
       @group_name = 'Conditional'
 
@@ -30,7 +29,7 @@ define (require) ->
           res = @fields.getField("val2").attributes.value
         @fields.setField("out", res)
 
-    And: class And extends ThreeNodes.NodeBase
+    And: class And extends Node
       @node_name = 'And'
       @group_name = 'Conditional'
 
@@ -48,7 +47,7 @@ define (require) ->
         res = @fields.getField("val1").getValue() != false && @fields.getField("val2").getValue() != false
         @fields.setField("out", res)
 
-    Or: class Or extends ThreeNodes.NodeBase
+    Or: class Or extends Node
       @node_name = 'Or'
       @group_name = 'Conditional'
 
@@ -66,7 +65,7 @@ define (require) ->
         res = @fields.getField("val1").getValue() != false || @fields.getField("val2").getValue() != false
         @fields.setField("out", res)
 
-    Equal: class Equal extends ThreeNodes.NodeBase
+    Equal: class Equal extends Node
       @node_name = 'Equal'
       @group_name = 'Conditional'
 
@@ -84,7 +83,7 @@ define (require) ->
         res = @fields.getField("val1").getValue(0) == @fields.getField("val2").getValue(0)
         @fields.setField("out", res)
 
-    Smaller: class Smaller extends ThreeNodes.NodeBase
+    Smaller: class Smaller extends Node
       @node_name = 'Smaller'
       @group_name = 'Conditional'
 
@@ -102,7 +101,7 @@ define (require) ->
         res = @fields.getField("val1").getValue(0) < @fields.getField("val2").getValue(0)
         @fields.setField("out", res)
 
-    Greater: class Greater extends ThreeNodes.NodeBase
+    Greater: class Greater extends Node
       @node_name = 'Greater'
       @group_name = 'Conditional'
 

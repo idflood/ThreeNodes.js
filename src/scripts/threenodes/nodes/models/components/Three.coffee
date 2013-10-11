@@ -3,11 +3,10 @@ define (require) ->
   jQuery = require 'jquery'
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
-    Object3D: class Object3D extends ThreeNodes.NodeBase
+    Object3D: class Object3D extends Node
       @node_name = 'Object3D'
       @group_name = 'Three'
 
@@ -376,7 +375,7 @@ define (require) ->
         @material_cache = @get_material_cache()
         @fields.setField("out", @ob)
 
-    Camera: class Camera extends ThreeNodes.NodeBase
+    Camera: class Camera extends Node
       @node_name = 'Camera'
       @group_name = 'Three'
 
@@ -421,7 +420,7 @@ define (require) ->
         @ob.lookAt(@fields.getField("target").getValue())
         @fields.setField("out", @ob)
 
-    Texture: class Texture extends ThreeNodes.NodeBase
+    Texture: class Texture extends Node
       @node_name = 'Texture'
       @group_name = 'Three'
 
@@ -456,7 +455,7 @@ define (require) ->
 
         @fields.setField("out", @ob)
 
-    Fog: class Fog extends ThreeNodes.NodeBase
+    Fog: class Fog extends Node
       @node_name = 'Fog'
       @group_name = 'Three'
 
@@ -485,7 +484,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    FogExp2: class FogExp2 extends ThreeNodes.NodeBase
+    FogExp2: class FogExp2 extends Node
       @node_name = 'FogExp2'
       @group_name = 'Three'
 
@@ -513,7 +512,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    WebGLRenderer: class WebGLRenderer extends ThreeNodes.NodeBase
+    WebGLRenderer: class WebGLRenderer extends Node
       @node_name = 'WebGLRenderer'
       @group_name = 'Three'
 

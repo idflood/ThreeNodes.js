@@ -3,8 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
   require 'cs!./Three'
   require 'cs!./Materials'
   require 'libs/Tween'
@@ -89,7 +88,7 @@ define (require) ->
             "out": {type: "Any", val: @ob}
         return $.extend(true, base_fields, fields)
 
-    SparksEmitter: class SparksEmitter extends ThreeNodes.NodeBase
+    SparksEmitter: class SparksEmitter extends Node
       @node_name = 'Emitter'
       @group_name = 'Particle.sparks'
 
@@ -156,7 +155,7 @@ define (require) ->
         delete @geom
         delete @pool
 
-    SparksAge: class SparksAge extends ThreeNodes.NodeBase
+    SparksAge: class SparksAge extends Node
       @node_name = 'Age'
       @group_name = 'Particle.sparks.actions'
 
@@ -182,7 +181,7 @@ define (require) ->
         @ob._easing = @fields.getField("easing").get("value")
         @fields.setField("action", @ob)
 
-    SparksMove: class SparksMove extends ThreeNodes.NodeBase
+    SparksMove: class SparksMove extends Node
       @node_name = 'Move'
       @group_name = 'Particle.sparks.actions'
 
@@ -205,7 +204,7 @@ define (require) ->
       compute: =>
         @fields.setField("action", @ob)
 
-    SparksAccelerate: class SparksAccelerate extends ThreeNodes.NodeBase
+    SparksAccelerate: class SparksAccelerate extends Node
       @node_name = 'Accelerate'
       @group_name = 'Particle.sparks.actions'
 
@@ -231,7 +230,7 @@ define (require) ->
         @ob.acceleration = @fields.getField("vector").getValue()
         @fields.setField("action", @ob)
 
-    SparksAccelerateFactor: class SparksAccelerateFactor extends ThreeNodes.NodeBase
+    SparksAccelerateFactor: class SparksAccelerateFactor extends Node
       @node_name = 'AccelerateFactor'
       @group_name = 'Particle.sparks.actions'
 
@@ -257,7 +256,7 @@ define (require) ->
         @ob.factor = @fields.getField("factor").getValue()
         @fields.setField("action", @ob)
 
-    SparksAccelerateVelocity: class SparksAccelerateVelocity extends ThreeNodes.NodeBase
+    SparksAccelerateVelocity: class SparksAccelerateVelocity extends Node
       @node_name = 'AccelerateVelocity'
       @group_name = 'Particle.sparks.actions'
 
@@ -283,7 +282,7 @@ define (require) ->
         @ob.factor = @fields.getField("factor").getValue()
         @fields.setField("action", @ob)
 
-    SparksRandomDrift: class SparksRandomDrift extends ThreeNodes.NodeBase
+    SparksRandomDrift: class SparksRandomDrift extends Node
       @node_name = 'RandomDrift'
       @group_name = 'Particle.sparks.actions'
 
@@ -309,7 +308,7 @@ define (require) ->
         @ob.drift = @fields.getField("vector").getValue()
         @fields.setField("action", @ob)
 
-    SparksLifetime: class SparksLifetime extends ThreeNodes.NodeBase
+    SparksLifetime: class SparksLifetime extends Node
       @node_name = 'Lifetime'
       @group_name = 'Particle.sparks.initializers'
 
@@ -337,7 +336,7 @@ define (require) ->
         @ob._min = @fields.getField("max").getValue()
         @fields.setField("initializer", @ob)
 
-    SparksPosition: class SparksPosition extends ThreeNodes.NodeBase
+    SparksPosition: class SparksPosition extends Node
       @node_name = 'Position'
       @group_name = 'Particle.sparks.initializers'
 
@@ -363,7 +362,7 @@ define (require) ->
         @ob.zone = @fields.getField("zone").getValue()
         @fields.setField("initializer", @ob)
 
-    SparksPointZone: class SparksPointZone extends ThreeNodes.NodeBase
+    SparksPointZone: class SparksPointZone extends Node
       @node_name = 'PointZone'
       @group_name = 'Particle.sparks.zone'
 
@@ -389,7 +388,7 @@ define (require) ->
         @ob.pos = @fields.getField("pos").getValue()
         @fields.setField("zone", @ob)
 
-    SparksLineZone: class SparksLineZone extends ThreeNodes.NodeBase
+    SparksLineZone: class SparksLineZone extends Node
       @node_name = 'LineZone'
       @group_name = 'Particle.sparks.zone'
 
@@ -419,7 +418,7 @@ define (require) ->
           @ob._length = @ob.end.clone().subSelf( @ob.start )
         @fields.setField("zone", @ob)
 
-    SparksCubeZone: class SparksCubeZone extends ThreeNodes.NodeBase
+    SparksCubeZone: class SparksCubeZone extends Node
       @node_name = 'CubeZone'
       @group_name = 'Particle.sparks.zone'
 
@@ -451,7 +450,7 @@ define (require) ->
         @ob.z = @fields.getField("z").getValue()
         @fields.setField("zone", @ob)
 
-    SparksSteadyCounter: class SparksSteadyCounter extends ThreeNodes.NodeBase
+    SparksSteadyCounter: class SparksSteadyCounter extends Node
       @node_name = 'SteadyCounter'
       @group_name = 'Particle.sparks'
 
@@ -477,7 +476,7 @@ define (require) ->
         @ob.pos = @fields.getField("rate").getValue()
         @fields.setField("counter", @ob)
 
-    ParticlePool: class ParticlePool extends ThreeNodes.NodeBase
+    ParticlePool: class ParticlePool extends Node
       @node_name = 'ParticlePool'
       @group_name = 'Particle.sparks'
 
@@ -543,7 +542,7 @@ define (require) ->
           @geom.__dirtyVertices = true
         @fields.setField("pool", this)
 
-    RandomCloudGeometry: class RandomCloudGeometry extends ThreeNodes.NodeBase
+    RandomCloudGeometry: class RandomCloudGeometry extends Node
       @node_name = 'RandomCloudGeometry'
       @group_name = 'Particle'
 

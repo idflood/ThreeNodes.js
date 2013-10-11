@@ -3,11 +3,10 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
-    PlaneGeometry: class PlaneGeometry extends ThreeNodes.NodeBase
+    PlaneGeometry: class PlaneGeometry extends Node
       @node_name = 'Plane'
       @group_name = 'Geometry'
 
@@ -44,7 +43,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    CubeGeometry: class CubeGeometry extends ThreeNodes.NodeBase
+    CubeGeometry: class CubeGeometry extends Node
       @node_name = 'Cube'
       @group_name = 'Geometry'
 
@@ -84,7 +83,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    SphereGeometry: class SphereGeometry extends ThreeNodes.NodeBase
+    SphereGeometry: class SphereGeometry extends Node
       @node_name = 'Sphere'
       @group_name = 'Geometry'
 
@@ -121,7 +120,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    CylinderGeometry: class CylinderGeometry extends ThreeNodes.NodeBase
+    CylinderGeometry: class CylinderGeometry extends Node
       @node_name = 'Cylinder'
       @group_name = 'Geometry'
 
@@ -167,7 +166,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    TorusGeometry: class TorusGeometry extends ThreeNodes.NodeBase
+    TorusGeometry: class TorusGeometry extends Node
       @node_name = 'Torus'
       @group_name = 'Geometry'
 
@@ -212,7 +211,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    TorusKnotGeometry: class TorusKnotGeometry extends ThreeNodes.NodeBase
+    TorusKnotGeometry: class TorusKnotGeometry extends Node
       @node_name = 'TorusKnot'
       @group_name = 'Geometry'
 
@@ -259,7 +258,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    OctahedronGeometry: class OctahedronGeometry extends ThreeNodes.NodeBase
+    OctahedronGeometry: class OctahedronGeometry extends Node
       @node_name = 'Octahedron'
       @group_name = 'Geometry'
 
@@ -295,7 +294,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    TextGeometry: class TextGeometry extends ThreeNodes.NodeBase
+    TextGeometry: class TextGeometry extends Node
       @node_name = 'Text'
       @group_name = 'Geometry'
 

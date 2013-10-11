@@ -2,8 +2,8 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
+  NodeNumberSimple = require 'cs!threenodes/nodes/models/NodeNumberSimple'
   require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
 
   namespace "ThreeNodes.nodes.views",
@@ -13,11 +13,11 @@ define (require) ->
       getCenterField: () => @model.fields.getField("string")
 
   namespace "ThreeNodes.nodes.models",
-    Number: class Number extends ThreeNodes.NodeNumberSimple
+    Number: class Number extends NodeNumberSimple
       @node_name = 'Number'
       @group_name = 'Base'
 
-    Boolean: class Boolean extends ThreeNodes.NodeBase
+    Boolean: class Boolean extends Node
       @node_name = 'Boolean'
       @group_name = 'Base'
 
@@ -37,7 +37,7 @@ define (require) ->
       compute: =>
         @fields.setField("out", @fields.getField("bool").getValue())
 
-    String: class String extends ThreeNodes.NodeBase
+    String: class String extends Node
       @node_name = 'String'
       @group_name = 'Base'
 
@@ -57,7 +57,7 @@ define (require) ->
       compute: =>
         @fields.setField("out", @fields.getField("string").getValue())
 
-    Vector2: class Vector2 extends ThreeNodes.NodeBase
+    Vector2: class Vector2 extends Node
       @node_name = 'Vector2'
       @group_name = 'Base'
 
@@ -88,7 +88,7 @@ define (require) ->
         @fields.setField("x", resx)
         @fields.setField("y", resy)
 
-    Vector3: class Vector3 extends ThreeNodes.NodeBase
+    Vector3: class Vector3 extends Node
       @node_name = 'Vector3'
       @group_name = 'Base'
 
@@ -124,7 +124,7 @@ define (require) ->
         @fields.setField("y", resy)
         @fields.setField("z", resz)
 
-    Color: class Color extends ThreeNodes.NodeBase
+    Color: class Color extends Node
       @node_name = 'Color'
       @group_name = 'Base'
 

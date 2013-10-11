@@ -2,8 +2,7 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
   require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
 
   namespace "ThreeNodes.nodes.views",
@@ -17,7 +16,7 @@ define (require) ->
       getCenterField: () => @model.fields.getField("out", true)
 
   namespace "ThreeNodes.nodes.models",
-    Random: class Random extends ThreeNodes.NodeBase
+    Random: class Random extends Node
       @node_name = 'Random'
       @group_name = 'Utils'
 
@@ -40,7 +39,7 @@ define (require) ->
         @fields.setField("out", value)
 
     # based on http://www.cycling74.com/forums/topic.php?id=7821
-    LFO: class LFO extends ThreeNodes.NodeBase
+    LFO: class LFO extends Node
       @node_name = 'LFO'
       @group_name = 'Utils'
 
@@ -121,7 +120,7 @@ define (require) ->
 
         @fields.setField("out", lfout)
 
-    Merge: class Merge extends ThreeNodes.NodeBase
+    Merge: class Merge extends Node
       @node_name = 'Merge'
       @group_name = 'Utils'
 
@@ -157,7 +156,7 @@ define (require) ->
               result[result.length] = subval
         @fields.setField("out", result)
 
-    Get: class Get extends ThreeNodes.NodeBase
+    Get: class Get extends Node
       @node_name = 'Get'
       @group_name = 'Utils'
 
@@ -181,7 +180,7 @@ define (require) ->
         if @value != old
           @fields.setField("out", @value)
 
-    Mp3Input: class Mp3Input extends ThreeNodes.NodeBase
+    Mp3Input: class Mp3Input extends Node
       @node_name = 'Mp3Input'
       @group_name = 'Utils'
 
@@ -326,7 +325,7 @@ define (require) ->
           @fields.setField("high", @getAverageLevel(length3rd * 2, length - 1))
         return true
 
-    Mouse: class Mouse extends ThreeNodes.NodeBase
+    Mouse: class Mouse extends Node
       @node_name = 'Mouse'
       @group_name = 'Utils'
 
@@ -350,7 +349,7 @@ define (require) ->
         @fields.setField("x", dx)
         @fields.setField("y", dy)
 
-    Timer: class Timer extends ThreeNodes.NodeBase
+    Timer: class Timer extends Node
       @node_name = 'Timer'
       @group_name = 'Utils'
 
@@ -388,7 +387,7 @@ define (require) ->
         @old = now
         @fields.setField("out", @counter)
 
-    Font: class Font extends ThreeNodes.NodeBase
+    Font: class Font extends Node
       @node_name = 'Font'
       @group_name = 'Utils'
 

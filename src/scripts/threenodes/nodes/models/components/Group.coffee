@@ -3,11 +3,10 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Nodes = require 'cs!threenodes/nodes/collections/Nodes'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
-    Group: class Group extends ThreeNodes.NodeBase
+    Group: class Group extends Node
       @node_name = 'Group'
       @group_name = false
 

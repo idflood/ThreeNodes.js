@@ -3,11 +3,10 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
-    BloomPass: class BloomPass extends ThreeNodes.NodeBase
+    BloomPass: class BloomPass extends Node
       @node_name = 'Bloom'
       @group_name = 'PostProcessing'
 
@@ -46,7 +45,7 @@ define (require) ->
         @ob.screenUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
         @fields.setField("out", @ob)
 
-    DotScreenPass: class DotScreenPass extends ThreeNodes.NodeBase
+    DotScreenPass: class DotScreenPass extends Node
       @node_name = 'DotScreen'
       @group_name = 'PostProcessing'
 
@@ -83,7 +82,7 @@ define (require) ->
           @ob = new THREE.DotScreenPass(@fields.getField("center").getValue(), @fields.getField('angle').getValue(), @fields.getField('scale').getValue())
         @fields.setField("out", @ob)
 
-    FilmPass: class FilmPass extends ThreeNodes.NodeBase
+    FilmPass: class FilmPass extends Node
       @node_name = 'Film'
       @group_name = 'PostProcessing'
 
@@ -123,7 +122,7 @@ define (require) ->
         @ob.uniforms.sCount.value = @fields.getField("scanlinesCount").getValue()
         @fields.setField("out", @ob)
 
-    VignettePass: class VignettePass extends ThreeNodes.NodeBase
+    VignettePass: class VignettePass extends Node
       @node_name = 'Vignette'
       @group_name = 'PostProcessing'
 
@@ -151,7 +150,7 @@ define (require) ->
         @ob.uniforms[ "darkness" ].value = @fields.getField("darkness").getValue()
         @fields.setField("out", @ob)
 
-    HorizontalBlurPass: class HorizontalBlurPass extends ThreeNodes.NodeBase
+    HorizontalBlurPass: class HorizontalBlurPass extends Node
       @node_name = 'HorizontalBlur'
       @group_name = 'PostProcessing'
 
@@ -177,7 +176,7 @@ define (require) ->
         @ob.uniforms[ "h" ].value = @fields.getField("delta").getValue()
         @fields.setField("out", @ob)
 
-    VerticalBlurPass: class VerticalBlurPass extends ThreeNodes.NodeBase
+    VerticalBlurPass: class VerticalBlurPass extends Node
       @node_name = 'VerticalBlur'
       @group_name = 'PostProcessing'
 
@@ -203,7 +202,7 @@ define (require) ->
         @ob.uniforms[ "v" ].value = @fields.getField("delta").getValue()
         @fields.setField("out", @ob)
 
-    BleachPass: class BleachPass extends ThreeNodes.NodeBase
+    BleachPass: class BleachPass extends Node
       @node_name = 'Bleach'
       @group_name = 'PostProcessing'
 

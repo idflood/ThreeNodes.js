@@ -2,11 +2,10 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes",
-    NodeMaterialBase: class NodeMaterialBase extends ThreeNodes.NodeBase
+    NodeMaterialBase: class NodeMaterialBase extends Node
       initialize: (options) =>
         super
         @ob = false

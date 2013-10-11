@@ -1,7 +1,6 @@
 define (require) ->
   # Require node types here to avoid circular dependency between
   # Node, Group and Nodes collection.
-  require 'cs!threenodes/nodes/models/Node'
   require 'cs!threenodes/nodes/models/components/Base'
   require 'cs!threenodes/nodes/models/components/Conditional'
   require 'cs!threenodes/nodes/models/components/Geometry'

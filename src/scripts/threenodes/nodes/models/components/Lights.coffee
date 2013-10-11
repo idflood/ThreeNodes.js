@@ -2,11 +2,10 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
-    PointLight: class PointLight extends ThreeNodes.NodeBase
+    PointLight: class PointLight extends Node
       @node_name = 'PointLight'
       @group_name = 'Lights'
 
@@ -35,7 +34,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    SpotLight: class SpotLight extends ThreeNodes.NodeBase
+    SpotLight: class SpotLight extends Node
       @node_name = 'SpotLight'
       @group_name = 'Lights'
 
@@ -75,7 +74,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    DirectionalLight: class DirectionalLight extends ThreeNodes.NodeBase
+    DirectionalLight: class DirectionalLight extends Node
       @node_name = 'DirectionalLight'
       @group_name = 'Lights'
 
@@ -104,7 +103,7 @@ define (require) ->
         @applyFieldsToVal(@fields.inputs, @ob)
         @fields.setField("out", @ob)
 
-    AmbientLight: class AmbientLight extends ThreeNodes.NodeBase
+    AmbientLight: class AmbientLight extends Node
       @node_name = 'AmbientLight'
       @group_name = 'Lights'
 

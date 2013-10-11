@@ -2,53 +2,53 @@ define (require) ->
   #"use strict"
   _ = require 'Underscore'
   Backbone = require 'Backbone'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
+  NodeNumberSimple = require 'cs!threenodes/nodes/models/NodeNumberSimple'
 
   namespace "ThreeNodes.nodes.models",
-    MathSin: class MathSin extends ThreeNodes.NodeNumberSimple
+    MathSin: class MathSin extends NodeNumberSimple
       @node_name = 'Sin'
       @group_name = 'Math'
 
       process_val: (num, i) =>
         Math.sin(num)
 
-    MathCos: class MathCos extends ThreeNodes.NodeNumberSimple
+    MathCos: class MathCos extends NodeNumberSimple
       @node_name = 'Cos'
       @group_name = 'Math'
 
       process_val: (num, i) =>
         Math.cos(num)
 
-    MathTan: class MathTan extends ThreeNodes.NodeNumberSimple
+    MathTan: class MathTan extends NodeNumberSimple
       @node_name = 'Tan'
       @group_name = 'Math'
 
       process_val: (num, i) =>
         Math.tan(num)
 
-    MathRound: class MathRound extends ThreeNodes.NodeNumberSimple
+    MathRound: class MathRound extends NodeNumberSimple
       @node_name = 'Round'
       @group_name = 'Math'
 
       process_val: (num, i) =>
         Math.round(num)
 
-    MathCeil: class MathCeil extends ThreeNodes.NodeNumberSimple
+    MathCeil: class MathCeil extends NodeNumberSimple
       @node_name = 'Ceil'
       @group_name = 'Math'
 
       process_val: (num, i) =>
         Math.ceil(num)
 
-    MathFloor: class MathFloor extends ThreeNodes.NodeNumberSimple
+    MathFloor: class MathFloor extends NodeNumberSimple
       @node_name = 'Floor'
       @group_name = 'Math'
 
       process_val: (num, i) =>
         Math.floor(num)
 
-    NodeNumberParam1: class NodeNumberParam1 extends ThreeNodes.NodeNumberSimple
+    NodeNumberParam1: class NodeNumberParam1 extends NodeNumberSimple
       process_val: (num, numb, i) =>
         num + numb
 

@@ -3,11 +3,10 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Rc4Random = require 'cs!threenodes/utils/Rc4Random'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
 
   namespace "ThreeNodes.nodes.models",
-    RandomSpread: class RandomSpread extends ThreeNodes.NodeBase
+    RandomSpread: class RandomSpread extends Node
       @node_name = 'RandomSpread'
       @group_name = 'Spread'
 
@@ -54,7 +53,7 @@ define (require) ->
             @value[i] = @rnd.getRandomNumber() * @width - @width / 2 + @offset
         @fields.setField("out", @value)
 
-    LinearSpread: class LinearSpread extends ThreeNodes.NodeBase
+    LinearSpread: class LinearSpread extends Node
       @node_name = 'LinearSpread'
       @group_name = 'Spread'
 

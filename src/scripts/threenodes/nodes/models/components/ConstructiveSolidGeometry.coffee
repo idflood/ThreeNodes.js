@@ -3,14 +3,13 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Utils = require 'cs!threenodes/utils/Utils'
-
-  require 'cs!threenodes/nodes/models/Node'
+  Node = require 'cs!threenodes/nodes/models/Node'
   require 'Three'
   require 'csg'
   require 'ThreeCSG'
 
   namespace "ThreeNodes.nodes.models",
-    NodeCSG: class NodeCSG extends ThreeNodes.NodeBase
+    NodeCSG: class NodeCSG extends Node
       constructor: () ->
         super
         @auto_evaluate = true
