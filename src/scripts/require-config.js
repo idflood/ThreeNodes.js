@@ -7,6 +7,7 @@ require.config({
     text: "libs/require/text",
     cs: "libs/require/cs",
     CoffeeScript: "libs/coffee-script",
+    "coffee-script": "libs/coffee-script",
     treeJquery: "libs/tree.jquery",
     RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame",
     Raphael: "libs/raphael-min",
