@@ -1,7 +1,7 @@
 define (require) ->
   #"use strict"
   Backbone = require 'Backbone'
-  Connection = require 'cs!threenodes/models/Connection'
+  Connection = require 'cs!threenodes/connections/models/Connection'
 
   class Connections extends Backbone.Collection
     model: Connection

@@ -3,7 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Indexer = require 'cs!threenodes/utils/Indexer'
-  Connections = require 'cs!threenodes/collections/Connections'
+  Connections = require 'cs!threenodes/connections/collections/Connections'
 
   class Nodes extends Backbone.Collection
 
