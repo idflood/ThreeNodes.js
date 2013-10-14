@@ -3,6 +3,7 @@ define (require) ->
   # Node, Group and Nodes collection.
   require 'cs!threenodes/nodes/models/components/Base'
   require 'cs!threenodes/nodes/models/components/Conditional'
+  require 'cs!threenodes/nodes/models/components/Code'
   require 'cs!threenodes/nodes/models/components/Geometry'
   require 'cs!threenodes/nodes/models/components/Lights'
   require 'cs!threenodes/nodes/models/components/Materials'

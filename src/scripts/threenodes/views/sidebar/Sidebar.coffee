@@ -124,6 +124,7 @@ define (require) ->
         Base: []
         Conditional: []
         Math: []
+        Code: []
         Utils: []
         Three: []
         Geometry: []
