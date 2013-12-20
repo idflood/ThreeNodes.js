@@ -27,7 +27,7 @@ define (require) ->
           inputs:
             "children": {type: "Object3D", val: [], default: []}
             "position": {type: "Vector3", val: new THREE.Vector3()}
-            "rotation": {type: "Vector3", val: new THREE.Vector3()}
+            "rotation": {type: "Euler", val: new THREE.Euler()}
             "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
             "visible": true
             "castShadow": false
