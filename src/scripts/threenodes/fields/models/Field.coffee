@@ -299,6 +299,13 @@ define (require) ->
             return val
         return null
 
+    Euler: class Euler extends NodeField
+      computeValue : (val) =>
+        if $.type(val) == "object"
+          if val.constructor == THREE.Euler
+            return val
+        return null
+
     Color: class Color extends NodeField
       computeValue : (val) =>
         switch $.type(val)
