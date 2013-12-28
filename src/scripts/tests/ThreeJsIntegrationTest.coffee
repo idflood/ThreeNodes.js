@@ -76,7 +76,7 @@ define [
         # Connect an euler node to the rotation input of the object 3d.
         euler = ng.createNode("Euler")
         ng.connections.create
-          from_field: euler.fields.getField("xyzw", true)
+          from_field: euler.fields.getField("euler", true)
           to_field: node_object3d.fields.getField("rotation")
 
         euler.fields.getField("x").setValue(42)
