@@ -124,6 +124,47 @@ define (require) ->
         @fields.setField("y", resy)
         @fields.setField("z", resz)
 
+    Quaternion: class Quaternion extends Node
+      @node_name = 'Quaternion'
+      @group_name = 'Base'
+
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "x" : 0
+            "y" : 0
+            "z" : 0
+            "w" : 1
+          outputs:
+            "xyzw" : {type: "Quaternion", val: false}
+            "x" : 0
+            "y" : 0
+            "z" : 0
+            "w" : 1
+        return $.extend(true, base_fields, fields)
+
+      compute: =>
+        res = []
+        resx = []
+        resy = []
+        resz = []
+        resw = []
+        numItems = @fields.getMaxInputSliceCount()
+
+        for i in [0..numItems]
+          resx[i] = @fields.getField("x").getValue(i)
+          resy[i] = @fields.getField("y").getValue(i)
+          resz[i] = @fields.getField("z").getValue(i)
+          resw[i] = @fields.getField("w").getValue(i)
+          res[i] = new THREE.Quaternion(resx[i], resy[i], resz[i], resw[i])
+
+        @fields.setField("xyzw", res)
+        @fields.setField("x", resx)
+        @fields.setField("y", resy)
+        @fields.setField("z", resz)
+        @fields.setField("w", resw)
+
     Euler: class Euler extends Node
       @node_name = 'Euler'
       @group_name = 'Base'
