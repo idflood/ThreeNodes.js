@@ -65,6 +65,26 @@ define [
         equals ThreeNodes.Webgl.renderModel.scene.id, n5.fields.getField("scene").getValue().id, "ThreeNodes.Webgl.renderModel.scene == scene connected to the renderer"
         equals n5.fields.getField("postfx").getValue().length, 0, "Webgl.postfx array is empty"
 
+      test "Three.js rotation", () ->
+        ng = app.nodes
+        app.clearWorkspace()
+
+        node_object3d = ng.createNode("Object3D")
+        rotation = node_object3d.fields.getField("rotation").getValue()
+        equals rotation instanceof THREE.Euler, true, "By default rotation is an Euler"
+
+        # Connect an euler node to the rotation input of the object 3d.
+        euler = ng.createNode("Euler")
+        ng.connections.create
+          from_field: euler.fields.getField("xyzw", true)
+          to_field: node_object3d.fields.getField("rotation")
+
+        euler.fields.getField("x").setValue(42)
+        ng.render()
+        equals euler.fields.getField("x", true).getValue(), 42, "Setting the x from an euler should give the correct x output"
+        object3d = node_object3d.ob
+        equals object3d.rotation.x, 42, "The object3d should have the rotation defined from the euler"
+
       test "Camera -> object3d -> merge -> scene connection test (children array)", () ->
         ng = app.nodes
         app.clearWorkspace()
