@@ -124,6 +124,47 @@ define (require) ->
         @fields.setField("y", resy)
         @fields.setField("z", resz)
 
+    Euler: class Euler extends Node
+      @node_name = 'Euler'
+      @group_name = 'Base'
+
+      getFields: =>
+        base_fields = super
+        fields =
+          inputs:
+            "x" : 0
+            "y" : 0
+            "z" : 0
+            "order": "XYZ"
+          outputs:
+            "euler" : {type: "Euler", val: false}
+            "x" : 0
+            "y" : 0
+            "z" : 0
+            "order": "XYZ"
+        return $.extend(true, base_fields, fields)
+
+      compute: =>
+        res = []
+        resx = []
+        resy = []
+        resz = []
+        resorder = []
+        numItems = @fields.getMaxInputSliceCount()
+
+        for i in [0..numItems]
+          resx[i] = @fields.getField("x").getValue(i)
+          resy[i] = @fields.getField("y").getValue(i)
+          resz[i] = @fields.getField("z").getValue(i)
+          resorder[i] = @fields.getField("order").getValue(i)
+          res[i] = new THREE.Euler(resx[i], resy[i], resz[i], resorder[i])
+
+        @fields.setField("euler", res)
+        @fields.setField("x", resx)
+        @fields.setField("y", resy)
+        @fields.setField("z", resz)
+        @fields.setField("order", resorder)
+
     Color: class Color extends Node
       @node_name = 'Color'
       @group_name = 'Base'
