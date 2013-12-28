@@ -9,6 +9,7 @@ define (require) ->
   require 'cs!threenodes/views/sidebar/fields/Vector2Field'
   require 'cs!threenodes/views/sidebar/fields/Vector3Field'
   require 'cs!threenodes/views/sidebar/fields/Vector4Field'
+  require 'cs!threenodes/views/sidebar/fields/QuaternionField'
   require 'cs!threenodes/views/sidebar/fields/EulerField'
 
   ### NodeSidebarView ###
@@ -29,6 +30,7 @@ define (require) ->
           when ThreeNodes.fields.Vector2 then ThreeNodes.views.fields.Vector2Field
           when ThreeNodes.fields.Vector3 then ThreeNodes.views.fields.Vector3Field
           when ThreeNodes.fields.Vector4 then ThreeNodes.views.fields.Vector4Field
+          when ThreeNodes.fields.Quaternion then ThreeNodes.views.fields.QuaternionField
           when ThreeNodes.fields.Euler then ThreeNodes.views.fields.EulerField
           else false
 
