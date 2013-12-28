@@ -82,6 +82,7 @@ define [
         euler.fields.getField("x").setValue(42)
         ng.render()
         equals euler.fields.getField("x", true).getValue(), 42, "Setting the x from an euler should give the correct x output"
+        equals node_object3d.fields.getField("rotation").getValue().x, 42, "Setting the x from an euler should give the correct x output"
         object3d = node_object3d.ob
         equals object3d.rotation.x, 42, "The object3d should have the rotation defined from the euler"
 
