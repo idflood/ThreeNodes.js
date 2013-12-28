@@ -135,7 +135,16 @@ define (require) ->
             "x" : 0
             "y" : 0
             "z" : 0
-            "order": "XYZ"
+            "order":
+              type: "String"
+              val: "XYZ"
+              values:
+                "XYZ": "XYZ"
+                "YZX": "YZX"
+                "ZXY": "ZXY"
+                "XZY": "XZY"
+                "YXZ": "YXZ"
+                "ZYX": "ZYX"
           outputs:
             "euler" : {type: "Euler", val: false}
             "x" : 0
