@@ -10,7 +10,7 @@ THREE.EffectComposer = function( renderer, renderTarget ) {
 
 	if ( this.renderTarget1 === undefined ) {
 
-		this.renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBufer: false };
+		this.renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
 		this.renderTarget1 = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, this.renderTargetParameters );
 
 	}
@@ -119,9 +119,14 @@ THREE.EffectComposer.prototype = {
 
 };
 
+// shared ortho camera
+
+THREE.EffectComposer.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
+
 // shared fullscreen quad scene
 
 THREE.EffectComposer.geometry = new THREE.PlaneGeometry( 1, 1 );
+THREE.EffectComposer.geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
 
 THREE.EffectComposer.quad = new THREE.Mesh( THREE.EffectComposer.geometry, null );
 THREE.EffectComposer.quad.position.z = -100;
@@ -129,8 +134,4 @@ THREE.EffectComposer.quad.scale.set( window.innerWidth, window.innerHeight, 1 );
 
 THREE.EffectComposer.scene = new THREE.Scene();
 THREE.EffectComposer.scene.add( THREE.EffectComposer.quad );
-
-// shared ortho camera
-
-THREE.EffectComposer.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
-
+THREE.EffectComposer.scene.add( THREE.EffectComposer.camera );

@@ -1,6 +1,7 @@
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author zz85 / http://www.lab4games.net/zz85/blog
+ * @author davidedc / http://www.sketchpatch.net/
  *
  * ShaderExtras currently contains:
  *
@@ -21,7 +22,11 @@
  *  blend
  *  fxaa
  *  luminosity
+ *  colorCorrection
  *  normalmap
+ *  ssao
+ *  colorify
+ *  unpackDepthRGBA
  */
 
 THREE.ShaderExtras = {
@@ -253,7 +258,7 @@ THREE.ShaderExtras = {
 				focus:    { type: "f", value: 1.0 },
 				aspect:   { type: "f", value: 1.0 },
 				aperture: { type: "f", value: 0.025 },
-				maxblur:  { type: "f", value: 1.0 },
+				maxblur:  { type: "f", value: 1.0 }
 			  },
 
 	vertexShader: [
@@ -703,7 +708,7 @@ THREE.ShaderExtras = {
 				"vec2 vin;",
 				"vec2 uv = vUv;",
 
-				"add += color = org = texture2D( tDiffuse, uv );",
+				"add = color = org = texture2D( tDiffuse, uv );",
 
 				"vin = ( uv - vec2( 0.5 ) ) * vec2( 1.4 );",
 				"sample_dist = dot( vin, vin ) * 2.0;",
@@ -1184,7 +1189,9 @@ THREE.ShaderExtras = {
 				"vec3 rgbNE = texture2D( tDiffuse, ( gl_FragCoord.xy + vec2( 1.0, -1.0 ) ) * resolution ).xyz;",
 				"vec3 rgbSW = texture2D( tDiffuse, ( gl_FragCoord.xy + vec2( -1.0, 1.0 ) ) * resolution ).xyz;",
 				"vec3 rgbSE = texture2D( tDiffuse, ( gl_FragCoord.xy + vec2( 1.0, 1.0 ) ) * resolution ).xyz;",
-				"vec3 rgbM  = texture2D( tDiffuse,  gl_FragCoord.xy  * resolution ).xyz;",
+				"vec4 rgbaM  = texture2D( tDiffuse,  gl_FragCoord.xy  * resolution );",
+				"vec3 rgbM  = rgbaM.xyz;",
+				"float opacity  = rgbaM.w;",
 
 				"vec3 luma = vec3( 0.299, 0.587, 0.114 );",
 
@@ -1219,17 +1226,17 @@ THREE.ShaderExtras = {
 
 				"if ( ( lumaB < lumaMin ) || ( lumaB > lumaMax ) ) {",
 
-					"gl_FragColor = vec4( rgbA, 1.0 );",
+					"gl_FragColor = vec4( rgbA, opacity );",
 
 				"} else {",
 
-					"gl_FragColor = vec4( rgbB, 1.0 );",
+					"gl_FragColor = vec4( rgbB, opacity );",
 
 				"}",
 
 			"}",
 
-		].join("\n"),
+		].join("\n")
 
 	},
 
@@ -1275,6 +1282,53 @@ THREE.ShaderExtras = {
 				"float v = dot( texel.xyz, luma );",
 
 				"gl_FragColor = vec4( v, v, v, texel.w );",
+
+			"}"
+
+		].join("\n")
+
+	},
+
+	/* -------------------------------------------------------------------------
+	//	Color correction
+	 ------------------------------------------------------------------------- */
+
+	'colorCorrection': {
+
+		uniforms: {
+
+			"tDiffuse" : 	{ type: "t", value: 0, texture: null },
+			"powRGB" :		{ type: "v3", value: new THREE.Vector3( 2, 2, 2 ) },
+			"mulRGB" :		{ type: "v3", value: new THREE.Vector3( 1, 1, 1 ) }
+
+		},
+
+		vertexShader: [
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vUv = vec2( uv.x, 1.0 - uv.y );",
+
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform sampler2D tDiffuse;",
+			"uniform vec3 powRGB;",
+			"uniform vec3 mulRGB;",
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"gl_FragColor = texture2D( tDiffuse, vUv );",
+				"gl_FragColor.rgb = mulRGB * pow( gl_FragColor.rgb, powRGB );",
 
 			"}"
 
@@ -1335,6 +1389,368 @@ THREE.ShaderExtras = {
 
 	},
 
+	/* -------------------------------------------------------------------------
+	//	Screen-space ambient occlusion shader
+	//	- ported from
+	//		SSAO GLSL shader v1.2
+	//		assembled by Martins Upitis (martinsh) (http://devlog-martinsh.blogspot.com)
+	//		original technique is made by ArKano22 (http://www.gamedev.net/topic/550699-ssao-no-halo-artifacts/)
+	//	- modifications
+	//		- modified to use RGBA packed depth texture (use clear color 1,1,1,1 for depth pass)
+	//		- made fog more compatible with three.js linear fog
+	//		- refactoring and optimizations
+	 ------------------------------------------------------------------------- */
+
+	'ssao': {
+
+		uniforms: {
+
+			"tDiffuse": 	{ type: "t", value: 0, texture: null },
+			"tDepth":   	{ type: "t", value: 1, texture: null },
+			"size": 		{ type: "v2", value: new THREE.Vector2( 512, 512 ) },
+			"cameraNear":	{ type: "f", value: 1 },
+			"cameraFar":	{ type: "f", value: 100 },
+			"fogNear":		{ type: "f", value: 5 },
+			"fogFar":		{ type: "f", value: 100 },
+			"fogEnabled":	{ type: "i", value: 0 },
+			"onlyAO":		{ type: "i", value: 0 },
+			"aoClamp":		{ type: "f", value: 0.3 },
+			"lumInfluence":	{ type: "f", value: 0.9 }
+
+		},
+
+		vertexShader: [
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vUv = vec2( uv.x, 1.0 - uv.y );",
+
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform float cameraNear;",
+			"uniform float cameraFar;",
+
+			"uniform float fogNear;",
+			"uniform float fogFar;",
+
+			"uniform bool fogEnabled;",		// attenuate AO with linear fog
+			"uniform bool onlyAO;", 		// use only ambient occlusion pass?
+
+			"uniform vec2 size;",			// texture width, height
+			"uniform float aoClamp;", 		// depth clamp - reduces haloing at screen edges
+
+			"uniform float lumInfluence;",  // how much luminance affects occlusion
+
+			"uniform sampler2D tDiffuse;",
+			"uniform sampler2D tDepth;",
+
+			"varying vec2 vUv;",
+
+			//"#define PI 3.14159265",
+			"#define DL 2.399963229728653", // PI * ( 3.0 - sqrt( 5.0 ) )
+			"#define EULER 2.718281828459045",
+
+			// helpers
+
+			"float width = size.x;", 	// texture width
+			"float height = size.y;", 	// texture height
+
+			"float cameraFarPlusNear = cameraFar + cameraNear;",
+			"float cameraFarMinusNear = cameraFar - cameraNear;",
+			"float cameraCoef = 2.0 * cameraNear;",
+
+			// user variables
+
+			"const int samples = 8;", 		// ao sample count
+			"const float radius = 5.0;", 	// ao radius
+
+			"const bool useNoise = false;", 		 // use noise instead of pattern for sample dithering
+			"const float noiseAmount = 0.0003;", // dithering amount
+
+			"const float diffArea = 0.4;", 		// self-shadowing reduction
+			"const float gDisplace = 0.4;", 	// gauss bell center
+
+			"const vec3 onlyAOColor = vec3( 1.0, 0.7, 0.5 );",
+			//"const vec3 onlyAOColor = vec3( 1.0, 1.0, 1.0 );",
+
+
+			// RGBA depth
+
+			"float unpackDepth( const in vec4 rgba_depth ) {",
+
+				"const vec4 bit_shift = vec4( 1.0 / ( 256.0 * 256.0 * 256.0 ), 1.0 / ( 256.0 * 256.0 ), 1.0 / 256.0, 1.0 );",
+				"float depth = dot( rgba_depth, bit_shift );",
+				"return depth;",
+
+			"}",
+
+			// generating noise / pattern texture for dithering
+
+			"vec2 rand( const vec2 coord ) {",
+
+				"vec2 noise;",
+
+				"if ( useNoise ) {",
+
+					"float nx = dot ( coord, vec2( 12.9898, 78.233 ) );",
+					"float ny = dot ( coord, vec2( 12.9898, 78.233 ) * 2.0 );",
+
+					"noise = clamp( fract ( 43758.5453 * sin( vec2( nx, ny ) ) ), 0.0, 1.0 );",
+
+				"} else {",
+
+					"float ff = fract( 1.0 - coord.s * ( width / 2.0 ) );",
+					"float gg = fract( coord.t * ( height / 2.0 ) );",
+
+					"noise = vec2( 0.25, 0.75 ) * vec2( ff ) + vec2( 0.75, 0.25 ) * gg;",
+
+				"}",
+
+				"return ( noise * 2.0  - 1.0 ) * noiseAmount;",
+
+			"}",
+
+			"float doFog() {",
+
+				"float zdepth = unpackDepth( texture2D( tDepth, vUv ) );",
+				"float depth = -cameraFar * cameraNear / ( zdepth * cameraFarMinusNear - cameraFar );",
+
+				"return smoothstep( fogNear, fogFar, depth );",
+
+			"}",
+
+			"float readDepth( const in vec2 coord ) {",
+
+				//"return ( 2.0 * cameraNear ) / ( cameraFar + cameraNear - unpackDepth( texture2D( tDepth, coord ) ) * ( cameraFar - cameraNear ) );",
+				"return cameraCoef / ( cameraFarPlusNear - unpackDepth( texture2D( tDepth, coord ) ) * cameraFarMinusNear );",
+
+
+			"}",
+
+			"float compareDepths( const in float depth1, const in float depth2, inout int far ) {",
+
+				"float garea = 2.0;", 						 // gauss bell width
+				"float diff = ( depth1 - depth2 ) * 100.0;", // depth difference (0-100)
+
+				// reduce left bell width to avoid self-shadowing
+
+				"if ( diff < gDisplace ) {",
+
+					"garea = diffArea;",
+
+				"} else {",
+
+					"far = 1;",
+
+				"}",
+
+				"float dd = diff - gDisplace;",
+				"float gauss = pow( EULER, -2.0 * dd * dd / ( garea * garea ) );",
+				"return gauss;",
+
+			"}",
+
+			"float calcAO( float depth, float dw, float dh ) {",
+
+				"float dd = radius - depth * radius;",
+				"vec2 vv = vec2( dw, dh );",
+
+				"vec2 coord1 = vUv + dd * vv;",
+				"vec2 coord2 = vUv - dd * vv;",
+
+				"float temp1 = 0.0;",
+				"float temp2 = 0.0;",
+
+				"int far = 0;",
+				"temp1 = compareDepths( depth, readDepth( coord1 ), far );",
+
+				// DEPTH EXTRAPOLATION
+
+				"if ( far > 0 ) {",
+
+					"temp2 = compareDepths( readDepth( coord2 ), depth, far );",
+					"temp1 += ( 1.0 - temp1 ) * temp2;",
+
+				"}",
+
+				"return temp1;",
+
+			"}",
+
+			"void main() {",
+
+				"vec2 noise = rand( vUv );",
+				"float depth = readDepth( vUv );",
+
+				"float tt = clamp( depth, aoClamp, 1.0 );",
+
+				"float w = ( 1.0 / width )  / tt + ( noise.x * ( 1.0 - noise.x ) );",
+				"float h = ( 1.0 / height ) / tt + ( noise.y * ( 1.0 - noise.y ) );",
+
+				"float pw;",
+				"float ph;",
+
+				"float ao;",
+
+				"float dz = 1.0 / float( samples );",
+				"float z = 1.0 - dz / 2.0;",
+				"float l = 0.0;",
+
+				"for ( int i = 0; i <= samples; i ++ ) {",
+
+					"float r = sqrt( 1.0 - z );",
+
+					"pw = cos( l ) * r;",
+					"ph = sin( l ) * r;",
+					"ao += calcAO( depth, pw * w, ph * h );",
+					"z = z - dz;",
+					"l = l + DL;",
+
+				"}",
+
+				"ao /= float( samples );",
+				"ao = 1.0 - ao;",
+
+				"if ( fogEnabled ) {",
+
+					"ao = mix( ao, 1.0, doFog() );",
+
+				"}",
+
+				"vec3 color = texture2D( tDiffuse, vUv ).rgb;",
+
+				"vec3 lumcoeff = vec3( 0.299, 0.587, 0.114 );",
+				"float lum = dot( color.rgb, lumcoeff );",
+				"vec3 luminance = vec3( lum );",
+
+				"vec3 final = vec3( color * mix( vec3( ao ), vec3( 1.0 ), luminance * lumInfluence ) );", // mix( color * ao, white, luminance )
+
+				"if ( onlyAO ) {",
+
+					"final = onlyAOColor * vec3( mix( vec3( ao ), vec3( 1.0 ), luminance * lumInfluence ) );", // ambient occlusion only
+
+				"}",
+
+				"gl_FragColor = vec4( final, 1.0 );",
+
+			"}"
+
+		].join("\n")
+
+	},
+
+	/* -------------------------------------------------------------------------
+	//	Colorify shader
+	 ------------------------------------------------------------------------- */
+
+	'colorify': {
+
+		uniforms: {
+
+			tDiffuse: { type: "t", value: 0, texture: null },
+			color:    { type: "c", value: new THREE.Color( 0xffffff ) }
+
+		},
+
+		vertexShader: [
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vUv = vec2( uv.x, 1.0 - uv.y );",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform vec3 color;",
+			"uniform sampler2D tDiffuse;",
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vec4 texel = texture2D( tDiffuse, vUv );",
+
+				"vec3 luma = vec3( 0.299, 0.587, 0.114 );",
+				"float v = dot( texel.xyz, luma );",
+
+				"gl_FragColor = vec4( v * color, texel.w );",
+
+			"}"
+
+		].join("\n")
+
+	},
+
+	/* -------------------------------------------------------------------------
+	//	Unpack RGBA depth shader
+	//	- show RGBA encoded depth as monochrome color
+	 ------------------------------------------------------------------------- */
+
+	'unpackDepthRGBA': {
+
+		uniforms: {
+
+			tDiffuse: { type: "t", value: 0, texture: null },
+			opacity:  { type: "f", value: 1.0 }
+
+		},
+
+		vertexShader: [
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vUv = vec2( uv.x, 1.0 - uv.y );",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform float opacity;",
+
+			"uniform sampler2D tDiffuse;",
+
+			"varying vec2 vUv;",
+
+			// RGBA depth
+
+			"float unpackDepth( const in vec4 rgba_depth ) {",
+
+				"const vec4 bit_shift = vec4( 1.0 / ( 256.0 * 256.0 * 256.0 ), 1.0 / ( 256.0 * 256.0 ), 1.0 / 256.0, 1.0 );",
+				"float depth = dot( rgba_depth, bit_shift );",
+				"return depth;",
+
+			"}",
+
+			"void main() {",
+
+				"float depth = 1.0 - unpackDepth( texture2D( tDiffuse, vUv ) );",
+				"gl_FragColor = opacity * vec4( vec3( depth ), 1.0 );",
+
+			"}"
+
+		].join("\n")
+
+	},
+
 	// METHODS
 
 	buildKernel: function( sigma ) {
@@ -1350,7 +1766,7 @@ THREE.ShaderExtras = {
 		var i, values, sum, halfWidth, kMaxKernelSize = 25, kernelSize = 2 * Math.ceil( sigma * 3.0 ) + 1;
 
 		if ( kernelSize > kMaxKernelSize ) kernelSize = kMaxKernelSize;
-		halfWidth = ( kernelSize - 1 ) * 0.5
+		halfWidth = ( kernelSize - 1 ) * 0.5;
 
 		values = new Array( kernelSize );
 		sum = 0.0;
