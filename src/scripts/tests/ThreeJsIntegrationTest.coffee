@@ -50,7 +50,7 @@ define [
         meshNode = ng.createNode("ThreeMesh")
         mesh = meshNode.ob
         ng.render()
-        equals mesh[0].material.constructor, THREE.MeshBasicMaterial, "Mesh default material is a MeshBasicMaterial"
+        equals mesh[0].material instanceof THREE.MeshBasicMaterial, true, "Mesh default material is a MeshBasicMaterial"
         equals mesh[0].material.color.r, 1, "Mesh default material is red (1/3)"
         equals mesh[0].material.color.g, 0, "Mesh default material is red (2/3)"
         equals mesh[0].material.color.b, 0, "Mesh default material is red (3/3)"
