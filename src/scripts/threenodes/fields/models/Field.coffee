@@ -323,13 +323,13 @@ define (require) ->
     Scene: class Scene extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
-          if val.constructor == THREE.Scene
+          if val instanceof THREE.Scene
             return val
         return null
     Camera: class Camera extends NodeField
       computeValue : (val) =>
         if $.type(val) == "object"
-          if val.constructor == THREE.Camera || val.constructor == THREE.PerspectiveCamera || val.constructor == THREE.OrthographicCamera
+          if val instanceof THREE.Camera || val instanceof THREE.PerspectiveCamera || val instanceof THREE.OrthographicCamera
             return val
         return null
     Mesh: class Mesh extends NodeField
