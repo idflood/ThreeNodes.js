@@ -29,7 +29,6 @@ define (require) ->
             "position": {type: "Vector3", val: new THREE.Vector3()}
             "rotation": {type: "Vector3", val: new THREE.Vector3()}
             "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
-            "doubleSided": false
             "visible": true
             "castShadow": false
             "receiveShadow": false

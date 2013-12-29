@@ -20,6 +20,13 @@ define (require) ->
           inputs:
             "opacity": 1
             "transparent": false
+            "side":
+              type: "Fload"
+              val: THREE.FrontSide
+              values:
+                "Front": THREE.FrontSide
+                "Back": THREE.BackSide
+                "Both": THREE.DoubleSide
             "depthTest": true
             "alphaTest": 0
             "polygonOffset": false
