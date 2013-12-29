@@ -15,6 +15,7 @@ require.config({
     Three: "libs/Three",
     ThreeCSG: 'libs/ThreeCSG',
     csg: 'libs/csg',
+    ColladaLoader: 'libs/three-extras/js/loaders/ColladaLoader',
     EffectComposer: 'libs/three-extras/js/postprocessing/EffectComposer',
     RenderPass: 'libs/three-extras/js/postprocessing/RenderPass',
     BloomPass: 'libs/three-extras/js/postprocessing/BloomPass',
@@ -59,6 +60,7 @@ require.config({
     'timeline-gui': {
       deps: ['timeline'],
     },
+    'ColladaLoader': ['Three'],
     'ThreeCSG': ['Three'],
     'csg': ['ThreeCSG'],
     'EffectComposer': ['Three'],

@@ -5,6 +5,8 @@ define (require) ->
   Backbone = require 'Backbone'
   Node = require 'cs!threenodes/nodes/models/Node'
 
+  require 'ColladaLoader'
+
   namespace "ThreeNodes.nodes.models",
     Object3D: class Object3D extends Node
       @node_name = 'Object3D'
