@@ -21,7 +21,7 @@ define (require) ->
             "opacity": 1
             "transparent": false
             "side":
-              type: "Fload"
+              type: "Float"
               val: THREE.FrontSide
               values:
                 "Front": THREE.FrontSide
