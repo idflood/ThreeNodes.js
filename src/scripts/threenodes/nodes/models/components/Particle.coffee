@@ -511,7 +511,7 @@ define (require) ->
             @pools.push(v)
 
         new_pos = () ->
-          new THREE.Vertex(new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY))
+          new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)
 
         for i in [0..@fields.getField("maxParticles").getValue() - 1]
           pos = new_pos()
@@ -539,7 +539,7 @@ define (require) ->
 
       compute: () =>
         if @geom != false
-          @geom.__dirtyVertices = true
+          @geom.verticesNeedUpdate = true
         @fields.setField("pool", this)
 
     RandomCloudGeometry: class RandomCloudGeometry extends Node
@@ -591,7 +591,7 @@ define (require) ->
           p.position.x = @limit_position(p.position.x)
           p.position.y = @limit_position(p.position.y)
           p.position.z = @limit_position(p.position.z)
-        @ob.__dirtyVertices = true
+        @ob.verticesNeedUpdate = true
         true
 
       generate: =>
@@ -600,8 +600,7 @@ define (require) ->
         total = @fields.getField("nbrParticles").getValue()
         linearVelocity = @fields.getField("linearVelocity").getValue()
         for i in [0..total]
-          vector = new THREE.Vector3( Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad )
-          v = new THREE.Vertex( vector )
+          v = new THREE.Vector3( Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad )
           v.velocity = new THREE.Vector3( Math.random() * linearVelocity.x - linearVelocity.x * 0.5, Math.random() * linearVelocity.y - linearVelocity.y * 0.5, Math.random() * linearVelocity.z - linearVelocity.z * 0.5 )
           @ob.vertices.push( v )
         true
