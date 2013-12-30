@@ -24,7 +24,14 @@ require.config({
     ShaderPass: 'libs/three-extras/js/postprocessing/ShaderPass',
     MaskPass: 'libs/three-extras/js/postprocessing/MaskPass',
     DotScreenPass: 'libs/three-extras/js/postprocessing/DotScreenPass',
-    ShaderExtras: 'libs/three-extras/js/ShaderExtras',
+    ShaderVignette: 'libs/three-extras/js/shaders/VignetteShader',
+    HorizontalBlurShader: 'libs/three-extras/js/shaders/HorizontalBlurShader',
+    VerticalBlurShader: 'libs/three-extras/js/shaders/VerticalBlurShader',
+    BleachBypassShader: 'libs/three-extras/js/shaders/BleachBypassShader',
+    ConvolutionShader: 'libs/three-extras/js/shaders/ConvolutionShader',
+    FilmShader: 'libs/three-extras/js/shaders/FilmShader',
+    CopyShader: 'libs/three-extras/js/shaders/CopyShader',
+    RenderPass: 'libs/three-extras/js/postprocessing/RenderPass',
     timeline: "libs/timeline.js/timeline",
     'timeline-gui': "libs/timeline.js/timeline-gui"
   },
@@ -63,7 +70,6 @@ require.config({
     'ColladaLoader': ['Three'],
     'ThreeCSG': ['Three'],
     'csg': ['ThreeCSG'],
-    'EffectComposer': ['Three'],
     'RenderPass': ['Three'],
     'BloomPass': ['Three'],
     'FilmPass': ['Three'],
@@ -71,6 +77,23 @@ require.config({
     'ShaderPass': ['Three'],
     'MaskPass': ['Three'],
     'DotScreenPass': ['Three'],
-    'ShaderExtras': ['Three']
+    'EffectComposer': {
+      deps: ['Three', 'CopyShader']
+    },
+    'RenderPass': ['Three'],
+    'BloomPass': {
+      deps: ['Three', 'ConvolutionShader']
+    },
+    'ConvolutionShader': ['Three'],
+    'FilmPass': {
+      deps: ['Three', 'FilmShader']
+    },
+    'ShaderVignette': ['Three'],
+    'HorizontalBlurShader': ['Three'],
+    'VerticalBlurShader': ['Three'],
+    'BleachBypassShader': ['Three'],
+    'FilmShader': ['Three'],
+    'CopyShader': ['Three'],
+    'RenderPass': ['Three']
   }
 });

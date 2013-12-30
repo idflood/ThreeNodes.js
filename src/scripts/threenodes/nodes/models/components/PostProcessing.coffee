@@ -5,6 +5,14 @@ define (require) ->
   Utils = require 'cs!threenodes/utils/Utils'
   Node = require 'cs!threenodes/nodes/models/Node'
 
+  require 'ShaderVignette'
+  require 'HorizontalBlurShader'
+  require 'VerticalBlurShader'
+  require 'BleachBypassShader'
+  require 'DotScreenPass'
+  require 'BloomPass'
+  require 'FilmPass'
+
   namespace "ThreeNodes.nodes.models",
     BloomPass: class BloomPass extends Node
       @node_name = 'Bloom'
@@ -42,7 +50,7 @@ define (require) ->
       compute: =>
         if @value_has_changed(['kernelSize', 'sigma', 'resolution']) == true
           @ob = new THREE.BloomPass(@fields.getField("strength").getValue(), @fields.getField('kernelSize').getValue(), @fields.getField('sigma').getValue(), @fields.getField('resolution').getValue())
-        @ob.screenUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
+        @ob.copyUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
         @fields.setField("out", @ob)
 
     DotScreenPass: class DotScreenPass extends Node
@@ -128,7 +136,7 @@ define (require) ->
 
       initialize: (options) =>
         super
-        shader = THREE.ShaderExtras[ "vignette" ]
+        shader = THREE.VignetteShader
         @ob = new THREE.ShaderPass( shader )
 
       getFields: =>
@@ -156,7 +164,7 @@ define (require) ->
 
       initialize: (options) =>
         super
-        shader = THREE.ShaderExtras[ "horizontalBlur" ]
+        shader = THREE.HorizontalBlurShader
         @ob = new THREE.ShaderPass( shader )
 
       getFields: =>
@@ -182,7 +190,7 @@ define (require) ->
 
       initialize: (options) =>
         super
-        shader = THREE.ShaderExtras[ "verticalBlur" ]
+        shader = THREE.VerticalBlurShader
         @ob = new THREE.ShaderPass( shader )
 
       getFields: =>
@@ -208,7 +216,7 @@ define (require) ->
 
       initialize: (options) =>
         super
-        shader = THREE.ShaderExtras[ "bleachbypass" ]
+        shader = THREE.BleachBypassShader
         @ob = new THREE.ShaderPass( shader )
 
       getFields: =>

@@ -3,15 +3,12 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
 
-  require 'Three'
-  require 'ShaderExtras'
+  THREE = require 'Three'
   require 'EffectComposer'
   require 'MaskPass'
   require 'RenderPass'
   require 'ShaderPass'
-  require 'BloomPass'
-  require 'FilmPass'
-  require 'DotScreenPass'
+  require 'CopyShader'
   require 'libs/BlobBuilder.min'
   require 'libs/FileSaver.min'
   require 'libs/canvas-toBlob.min'
@@ -31,7 +28,7 @@ define (require) ->
           clearColor: 0x000000
           preserveDrawingBuffer: true
       @current_renderer.autoClear = false
-      @effectScreen = new THREE.ShaderPass( THREE.ShaderExtras[ "screen" ] )
+      @effectScreen = new THREE.ShaderPass( THREE.CopyShader )
       @effectScreen.renderToScreen = true
       @renderModel = new THREE.RenderPass( @current_scene, @current_camera )
       @composer = new THREE.EffectComposer( @current_renderer )
