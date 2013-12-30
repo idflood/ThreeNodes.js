@@ -27,7 +27,7 @@ define (require) ->
           inputs:
             "children": {type: "Object3D", val: [], default: []}
             "position": {type: "Vector3", val: new THREE.Vector3()}
-            "rotation": {type: "Euler", val: new THREE.Euler()}
+            "rotation": {type: "Any", val: new THREE.Euler()}
             "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
             "visible": true
             "castShadow": false
@@ -88,8 +88,18 @@ define (require) ->
               #console.log "scene add child"
               @ob.add(child)
 
+      applyRotation: (target, rotation) =>
+        if rotation instanceof THREE.Euler
+          target.setRotationFromEuler(rotation)
+        else if rotation instanceof THREE.Quaternion
+          target.quaternion = rotation
+        else if rotation instanceof THREE.Vector3
+          target.rotation.set(rotation.x, rotation.y, rotation.z, "XYZ")
+
       compute: =>
-        @applyFieldsToVal(@fields.inputs, @ob, ['children'])
+        @applyFieldsToVal(@fields.inputs, @ob, ['children', 'rotation'])
+        rotation = @fields.getField('rotation').getValue()
+        @applyRotation(@ob, rotation)
         @apply_children()
         @fields.setField("out", @ob)
 
@@ -122,8 +132,10 @@ define (require) ->
         super
 
       compute: =>
-        @applyFieldsToVal(@fields.inputs, @ob, ['children', 'lights'])
+        @applyFieldsToVal(@fields.inputs, @ob, ['children', 'lights', 'rotation'])
         @apply_children()
+        rotation = @fields.getField('rotation').getValue()
+        @applyRotation(@ob, rotation)
         @fields.setField("out", @ob)
 
     Object3DwithMeshAndMaterial: class Object3DwithMeshAndMaterial extends Object3D
@@ -242,7 +254,9 @@ define (require) ->
               applyShadowOptionsToSubMeshes(child)
 
         for i in [0..numItems]
-          @applyFieldsToVal(@fields.inputs, @ob[i], ['children', 'file_url', 'castShadow', 'receiveShadow'], i)
+          @applyFieldsToVal(@fields.inputs, @ob[i], ['children', 'file_url', 'castShadow', 'receiveShadow', 'rotation'], i)
+          rotation = @fields.getField('rotation').getValue(i)
+          @applyRotation(@ob[i], rotation)
           @ob[i].castShadow = cast
           @ob[i].receiveShadow = receive
 
@@ -309,7 +323,9 @@ define (require) ->
             @ob[i] = item
 
         for i in [0..numItems]
-          @applyFieldsToVal(@fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+          @applyFieldsToVal(@fields.inputs, @ob[i], ['children', 'geometry', 'material', 'rotation'], i)
+          rotation = @fields.getField('rotation').getValue(i)
+          @applyRotation(@ob[i], rotation)
 
         if needs_rebuild == true
           @trigger("RebuildAllShaders")
@@ -366,7 +382,9 @@ define (require) ->
             @ob[i] = item
 
         for i in [0..numItems]
-          @applyFieldsToVal(@fields.inputs, @ob[i], ['children', 'geometry', 'material'], i)
+          @applyFieldsToVal(@fields.inputs, @ob[i], ['children', 'geometry', 'material', 'rotation'], i)
+          rotation = @fields.getField('rotation').getValue(i)
+          @applyRotation(@ob[i], rotation)
 
         if needs_rebuild == true
           @trigger("RebuildAllShaders")
