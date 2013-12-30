@@ -103,6 +103,60 @@ define [
               vector3:
                 val: new THREE.Vector3()
                 return: false
+          material:
+            instance: new ThreeNodes.fields.Material({})
+            values:
+              MeshBasicMaterial:
+                val: new THREE.MeshBasicMaterial()
+                return: true
+              MeshLambertMaterial:
+                val: new THREE.MeshLambertMaterial()
+                return: true
+              MeshPhongMaterial:
+                val: new THREE.MeshPhongMaterial()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          geometry:
+            instance: new ThreeNodes.fields.Geometry({})
+            values:
+              CubeGeometry:
+                val: new THREE.CubeGeometry()
+                return: true
+              SphereGeometry:
+                val: new THREE.SphereGeometry()
+                return: true
+              CylinderGeometry:
+                val: new THREE.CylinderGeometry()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          object3d:
+            instance: new ThreeNodes.fields.Object3D({})
+            values:
+              Object3D:
+                val: new THREE.Object3D()
+                return: true
+              SphereGeometry:
+                val: new THREE.Mesh()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          fog:
+            instance: new ThreeNodes.fields.Fog({})
+            values:
+              fog:
+                val: new THREE.Fog()
+                return: true
+              fogExp2:
+                val: new THREE.FogExp2()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
 
         for i, field of fields
           instance = field.instance
