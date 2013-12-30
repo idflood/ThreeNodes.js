@@ -29,7 +29,7 @@ define (require) ->
         # on output value change set preview color
         fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>
           @$picker_el.css
-            background: v[0].getContextStyle()
+            background: v[0].getStyle()
 
       remove: () =>
         @$picker_el.each () ->

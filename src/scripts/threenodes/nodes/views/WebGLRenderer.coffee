@@ -97,7 +97,7 @@ define (require) ->
         return this
 
       apply_bg_color: (force_refresh = false) ->
-        new_val = @model.fields.getField('bg_color').getValue().getContextStyle()
+        new_val = @model.fields.getField('bg_color').getValue().getStyle()
 
         if @old_bg == new_val && force_refresh == false
           return false
