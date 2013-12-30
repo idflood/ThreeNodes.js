@@ -7,7 +7,7 @@
 
 THREE.OBJMTLLoader = function ( ) {
 
-	THREE.EventTarget.call( this );
+	THREE.EventDispatcher.call( this );
 
 };
 
@@ -188,7 +188,7 @@ THREE.OBJMTLLoader.prototype = {
 
 		function uv( u, v ) {
 
-			return new THREE.UV( u, v );
+			return new THREE.Vector2( u, v );
 
 		}
 
