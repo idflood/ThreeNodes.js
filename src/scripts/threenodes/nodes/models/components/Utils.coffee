@@ -395,7 +395,8 @@ define (require) ->
         super
         @auto_evaluate = true
         @ob = ""
-        dir = "../assets/fonts/"
+        # todo: find a way to have cleaner path (./asset/fonts/)
+        dir = "../../../../../../assets/fonts/"
         @files =
           "helvetiker":
             "normal": dir + "helvetiker_regular.typeface"
