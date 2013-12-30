@@ -49,9 +49,9 @@ define (require) ->
         if $.type(@ob) == "array"
           for sub_material in @ob
             console.log "rebuilding submaterial"
-            sub_material.program = false
+            sub_material.needsUpdate = true
         else
-          @ob.program = false
+          @ob.needsUpdate = true
         @
 
       remove: () =>
