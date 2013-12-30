@@ -585,12 +585,12 @@ define (require) ->
       move_particles: =>
         rndVelocity = @fields.getField("rndVelocity").getValue()
         for key,p of @ob.vertices
-          p.position.x += Math.random() * rndVelocity.x - rndVelocity.x * 0.5 + p.velocity.x
-          p.position.y += Math.random() * rndVelocity.y - rndVelocity.y * 0.5 + p.velocity.y
-          p.position.z += Math.random() * rndVelocity.z - rndVelocity.z * 0.5 + p.velocity.z
-          p.position.x = @limit_position(p.position.x)
-          p.position.y = @limit_position(p.position.y)
-          p.position.z = @limit_position(p.position.z)
+          p.x += Math.random() * rndVelocity.x - rndVelocity.x * 0.5 + p.velocity.x
+          p.y += Math.random() * rndVelocity.y - rndVelocity.y * 0.5 + p.velocity.y
+          p.z += Math.random() * rndVelocity.z - rndVelocity.z * 0.5 + p.velocity.z
+          p.x = @limit_position(p.x)
+          p.y = @limit_position(p.y)
+          p.z = @limit_position(p.z)
         @ob.verticesNeedUpdate = true
         true
 
