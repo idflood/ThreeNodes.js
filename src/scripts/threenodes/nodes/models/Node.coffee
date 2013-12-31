@@ -67,7 +67,6 @@ define (require) ->
       if @options.anim != false
         @loadAnimation()
 
-      @showNodeAnimation()
       return this
 
     typename: => String(@constructor.name)
@@ -109,9 +108,6 @@ define (require) ->
 
     createConnection: (field1, field2) =>
       @trigger("createConnection", field1, field2)
-
-    showNodeAnimation: () =>
-      @trigger("node:showAnimations")
 
     addCountInput : () =>
       @fields.addFields

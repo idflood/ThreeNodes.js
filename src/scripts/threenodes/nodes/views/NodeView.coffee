@@ -36,12 +36,12 @@ define (require) ->
         @model.on('remove', () => @remove())
         @model.on("node:computePosition", @computeNodePosition)
         @model.on("node:renderConnections", @renderConnections)
-        @model.on("node:showAnimations", @highlighAnimations)
         @model.on("node:addSelectedClass", @addSelectedClass)
 
         # Render the node and "post init" the model
         @render()
         @initContextMenus()
+        @highlighAnimations()
         #@model.postInit()
 
       initContextMenus: () =>
