@@ -3,6 +3,7 @@ require.config({
     jquery: 'libs/jquery-2.0.3',
     "jquery.ui": 'libs/jquery-ui/js/jquery-ui',
     'jquery.menubar': 'libs/jquery.menubar',
+    'jquery.layout': 'libs/jquery.layout-latest',
     Underscore: 'libs/underscore',
     Backbone: 'libs/backbone',
     text: "libs/require/text",
@@ -63,6 +64,10 @@ require.config({
     },
     'jquery.menubar': {
       deps: ['jquery.ui'],
+      exports: "jquery"
+    },
+    'jquery.layout': {
+      deps: ['jquery', 'jquery.ui'],
       exports: "jquery"
     },
     'colorpicker': {

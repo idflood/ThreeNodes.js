@@ -12,7 +12,7 @@ define (require) ->
   require 'jquery.ui'
   require 'libs/jquery.transform2d'
   require 'libs/jquery-scrollview/jquery.scrollview'
-  require 'libs/jquery.layout-latest'
+  require 'jquery.layout'
 
   class UI extends Backbone.View
 
