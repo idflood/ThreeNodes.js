@@ -5,7 +5,7 @@ define (require) ->
   _view_template = require 'text!templates/definition.tmpl.html'
   _view_group_delete = require 'text!templates/confirm_group_delete.tmpl.html'
 
-  require 'libs/jquery-ui/js/jquery-ui-1.9m6.min'
+  require 'jquery.ui'
 
   ### Node View ###
   class GroupDefinitionView extends Backbone.View

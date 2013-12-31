@@ -3,6 +3,7 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   _view_menubar = require 'text!templates/app_menubar.tmpl.html'
+  require 'jquery.menubar'
 
   class MenuBar extends Backbone.View
     @template: _view_menubar
