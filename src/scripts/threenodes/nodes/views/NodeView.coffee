@@ -79,10 +79,8 @@ define (require) ->
             nodeAnimation = true
           else
             $target.removeClass "has-animation"
-        if nodeAnimation == true
-          @$el.addClass "node-has-animation"
-        else
-          @$el.removeClass "node-has-animation"
+
+        @$el.toggleClass "node-has-animation", nodeAnimation
         true
 
       addSelectedClass: () =>
