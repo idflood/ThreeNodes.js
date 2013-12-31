@@ -92,6 +92,8 @@ define (require) ->
 
       @layout = $('body').layout
         scrollToBookmarkOnLoad: false
+        animatePaneSizing: false
+        fxName: 'none'
         center:
           size: "100%"
         north:
