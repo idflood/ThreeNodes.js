@@ -120,6 +120,7 @@ define (require) ->
             else
               $(this).addClass("ui-selecting")
           selectable = $("#container").data("selectable")
+          if !selectable then return
           selectable.refresh()
           selectable._mouseStop(null)
           self.model.fields.renderSidebar()
