@@ -26,6 +26,7 @@ SPARKS.Engine = {
 	_timerStep: 10,
 	_velocityVerlet: false,
 	_emitters: [],
+	_isRunning: false,
 	
 	add: function(emitter) {
 		this._emitters.push(emitter);
@@ -44,14 +45,14 @@ SPARKS.Engine = {
 	
 	stop: function() {
 		this._isRunning = false;
-		for (var i=0,il=_emitters.length;i<il;i++) {
-			_emitters[i]._isRunning = false;
+		for (var i=0,il=this._emitters.length;i<il;i++) {
+			this._emitters[i]._isRunning = false;
 		}
 		clearTimeout(this._timer);
 	},
 	
 	isRunning: function() {
-		return this._isRunning & true;
+		return this._isRunning;
 	},
 	
 	// Step gets called upon by the engine
@@ -618,14 +619,14 @@ SPARKS.PointZone.prototype.getLocation = function() {
 SPARKS.LineZone = function(start, end) {
     this.start = start;
 	this.end = end;
-	this._length = end.clone().subSelf( start );
+	this._length = end.clone().sub( start );
 };
 
 SPARKS.LineZone.prototype.getLocation = function() {
     var len = this._length.clone();
 
 	len.multiplyScalar( Math.random() );
-	return len.addSelf( this.start );
+	return len.add( this.start );
 	
 };
 
@@ -640,8 +641,8 @@ SPARKS.ParallelogramZone.prototype.getLocation = function() {
     
 	var d1 = this.side1.clone().multiplyScalar( Math.random() );
 	var d2 = this.side2.clone().multiplyScalar( Math.random() );
-	d1.addSelf(d2);
-	return d1.addSelf( this.corner );
+	d1.add(d2);
+	return d1.add( this.corner );
 	
 };
 
@@ -746,7 +747,7 @@ SPARKS.DiscZone.prototype.getLocation = function() {
 	p.multiplyScalar( radius * Math.cos( angle ) );
 	var p2 = _planeAxis2.clone();
 	p2.multiplyScalar( radius * Math.sin( angle ) );
-	p.addSelf( p2 );
+	p.add( p2 );
 	return _center.add( p );
 	
 };
