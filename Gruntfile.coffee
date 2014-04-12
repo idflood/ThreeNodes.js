@@ -10,6 +10,7 @@ module.exports = (grunt) ->
       dev:
         options:
           debugInfo: false
+          bundleExec: true
 
       build:
         options:
@@ -18,6 +19,7 @@ module.exports = (grunt) ->
           noLineComments: true
           imagesDir: "assets/images"
           fontsDir: "assets/fonts"
+          bundleExec: true
 
     # https://github.com/jrburke/r.js/blob/master/build/example.build.js
     requirejs:
