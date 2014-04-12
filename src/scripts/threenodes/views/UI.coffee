@@ -101,7 +101,7 @@ define (require) ->
           resizable: false
           slidable: false
           showOverflowOnHover: true
-          size: 24
+          size: 27
           resizerClass: "ui-layout-resizer-hidden"
           spacing_open: 0
           spacing_closed: 0

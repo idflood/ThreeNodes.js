@@ -18,15 +18,15 @@ define (require) ->
       @timeline = new Timeline
         element: @el
         displayOnlySelected: true
-        colorBackground: "#333"
-        colorButtonBackground: "#222222"
-        colorButtonStroke: "#777"
-        colorScrollbar: "#373737"
-        colorScrollbarThumb: "#555"
+        colorBackground: "#313638"
+        colorButtonBackground: "#313638"
+        colorButtonStroke: "#aeb7bb"
+        colorScrollbar: "#313638"
+        colorScrollbarThumb: "#656c6f"
         colorTimelineLabel: "#999"
-        colorTimelineTick: "#555"
+        colorTimelineTick: "#656c6f"
         colorTimeScale: "#666"
-        colorHeaderBorder: "#222"
+        colorHeaderBorder: "#313638"
         colorTimeTicker: "#f00"
         colorTrackBottomLine: "#555"
         colorPropertyLabel: "#999"

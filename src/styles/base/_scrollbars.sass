@@ -15,7 +15,7 @@ $s: 8px
   background: transparent
 
 ::-webkit-scrollbar-track-piece
-  background: #272727
+  background: $background_color
   border-radius: 6px
 
 
@@ -27,7 +27,7 @@ $s: 8px
 
 ::-webkit-scrollbar-thumb:vertical,
 ::-webkit-scrollbar-thumb:horizontal
-  background: #999
+  background: lighten($background_color, 4%)
   border-radius: 6px
   &:hover
-    background: #aaa
+    background: $border_color

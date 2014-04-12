@@ -1,11 +1,11 @@
-$bg: #333
+$bg: $background_color
 #main-menu-bar
   background: $bg
-  height: 23px
-  border-bottom: 1px solid #444
+  height: 26px
+  border-bottom: 1px solid $border_color
   ul
     background: $bg
-    border: 1px solid #444
+    border: 1px solid $border_color
     border-top: 0
     //border-top: 1px solid #444
 
@@ -39,6 +39,17 @@ $bg: #333
   margin: 0
   display: block
   outline: none
+  // Add a pseudo element to attenuate the border between the menu and submenu.
+  &:before
+    content: ""
+    display: block
+    height: 1px
+    position: absolute
+    top: -1px
+    left: 0
+    right: 0
+    background: darken($background_color, 2%)
+
   .ui-menu
     margin-top: -3px
     position: absolute
