@@ -34,4 +34,4 @@ define (require) ->
 
       create_sidebar_input: ($target) =>
         @textfield = @createTextfield($target, "string")
-        @textfield.linkTextfieldToVal(@textfield.$input, "string")
+        @textfield.linkTextfieldToVal("string")

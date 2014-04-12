@@ -17,6 +17,7 @@ require.config({
     Three: "libs/Three",
     ThreeCSG: 'libs/ThreeCSG',
     csg: 'libs/csg',
+    'draggable-number': 'libs/draggable-number',
     ColladaLoader: 'libs/three-extras/js/loaders/ColladaLoader',
     EffectComposer: 'libs/three-extras/js/postprocessing/EffectComposer',
     RenderPass: 'libs/three-extras/js/postprocessing/RenderPass',
