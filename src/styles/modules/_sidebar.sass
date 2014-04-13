@@ -12,7 +12,7 @@
     margin-bottom: 5px
     margin-left: 10px
     font-weight: bold
-    letter-spacing: 0
+    letter-spacing: 1px
     text-transform: uppercase
 
   ul
@@ -58,12 +58,14 @@
 
       a
         +inline-block
-        padding: .4em 10px
+        padding: .4em 10px .5em 10px
         outline: 0
+        letter-spacing: 1px
+
       &.ui-tabs-active
         //+box-shadow(0px 0px 2px 0px rgba(#000, 0.25))
-        background: lighten($background_color, 4%)
-        +background-image(linear-gradient(lighten($background_color, 4%), lighten($background_color, 2%)))
+        background: lighten($background_color, 5%)
+        +background-image(linear-gradient(lighten($background_color, 7%), lighten($background_color, 2%)))
         z-index: 20
         a
           color: #eee
@@ -98,21 +100,60 @@
       background: darken($background_color, 10%)
 
 #tab-attribute
-  padding: 5px
+  //padding: 5px
+  > div
+    padding-bottom: 10px
+
+
   h2
-    margin: 0
+    position: relative
+    margin: 10px 0 10px 0
+    padding: 0 5px 0 5px
     font-size: 14px
     font-weight: bold
-    border-bottom: 1px solid #444
-    padding-bottom: 3px
+    border-bottom: 1px solid lighten($background_color, 3%)
+
     color: #eee
+    &:after
+      content: ""
+      display: block
+      position: absolute
+      left: 0
+      right: 0
+      bottom: 0
+      height: 0px
+      border-top: 1px solid $border_color
+
+
   h3
+    display: table-cell
     margin-left: 0
     margin-top: 5px
+    padding-top: 1px
+    padding-right: 10px
+    min-width: 40px
+    width: 1%
     font-size: 11px
+    font-weight: 400
+    vertical-align: top
 
   .field-wrapper
-    padding-bottom: 8px
+    +box-sizing(border-box)
+    display: table
+    width: 100%
+    padding: 0 5px 8px 5px
+    min-height: 35px
+    > div
+      display: table-cell
+      text-align: left
+      vertical-align: top
+
+  input[type="text"]
+    +box-sizing(border-box)
+    width: 100%
+    position: relative
+    top: -6px
+    left: -4px
 
 #node_filter
   position: absolute
@@ -138,9 +179,9 @@
   position: relative
   overflow: visible
 #sidebar input
-  +box-shadow(#222, 0, 1px, 14px, false, inset)
+  //+box-shadow(#222, 0, 1px, 14px, false, inset)
   padding: 6px 7px
-  width: 188px
+  //width: 188px
   border: $border_color
   background: lighten($background_color, 2%)
 
@@ -149,8 +190,7 @@
   &:focus
     outline: 0
     border: #444
-    +box-shadow(#222, 0, 1px, 6px, false, inset)
-    background: #222
+    background: lighten($background_color, 4%)
   &:hover
-    border: #3a3a3a
+    border: darken($border_color, 2%)
 
