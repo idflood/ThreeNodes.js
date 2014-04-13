@@ -20,7 +20,7 @@ define (require) ->
 
       if @options.type == "float" && @options.link_to_val == true
         @$input.val(@model.getValue())
-        @slider = @addTextfieldSlider(@$input)
+        @slider = @addTextfieldSlider()
       return @
 
     linkTextfieldToVal: (type = "float") =>
