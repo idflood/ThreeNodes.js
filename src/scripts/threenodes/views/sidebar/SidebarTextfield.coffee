@@ -18,12 +18,14 @@ define (require) ->
       @$el.append(@container)
       @$input = $("input", @container)
 
-      if @options.type == "float" && @options.link_to_val == true
-        @$input.val(@model.getValue())
-        @slider = @addTextfieldSlider()
       return @
 
     linkTextfieldToVal: (type = "float") =>
+      @$input.val(@model.getValue())
+
+      if @options.type == "float" && @slider == false
+        @slider = @addTextfieldSlider()
+
       on_value_changed = (v) =>
         @slider.set(v)
       @model.on "value_updated", on_value_changed
@@ -43,11 +45,14 @@ define (require) ->
       return this
 
     linkTextfieldToSubval: (subval, type = "float") =>
+      @$input.val(@model.getValue()[subval])
+
+      if @options.type == "float"
+        @slider = @addTextfieldSlider()
+
       # TODO: use the event instead of the hook
       @model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) =>
         @$input.val(v[subval])
-
-      @$input.val(@model.getValue()[subval])
 
       updateVal = () =>
         dval = @$input.val()
@@ -56,6 +61,7 @@ define (require) ->
           @model.attributes.value[0][subval] = dval
         else
           @model.attributes.value[subval] = dval
+
 
       @slider._options.changeCallback = (new_val) =>
         updateVal()

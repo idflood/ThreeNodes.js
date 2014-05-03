@@ -41,8 +41,6 @@ define (require) ->
       $target = @createSidebarContainer(subval)
       textfield = @createTextfield($target, type, false)
       textfield.linkTextfieldToSubval(subval, type)
-      if type == "float"
-        textfield.addTextfieldSlider()
       return false
 
     createSidebarFieldTitle: (name = @model.get("name")) =>
