@@ -161,6 +161,14 @@ define (require) ->
           @sidebar.renderNodesAttributes(nodes)
           # Display the selected nodes in the timeline
           @trigger("selectAnims", anims)
+
+      # Quick fix for input blur.
+      # Without this, after focusing an input in a node it was difficult
+      # to unfocus it. Clicking on the workspace didn't worked.
+      # The problem come from the selectable above which prevent event propagation
+      # somewhere.
+      $("#container").mousedown (e) ->
+        $('input, textarea').trigger('blur')
       return @
 
     # Switch between player/editor mode
