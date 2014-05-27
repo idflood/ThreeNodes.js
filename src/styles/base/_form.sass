@@ -1,10 +1,15 @@
-input, button
+input, button, textarea
+  +box-sizing(border-box)
   width: 100%
   border: 1px solid ($node_color + #111)
   background: $node_color
   font-size: 9px
   color: #aaa
   font-family: $blueprint-font-family
+
+  &:focus
+    outline: 0
+    border-color: ($node_color + #444)
 
 button
   width: auto

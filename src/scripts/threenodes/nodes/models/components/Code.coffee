@@ -3,10 +3,10 @@ define (require) ->
   _ = require 'Underscore'
   Backbone = require 'Backbone'
   Node = require 'cs!threenodes/nodes/models/Node'
-  NodeWithCenterTextfield = require 'cs!threenodes/nodes/views/NodeWithCenterTextfield'
+  NodeCodeView = require 'cs!threenodes/nodes/views/NodeCodeView'
 
   namespace "ThreeNodes.nodes.views",
-    Expression: class Expression extends NodeWithCenterTextfield
+    Expression: class Expression extends NodeCodeView
       getCenterField: () => @model.fields.getField("code")
 
   namespace "ThreeNodes.nodes.models",
@@ -48,7 +48,11 @@ define (require) ->
         if @function != false
           # Function should simply return a value.
           # It can access extra fields with this.fields.getField / setField.
-          result = @function()
+          try
+            result = @function()
+          catch error
+            # do nothing on errors.
+            # todo: maybe display error + line error in code (dispatch even to view).
 
         # Assign the new result to @out.
         @out = result
