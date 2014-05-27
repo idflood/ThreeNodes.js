@@ -32,8 +32,9 @@ define (require) ->
 
       @$input.val(@model.getValue())
 
-      @slider._options.changeCallback = (new_val) =>
-        @model.setValue(new_val)
+      if @slider
+        @slider._options.changeCallback = (new_val) =>
+          @model.setValue(new_val)
 
       @$input.keypress (e) =>
         if e.which == 13
