@@ -27,7 +27,7 @@ define (require) ->
         @slider = @addTextfieldSlider()
 
       on_value_changed = (v) =>
-        @slider.set(v)
+        if @slider then @slider.set(v)
       @model.on "value_updated", on_value_changed
 
       @$input.val(@model.getValue())

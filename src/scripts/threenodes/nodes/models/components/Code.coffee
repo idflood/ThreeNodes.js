@@ -21,7 +21,6 @@ define (require) ->
         @onCodeUpdate()
         field = @fields.getField("code")
 
-
         field.on "value_updated", @onCodeUpdate
 
       onCodeUpdate: (code = "") =>
