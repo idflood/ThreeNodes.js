@@ -38,4 +38,33 @@ define (require) ->
           view = new view_class
             model: field
           @$el.append(view.el)
+
+      # Special case for code nodes, add buttons to add inputs/outputs.
+      # Todo: find a way to define a sidebarview class by nodetypes and
+      # refactor this (CodeSidebarView extends NodeSidebarView)
+      if @model.onCodeUpdate
+        self = this
+        @$el.append("<h2>Add custom fields</h2>")
+        $inputs_form = $('<form class="dynamic-fields__form"></form>')
+        $inputs_form.append('<input type="text" name="key" placeholder="key" />')
+        $inputs_form.append('<input type="text" name="type" placeholder="type" />')
+        $inputs_form.append('<input type="submit" value="Add input field" />')
+        @$el.append($inputs_form)
+
+        $inputs_form.on 'submit', (e) ->
+          e.preventDefault()
+          $form = $(this)
+          $key = $(this).find('[name="key"]')
+          $type = 'Any'
+          key = $.trim($key.val())
+          if key != ''
+            # add this to the model custom fields definition and rerender the view.
+            self.model.addCustomField(key, 'Any', 'inputs')
+            # Reset form.
+            $key.val('')
+
+            # Simply rerender the sidebar.
+            # todo: maybe do something like remove the render.
+            self.render()
+
       return @

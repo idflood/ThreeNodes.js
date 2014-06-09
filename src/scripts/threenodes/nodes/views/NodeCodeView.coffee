@@ -22,11 +22,11 @@ define (require) ->
         f_in.attr("disabled", "disabled")
       else
         f_in.keypress (e) ->
-          console.log e
-          if e.which == 13
-            field.setValue($(this).val())
-            $(this).blur()
+          #console.log e
+          #if e.which == 13
+          #  field.setValue($(this).val())
+          #  $(this).blur()
       @
 
     # View class can override this. Possibility to reuse this class
-    getCenterField: () => @model.fields.getField("in")
+    getCenterField: () => @model.fields.getField("code")

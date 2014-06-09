@@ -6,8 +6,8 @@ define (require) ->
   NodeCodeView = require 'cs!threenodes/nodes/views/NodeCodeView'
 
   namespace "ThreeNodes.nodes.views",
+    Code: class Code extends NodeCodeView
     Expression: class Expression extends NodeCodeView
-      getCenterField: () => @model.fields.getField("code")
 
   namespace "ThreeNodes.nodes.models",
     Expression: class Expression extends Node
@@ -15,13 +15,23 @@ define (require) ->
       @group_name = 'Code'
 
       initialize: (options) =>
+        # Prepare custom fields before calling the super constructructor since
+        # it will call getFields when creating @fields.
+        @custom_fields = {inputs: {}, outputs: {}}
+        @loadCustomFields(options)
+
         super
         @auto_evaluate = true
         @out = null
+
         @onCodeUpdate()
         field = @fields.getField("code")
 
         field.on "value_updated", @onCodeUpdate
+
+      loadCustomFields: (options) =>
+        if !options.custom_fields then return
+        @custom_fields = $.extend(true, @custom_fields, options.custom_fields)
 
       onCodeUpdate: (code = "") =>
         console.log code
@@ -31,6 +41,19 @@ define (require) ->
           console.warn error
           @function = false
 
+      addCustomField: (key, type, direction = 'inputs') =>
+        field = {key: key, type: type}
+        # Add the field to the a variable for saving.
+        @custom_fields[direction][key] = field
+
+        value = false
+        @fields.addField(key, value, direction)
+
+      toJSON: () =>
+        res = super
+        res.custom_fields = @custom_fields
+        return res
+
       getFields: =>
         base_fields = super
         fields =
@@ -38,6 +61,8 @@ define (require) ->
             "code" : ""
           outputs:
             "out" : {type: "Any", val: null}
+        # merge with custom fields
+        fields = $.extend(true, fields, @custom_fields)
         return $.extend(true, base_fields, fields)
 
       compute: () =>
@@ -57,3 +82,18 @@ define (require) ->
         @out = result
 
         @fields.setField("out", @out)
+
+    Code: class Code extends Expression
+      @node_name = 'Code'
+      @group_name = 'Code'
+
+      initialize: (options) =>
+        super
+
+      getDynamicFields: () =>
+        return {}
+
+      getFields: =>
+        base_fields = super
+        fields = @getDynamicFields()
+        return $.extend(true, base_fields, fields)
