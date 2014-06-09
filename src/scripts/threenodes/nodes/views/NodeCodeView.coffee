@@ -21,7 +21,8 @@ define (require) ->
       if field.get("is_output") == true
         f_in.attr("disabled", "disabled")
       else
-        f_in.keypress (e) ->
+        f_in.keyup (e) ->
+          field.setValue($(this).val())
           #console.log e
           #if e.which == 13
           #  field.setValue($(this).val())
