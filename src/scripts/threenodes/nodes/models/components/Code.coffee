@@ -47,7 +47,7 @@ define (require) ->
         @custom_fields[direction][key] = field
 
         value = false
-        @fields.addField(key, value, direction)
+        @fields.addField(key, {value: value, type: type, default: false}, direction)
 
       toJSON: () =>
         res = super
