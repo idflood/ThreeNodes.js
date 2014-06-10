@@ -18,11 +18,9 @@ define (require) ->
       super
       @render()
 
-    render: () =>
-      # Compile the template file
-      @$el.html("<h2>#{@model.get('name')}</h2>")
-      for f of @model.fields.inputs
-        field = @model.fields.inputs[f]
+    displayFields: (fields) =>
+      for f of fields
+        field = fields[f]
         view_class = switch field.constructor
           when ThreeNodes.fields.Bool then ThreeNodes.views.fields.BoolField
           when ThreeNodes.fields.String then ThreeNodes.views.fields.StringField
@@ -38,6 +36,14 @@ define (require) ->
           view = new view_class
             model: field
           @$el.append(view.el)
+
+    render: () =>
+      # Compile the template file
+      @$el.html("<h2>#{@model.get('name')}</h2>")
+      @displayFields(@model.fields.inputs)
+
+      # Display custom fields if needed.
+      if @model.custom_fields then @displayFields(@model.custom_fields.inputs)
 
       # Special case for code nodes, add buttons to add inputs/outputs.
       # Todo: find a way to define a sidebarview class by nodetypes and
