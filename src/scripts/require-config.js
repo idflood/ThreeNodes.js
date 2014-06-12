@@ -39,6 +39,7 @@ require.config({
     'timeline-gui': "libs/timeline.js/timeline-gui"
   },
   shim: {
+
     'Three':{
       exports: "THREE"
     },
