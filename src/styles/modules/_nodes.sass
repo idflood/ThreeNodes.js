@@ -209,12 +209,15 @@ $animation_color: #f00
 
 // code
 .type-Code
-  width: 300px
+  width: auto
   @extend .ratio-25-50-25
 
   textarea
     min-height: 5em
     font-size: 13px
+
+  .CodeMirror
+    min-width: 300px
 
 // special nodes
 .node-WebGLRenderer
