@@ -16,11 +16,10 @@ define (require) ->
     initialize: (options) =>
       super
       field = @getCenterField()
-      console.log @$el
+
       container = $("<div><textarea data-fid='#{field.get('fid')}' spellcheck='false'></textarea></div>")
       container.insertAfter($(".options", @$el))
       f_in = $("textarea", container)
-
 
       field.on_value_update_hooks.update_center_textfield = (v) ->
         if v != null
@@ -37,6 +36,11 @@ define (require) ->
 
       editor.on "change", (instance, changeObj) ->
         field.setValue(editor.getValue())
+
+      $codemirror = @$el.find('.CodeMirror')
+      $codemirror.parent().on "mousemove click mouseup mousedown", (e) ->
+        e.stopPropagation()
+
 
       if field.get("is_output") == true
         f_in.attr("disabled", "disabled")
