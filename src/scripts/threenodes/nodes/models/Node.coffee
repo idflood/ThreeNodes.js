@@ -17,6 +17,8 @@ define (require) ->
       gid: -1 # group id, set on subnodes of group == group.nid
       x: 0
       y: 0
+      width: null
+      height: null
       name: ""
 
     initialize: (options) =>
@@ -172,6 +174,8 @@ define (require) ->
         anim: @getAnimationData()
         x: @get('x')
         y: @get('y')
+        width: @get('width')
+        height: @get('height')
         fields: @fields.toJSON()
       res
 

@@ -34,6 +34,19 @@ define (require) ->
         gutters: ["CodeMirror-lint-markers"]
         lint: true
 
+      self = this
+      @$el.resizable
+        minHeight: 50
+        minWidth: 220
+        ghost: true
+        resize: (event, ui) ->
+          size = ui.size
+          editor.setSize(null, size.height - 37)
+          model = self.model
+          model.set("width", size.width - 13)
+          model.set("height", size.height - 13)
+          self.renderConnections()
+
       editor.on "change", (instance, changeObj) ->
         field.setValue(editor.getValue())
 
@@ -41,6 +54,8 @@ define (require) ->
       $codemirror.parent().on "mousemove click mouseup mousedown", (e) ->
         e.stopPropagation()
 
+      if @model.get('height')
+        editor.setSize(null, @model.get('height'))
 
       if field.get("is_output") == true
         f_in.attr("disabled", "disabled")
@@ -53,6 +68,11 @@ define (require) ->
           #  field.setValue($(this).val())
           #  $(this).blur()
       @
+
+    render: () =>
+      super
+      if @model.get('width') then @$el.css('width', @model.get('width'))
+      if @model.get('height') then @$el.css('height', @model.get('height'))
 
     # View class can override this. Possibility to reuse this class
     getCenterField: () => @model.fields.getField("code")
