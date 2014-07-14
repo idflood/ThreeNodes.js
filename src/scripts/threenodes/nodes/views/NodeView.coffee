@@ -119,7 +119,7 @@ define (require) ->
               $(this).removeClass("ui-selected")
             else
               $(this).addClass("ui-selecting")
-          selectable = $("#container").data("selectable")
+          selectable = $("#container").data("ui-selectable")
           if !selectable then return
           selectable.refresh()
           selectable._mouseStop(null)
