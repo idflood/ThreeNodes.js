@@ -1,11 +1,11 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/views/NodeView',
-  "colorpicker",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!../models/Node'
+  require 'cs!./NodeView'
+  require 'colorpicker'
 
   namespace "ThreeNodes.nodes.views",
     Color: class Color extends ThreeNodes.NodeView
@@ -29,7 +29,7 @@ define [
         # on output value change set preview color
         fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (v) =>
           @$picker_el.css
-            background: v[0].getContextStyle()
+            background: v[0].getStyle()
 
       remove: () =>
         @$picker_el.each () ->

@@ -1,310 +1,291 @@
-define [
-  'Underscore',
-  'Backbone',
-  "text!templates/field_context_menu.tmpl.html",
-  "text!templates/node_context_menu.tmpl.html",
-  "text!templates/app_ui.tmpl.html",
-  'cs!threenodes/views/sidebar/Sidebar',
-  'cs!threenodes/views/MenuBar',
-  'cs!threenodes/views/Breadcrumb',
-  "RequestAnimationFrame",
-  "Raphael",
-  "libs/jquery.contextMenu",
-  "jquery.ui",
-  "libs/jquery.transform2d",
-  "libs/jquery-scrollview/jquery.scrollview",
-  "libs/jquery.layout-latest",
-], (_, Backbone, _view_field_context_menu, _view_node_context_menu, _view_app_ui) ->
+define (require) ->
   ### UI View ###
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  _view_app_ui = require 'text!templates/app_ui.tmpl.html'
+  Sidebar = require 'cs!threenodes/views/sidebar/Sidebar'
+  Breadcrumb = require 'cs!threenodes/views/Breadcrumb'
+  MenuBar = require 'cs!threenodes/views/MenuBar'
 
-  namespace "ThreeNodes",
-    UI: class UI extends Backbone.View
+  require 'RequestAnimationFrame'
+  require 'Raphael'
+  require 'jquery.ui'
+  require 'libs/jquery.transform2d'
+  require 'libs/jquery-scrollview/jquery.scrollview'
+  require 'jquery.layout'
 
-      # Background svg used to draw the connections
-      @svg: false
-      @connecting_line = false
+  class UI extends Backbone.View
 
-      initialize: (options) ->
-        super
+    # Background svg used to draw the connections
+    @svg: false
+    @connecting_line = false
 
-        @settings = options.settings
-        @is_grabbing = false
+    initialize: (options) ->
+      super
 
-        # Bind events
-        $(window).resize(@onUiWindowResize)
+      @settings = options.settings
+      @is_grabbing = false
 
-        # Create the ui dom elements from template
-        ui_tmpl = _.template(_view_app_ui, {})
-        @$el.append(ui_tmpl)
+      # Bind events
+      $(window).resize(@onUiWindowResize)
 
-        # Create breadcrumb view (for selecting current group/workspace)
-        @breadcrumb = new ThreeNodes.Breadcrumb({el: $("#breadcrumb")})
+      # Create the ui dom elements from template
+      ui_tmpl = _.template(_view_app_ui, {})
+      @$el.append(ui_tmpl)
 
-        # Setup SVG for drawing connections
-        ThreeNodes.UI.svg = Raphael("graph", 4000, 4000)
-        ThreeNodes.UI.connecting_line = ThreeNodes.UI.svg.path("M0 -20 L0 -20").attr
-          stroke: "#fff"
-          'stroke-dasharray': "-"
-          fill: "none"
-          opacity: 0
+      # Create breadcrumb view (for selecting current group/workspace)
+      @breadcrumb = new Breadcrumb({el: $("#breadcrumb")})
 
-        # Setup the sidebar and menu subviews
-        @sidebar = new ThreeNodes.Sidebar({el: $("#sidebar")})
-        @initMenubar()
+      # Setup SVG for drawing connections
+      UI.svg = Raphael("graph", 4000, 4000)
+      UI.connecting_line = UI.svg.path("M0 -20 L0 -20").attr
+        stroke: "#fff"
+        'stroke-dasharray': "-"
+        fill: "none"
+        opacity: 0
 
-        # Set the layout and show application
-        @initLayout()
-        @initDrop()
-        @showApplication()
+      # Setup the sidebar and menu subviews
+      @sidebar = new Sidebar({el: $("#sidebar")})
+      @initMenubar()
 
-        # Fire the first resize event
-        @onUiWindowResize()
+      # Set the layout and show application
+      @initLayout()
+      @showApplication()
 
-        # Start main render loop
-        @animate()
+      # Fire the first resize event
+      @onUiWindowResize()
 
-      onNodeListRebuild: (nodes) =>
-        if @timeoutId
-          clearTimeout(@timeoutId)
-        # add a little delay since the event is fired multiple time on file load
-        onTimeOut = () =>
-          @sidebar.render(nodes)
-        @timeoutId = setTimeout(onTimeOut, 10)
+      # Start main render loop
+      @animate()
 
-      initDrop: () =>
-        self = this
-        # Setup the drop area for the draggables created above
-        $("#container").droppable
-          accept: "#tab-new a.button, #library .definition"
-          activeClass: "ui-state-active"
-          hoverClass: "ui-state-hover"
-          drop: (event, ui) ->
-            offset = $("#container-wrapper").offset()
-            definition = false
+    onNodeListRebuild: (nodes) =>
+      if @timeoutId
+        clearTimeout(@timeoutId)
+      # add a little delay since the event is fired multiple time on file load
+      onTimeOut = () =>
+        @sidebar.render(nodes)
+      @timeoutId = setTimeout(onTimeOut, 10)
 
-            if ui.draggable.hasClass("definition")
-              nodename = "Group"
-              container =  $("#library")
-              definition = ui.draggable.data("model")
-              offset.left -= container.offset().left
-            else
-              nodename = ui.draggable.attr("rel")
-              container =  $("#sidebar .ui-layout-center")
+    clearWorkspace: () =>
+      # Remove the nodes attributes from the sidebar
+      @sidebar.clearWorkspace()
 
-            dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
-            dy = ui.position.top + $("#container-wrapper").scrollTop() - container.scrollTop() - offset.top
-            #debugger
-            self.trigger("CreateNode", {type: nodename, x: dx, y: dy, definition: definition})
-            $("#sidebar").show()
+    # Setup menubar
+    initMenubar: () =>
+      menu_tmpl = _.template(MenuBar.template, {})
+      $menu_tmpl = $(menu_tmpl).prependTo("body")
+      @menubar = new MenuBar
+        el: $menu_tmpl
 
-        return this
+      @menubar.on "ToggleAttributes", () => if @layout then @layout.toggle("west")
+      @menubar.on "ToggleLibrary", () => if @layout then @layout.toggle("east")
+      @menubar.on "ToggleTimeline", () => if @layout then @layout.toggle("south")
 
-      clearWorkspace: () =>
-        # Remove the nodes attributes from the sidebar
-        @sidebar.clearWorkspace()
+      return this
 
-      # Setup menubar
-      initMenubar: () =>
-        menu_tmpl = _.template(ThreeNodes.MenuBar.template, {})
-        $menu_tmpl = $(menu_tmpl).prependTo("body")
-        @menubar = new ThreeNodes.MenuBar
-          el: $menu_tmpl
+    # Setup layout
+    initLayout: () =>
+      @makeSelectable()
+      @setupMouseScroll()
+      @initBottomToolbox()
+      @initDisplayModeSwitch()
 
-        @menubar.on "ToggleAttributes", () => if @layout then @layout.toggle("west")
-        @menubar.on "ToggleLibrary", () => if @layout then @layout.toggle("east")
-        @menubar.on "ToggleTimeline", () => if @layout then @layout.toggle("south")
+      @layout = $('body').layout
+        scrollToBookmarkOnLoad: false
+        animatePaneSizing: false
+        fxName: 'none'
+        center:
+          size: "100%"
+        north:
+          closable: false
+          resizable: false
+          slidable: false
+          showOverflowOnHover: true
+          size: 27
+          resizerClass: "ui-layout-resizer-hidden"
+          spacing_open: 0
+          spacing_closed: 0
+        east:
+          minSize: 220
+          initClosed: true
+          onresize: (name, pane_el, state, opt, layout_name) =>
+            @onUiWindowResize()
+          onopen: (name, pane_el, state, opt, layout_name) =>
+            @onUiWindowResize()
+          onclose: (name, pane_el, state, opt, layout_name) =>
+            @onUiWindowResize()
+        west:
+          minSize: 220
+        south:
+          minSize: 48
+          size: 48
+          onopen: (name, pane_el, state, opt, layout_name) =>
+            @trigger("timelineResize", pane_el.innerHeight())
+            @onUiWindowResize()
+          onclose: (name, pane_el, state, opt, layout_name) =>
+            @trigger("timelineResize", pane_el.innerHeight())
+            @onUiWindowResize()
+          onresize: (name, pane_el, state, opt, layout_name) =>
+            @trigger("timelineResize", pane_el.innerHeight())
+            @onUiWindowResize()
 
-        return this
+      # Set timeline height
+      @trigger("timelineResize", 48)
+      return this
 
-      # Setup layout
-      initLayout: () =>
-        @makeSelectable()
-        @setupMouseScroll()
-        @initContextMenus()
-        @initBottomToolbox()
-        @initDisplayModeSwitch()
-
-        @layout = $('body').layout
-          scrollToBookmarkOnLoad: false
-          center:
-            size: "100%"
-          north:
-            closable: false
-            resizable: false
-            slidable: false
-            showOverflowOnHover: true
-            size: 24
-            resizerClass: "ui-layout-resizer-hidden"
-            spacing_open: 0
-            spacing_closed: 0
-          east:
-            minSize: 220
-            initClosed: true
-            onresize: (name, pane_el, state, opt, layout_name) =>
-              @onUiWindowResize()
-            onopen: (name, pane_el, state, opt, layout_name) =>
-              @onUiWindowResize()
-            onclose: (name, pane_el, state, opt, layout_name) =>
-              @onUiWindowResize()
-          west:
-            minSize: 220
-          south:
-            minSize: 48
-            size: 48
-            onopen: (name, pane_el, state, opt, layout_name) =>
-              @trigger("timelineResize", pane_el.innerHeight())
-              @onUiWindowResize()
-            onclose: (name, pane_el, state, opt, layout_name) =>
-              @trigger("timelineResize", pane_el.innerHeight())
-              @onUiWindowResize()
-            onresize: (name, pane_el, state, opt, layout_name) =>
-              @trigger("timelineResize", pane_el.innerHeight())
-              @onUiWindowResize()
-
-        # Set timeline height
-        @trigger("timelineResize", 48)
-        return this
-
-      # Handle the nodes selection
-      makeSelectable: () ->
-        $("#container").selectable
-          filter: ".node"
-          stop: (event, ui) =>
-            $selected = $(".node.ui-selected")
-            nodes = []
-            anims = []
-            # Add the nodes and their anims container to some arrays
-            $selected.each () ->
-              ob = $(this).data("object")
+    # Handle the nodes selection
+    makeSelectable: () ->
+      $("#container").selectable
+        filter: ".node"
+        stop: (event, ui) =>
+          $selected = $(".node.ui-selected")
+          nodes = []
+          anims = []
+          # Add the nodes and their anims container to some arrays
+          $selected.each () ->
+            ob = $(this).data("object")
+            if !ob.get("parent")
               ob.anim.objectTrack.name = ob.get("name")
               anims.push(ob.anim)
               nodes.push(ob)
-            # Display the selected nodes attributes in the sidebar
-            @sidebar.renderNodesAttributes(nodes)
-            # Display the selected nodes in the timeline
-            @trigger("selectAnims", anims)
-        return @
+            else
+              # if this is a subnode we only select the group
+              obgrp = ob.get("parent")
+              obgrp.anim.objectTrack.name = ob.get("name")
+              # add the object only once
+              if !_.find(nodes, (n) -> n.cid == obgrp.cid)
+                anims.push(obgrp.anim)
+                nodes.push(obgrp)
+          # Display the selected nodes attributes in the sidebar
+          @sidebar.clearNodesAttributes()
+          @sidebar.renderNodesAttributes(nodes)
+          # Display the selected nodes in the timeline
+          @trigger("selectAnims", anims)
 
-      # Switch between player/editor mode
-      setDisplayMode: (is_player = false) =>
-        if is_player == true
-          $("body").addClass("player-mode")
-          $("body").removeClass("editor-mode")
-          $("#display-mode-switch").html("editor mode")
-        else
-          $("body").addClass("editor-mode")
-          $("body").removeClass("player-mode")
-          $("#display-mode-switch").html("player mode")
+      # Quick fix for input blur.
+      # Without this, after focusing an input in a node it was difficult
+      # to unfocus it. Clicking on the workspace didn't worked.
+      # The problem come from the selectable above which prevent event propagation
+      # somewhere.
+      $("#container").mousedown (e) ->
+        $('input, textarea').trigger('blur')
+      return @
 
-        @settings.player_mode = is_player
-        if is_player == false
-          @trigger("renderConnections")
-        return true
+    # Switch between player/editor mode
+    setDisplayMode: (is_player = false) =>
+      if is_player == true
+        $("body").addClass("player-mode")
+        $("body").removeClass("editor-mode")
+        $("#display-mode-switch").html("")
+      else
+        $("body").addClass("editor-mode")
+        $("body").removeClass("player-mode")
+        $("#display-mode-switch").html("player mode")
 
-      setupMouseScroll: () =>
-        @scroll_target = $("#container-wrapper")
+      $("#display-mode-switch").toggleClass("icon-pencil", is_player)
 
-        # Return true if the click is made on the background, false otherwise
-        is_from_target = (e) ->
-          if e.target == $("#graph svg")[0]
-            return true
+      @settings.player_mode = is_player
+      if is_player == false
+        @trigger("renderConnections")
+      return true
+
+    setupMouseScroll: () =>
+      @scroll_target = $("#container-wrapper")
+
+      # Return true if the click is made on the background, false otherwise
+      is_from_target = (e) ->
+        if e.target == $("#graph svg")[0]
+          return true
+        return false
+
+      # Disable the context menu on the container so that we can drag with right click
+      @scroll_target.bind "contextmenu", (e) -> return false
+
+      # Handle start drag
+      @scroll_target.mousedown (e) =>
+        # Init drag only if middle or right click AND if the target element is the svg
+        if is_from_target(e) && (e.which == 2 || e.which == 3)
+          @is_grabbing = true
+          @xp = e.pageX
+          @yp = e.pageY
           return false
 
-        # Disable the context menu on the container so that we can drag with right click
-        @scroll_target.bind "contextmenu", (e) -> return false
+      # Hande drag when the mouse move
+      @scroll_target.mousemove (e) =>
+        if is_from_target(e) && (@is_grabbing == true)
+          @scrollTo(@xp - e.pageX, @yp - e.pageY)
+          @xp = e.pageX
+          @yp = e.pageY
 
-        # Handle start drag
-        @scroll_target.mousedown (e) =>
-          # Init drag only if middle or right click AND if the target element is the svg
-          if is_from_target(e) && (e.which == 2 || e.which == 3)
-            @is_grabbing = true
-            @xp = e.pageX
-            @yp = e.pageY
-            return false
+      # Handle stop drag
+      @scroll_target.mouseout => @is_grabbing = false
+      @scroll_target.mouseup (e) =>
+        if is_from_target(e) && (e.which == 2 || e.which == 3)
+          @is_grabbing = false
 
-        # Hande drag when the mouse move
-        @scroll_target.mousemove (e) =>
-          if is_from_target(e) && (@is_grabbing == true)
-            @scrollTo(@xp - e.pageX, @yp - e.pageY)
-            @xp = e.pageX
-            @yp = e.pageY
+      return true
 
-        # Handle stop drag
-        @scroll_target.mouseout => @is_grabbing = false
-        @scroll_target.mouseup (e) =>
-          if is_from_target(e) && (e.which == 2 || e.which == 3)
-            @is_grabbing = false
+    scrollTo: (dx, dy) =>
+      x = @scroll_target.scrollLeft() + dx
+      y = @scroll_target.scrollTop() + dy
+      @scroll_target.scrollLeft(x).scrollTop(y)
 
-        return true
+    switchDisplayMode: () =>
+      @setDisplayMode(!@settings.player_mode)
+      return this
 
-      scrollTo: (dx, dy) =>
-        x = @scroll_target.scrollLeft() + dx
-        y = @scroll_target.scrollTop() + dy
-        @scroll_target.scrollLeft(x).scrollTop(y)
+    initDisplayModeSwitch: () =>
+      $("body").append("<div id='display-mode-switch'>switch mode</div>")
+      $("#display-mode-switch").click (e) =>
+        @switchDisplayMode()
 
-      switchDisplayMode: () =>
-        @setDisplayMode(!@settings.player_mode)
-        return this
+    # Setup the bottom right dom container
+    initBottomToolbox: () =>
+      $("body").append("<div id='bottom-toolbox'></div>")
+      $container = $("#bottom-toolbox")
+      @initResizeSlider($container)
 
-      initDisplayModeSwitch: () =>
-        $("body").append("<div id='display-mode-switch'>switch mode</div>")
-        $("#display-mode-switch").click (e) =>
-          @switchDisplayMode()
+    # Initialize the little node zoom slider
+    initResizeSlider: ($container) =>
+      $container.append("<div id='zoom-slider'></div>")
+      scale_graph = (val) ->
+        factor = val / 100
+        $("#container").css('transform', "scale(#{factor}, #{factor})")
 
-      # Setup the bottom right dom container
-      initBottomToolbox: () =>
-        $("body").append("<div id='bottom-toolbox'></div>")
-        $container = $("#bottom-toolbox")
-        @initResizeSlider($container)
+      $("#zoom-slider").slider
+        min: 25
+        step: 25
+        value: 100
+        change: (event, ui) -> scale_graph(ui.value)
+        slide: (event, ui) -> scale_graph(ui.value)
 
-      # Initialize the little node zoom slider
-      initResizeSlider: ($container) =>
-        $container.append("<div id='zoom-slider'></div>")
-        scale_graph = (val) ->
-          factor = val / 100
-          $("#container").css('transform', "scale(#{factor}, #{factor})")
+    # Display the app and hide the intro
+    showApplication: () =>
+      delay_intro = 500
 
-        $("#zoom-slider").slider
-          min: 25
-          step: 25
-          value: 100
-          change: (event, ui) -> scale_graph(ui.value)
-          slide: (event, ui) -> scale_graph(ui.value)
+      # Display/hide with some delay
+      $("body > header").delay(delay_intro).hide()
+      $("#sidebar").delay(delay_intro).show()
+      $("#container-wrapper").delay(delay_intro).show()
 
-      initContextMenus: () =>
-        menu_field_menu = _.template(_view_field_context_menu, {})
-        $("body").append(menu_field_menu)
+      # Render the connections if needed
+      @trigger("renderConnections")
 
-        node_menu = _.template(_view_node_context_menu, {})
-        $("body").append(node_menu)
+    # Function called when the window is resized and if some panels are closed/opened/resized
+    onUiWindowResize: () =>
+      # Default minimum margins
+      margin_bottom = 20
+      margin_right = 25
 
-      # Display the app and hide the intro
-      showApplication: () =>
-        delay_intro = 500
+      # Calculate the bottom and right margins if the corresponding panels are not closed
+      if @layout.south.state.isClosed == false then margin_bottom += $("#timeline").innerHeight()
+      if @layout.east.state.isClosed == false then margin_right += $("#library").innerWidth()
 
-        # Display/hide with some delay
-        $("body > header").delay(delay_intro).hide()
-        $("#sidebar").delay(delay_intro).show()
-        $("#container-wrapper").delay(delay_intro).show()
+      # Apply the margins to some DOM elements
+      $("#bottom-toolbox").attr("style", "bottom: #{margin_bottom}px !important; right: #{margin_right}px")
+      $("#webgl-window").css
+        right: margin_right
 
-        # Render the connections if needed
-        @trigger("renderConnections")
-
-      # Function called when the window is resized and if some panels are closed/opened/resized
-      onUiWindowResize: () =>
-        # Default minimum margins
-        margin_bottom = 20
-        margin_right = 25
-
-        # Calculate the bottom and right margins if the corresponding panels are not closed
-        if @layout.south.state.isClosed == false then margin_bottom += $("#timeline").innerHeight()
-        if @layout.east.state.isClosed == false then margin_right += $("#library").innerWidth()
-
-        # Apply the margins to some DOM elements
-        $("#bottom-toolbox").attr("style", "bottom: #{margin_bottom}px !important; right: #{margin_right}px")
-        $("#webgl-window").css
-          right: margin_right
-
-      animate: () =>
-        @trigger("render")
-        requestAnimationFrame( @animate )
+    animate: () =>
+      @trigger("render")
+      requestAnimationFrame( @animate )

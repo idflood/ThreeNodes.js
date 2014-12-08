@@ -1,13 +1,13 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/views/sidebar/fields/BaseField',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  BaseField = require 'cs!threenodes/views/sidebar/fields/BaseField'
 
   ### Vector3Field View ###
   namespace "ThreeNodes.views.fields",
-    Vector4Field: class Vector4Field extends ThreeNodes.views.fields.BaseField
+    Vector4Field: class Vector4Field extends BaseField
       render: () =>
         @createSidebarFieldTitle()
         @createSubvalTextinput("x")

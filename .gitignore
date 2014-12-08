@@ -16,3 +16,5 @@ dist/*
 dist/*/*
 dist/*/*/*
 dist/*/*/*/*
+assets/styles/*
+Gemfile.lock

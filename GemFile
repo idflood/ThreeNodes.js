@@ -1,8 +1,5 @@
 source 'http://rubygems.org'
-source "http://gems.github.com"
 
-
-gem 'socket.io'
-gem 'express'
-gem 'sass'
+gem 'sass', '3.3.3'
+gem 'compass', '1.0.0.alpha.19'
 gem 'coffee-script'

@@ -1,14 +1,14 @@
-//  Timeline.js v0.1 / 2011-05-01       
+//  Timeline.js v0.1 / 2011-05-01
 //  A compact JavaScript animation library with a GUI timeline for fast editing.
-//  by Marcin Ignac (http://marcinignac.com) 
-//  
+//  by Marcin Ignac (http://marcinignac.com)
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.      
+// IN THE SOFTWARE.
 Timeline.prototype.initGUI = function (parameters) {
   var self = this;
 
@@ -81,7 +81,7 @@ Timeline.prototype.initGUI = function (parameters) {
   this.onMouseUp = self.onMouseUp.bind(this);
   this.onMouseDoubleClick = self.onMouseDoubleClick.bind(this);
   this.onMouseWheel = self.onMouseWheel.bind(this);
-  
+
   this.canvas.addEventListener('click', self.onMouseClick, false);
   this.canvas.addEventListener('mousedown', self.onMouseDown, false);
   document.body.addEventListener('mousemove', self.onDocumentMouseMove, false);
@@ -221,7 +221,7 @@ Timeline.prototype.onMouseDown = function (event) {
     this.save();
   }
   else if (x > this.trackLabelWidth && y > this.canvasHeight - this.timeScrollHeight) {
-    //time scroll   
+    //time scroll
     if (x >= this.trackLabelWidth + this.timeScrollThumbPos && x <= this.trackLabelWidth + this.timeScrollThumbPos + this.timeScrollThumbWidth) {
       this.timeScrollThumbDragOffset = x - this.trackLabelWidth - this.timeScrollThumbPos;
       this.draggingTimeScrollThumb = true;
@@ -554,7 +554,7 @@ Timeline.prototype.updateGUI = function () {
 
   this.c.fillStyle = this.colorTimelineLabel;
   var x = this.timeToX(0);
-  //for(var sec=timelineStart; sec<timelineEnd; sec++) {                               
+  //for(var sec=timelineStart; sec<timelineEnd; sec++) {
   var sec = timelineStart;
   while (x < this.canvas.width) {
     x = this.timeToX(sec);
@@ -577,7 +577,7 @@ Timeline.prototype.updateGUI = function () {
   // sidebar background
   this.drawRect(0, 0, this.trackLabelWidth, this.canvasHeight, this.colorBackground);
 
-  //buttons  
+  //buttons
   this.drawRect(0 * this.headerHeight - 4 * -1, 5, this.headerHeight - 8, this.headerHeight - 8, this.colorButtonBackground);
   this.drawRect(1 * this.headerHeight - 4 * 0, 5, this.headerHeight - 8, this.headerHeight - 8, this.colorButtonBackground);
   this.drawRect(2 * this.headerHeight - 4 * 1, 5, this.headerHeight - 8, this.headerHeight - 8, this.colorButtonBackground);
@@ -592,11 +592,11 @@ Timeline.prototype.updateGUI = function () {
   this.c.lineTo(4 + 6.5, 5 + 5);
   this.c.stroke();
 
-  //pause  
+  //pause
   this.c.strokeRect(this.headerHeight + 5.5, 5 + 5.5, this.headerHeight / 6, this.headerHeight - 8 - 11);
   this.c.strokeRect(this.headerHeight + 5.5 + this.headerHeight / 6 + 2, 5 + 5.5, this.headerHeight / 6, this.headerHeight - 8 - 11);
 
-  //stop    
+  //stop
   this.c.strokeRect(2 * this.headerHeight - 4 + 5.5, 5 + 5.5, this.headerHeight - 8 - 11, this.headerHeight - 8 - 11);
 
   //export
@@ -642,7 +642,7 @@ Timeline.prototype.updateGUI = function () {
   this.c.restore();
 
   //end of label panel
-  this.drawLine(this.trackLabelWidth, 0, this.trackLabelWidth, h, "#000000");
+  this.drawLine(this.trackLabelWidth, 0, this.trackLabelWidth, h, "#2c3133");
 
   //time scale
   for (var i = 2; i < 20; i++) {
@@ -703,7 +703,7 @@ Timeline.prototype.drawTrack = function (track, y) {
   }
   else {
     xshift += 10;
-    //label color    
+    //label color
     this.c.fillStyle = this.colorPropertyLabel;
   }
 

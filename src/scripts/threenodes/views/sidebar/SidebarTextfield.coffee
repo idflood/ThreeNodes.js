@@ -1,93 +1,80 @@
-define [
-  'Underscore',
-  'Backbone',
-  "text!templates/field_textfield.tmpl.html",
-], (_, Backbone, _view_field_textfield) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  _view_field_textfield = require 'text!templates/field_textfield.tmpl.html'
+  DraggableNumber = require 'draggable-number'
 
   ### SidebarTextfield View ###
-  namespace "ThreeNodes",
-    SidebarTextfield: class SidebarTextfield extends Backbone.View
-      initialize: (options) ->
-        super
-        @render()
+  class SidebarTextfield extends Backbone.View
+    initialize: (options) ->
+      super
+      @slider = false
+      @render()
 
-      render: () =>
-        # Compile the template file
-        @container = $(_.template(_view_field_textfield, @options))
-        @$el.append(@container)
-        @$input = $("input", @container)
+    render: () =>
+      # Compile the template file
+      @container = $(_.template(_view_field_textfield, @options))
+      @$el.append(@container)
+      @$input = $("input", @container)
 
-        if @options.type == "float" && @options.link_to_val == true
-          @$input.val(@model.getValue())
-          @addTextfieldSlider()
-        return @
+      return @
 
-      linkTextfieldToVal: (f_input, type = "float") =>
-        on_value_changed = (v) ->
-          f_input.val(v)
-        @model.on "value_updated", on_value_changed
+    linkTextfieldToVal: (type = "float") =>
+      @$input.val(@model.getValue())
 
-        f_input.val(@model.getValue())
-        f_input.keypress (e) =>
-          if e.which == 13
-            if type == "float"
-              @model.setValue(parseFloat(f_input.val()))
-            else
-              @model.setValue(f_input.val())
-            f_input.blur()
-        return f_input
+      if @options.type == "float" && @slider == false
+        @slider = @addTextfieldSlider()
 
-      # TODO: maybe remove f_input param
-      linkTextfieldToSubval: (f_input, subval, type = "float") =>
-        # TODO: use the event instead of the hook
-        @model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) ->
-          f_input.val(v[subval])
+      on_value_changed = (v) =>
+        if @slider then @slider.set(v)
+      @model.on "value_updated", on_value_changed
 
-        f_input.val(@model.getValue()[subval])
-        f_input.keypress (e) =>
-          if e.which == 13
-            dval = f_input.val()
-            if type == "float" then dval = parseFloat(dval)
-            if $.type(@model.attributes.value) == "array"
-              @model.attributes.value[0][subval] = dval
-            else
-              @model.attributes.value[subval] = dval
-            f_input.blur()
-        f_input
+      @$input.val(@model.getValue())
 
-      addTextfieldSlider: () =>
-        $parent = @$input.parent()
+      if @slider
+        @slider._options.changeCallback = (new_val) =>
+          @model.setValue(new_val)
 
-        on_slider_change = (e, ui) =>
-          @$input.val(ui.value)
-          # simulate a keypress to apply value
-          press = jQuery.Event("keypress")
-          press.which = 13
-          @$input.trigger(press)
+      @$input.keypress (e) =>
+        if e.which == 13
+          if type == "float"
+            @model.setValue(parseFloat(@$input.val()))
+          else
+            @model.setValue(@$input.val())
+          @$input.blur()
+      return this
 
-        remove_slider = () =>
-          $(".slider-container", $parent).remove()
+    linkTextfieldToSubval: (subval, type = "float") =>
+      @$input.val(@model.getValue()[subval])
 
-        create_slider = () =>
-          remove_slider()
-          $parent.append('<div class="slider-container"><div class="slider"></div></div>')
-          current_val = parseFloat(@$input.val())
-          min_diff = 0.5
-          diff = Math.max(min_diff, Math.abs(current_val * 4))
-          $(".slider-container", $parent).append("<span class='min'>#{(current_val - diff).toFixed(2)}</span>")
-          $(".slider-container", $parent).append("<span class='max'>#{(current_val + diff).toFixed(2)}</span>")
+      if @options.type == "float"
+        @slider = @addTextfieldSlider()
 
-          $(".slider", $parent).slider
-            min: current_val - diff
-            max: current_val + diff
-            value: current_val
-            step: 0.01
-            change: on_slider_change
-            slide: on_slider_change
+      # TODO: use the event instead of the hook
+      @model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (v) =>
+        @$input.val(v[subval])
 
-        # recreate slider on focus
-        @$input.focus (e) =>
-          create_slider()
-        # create first slider
-        create_slider()
+      updateVal = () =>
+        dval = @$input.val()
+        if type == "float" then dval = parseFloat(dval)
+        if $.type(@model.attributes.value) == "array"
+          @model.attributes.value[0][subval] = dval
+        else
+          @model.attributes.value[subval] = dval
+
+
+      @slider._options.changeCallback = (new_val) =>
+        updateVal()
+
+      @$input.change (e) =>
+        updateVal()
+      @$input.keypress (e) =>
+        if e.which == 13
+          updateVal()
+          @$input.blur()
+      return this
+
+    addTextfieldSlider: () =>
+      slider = new DraggableNumber(@$input.get(0))
+      return slider

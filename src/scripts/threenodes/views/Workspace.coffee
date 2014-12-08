@@ -1,13 +1,14 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/views/NodeView',
-  'cs!threenodes/views/ConnectionView',
-  'cs!threenodes/nodes/views/Color',
-  'cs!threenodes/nodes/views/WebGLRenderer',
-  'cs!threenodes/nodes/views/Group',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+  ConnectionView = require 'cs!threenodes/connections/views/ConnectionView'
+
+  require 'jquery.ui'
+  require 'cs!threenodes/nodes/views/NodeView'
+  require 'cs!threenodes/nodes/views/Color'
+  require 'cs!threenodes/nodes/views/WebGLRenderer'
+  require 'cs!threenodes/nodes/views/Group'
 
   ### Workspace View ###
 
@@ -15,59 +16,91 @@ define [
   # There is a global workspace and possibly many workspaces
   # from group nodes. There is always only one workspace displayed.
 
-  namespace "ThreeNodes",
-    Workspace: class Workspace extends Backbone.View
-      initialize: (options) =>
-        super
-        @views = []
-        @settings = options.settings
+  class Workspace extends Backbone.View
+    initialize: (options) =>
+      super
+      @settings = options.settings
+      @initDrop()
 
-      render: (nodes) =>
-        console.log "should remove " + @views.length
-        console.log @views
-        # Remove all existing views before displaying new ones
-        _.each(@views, (view) -> view.remove())
+    render: (nodes) =>
+      # Keep a reference of the current nodes
+      @nodes = nodes
 
-        # Keep a reference of the current nodes
-        @nodes = nodes
+      console.log "Workspace.render " + nodes.length
+      @views = []
 
-        console.log "Workspace.render " + nodes.length
+      # Create the views for already created nodes and connections
+      _.each(@nodes.models, @renderNode)
+      _.each(@nodes.connections.models, @renderConnection)
 
-        # Create the views for already created nodes and connections
-        _.each(@nodes.models, @renderNode)
-        _.each(@nodes.connections.models, @renderConnection)
+      # Create views when a new node is created
+      @nodes.bind("add", @renderNode)
 
-        # Reset the array of views
-        @views = []
+      # Create a connection view when a connection is created
+      @nodes.connections.bind("add", @renderConnection)
 
-        # Create views when a new node is created
-        @nodes.bind("add", @renderNode)
+    destroy: () =>
+      # Remove all existing views before displaying new ones
+      _.each(@views, (view) -> view.remove())
+      @nodes.unbind("add", @renderNode)
+      @nodes.connections.unbind("add", @renderConnection)
+      delete @views
+      delete @settings
+      @remove()
 
-        # Create a connection view when a connection is created
-        @nodes.connections.bind("add", @renderConnection)
+    renderNode: (node) =>
+      nodename = node.constructor.name
 
-      renderNode: (node) =>
-        nodename = node.constructor.name
+      if ThreeNodes.nodes.views[nodename]
+        # If there is a view associated with the node model use it
+        viewclass = ThreeNodes.nodes.views[nodename]
+      else
+        # Use the default view class
+        viewclass = ThreeNodes.NodeView
 
-        if ThreeNodes.nodes.views[nodename]
-          # If there is a view associated with the node model use it
-          viewclass = ThreeNodes.nodes.views[nodename]
-        else
-          # Use the default view class
-          viewclass = ThreeNodes.NodeView
-        view = new viewclass
-          model: node
+      # Add directly the node element to the dom so that the view can
+      # access the .parent() directly. (@see FieldsView.onFieldCreated)
+      $nodeEl = $("<div class='node'></div>").appendTo(@$el)
+      view = new viewclass
+        model: node
+        el: $nodeEl
 
-        view.$el.appendTo(@$el)
+      # Save the nid and model in the data attribute
+      view.$el.data("nid", node.get("nid"))
+      view.$el.data("object", node)
+      @views.push(view)
 
-        # Save the nid and model in the data attribute
-        view.$el.data("nid", node.get("nid"))
-        view.$el.data("object", node)
-        @views.push(view)
+    renderConnection: (connection) =>
+      if @settings.test == true
+        return false
+      view = new ConnectionView
+        model: connection
+      @views.push(view)
 
-      renderConnection: (connection) =>
-        if @settings.test == true
-          return false
-        view = new ThreeNodes.ConnectionView
-          model: connection
-        @views.push(view)
+    initDrop: () =>
+      self = this
+      # Setup the drop area for the draggables created above
+      $("#container").droppable
+        accept: "#tab-new a.button, #library .definition"
+        activeClass: "ui-state-active"
+        hoverClass: "ui-state-hover"
+        drop: (event, ui) ->
+          offset = $("#container-wrapper").offset()
+          definition = false
+
+          if ui.draggable.hasClass("definition")
+            nodename = "Group"
+            container =  $("#library")
+            definition = ui.draggable.data("model")
+            offset.left -= container.offset().left
+          else
+            nodename = ui.draggable.attr("rel")
+            container =  $("#sidebar .ui-layout-center")
+
+          dx = ui.position.left + $("#container-wrapper").scrollLeft() - offset.left - 10
+          dy = ui.position.top + $("#container-wrapper").scrollTop() - container.scrollTop() - offset.top
+          if self.nodes
+            self.nodes.createNode({type: nodename, x: dx, y: dy, definition: definition})
+          $("#sidebar").show()
+
+      return this

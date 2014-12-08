@@ -1,10 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/views/NodeView',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!../models/Node'
+  require 'cs!./NodeView'
 
   namespace "ThreeNodes.nodes.views",
     WebGLRenderer: class WebGLRenderer extends ThreeNodes.NodeView
@@ -97,7 +97,7 @@ define [
         return this
 
       apply_bg_color: (force_refresh = false) ->
-        new_val = @model.fields.getField('bg_color').getValue().getContextStyle()
+        new_val = @model.fields.getField('bg_color').getValue().getStyle()
 
         if @old_bg == new_val && force_refresh == false
           return false

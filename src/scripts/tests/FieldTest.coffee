@@ -61,3 +61,111 @@ define [
         equals nf.getValue().getHex(), new THREE.Color(0xffffff).getHex(), "ColorField converted TRUE value to 0xffffff"
         nf.setValue new THREE.Vector3(0.1, 0.2, 0.3)
         equals nf.getValue().getHex(), new THREE.Color().setRGB(0.1, 0.2, 0.3).getHex(), "ColorField converted Vector3 value to Color"
+
+      test "Three.js fields", () ->
+        fields =
+          vector2:
+            instance: new ThreeNodes.fields.Vector2({})
+            values:
+              vector2:
+                val: new THREE.Vector2()
+                return: true
+              float:
+                val: 42
+                return: false
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          color:
+            instance: new ThreeNodes.fields.Color({})
+            values:
+              color:
+                val: new THREE.Color()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: true
+              float:
+                val: 0xff0000
+                return: true
+              boolean:
+                val: true
+                return: true
+              vector2:
+                val: new THREE.Vector2()
+                return: false
+          scene:
+            instance: new ThreeNodes.fields.Scene({})
+            values:
+              color:
+                val: new THREE.Scene()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          material:
+            instance: new ThreeNodes.fields.Material({})
+            values:
+              MeshBasicMaterial:
+                val: new THREE.MeshBasicMaterial()
+                return: true
+              MeshLambertMaterial:
+                val: new THREE.MeshLambertMaterial()
+                return: true
+              MeshPhongMaterial:
+                val: new THREE.MeshPhongMaterial()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          geometry:
+            instance: new ThreeNodes.fields.Geometry({})
+            values:
+              CubeGeometry:
+                val: new THREE.CubeGeometry()
+                return: true
+              SphereGeometry:
+                val: new THREE.SphereGeometry()
+                return: true
+              CylinderGeometry:
+                val: new THREE.CylinderGeometry()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          object3d:
+            instance: new ThreeNodes.fields.Object3D({})
+            values:
+              Object3D:
+                val: new THREE.Object3D()
+                return: true
+              SphereGeometry:
+                val: new THREE.Mesh()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+          fog:
+            instance: new ThreeNodes.fields.Fog({})
+            values:
+              fog:
+                val: new THREE.Fog()
+                return: true
+              fogExp2:
+                val: new THREE.FogExp2()
+                return: true
+              vector3:
+                val: new THREE.Vector3()
+                return: false
+
+        for i, field of fields
+          instance = field.instance
+          for index, value of field.values
+            returnsomething = value.return
+            result = instance.computeValue(value.val)
+            valuename = index
+
+            if returnsomething
+              equals result != null, returnsomething, "Field type " + instance.constructor.name + " should return something when passed a " + valuename
+            else
+              equals result != null, returnsomething, "Field type " + instance.constructor.name + " should return null when passed a " + valuename

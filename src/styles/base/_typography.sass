@@ -1,0 +1,34 @@
+$c1: #ccc
+$c2: #fff
+
+
+%mono-font
+  font-family: $mono
+
+
+body
+  font-family: $blueprint-font-family
+  font-size: 12px
+  line-height: 1.4em
+  color: #999
+  a, .ui-widget-content a
+    text-decoration: none
+    +link-colors($c1, $c2, $c1, $c1, $c2)
+
+  h2, h3
+    color: #aaa
+
+  h3
+    font-weight: 700
+
+.node
+  color: #aaa
+  font-size: 10px
+
+  .head
+    font-weight: normal
+    letter-spacing: 1px
+    text-align: center
+
+  .outputs > div
+    text-align: right

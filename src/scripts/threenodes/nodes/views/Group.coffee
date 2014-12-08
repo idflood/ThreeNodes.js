@@ -1,11 +1,10 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/models/Node',
-  'cs!threenodes/views/NodeView',
-  "colorpicker",
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  require 'cs!../models/Node'
+  require 'cs!./NodeView'
 
   namespace "ThreeNodes.nodes.views",
     Group: class Group extends ThreeNodes.NodeView
@@ -24,11 +23,15 @@ define [
         else
           # Use the default view class
           viewclass = ThreeNodes.NodeView
+
+        # same as Workspace.renderNode
+        $nodeEl = $("<div class='node'></div>").appendTo(@$el.find("> .options"))
         view = new viewclass
           model: node
           isSubNode: true
+          el: $nodeEl
 
-        view.$el.appendTo(@$el.find("> .options"))
+        #view.$el.appendTo(@$el.find("> .options"))
 
         # Save the nid and model in the data attribute
         view.$el.data("nid", node.get("nid"))

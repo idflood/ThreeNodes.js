@@ -1635,9 +1635,11 @@ body > header h1 {
   padding-top: 7px;
 }
 .node .inner-field {
-  background: transparent;
   cursor: pointer;
   display: inline-block;
+  min-width: 100%;
+  min-height: 16px;
+  background: transparent;
 }
 .node .inner-field span {
   display: inline-block;
@@ -1682,6 +1684,9 @@ body > header h1 {
   width: 100%;
   vertical-align: middle;
   line-height: 10px;
+}
+.node .outputs {
+  float: right;
 }
 .node .inputs .inner-field span {
   margin-right: 4px;

@@ -1,19 +1,19 @@
-define [
-  'Underscore',
-  'Backbone',
-  'cs!threenodes/views/sidebar/fields/BaseField',
-], (_, Backbone) ->
+define (require) ->
   #"use strict"
+  _ = require 'Underscore'
+  Backbone = require 'Backbone'
+
+  BaseField = require 'cs!threenodes/views/sidebar/fields/BaseField'
 
   ### FloatField View ###
   namespace "ThreeNodes.views.fields",
-    FloatField: class FloatField extends ThreeNodes.views.fields.BaseField
+    FloatField: class FloatField extends BaseField
       initialize: (options) ->
         super
 
       render: () =>
         $target = @createSidebarContainer()
-        console.log @model
+        #console.log @model
         if @model.attributes.possibilities
           @create_sidebar_select($target)
         else
@@ -37,4 +37,4 @@ define [
 
       create_sidebar_input: ($target) =>
         @textfield = @createTextfield($target)
-        @textfield.linkTextfieldToVal(@textfield.$input)
+        @textfield.linkTextfieldToVal()

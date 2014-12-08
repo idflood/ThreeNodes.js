@@ -1,12 +1,15 @@
 require.config({
   paths: {
-    jquery: 'libs/jquery-1.7.2',
-    "jquery.ui": 'libs/jquery-ui/js/jquery-ui-1.9m6',
+    jquery: 'libs/jquery-2.0.3',
+    "jquery.ui": 'libs/jquery-ui/js/jquery-ui',
+    'jquery.menubar': 'libs/jquery.menubar',
+    'jquery.layout': 'libs/jquery.layout-latest',
     Underscore: 'libs/underscore',
     Backbone: 'libs/backbone',
     text: "libs/require/text",
     cs: "libs/require/cs",
     CoffeeScript: "libs/coffee-script",
+    "coffee-script": "libs/coffee-script",
     treeJquery: "libs/tree.jquery",
     RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame",
     Raphael: "libs/raphael-min",
@@ -14,6 +17,8 @@ require.config({
     Three: "libs/Three",
     ThreeCSG: 'libs/ThreeCSG',
     csg: 'libs/csg',
+    'draggable-number': 'libs/draggable-number',
+    ColladaLoader: 'libs/three-extras/js/loaders/ColladaLoader',
     EffectComposer: 'libs/three-extras/js/postprocessing/EffectComposer',
     RenderPass: 'libs/three-extras/js/postprocessing/RenderPass',
     BloomPass: 'libs/three-extras/js/postprocessing/BloomPass',
@@ -22,11 +27,19 @@ require.config({
     ShaderPass: 'libs/three-extras/js/postprocessing/ShaderPass',
     MaskPass: 'libs/three-extras/js/postprocessing/MaskPass',
     DotScreenPass: 'libs/three-extras/js/postprocessing/DotScreenPass',
-    ShaderExtras: 'libs/three-extras/js/ShaderExtras',
+    ShaderVignette: 'libs/three-extras/js/shaders/VignetteShader',
+    HorizontalBlurShader: 'libs/three-extras/js/shaders/HorizontalBlurShader',
+    VerticalBlurShader: 'libs/three-extras/js/shaders/VerticalBlurShader',
+    BleachBypassShader: 'libs/three-extras/js/shaders/BleachBypassShader',
+    ConvolutionShader: 'libs/three-extras/js/shaders/ConvolutionShader',
+    FilmShader: 'libs/three-extras/js/shaders/FilmShader',
+    CopyShader: 'libs/three-extras/js/shaders/CopyShader',
+    RenderPass: 'libs/three-extras/js/postprocessing/RenderPass',
     timeline: "libs/timeline.js/timeline",
     'timeline-gui': "libs/timeline.js/timeline-gui"
   },
   shim: {
+
     'Three':{
       exports: "THREE"
     },
@@ -51,6 +64,14 @@ require.config({
       deps: ['jquery'],
       exports: "jquery"
     },
+    'jquery.menubar': {
+      deps: ['jquery.ui'],
+      exports: "jquery"
+    },
+    'jquery.layout': {
+      deps: ['jquery', 'jquery.ui'],
+      exports: "jquery"
+    },
     'colorpicker': {
       deps: ['jquery'],
       exports: "jquery"
@@ -58,9 +79,9 @@ require.config({
     'timeline-gui': {
       deps: ['timeline'],
     },
+    'ColladaLoader': ['Three'],
     'ThreeCSG': ['Three'],
     'csg': ['ThreeCSG'],
-    'EffectComposer': ['Three'],
     'RenderPass': ['Three'],
     'BloomPass': ['Three'],
     'FilmPass': ['Three'],
@@ -68,6 +89,23 @@ require.config({
     'ShaderPass': ['Three'],
     'MaskPass': ['Three'],
     'DotScreenPass': ['Three'],
-    'ShaderExtras': ['Three']
+    'EffectComposer': {
+      deps: ['Three', 'CopyShader']
+    },
+    'RenderPass': ['Three'],
+    'BloomPass': {
+      deps: ['Three', 'ConvolutionShader']
+    },
+    'ConvolutionShader': ['Three'],
+    'FilmPass': {
+      deps: ['Three', 'FilmShader']
+    },
+    'ShaderVignette': ['Three'],
+    'HorizontalBlurShader': ['Three'],
+    'VerticalBlurShader': ['Three'],
+    'BleachBypassShader': ['Three'],
+    'FilmShader': ['Three'],
+    'CopyShader': ['Three'],
+    'RenderPass': ['Three']
   }
 });

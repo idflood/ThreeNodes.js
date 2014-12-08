@@ -1,0 +1,89 @@
+.ui-layout-pane
+  overflow: auto
+
+.ui-layout-content
+  padding: 10px
+  position: relative
+  overflow: auto
+
+.ui-layout-resizer
+  background: darken($background_color, 2%)
+  border: 1px solid $background_color
+  border-width: 0
+
+$hover: $border_color
+$limit: #eee
+$toggler_normal: lighten($background_color, 4%)
+$toggler_hover: #ddd
+.ui-layout-resizer-open-hover
+  background: $hover
+
+.ui-layout-resizer-dragging
+  background: $hover
+  border: 1px solid $border_color
+
+.ui-layout-resizer-dragging-limit, .ui-layout-resizer-closed-hover
+  background: $limit
+
+
+.ui-layout-resizer-sliding
+  +opacity(0.1)
+
+.ui-layout-resizer-sliding-hover
+  +opacity(1)
+
+.ui-layout-resizer-north-sliding-hover
+  border-bottom-width: 1px
+
+.ui-layout-resizer-south-sliding-hover
+  border-top-width: 1px
+
+.ui-layout-resizer-west-sliding-hover
+  border-right-width: 1px
+
+.ui-layout-resizer-east-sliding-hover
+  border-left-width: 1px
+
+
+.ui-layout-toggler
+  border: 1px solid $toggler_normal
+  background-color: $toggler_normal
+
+.ui-layout-resizer-hover .ui-layout-toggler
+  background-color: $toggler_hover
+  +opacity(0.5)
+
+.ui-layout-toggler-hover, .ui-layout-resizer-hover .ui-layout-toggler-hover
+  background-color: $toggler_hover
+  +opacity(1)
+
+.ui-layout-toggler-north, .ui-layout-toggler-south
+  border-width: 0 1px
+
+.ui-layout-toggler-west, .ui-layout-toggler-east
+  border-width: 1px 0
+
+.ui-layout-resizer-sliding.ui-layout-toggler
+  display: none
+
+.ui-layout-toggler .content
+  color: #666
+  font-size: 12px
+  font-weight: bold
+  width: 100%
+  padding-bottom: 0.35ex
+
+
+.ui-layout-mask
+  border: none !important
+  padding: 0 !important
+  margin: 0 !important
+  overflow: hidden !important
+  position: absolute !important
+  opacity: 0 !important
+
+.ui-layout-mask-inside-pane
+  top: 0 !important
+  left: 0 !important
+  width: 100% !important
+  height: 100% !important
