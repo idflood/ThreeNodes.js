@@ -29,8 +29,8 @@ module.exports = (grunt) ->
           mainConfigFile: 'src/scripts/require-config.js'
           name: "boot"
           out: "assets/scripts/boot.js"
-          optimize: "uglify2"
-          #optimize: "none"
+          #optimize: "uglify2"
+          optimize: "none"
           inlineText: true
           preserveLicenseComments: false
           include: "requireLib"
