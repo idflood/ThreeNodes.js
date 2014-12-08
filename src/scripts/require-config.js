@@ -34,19 +34,17 @@ require.config({
     ConvolutionShader: 'libs/three-extras/js/shaders/ConvolutionShader',
     FilmShader: 'libs/three-extras/js/shaders/FilmShader',
     CopyShader: 'libs/three-extras/js/shaders/CopyShader',
-    RenderPass: 'libs/three-extras/js/postprocessing/RenderPass',
     timeline: "libs/timeline.js/timeline",
     'timeline-gui': "libs/timeline.js/timeline-gui"
   },
   shim: {
-
-    'Three':{
+    'Three': {
       exports: "THREE"
     },
-    'RequestAnimationFrame':{
+    'RequestAnimationFrame': {
       exports: "requestAnimationFrame"
     },
-    'Raphael':{
+    'Raphael': {
       exports: "Raphael"
     },
     'treeJquery': {
@@ -77,14 +75,12 @@ require.config({
       exports: "jquery"
     },
     'timeline-gui': {
-      deps: ['timeline'],
+      deps: ['timeline']
     },
     'ColladaLoader': ['Three'],
     'ThreeCSG': ['Three'],
     'csg': ['ThreeCSG'],
     'RenderPass': ['Three'],
-    'BloomPass': ['Three'],
-    'FilmPass': ['Three'],
     'TexturePass': ['Three'],
     'ShaderPass': ['Three'],
     'MaskPass': ['Three'],
@@ -92,7 +88,6 @@ require.config({
     'EffectComposer': {
       deps: ['Three', 'CopyShader']
     },
-    'RenderPass': ['Three'],
     'BloomPass': {
       deps: ['Three', 'ConvolutionShader']
     },
@@ -105,7 +100,6 @@ require.config({
     'VerticalBlurShader': ['Three'],
     'BleachBypassShader': ['Three'],
     'FilmShader': ['Three'],
-    'CopyShader': ['Three'],
-    'RenderPass': ['Three']
+    'CopyShader': ['Three']
   }
 });
