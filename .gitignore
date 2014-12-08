@@ -7,13 +7,7 @@ Thumbs.db
 node_modules/
 public/tmp/
 output_static/
-output_static/*
-output_static/*/*
-output_static/*/*/*
-output_static/*/*/*/*
+output_static/**
 dist/
-dist/*
-dist/*/*
-dist/*/*/*
-dist/*/*/*/*
+dist/**
 Gemfile.lock
