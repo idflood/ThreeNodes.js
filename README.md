@@ -1,7 +1,11 @@
-#ThreeNodes.js
-![screenshot_version_0.1.0](public/misc/screenshot1.jpg)  
+# ThreeNodes.js
 
-This is an attempt to make something like "vvvv" in javascript, html and webgl.
+[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+
+![screenshot_version_0.1.0](public/misc/screenshot1.jpg)
+
+## Experimental
+This is an experiment to make something like "vvvv" in javascript, html and webgl.
 
 Live demo: http://idflood.github.com/ThreeNodes.js/
 
@@ -65,31 +69,15 @@ Live demo: http://idflood.github.com/ThreeNodes.js/
 ## Development setup
 This will automatically compile coffescript files to javascript, sass to css and haml to html.
 
-1. install node.js 0.6.x (http://nodejs.org/)
-2. install npm (https://github.com/isaacs/npm)
-3. install coffeescript (http://jashkenas.github.com/coffee-script/)
-4. install jade globally: sudo npm install -g jade
-5. cd in ThreeNodes
-6. npm install -d
-
-## Usage
-1. cd in ThreeNodes
-2. node server.js
-3. with firefox or chrome go to http://localhost:3000/
-4. allow this site to create popups (for webglrender node)
+1. install node.js 0.8.x or later (http://nodejs.org/)
+2. install compass (http://compass-style.org/install/)
+3. install grunt (http://gruntjs.com/getting-started#installing-the-cli)
+4. cd in ThreeNodes
+5. npm install -d
 
 ## Build / Deploy
 1. cd in ThreeNodes
-2. node server.js build
-3. a new /dist should have been created
-
-If there is an error when building see https://github.com/jrburke/r.js/issues/157#issuecomment-5402796
-This will be fixed with the next require.js release (2.0)
-
-## Build annotated sources
-1. install docco and dependancies
-2. docco src/scripts/threenodes/*.coffee src/scripts/threenodes/*/*.coffee
-3. cp docs/App.html docs/index.html
+2. grunt build
 
 ## Known limitations
 - It is recommended to always access ThreeNodes.js from http since chrome has a highly restrictive file access when using file://. (see http://code.google.com/p/chromium/issues/detail?id=40787)
