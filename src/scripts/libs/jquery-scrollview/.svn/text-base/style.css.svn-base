@@ -1,0 +1,17 @@
+body {
+  padding:10px 25px;
+  cursor:url("/sv/images/openhand.cur");
+}
+.gr {
+ cursor:url(/sv/images/openhand.cur), url(/sv/images/openhand.png), default;
+}
+
+#map {
+ width:600px;
+ height:400px;
+ border:1px solid #666;
+ overflow:scroll;
+}
+
+#map img { border:none; }
+a { color:gray; font-size:11px; }

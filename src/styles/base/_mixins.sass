@@ -1,0 +1,30 @@
+@mixin link-colors($normal, $hover, $active, $visited, $focus)
+  color: $normal
+
+  @if $visited
+    &:visited
+      color: $visited
+  @if $focus
+    &:focus
+      color: $focus
+  @if $hover
+    &:hover
+      color: $hover
+  @if $active
+    &:active
+      color: $active
+
+.relative
+  position: relative
+
+.visually-hidden
+  position: absolute
+  top: -9999px
+  left: -9999px
+
+.hidden-element
+  display: none
+
+.inline-float
+  display: inline !important
+  float: left

@@ -1,0 +1,70 @@
+{
+	"IcoMoonType": "selection",
+	"icons": [
+		{
+			"icon": {
+				"paths": [
+					"M847.923 176.026c-73.83-73.882-129.28-62.822-129.28-62.822l-554.291 554.291-51.712 243.866 243.866-51.712 554.24-554.24c0 0 11.11-55.45-62.822-129.382zM341.965 830.31l-83.098 17.92c-8.038-15.002-17.715-30.003-35.379-47.718-17.664-17.664-32.717-27.29-47.718-35.328l17.971-83.149 24.013-24.013c0 0 45.261 0.922 96.307 51.968 51.098 51.098 52.019 96.358 52.019 96.358l-24.115 23.962z"
+				],
+				"tags": [
+					"pencil",
+					"write",
+					"blog",
+					"edit",
+					"save"
+				],
+				"grid": 20
+			},
+			"properties": {
+				"order": 2,
+				"id": 7,
+				"prevSize": 20,
+				"code": 58880,
+				"name": "pencil",
+				"ligatures": ""
+			},
+			"setIdx": 0,
+			"iconIdx": 0
+		}
+	],
+	"height": 1024,
+	"metadata": {
+		"name": "icomoon"
+	},
+	"preferences": {
+		"fontPref": {
+			"prefix": "icon-",
+			"metadata": {
+				"fontFamily": "icomoon"
+			},
+			"showGlyphs": true,
+			"metrics": {
+				"emSize": 1024,
+				"baseline": 6.25,
+				"whitespace": 50
+			},
+			"resetPoint": 58880,
+			"showQuickUse": true,
+			"quickUsageToken": false,
+			"showMetrics": true,
+			"showMetadata": false,
+			"ie7": true
+		},
+		"imagePref": {
+			"color": 0,
+			"height": 32,
+			"columns": 16,
+			"margin": 16,
+			"png": false,
+			"sprites": true
+		},
+		"historySize": 100,
+		"showCodes": true,
+		"gridSize": 16,
+		"showLiga": false,
+		"showGrid": true,
+		"showGlyphs": true,
+		"showQuickUse": true,
+		"search": ""
+	}
+}

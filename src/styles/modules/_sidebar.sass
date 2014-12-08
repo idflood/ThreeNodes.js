@@ -1,0 +1,196 @@
+#sidebar
+  overflow: hidden
+  .container
+    overflow-y: auto
+    overflow-x: hidden
+    padding: 0
+
+  h3
+    color: #eee
+    font-size: 12px
+    margin-top: 30px
+    margin-bottom: 5px
+    margin-left: 10px
+    font-weight: bold
+    letter-spacing: 1px
+    text-transform: uppercase
+
+  ul
+    +no-bullets()
+
+  ul, li
+    +reset-box-model()
+
+  > div
+    padding-right: 20px
+    margin-bottom: 40px
+
+  #tab-new a
+    padding: 5px 10px
+    display: block
+
+  .ui-tabs-nav
+    position: relative
+    display: block
+    float: none
+    overflow: hidden
+    margin: 0
+    padding: 0
+    padding-top: 12px
+    background: $background_color
+    border-bottom: 1px solid $border_color
+
+    li
+      position: relative
+      display: inline
+      float: left
+      padding: 0
+      margin: 0
+      background: $background_color
+      +background-image(linear-gradient(lighten($background_color, 2%), darken($background_color, 2%)))
+      border-right: 1px solid lighten($background_color, 3%)
+      border-top: 1px solid lighten($background_color, 8%)
+      z-index: 10
+      //&:first-child
+      //  +border-radius(4px 0 0 0)
+      &:last-child
+        +border-radius(0 4px 0 0)
+
+      a
+        +inline-block
+        padding: .4em 10px .5em 10px
+        outline: 0
+        letter-spacing: 1px
+
+      &.ui-tabs-active
+        //+box-shadow(0px 0px 2px 0px rgba(#000, 0.25))
+        background: lighten($background_color, 5%)
+        +background-image(linear-gradient(lighten($background_color, 7%), lighten($background_color, 2%)))
+        z-index: 20
+        a
+          color: #eee
+      &:first-child
+        padding-left: 6px
+
+
+#tab-new
+  position: relative
+  padding-top: 20px
+
+
+
+  li
+    border-top: 1px solid darken($background_color, 3%)
+    &:before
+      content: ""
+      display: block
+      height: 0px
+      border-top: 1px solid lighten($background_color, 3%)
+    &:first-child
+      border-top-color: $border_color
+
+  a
+    font-size: 10px
+    letter-spacing: 1px
+
+  li:hover
+    &:before
+      border-color: darken($background_color, 12%)
+    a
+      background: darken($background_color, 10%)
+
+#tab-attribute
+  //padding: 5px
+  > div
+    padding-bottom: 10px
+
+
+  h2
+    position: relative
+    margin: 10px 0 10px 0
+    padding: 0 5px 0 5px
+    font-size: 14px
+    font-weight: bold
+    border-bottom: 1px solid lighten($background_color, 3%)
+
+    color: #eee
+    &:after
+      content: ""
+      display: block
+      position: absolute
+      left: 0
+      right: 0
+      bottom: 0
+      height: 0px
+      border-top: 1px solid $border_color
+
+
+  h3
+    display: table-cell
+    margin-left: 0
+    margin-top: 5px
+    padding-top: 1px
+    padding-right: 10px
+    min-width: 40px
+    width: 1%
+    font-size: 11px
+    font-weight: 400
+    vertical-align: top
+
+  .field-wrapper
+    +box-sizing(border-box)
+    display: table
+    width: 100%
+    padding: 0 5px 8px 5px
+    min-height: 35px
+    > div
+      display: table-cell
+      text-align: left
+      vertical-align: top
+
+  input[type="text"]
+    +box-sizing(border-box)
+    width: 100%
+    position: relative
+    top: -6px
+    left: -4px
+
+#node_filter
+  position: absolute
+  left: 8px
+  top: 7px
+  width: 178px !important
+
+  border-radius: 5px
+  outline: 0
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a
+  cursor: text
+
+.ui-tabs .ui-tabs-hide
+  display: none !important
+
+#sidebar li.ui-tabs-selected
+  background: lighten($background_color, 2%)
+  a
+    color: #333
+
+.input-container
+  position: relative
+  overflow: visible
+#sidebar input
+  //+box-shadow(#222, 0, 1px, 14px, false, inset)
+  padding: 6px 7px
+  //width: 188px
+  border: $border_color
+  background: lighten($background_color, 2%)
+
+  font-size: 12px
+
+  &:focus
+    outline: 0
+    border: #444
+    background: lighten($background_color, 4%)
+  &:hover
+    border: darken($border_color, 2%)
+

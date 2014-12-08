@@ -1,0 +1,53 @@
+#sidebar
+  ul.tree
+    list-style: none outside
+    margin-bottom: 0
+    ul
+      list-style: none outside
+      margin-bottom: 0
+      margin-left: 8px
+    li
+      &.closed > ul
+        display: none
+      margin-left: 0
+    a.toggler
+      background: image-url("treeDown.png") no-repeat 0 50%
+      width: 12px
+      display: block
+      float: left
+      text-indent: -9999px
+      opacity: 0.9
+    span, a
+      cursor: pointer
+    li
+      > span
+        margin-left: 12px
+        padding: 2px
+      &.folder > span
+        margin-left: 0
+    a.toggler.closed
+      background-image: image-url("treeRight.png")
+
+  ul.tree span
+    span.dragging
+      color: #fff
+      background: #000
+      opacity: 0.6
+      cursor: pointer
+      padding: 2px 8px
+
+    &.ghost
+      border: dashed 2px #aaa
+      margin-left: 12px
+      width: auto
+      color: #fff
+      float: none
+      display: inline
+      &.folder
+        margin-left: 0
+        background-image: none
+      &.inside
+        margin-left: 36px
+    &.selected
+      background: #000
+      color: #fff
