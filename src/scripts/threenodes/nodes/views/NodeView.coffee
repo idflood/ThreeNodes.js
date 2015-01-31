@@ -128,16 +128,26 @@ define (require) ->
 
       initTitleClick: () ->
         self = this
-        @$el.find("> .head span").dblclick (e) ->
+
+        $title_span = @$el.find("> .head span")
+        $input = $("<input type='text' />")
+        @$el.find("> .head").append($input)
+        $input.hide()
+
+        # Fix conflict with contextmenu.
+        $input.on 'mousedown', (e) ->
+          e.stopPropagation()
+
+        $title_span.dblclick (e) ->
           prev = $(this).html()
-          self.$el.find("> .head").append("<input type='text' />")
-          $(this).hide()
-          $input = self.$el.find("> .head input", )
           $input.val(prev)
+          $title_span.hide();
+          $input.show()
 
           apply_input_result = () ->
             self.model.set('name', $input.val())
-            $input.remove()
+            $input.hide()
+            $title_span.show()
 
           $input.blur (e) ->
             apply_input_result()
