@@ -59,10 +59,13 @@ define (require) ->
       self = this
       field = @model
 
+      start_offset_x = 0
+      start_offset_y = 0
+
       getPath = (start, end, offset) ->
         ofx = $("#container-wrapper").scrollLeft()
         ofy = $("#container-wrapper").scrollTop()
-        "M#{start.left + offset.left + 2} #{start.top + offset.top + 2} L#{end.left + offset.left + ofx} #{end.top + offset.top + ofy}"
+        "M#{start.left + offset.left + 2} #{start.top + offset.top + 2} L#{end.left + offset.left + ofx - start_offset_x} #{end.top + offset.top + ofy - start_offset_y}"
 
       highlight_possible_targets = () ->
         target = ".outputs .field"
@@ -81,6 +84,8 @@ define (require) ->
           left: 0
           top: 0
         start: (event, ui) ->
+          start_offset_x = $("#container-wrapper").scrollLeft()
+          start_offset_y = $("#container-wrapper").scrollTop()
           highlight_possible_targets()
           if UI.connecting_line then UI.connecting_line.attr({opacity: 1})
         stop: (event, ui) ->
