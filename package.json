@@ -20,5 +20,13 @@
     "phantom": "0.5.2",
     "sty": "0.6.1"
   },
-  "engine": "node >= 0.8.x"
+  "engine": "node >= 0.8.x",
+  "devDependencies": {
+    "grunt-webpack": "^1.0.8",
+    "coffee-loader": "^0.7.2",
+    "webpack": "^1.6.0",
+    "html-loader": "^0.2.3",
+    "grunt-contrib-clean": "^0.6.0",
+    "webpack-dev-server": "^1.7.0"
+  }
 }

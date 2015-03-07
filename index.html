@@ -3,12 +3,7 @@
   <head>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type">
     <title>ThreeNodes.js::0.2.0</title>
-    <script src="src/scripts/libs/require/require.js"></script>
-    <script src="src/scripts/require-config.js"></script>
-    <script>
-      require.config({baseUrl : 'src/scripts'});
-      require(['boot']);
-    </script>
+
     <link href="assets/styles/screen.css" media="all" rel="stylesheet" type="text/css">
     <link href="src/fonts/icomoon/style.css" media="all" rel="stylesheet" type="text/css">
     <link href="src/scripts/bower_components/codemirror/lib/codemirror.css" media="all" rel="stylesheet" type="text/css">
@@ -24,5 +19,18 @@
       </div>
     </header>
     <footer id="footer">ThreeNodes.js | idflood.com | 2011</footer>
+
+    <script src="src/scripts/libs/jquery-2.0.3.js"></script>
+    <script src="src/scripts/libs/jquery-ui/js/jquery-ui.js"></script>
+    <script src="src/scripts/libs/Three.js"></script>
+    <script src="src/scripts/libs/jquery.layout-latest.js"></script>
+    <script src="src/scripts/libs/tree.jquery.js"></script>
+    <script src="src/scripts/libs/raphael-min.js"></script>
+    <script src="src/scripts/libs/jshint.js"></script>
+    <!--<script src="assets/scripts/ThreeNodes.NodeTypes.js"></script>-->
+    <script src="assets/scripts/ThreeNodes.Core.js"></script>
+    <script>
+      var core = new ThreeNodes.Core();
+    </script>
   </body>
 </html>

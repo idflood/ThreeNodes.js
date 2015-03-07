@@ -41,10 +41,21 @@ module.exports = (grunt) ->
           pragmasOnSave:
             excludeCoffeeScript: true
 
+    webpack:
+      options: require("./webpack.config.js")
+
+      dev:
+        devtool: "sourcemap"
+        debug: true
+
     watch:
       sass:
         files: ["src/styles/**"]
         tasks: ["compass:dev"]
+
+      js:
+        files: ["src/scripts/**", "!src/scripts/bower_components/**"]
+        tasks: ["scripts:dev"]
 
       reloadcss:
         options: {livereload: true}
@@ -52,7 +63,7 @@ module.exports = (grunt) ->
 
       reloadjs:
         options: {livereload: true}
-        files: ["src/scripts/**", "!src/scripts/bower_components/**"]
+        files: ["assets/scripts/**", "!src/scripts/bower_components/**"]
 
       reloadhtmlphp:
         options: {livereload: true}
@@ -60,6 +71,7 @@ module.exports = (grunt) ->
 
     clean:
       build: ["assets/images/"]
+      scripts: ["assets/scripts/"]
 
     copy:
       main:
@@ -106,6 +118,7 @@ module.exports = (grunt) ->
         options: {message: "Build complete"}
 
   # Load necessary plugins
+  grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-contrib-compass"
   grunt.loadNpmTasks "grunt-contrib-coffee"
@@ -114,6 +127,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-requirejs"
   grunt.loadNpmTasks "grunt-notify"
-  grunt.registerTask "init", ["compass:clean", "compass:dev"]
+  grunt.loadNpmTasks "grunt-webpack"
+
+  grunt.registerTask "init", ["compass:clean", "compass:dev", "scripts:dev"]
   grunt.registerTask "default", ["compass:clean", "compass:dev", "watch"]
+  grunt.registerTask "scripts", ["webpack:dev"]
   grunt.registerTask "build", ["clean", "compass:clean", "copy", "imagemin", "compass:build", "requirejs", "notify:build"]

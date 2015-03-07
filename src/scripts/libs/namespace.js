@@ -8,6 +8,7 @@
   namespace = function(name, values) {
     var key, subpackage, target, value, _i, _len, _ref, _results;
     target = typeof exports !== "undefined" && exports !== null ? exports : window;
+    //target = window;
     if (name.length > 0) {
       _ref = name.split('.');
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
