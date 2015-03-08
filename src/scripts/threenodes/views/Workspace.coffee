@@ -4,10 +4,7 @@ Backbone = require 'Backbone'
 ConnectionView = require 'threenodes/connections/views/ConnectionView'
 
 require 'jquery.ui'
-require 'threenodes/nodes/views/NodeView'
-require 'threenodes/nodes/views/Color'
-require 'threenodes/nodes/views/WebGLRenderer'
-require 'threenodes/nodes/views/Group'
+
 
 ### Workspace View ###
 

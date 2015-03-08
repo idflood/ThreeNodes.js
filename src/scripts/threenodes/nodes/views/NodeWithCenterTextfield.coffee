@@ -2,9 +2,9 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 
 require '../models/Node'
-require './NodeView'
+NodeView = require './NodeView'
 
-class NodeWithCenterTextfield extends ThreeNodes.NodeView
+class NodeWithCenterTextfield extends NodeView
   initialize: (options) =>
     super
     field = @getCenterField()
@@ -25,3 +25,5 @@ class NodeWithCenterTextfield extends ThreeNodes.NodeView
 
   # View class can override this. Possibility to reuse this class
   getCenterField: () => @model.fields.getField("in")
+
+module.exports = NodeWithCenterTextfield

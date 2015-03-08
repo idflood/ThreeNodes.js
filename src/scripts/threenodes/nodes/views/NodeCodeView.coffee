@@ -8,9 +8,9 @@ require 'bower_components/codemirror/addon/lint/lint'
 require 'bower_components/codemirror/addon/lint/javascript-lint'
 
 require '../models/Node'
-require './NodeView'
+NodeView = require './NodeView'
 
-class NodeCodeView extends ThreeNodes.NodeView
+class NodeCodeView extends NodeView
   initialize: (options) =>
     super
     field = @getCenterField()
@@ -74,3 +74,5 @@ class NodeCodeView extends ThreeNodes.NodeView
 
   # View class can override this. Possibility to reuse this class
   getCenterField: () => @model.fields.getField("code")
+
+module.exports = NodeCodeView

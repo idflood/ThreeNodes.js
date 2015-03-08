@@ -1,9 +1,8 @@
 #"use strict"
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-namespace = require('libs/namespace').namespace
 
-THREE = require 'Three'
+#THREE = require 'Three'
 require 'EffectComposer'
 require 'MaskPass'
 require 'RenderPass'
@@ -12,10 +11,6 @@ require 'CopyShader'
 require 'libs/BlobBuilder.min'
 require 'libs/FileSaver.min'
 require 'libs/canvas-toBlob.min'
-
-# Todo: remove global variable if possible.
-namespace "ThreeNodes",
-  Webgl: {}
 
 class WebglBase
   constructor: () ->
@@ -33,15 +28,17 @@ class WebglBase
     @renderModel = new THREE.RenderPass( @current_scene, @current_camera )
     @composer = new THREE.EffectComposer( @current_renderer )
 
-    ThreeNodes.Webgl.current_renderer = @current_renderer
-    ThreeNodes.Webgl.current_scene = @current_scene
-    ThreeNodes.Webgl.current_camera = @current_camera
-    ThreeNodes.Webgl.composer = @composer
-    ThreeNodes.Webgl.renderModel = @renderModel
-    ThreeNodes.Webgl.effectScreen = @effectScreen
+    WebglBase.current_renderer = @current_renderer
+    WebglBase.current_scene = @current_scene
+    WebglBase.current_camera = @current_camera
+    WebglBase.composer = @composer
+    WebglBase.renderModel = @renderModel
+    WebglBase.effectScreen = @effectScreen
 
   exportImage: (fname) =>
     canvas = @current_renderer.domElement
     on_write = (blob) ->
       saveAs(blob, fname)
     canvas.toBlob(on_write, "image/png")
+
+module.exports = WebglBase

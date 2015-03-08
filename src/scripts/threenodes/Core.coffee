@@ -1,5 +1,3 @@
-_ = require 'Underscore'
-Backbone = require 'Backbone'
 UrlHandler = require './utils/UrlHandler'
 FileHandler = require './utils/FileHandler'
 #AppWebsocket = require './utils/AppWebsocket'
