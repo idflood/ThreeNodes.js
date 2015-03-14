@@ -62,7 +62,7 @@ define [
           to_field: n5.fields.getField("scene")
 
         ng.render()
-        equals ThreeNodes.Webgl.renderModel.scene.id, n5.fields.getField("scene").getValue().id, "ThreeNodes.Webgl.renderModel.scene == scene connected to the renderer"
+        equals WebglBase.renderModel.scene.id, n5.fields.getField("scene").getValue().id, "WebglBase.renderModel.scene == scene connected to the renderer"
         equals n5.fields.getField("postfx").getValue().length, 0, "Webgl.postfx array is empty"
 
       test "Three.js rotation", () ->

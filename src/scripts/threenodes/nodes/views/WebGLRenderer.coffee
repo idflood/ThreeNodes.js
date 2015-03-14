@@ -1,6 +1,5 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-namespace = require('libs/namespace').namespace
 
 require '../models/Node'
 NodeView = require './NodeView'
@@ -8,7 +7,7 @@ NodeView = require './NodeView'
 class WebGLRenderer extends NodeView
   initialize: (options) =>
     super
-
+    console.log this
     @preview_mode = true
     @creating_popup = false
     @win = false
@@ -129,5 +128,7 @@ class WebGLRenderer extends NodeView
         #@win.resizeTo(dw, dh + 52)
     @model.width = dw
     @model.height = dh
+
+ThreeNodes.Core.addNodeView('WebGLRenderer', WebGLRenderer)
 
 module.exports = WebGLRenderer

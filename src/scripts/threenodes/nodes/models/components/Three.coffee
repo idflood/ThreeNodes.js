@@ -3,7 +3,8 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 Node = require 'threenodes/nodes/models/Node'
 require 'ColladaLoader'
-Object3D = require 'threenodes/nodes/models/components/Three/Object'
+Object3D = require 'threenodes/nodes/models/components/Three/Object3D'
+WebglBase = require 'threenodes/utils/WebglBase'
 
 class Scene extends Object3D
   @node_name = 'Scene'
@@ -455,8 +456,13 @@ class WebGLRenderer extends Node
 
   initialize: (options) =>
     super
+    if !WebglBase.instance
+      @webgl = new WebglBase()
+    else
+      @webgl = WebglBase.instance
     @auto_evaluate = true
-    @ob = ThreeNodes.Webgl.current_renderer
+    @ob = WebglBase.current_renderer
+
     @width = 0
     @height = 0
 
@@ -482,12 +488,12 @@ class WebGLRenderer extends Node
     return $.extend(true, base_fields, fields)
 
   remove: () =>
-    if ThreeNodes.Webgl.current_camera == @fields.getField("camera").getValue()
-      ThreeNodes.Webgl.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
-      ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
-    if ThreeNodes.Webgl.current_scene == @fields.getField("scene").getValue()
-      ThreeNodes.Webgl.current_scene = new THREE.Scene()
-      ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
+    if WebglBase.current_camera == @fields.getField("camera").getValue()
+      WebglBase.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
+      WebglBase.renderModel.camera = WebglBase.current_camera
+    if WebglBase.current_scene == @fields.getField("scene").getValue()
+      WebglBase.current_scene = new THREE.Scene()
+      WebglBase.renderModel.scene = WebglBase.current_scene
 
     $(@ob.domElement).unbind()
     delete @ob
@@ -499,19 +505,19 @@ class WebGLRenderer extends Node
     # work on a copy of the incoming array
     fxs = @fields.getField("postfx").getValue().slice(0)
     # 1st pass = rendermodel, last pass = screen
-    fxs.unshift ThreeNodes.Webgl.renderModel
-    fxs.push ThreeNodes.Webgl.effectScreen
-    ThreeNodes.Webgl.composer.passes = fxs
+    fxs.unshift WebglBase.renderModel
+    fxs.push WebglBase.effectScreen
+    WebglBase.composer.passes = fxs
 
   compute: =>
-    if !ThreeNodes.Webgl.current_renderer
+    if !WebglBase.current_renderer
       return
 
     @trigger("on_compute")
 
     @applyFieldsToVal(@fields.inputs, @ob, ['width', 'height', 'scene', 'camera', 'bg_color', 'postfx'])
-    ThreeNodes.Webgl.current_camera = @fields.getField("camera").getValue()
-    ThreeNodes.Webgl.current_scene = @fields.getField("scene").getValue()
+    WebglBase.current_camera = @fields.getField("camera").getValue()
+    WebglBase.current_scene = @fields.getField("scene").getValue()
 
     #set the current aspect on the camera
     @fields.getField("camera").getValue().aspect = @width / @height
@@ -519,9 +525,9 @@ class WebGLRenderer extends Node
 
     @apply_post_fx()
     @ob.clear()
-    ThreeNodes.Webgl.renderModel.scene = ThreeNodes.Webgl.current_scene
-    ThreeNodes.Webgl.renderModel.camera = ThreeNodes.Webgl.current_camera
-    ThreeNodes.Webgl.composer.renderer = ThreeNodes.Webgl.current_renderer
-    ThreeNodes.Webgl.composer.render(0.05)
+    WebglBase.renderModel.scene = WebglBase.current_scene
+    WebglBase.renderModel.camera = WebglBase.current_camera
+    WebglBase.composer.renderer = WebglBase.current_renderer
+    WebglBase.composer.render(0.05)
 
 ThreeNodes.Core.addNodeType('WebGLRenderer', WebGLRenderer)

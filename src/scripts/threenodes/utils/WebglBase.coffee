@@ -13,8 +13,11 @@ require 'libs/FileSaver.min'
 require 'libs/canvas-toBlob.min'
 
 class WebglBase
+  @instance: false
+
   constructor: () ->
     console.log "webgl init..."
+    WebglBase.instance = this
     @current_scene = new THREE.Scene()
     @current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000)
     @current_renderer = false

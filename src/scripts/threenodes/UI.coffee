@@ -5,7 +5,9 @@ UIView = require './views/UIView'
 Workspace = require './views/Workspace'
 AppTimeline = require './views/AppTimeline'
 GroupDefinitionView = require './views/GroupDefinitionView'
-WebglBase = require './utils/WebglBase'
+#WebglBase = require 'threenodes/utils/WebglBase'
+UrlHandler = require 'threenodes/utils/UrlHandler'
+FileHandler = require 'threenodes/utils/FileHandler'
 
 NodeView = require 'threenodes/nodes/views/NodeView'
 NodeViewColor = require 'threenodes/nodes/views/Color'
@@ -22,7 +24,15 @@ class UI
       mouseX: 0
       mouseY: 0
 
-    @webgl = new WebglBase()
+    #@webgl = new WebglBase()
+
+    @url_handler = new UrlHandler()
+    @file_handler = new FileHandler(@core.nodes, @core.group_definitions)
+
+    # File and url events
+    @file_handler.on("ClearWorkspace", () => @clearWorkspace())
+    @url_handler.on("ClearWorkspace", () => @clearWorkspace())
+    @url_handler.on("LoadJSON", @file_handler.loadFromJsonData)
 
     # Initialize the user interface and timeline
     @initUI()
@@ -38,8 +48,8 @@ class UI
     # Enabling the pushState method would require to redirect path
     # for the node.js server and github page (if possible)
     # for simplicity we disable it
-    #Backbone.history.start
-    #  pushState: false
+    Backbone.history.start
+      pushState: false
 
     return true
 
@@ -85,16 +95,16 @@ class UI
       # Setup the main menu events
       @ui.menubar.on("RemoveSelectedNodes", @core.nodes.removeSelectedNodes)
       @ui.menubar.on("ClearWorkspace", @clearWorkspace)
-      @ui.menubar.on("SaveFile", @core.file_handler.saveLocalFile)
-      @ui.menubar.on("ExportCode", @core.file_handler.exportCode)
-      @ui.menubar.on("LoadJSON", @core.file_handler.loadFromJsonData)
-      @ui.menubar.on("LoadFile", @core.file_handler.loadLocalFile)
-      @ui.menubar.on("ExportImage", @webgl.exportImage)
+      @ui.menubar.on("SaveFile", @file_handler.saveLocalFile)
+      @ui.menubar.on("ExportCode", @file_handler.exportCode)
+      @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
+      @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
+      #@ui.menubar.on("ExportImage", @webgl.exportImage)
       @ui.menubar.on("GroupSelectedNodes", @core.group_definitions.groupSelectedNodes)
 
       # Special events
       @core.nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
-      @core.url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
+      @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
 
       #breadcrumb
       @ui.breadcrumb.on("click", @setWorkspaceFromDefinition)
@@ -131,7 +141,7 @@ class UI
 
   clearWorkspace: () =>
     @core.nodes.clearWorkspace()
-    @group_definitions.removeAll()
+    @core.group_definitions.removeAll()
     if @ui then @ui.clearWorkspace()
     #@initTimeline()
 

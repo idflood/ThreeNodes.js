@@ -8,7 +8,11 @@ require 'HorizontalBlurShader'
 require 'VerticalBlurShader'
 require 'BleachBypassShader'
 require 'DotScreenPass'
+
+require 'ConvolutionShader'
 require 'BloomPass'
+
+require 'FilmShader'
 require 'FilmPass'
 
 class BloomPass extends Node
