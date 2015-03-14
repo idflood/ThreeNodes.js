@@ -130,6 +130,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-webpack"
 
   grunt.registerTask "init", ["compass:clean", "compass:dev", "scripts:dev"]
-  grunt.registerTask "default", ["compass:clean", "compass:dev", "watch"]
+  grunt.registerTask "default", ["compass:clean", "compass:dev", "scripts:dev", "watch"]
   grunt.registerTask "scripts", ["webpack:dev"]
   grunt.registerTask "build", ["clean", "compass:clean", "copy", "imagemin", "compass:build", "requirejs", "notify:build"]

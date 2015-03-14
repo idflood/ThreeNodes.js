@@ -15,9 +15,9 @@ class Group extends NodeView
   renderNode: (node) =>
     nodename = node.constructor.name
 
-    if ThreeNodes.nodes.views[nodename]
+    if ThreeNodes.Core.nodes.views[nodename]
       # If there is a view associated with the node model use it
-      viewclass = ThreeNodes.nodes.views[nodename]
+      viewclass = ThreeNodes.Core.nodes.views[nodename]
     else
       # Use the default view class
       viewclass = ThreeNodes.NodeView

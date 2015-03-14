@@ -13,10 +13,10 @@ require 'libs/jquery.transform2d'
 require 'libs/jquery-scrollview/jquery.scrollview'
 require 'jquery.layout'
 
-class UI extends Backbone.View
+class UIView extends Backbone.View
 
   # Background svg used to draw the connections
-  @svg: false
+  @svg = false
   @connecting_line = false
 
   initialize: (options) ->
@@ -36,8 +36,8 @@ class UI extends Backbone.View
     @breadcrumb = new Breadcrumb({el: $("#breadcrumb")})
 
     # Setup SVG for drawing connections
-    UI.svg = Raphael("graph", 4000, 4000)
-    UI.connecting_line = UI.svg.path("M0 -20 L0 -20").attr
+    UIView.svg = Raphael("graph", 4000, 4000)
+    UIView.connecting_line = UIView.svg.path("M0 -20 L0 -20").attr
       stroke: "#fff"
       'stroke-dasharray': "-"
       fill: "none"
@@ -288,3 +288,5 @@ class UI extends Backbone.View
   animate: () =>
     @trigger("render")
     requestAnimationFrame( @animate )
+
+module.exports = UIView

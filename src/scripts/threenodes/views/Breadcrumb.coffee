@@ -24,3 +24,5 @@ class Breadcrumb extends Backbone.View
     gid = $(e.target).data("gid")
     if gid == "global"
       @trigger("click", "global")
+
+module.exports = Breadcrumb

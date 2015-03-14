@@ -8,3 +8,5 @@ class Utils
         return false
 
     true
+
+module.exports = Utils

@@ -62,3 +62,5 @@ class FieldsView extends Backbone.View
     delete @node
     delete @subviews
     super
+
+module.exports = FieldsView

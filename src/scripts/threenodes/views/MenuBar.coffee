@@ -40,3 +40,5 @@ class MenuBar extends Backbone.View
 
     # sends "normal" urls to the router
     return true
+
+module.exports = MenuBar

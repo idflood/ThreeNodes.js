@@ -5,9 +5,9 @@ module.exports = {
   context: "./src/scripts/",
   //devtool: "eval",
   entry: {
+    "Core": "./threenodes/Core.coffee",
     "NodeTypes": "./NodeTypes.coffee",
-    "UI": "./threenodes/UI.coffee",
-    "Core": "./threenodes/Core.coffee"
+    "UI": "./threenodes/UI.coffee"
   },
   output: {
     path: path.join(__dirname, "assets/scripts/"),
@@ -30,7 +30,10 @@ module.exports = {
 		"jquery.layout": "jQuery",
 		"treeJquery": "jQuery",
 		"Raphael": "Raphael",
-    "jshint": "libs/jshint"
+    "jshint": "libs/jshint",
+    "Underscore": "_",
+    "underscore": "_",
+    "Backbone": "Backbone"
   },
   resolve: {
     alias: {
@@ -66,8 +69,8 @@ module.exports = {
       ConvolutionShader: 'libs/three-extras/js/shaders/ConvolutionShader',
       FilmShader: 'libs/three-extras/js/shaders/FilmShader',
       CopyShader: 'libs/three-extras/js/shaders/CopyShader',
-      timeline: "libs/timeline.js/timeline",
-      'timeline-gui': "libs/timeline.js/timeline-gui"
+      //timeline: "libs/timeline.js/timeline",
+      //'timeline-gui': "libs/timeline.js/timeline-gui"
     },
     extensions: ['', '.coffee', '.js'],
     root: path.join(__dirname, "src/scripts/")

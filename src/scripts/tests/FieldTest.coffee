@@ -12,7 +12,7 @@ define [
       module "NodeFields"
 
       test "Bool field", () ->
-        nf = new ThreeNodes.fields.Bool
+        nf = new ThreeNodes.Core.fields.Bool
           name: "booltest"
           value: false
         equals nf.get("name"), "booltest", "Bool name is set"
@@ -27,7 +27,7 @@ define [
         strictEqual nf.getValue(), true, "Boolfield kept previous value when wrong type is set"
 
       test "Float field", () ->
-        nf = new ThreeNodes.fields.Float
+        nf = new ThreeNodes.Core.fields.Float
           name: "floattest"
           value: 3
         equals nf.getValue(), 3, "Floatfield value is 3"
@@ -45,7 +45,7 @@ define [
         strictEqual nf.getValue(), 42, "Floatfield converted string value to float"
 
       test "Color field", () ->
-        nf = new ThreeNodes.fields.Color
+        nf = new ThreeNodes.Core.fields.Color
           name: "colortest"
           value: new THREE.Color(0xff000)
         equals nf.getValue().getHex(), new THREE.Color(0xff000).getHex(), "ColorField value is 0xff0000"
@@ -65,7 +65,7 @@ define [
       test "Three.js fields", () ->
         fields =
           vector2:
-            instance: new ThreeNodes.fields.Vector2({})
+            instance: new ThreeNodes.Core.fields.Vector2({})
             values:
               vector2:
                 val: new THREE.Vector2()
@@ -77,7 +77,7 @@ define [
                 val: new THREE.Vector3()
                 return: false
           color:
-            instance: new ThreeNodes.fields.Color({})
+            instance: new ThreeNodes.Core.fields.Color({})
             values:
               color:
                 val: new THREE.Color()
@@ -95,7 +95,7 @@ define [
                 val: new THREE.Vector2()
                 return: false
           scene:
-            instance: new ThreeNodes.fields.Scene({})
+            instance: new ThreeNodes.Core.fields.Scene({})
             values:
               color:
                 val: new THREE.Scene()
@@ -104,7 +104,7 @@ define [
                 val: new THREE.Vector3()
                 return: false
           material:
-            instance: new ThreeNodes.fields.Material({})
+            instance: new ThreeNodes.Core.fields.Material({})
             values:
               MeshBasicMaterial:
                 val: new THREE.MeshBasicMaterial()
@@ -119,7 +119,7 @@ define [
                 val: new THREE.Vector3()
                 return: false
           geometry:
-            instance: new ThreeNodes.fields.Geometry({})
+            instance: new ThreeNodes.Core.fields.Geometry({})
             values:
               CubeGeometry:
                 val: new THREE.CubeGeometry()
@@ -134,7 +134,7 @@ define [
                 val: new THREE.Vector3()
                 return: false
           object3d:
-            instance: new ThreeNodes.fields.Object3D({})
+            instance: new ThreeNodes.Core.fields.Object3D({})
             values:
               Object3D:
                 val: new THREE.Object3D()
@@ -146,7 +146,7 @@ define [
                 val: new THREE.Vector3()
                 return: false
           fog:
-            instance: new ThreeNodes.fields.Fog({})
+            instance: new ThreeNodes.Core.fields.Fog({})
             values:
               fog:
                 val: new THREE.Fog()

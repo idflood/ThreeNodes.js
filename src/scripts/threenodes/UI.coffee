@@ -1,8 +1,9 @@
 require 'jquery'
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-UI = require './views/UI'
+UIView = require './views/UIView'
 Workspace = require './views/Workspace'
+AppTimeline = require './views/AppTimeline'
 GroupDefinitionView = require './views/GroupDefinitionView'
 WebglBase = require './utils/WebglBase'
 
@@ -13,6 +14,9 @@ NodeViewGroup = require 'threenodes/nodes/views/Group'
 
 class UI
   constructor: (@core) ->
+    # Fix backbone with webpack.
+    Backbone.$ = $
+
     # Define renderer mouseX/Y for use in utils.Mouse node for instance
     ThreeNodes.renderer =
       mouseX: 0
@@ -22,7 +26,7 @@ class UI
 
     # Initialize the user interface and timeline
     @initUI()
-    #@initTimeline()
+    @initTimeline()
 
     # Initialize the workspace view
     @createWorkspace()
@@ -43,7 +47,7 @@ class UI
     if @workspace then @workspace.destroy()
     @workspace = new Workspace
       el: jQuery("<div class='nodes-container'></div>").appendTo("#container")
-      settings: @settings
+      settings: @core.settings
 
   setWorkspaceFromDefinition: (definition) =>
     @createWorkspace()
@@ -56,11 +60,11 @@ class UI
       # maybe sync new modifications...
 
     if definition == "global"
-      @workspace.render(@nodes)
+      @workspace.render(@core.nodes)
       @ui.breadcrumb.reset()
     else
       # create a hidden temporary group node from this definition
-      @edit_node = @nodes.createGroup
+      @edit_node = @core.nodes.createGroup
         type: "Group"
         definition: definition
         x: -9999
@@ -70,27 +74,27 @@ class UI
   initUI: () =>
     if @core.settings.test == false
       # Create the main user interface view
-      @ui = new UI
+      @ui = new UIView
         el: $("body")
-        settings: @settings
+        settings: @core.settings
 
       # Link UI to render events
-      @ui.on("render", @nodes.render)
-      @ui.on("renderConnections", @nodes.renderAllConnections)
+      @ui.on("render", @core.nodes.render)
+      @ui.on("renderConnections", @core.nodes.renderAllConnections)
 
       # Setup the main menu events
-      @ui.menubar.on("RemoveSelectedNodes", @nodes.removeSelectedNodes)
+      @ui.menubar.on("RemoveSelectedNodes", @core.nodes.removeSelectedNodes)
       @ui.menubar.on("ClearWorkspace", @clearWorkspace)
-      @ui.menubar.on("SaveFile", @file_handler.saveLocalFile)
-      @ui.menubar.on("ExportCode", @file_handler.exportCode)
-      @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
-      @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
+      @ui.menubar.on("SaveFile", @core.file_handler.saveLocalFile)
+      @ui.menubar.on("ExportCode", @core.file_handler.exportCode)
+      @ui.menubar.on("LoadJSON", @core.file_handler.loadFromJsonData)
+      @ui.menubar.on("LoadFile", @core.file_handler.loadLocalFile)
       @ui.menubar.on("ExportImage", @webgl.exportImage)
-      @ui.menubar.on("GroupSelectedNodes", @group_definitions.groupSelectedNodes)
+      @ui.menubar.on("GroupSelectedNodes", @core.group_definitions.groupSelectedNodes)
 
       # Special events
-      @nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
-      @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
+      @core.nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
+      @core.url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
 
       #breadcrumb
       @ui.breadcrumb.on("click", @setWorkspaceFromDefinition)
@@ -102,8 +106,31 @@ class UI
   setDisplayMode: (is_player = false) =>
     if @ui then @ui.setDisplayMode(is_player)
 
+  initTimeline: () =>
+    # Remove old timeline DOM elements
+    $("#timeline-container, #keyEditDialog").remove()
+
+    # Cleanup the old timeline if there was one
+    if @timelineView
+      @core.nodes.off("remove", @timelineView.onNodeRemove)
+      @timelineView.remove()
+      if @ui
+        @timelineView.off("TimelineCreated", @ui.onUiWindowResize)
+
+    # Create a new timeline
+    @timelineView = new AppTimeline
+      el: $("#timeline")
+      ui: @ui
+
+    # Bind events to it
+    @core.nodes.bindTimelineEvents(@timelineView)
+    @core.nodes.on("remove", @timelineView.onNodeRemove)
+    if @ui then @ui.onUiWindowResize()
+
+    return this
+
   clearWorkspace: () =>
-    @nodes.clearWorkspace()
+    @core.nodes.clearWorkspace()
     @group_definitions.removeAll()
     if @ui then @ui.clearWorkspace()
     #@initTimeline()

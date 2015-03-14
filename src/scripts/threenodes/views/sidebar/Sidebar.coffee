@@ -139,10 +139,10 @@ class Sidebar extends Backbone.View
       "Constructive-Geometry": []
 
     # Organize each node types by group
-    for node of ThreeNodes.nodes.models
+    for node of ThreeNodes.Core.nodes.models
       # don't show hidden nodes types (group_name = false)
-      if ThreeNodes.nodes.models[node].group_name
-        group_name = (ThreeNodes.nodes.models[node].group_name).replace(/\./g, "-")
+      if ThreeNodes.Core.nodes.models[node].group_name
+        group_name = (ThreeNodes.Core.nodes.models[node].group_name).replace(/\./g, "-")
         if !nodes_by_group[group_name]
           nodes_by_group[group_name] = []
         nodes_by_group[group_name].push(node)
@@ -151,7 +151,7 @@ class Sidebar extends Backbone.View
     for group of nodes_by_group
       $container.append("<h3>#{group}</h3><ul id='nodetype-#{group}'></ul>")
       for node in nodes_by_group[group]
-        $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.nodes.models[node].node_name }</a></li>")
+        $("#nodetype-#{group}", $container).append("<li><a class='button' rel='#{node}' href='#'>#{ ThreeNodes.Core.nodes.models[node].node_name }</a></li>")
 
     # Make the list of nodes draggable
     $("a.button", $container).draggable
@@ -163,3 +163,5 @@ class Sidebar extends Backbone.View
       containment: "document"
 
     return this
+
+module.exports = Sidebar

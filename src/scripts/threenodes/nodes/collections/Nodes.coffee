@@ -88,12 +88,12 @@ class Nodes extends Backbone.Collection
     options.parent = @parent
 
     # Print error if the node type is not found and return false
-    if !ThreeNodes.nodes.models[options.type]
+    if !ThreeNodes.Core.nodes.models[options.type]
       console.error("Node type doesn't exists: " + options.type)
       return false
 
     # Create the node and pass the options
-    n = new ThreeNodes.nodes.models[options.type](options)
+    n = new ThreeNodes.Core.nodes.models[options.type](options)
 
     # Add the node to the collection
     @add(n)

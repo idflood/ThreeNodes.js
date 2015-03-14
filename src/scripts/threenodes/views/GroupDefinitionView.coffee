@@ -50,3 +50,5 @@ class GroupDefinitionView extends Backbone.View
           self.$confirm.dialog("close")
         "Cancel": () =>
           self.$confirm.dialog("close")
+
+module.exports = GroupDefinitionView

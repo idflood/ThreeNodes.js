@@ -45,3 +45,5 @@ class BaseField extends Backbone.View
   createSidebarFieldTitle: (name = @model.get("name")) =>
     @$el.append("<h3>#{name}</h3>")
     return @$el
+
+module.exports = BaseField

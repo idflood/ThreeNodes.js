@@ -47,12 +47,12 @@ class Workspace extends Backbone.View
   renderNode: (node) =>
     nodename = node.constructor.name
 
-    if ThreeNodes.nodes.views[nodename]
+    if ThreeNodes.Core.nodes.views[nodename]
       # If there is a view associated with the node model use it
-      viewclass = ThreeNodes.nodes.views[nodename]
+      viewclass = ThreeNodes.Core.nodes.views[nodename]
     else
       # Use the default view class
-      viewclass = ThreeNodes.NodeView
+      viewclass = ThreeNodes.Core.nodes.views.NodeView
 
     # Add directly the node element to the dom so that the view can
     # access the .parent() directly. (@see FieldsView.onFieldCreated)
@@ -100,3 +100,5 @@ class Workspace extends Backbone.View
         $("#sidebar").show()
 
     return this
+
+module.exports = Workspace

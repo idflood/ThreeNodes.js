@@ -15,8 +15,9 @@ class Core
     settings =
       test: false
       player_mode: false
-    @settings = $.extend(settings, options)
+    @settings = $.extend({}, settings, options)
 
+    console.log this
     # Disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
     # this makes the soundinput node not working
     websocket_enabled = false
@@ -37,6 +38,28 @@ class Core
     # File and url events
     @url_handler.on("LoadJSON", @file_handler.loadFromJsonData)
 
+  @addFieldType: (fieldName, field) ->
+    if !Core.fields? then Core.fields = {}
+    if !Core.fields.models? then Core.fields.models = {}
+    Core.fields.models[fieldName] = field
+    return true
+
+  @addFieldView: (fieldName, fieldView) ->
+    if !Core.fields? then Core.fields = {}
+    if !Core.fields.views? then Core.fields.views = {}
+    Core.fields.views[fieldName] = fieldView
+    return true
+
+  @addNodeType: (nodeName, nodeType) ->
+    if !Core.nodes? then Core.nodes = {}
+    if !Core.nodes.models? then Core.nodes.models = {}
+    Core.nodes.models[nodeName] = nodeType
+    return true
+
+  @addNodeView: (viewName, nodeView) ->
+    if !Core.nodes? then Core.nodes = {}
+    if !Core.nodes.views? then Core.nodes.views = {}
+    Core.nodes.views[viewName] = nodeView
     return true
 
 module.exports = Core

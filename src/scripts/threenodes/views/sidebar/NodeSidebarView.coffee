@@ -2,14 +2,14 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
 
-require 'threenodes/views/sidebar/fields/BoolField'
-require 'threenodes/views/sidebar/fields/StringField'
-require 'threenodes/views/sidebar/fields/FloatField'
-require 'threenodes/views/sidebar/fields/Vector2Field'
-require 'threenodes/views/sidebar/fields/Vector3Field'
-require 'threenodes/views/sidebar/fields/Vector4Field'
-require 'threenodes/views/sidebar/fields/QuaternionField'
-require 'threenodes/views/sidebar/fields/EulerField'
+#require 'threenodes/views/sidebar/fields/BoolField'
+#require 'threenodes/views/sidebar/fields/StringField'
+#require 'threenodes/views/sidebar/fields/FloatField'
+#require 'threenodes/views/sidebar/fields/Vector2Field'
+#require 'threenodes/views/sidebar/fields/Vector3Field'
+#require 'threenodes/views/sidebar/fields/Vector4Field'
+#require 'threenodes/views/sidebar/fields/QuaternionField'
+#require 'threenodes/views/sidebar/fields/EulerField'
 
 ### NodeSidebarView ###
 class NodeSidebarView extends Backbone.View
@@ -18,18 +18,12 @@ class NodeSidebarView extends Backbone.View
     @render()
 
   displayFields: (fields) =>
+    #throw new Error("Need to reimplement")
+    # todo: set the View from the field class.
+    # add a static field on the model, @sidebarView: BoolFieldView
     for f of fields
       field = fields[f]
-      view_class = switch field.constructor
-        when ThreeNodes.fields.Bool then ThreeNodes.views.fields.BoolField
-        when ThreeNodes.fields.String then ThreeNodes.views.fields.StringField
-        when ThreeNodes.fields.Float then ThreeNodes.views.fields.FloatField
-        when ThreeNodes.fields.Vector2 then ThreeNodes.views.fields.Vector2Field
-        when ThreeNodes.fields.Vector3 then ThreeNodes.views.fields.Vector3Field
-        when ThreeNodes.fields.Vector4 then ThreeNodes.views.fields.Vector4Field
-        when ThreeNodes.fields.Quaternion then ThreeNodes.views.fields.QuaternionField
-        when ThreeNodes.fields.Euler then ThreeNodes.views.fields.EulerField
-        else false
+      view_class = field.constructor.VIEW
 
       if view_class != false
         view = new view_class
@@ -73,3 +67,5 @@ class NodeSidebarView extends Backbone.View
           self.render()
 
     return @
+
+module.exports = NodeSidebarView

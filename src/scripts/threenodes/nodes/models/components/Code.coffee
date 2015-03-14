@@ -2,97 +2,101 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 Node = require 'threenodes/nodes/models/Node'
 NodeCodeView = require 'threenodes/nodes/views/NodeCodeView'
-namespace = require('libs/namespace').namespace
 
-namespace "ThreeNodes.nodes.views",
-  Code: class Code extends NodeCodeView
-  Expression: class Expression extends NodeCodeView
+class CodeView extends NodeCodeView
+ThreeNodes.Core.addNodeView('Code', CodeView)
 
-namespace "ThreeNodes.nodes.models",
-  Expression: class Expression extends Node
-    @node_name = 'Expression'
-    @group_name = 'Code'
+class ExpressionView extends NodeCodeView
+ThreeNodes.Core.addNodeView('Expression', ExpressionView)
 
-    initialize: (options) =>
-      # Prepare custom fields before calling the super constructructor since
-      # it will call getFields when creating @fields.
-      @custom_fields = {inputs: {}, outputs: {}}
-      @loadCustomFields(options)
+class Expression extends Node
+  @node_name = 'Expression'
+  @group_name = 'Code'
 
-      super
-      @auto_evaluate = true
-      @out = null
+  initialize: (options) =>
+    # Prepare custom fields before calling the super constructructor since
+    # it will call getFields when creating @fields.
+    @custom_fields = {inputs: {}, outputs: {}}
+    @loadCustomFields(options)
 
-      @onCodeUpdate()
-      field = @fields.getField("code")
+    super
+    @auto_evaluate = true
+    @out = null
 
-      field.on "value_updated", @onCodeUpdate
+    @onCodeUpdate()
+    field = @fields.getField("code")
 
-    loadCustomFields: (options) =>
-      if !options.custom_fields then return
-      @custom_fields = $.extend(true, @custom_fields, options.custom_fields)
+    field.on "value_updated", @onCodeUpdate
 
-    onCodeUpdate: (code = "") =>
-      console.log code
+  loadCustomFields: (options) =>
+    if !options.custom_fields then return
+    @custom_fields = $.extend(true, @custom_fields, options.custom_fields)
+
+  onCodeUpdate: (code = "") =>
+    console.log code
+    try
+      @function = new Function(code)
+    catch error
+      console.warn error
+      @function = false
+
+  addCustomField: (key, type, direction = 'inputs') =>
+    field = {key: key, type: type}
+    # Add the field to the a variable for saving.
+    @custom_fields[direction][key] = field
+
+    value = false
+    @fields.addField(key, {value: value, type: type, default: false}, direction)
+
+  toJSON: () =>
+    res = super
+    res.custom_fields = @custom_fields
+    return res
+
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "code" : ""
+      outputs:
+        "out" : {type: "Any", val: null}
+    # merge with custom fields
+    fields = $.extend(true, fields, @custom_fields)
+    return $.extend(true, base_fields, fields)
+
+  compute: () =>
+    code = @fields.getField("code").getValue()
+    # By default, keep last result from a valid code.
+    result = @out
+    if @function != false
+      # Function should simply return a value.
+      # It can access extra fields with this.fields.getField / setField.
       try
-        @function = new Function(code)
+        result = @function()
       catch error
-        console.warn error
-        @function = false
+        # do nothing on errors.
+        # todo: maybe display error + line error in code (dispatch even to view).
 
-    addCustomField: (key, type, direction = 'inputs') =>
-      field = {key: key, type: type}
-      # Add the field to the a variable for saving.
-      @custom_fields[direction][key] = field
+    # Assign the new result to @out.
+    @out = result
 
-      value = false
-      @fields.addField(key, {value: value, type: type, default: false}, direction)
+    @fields.setField("out", @out)
 
-    toJSON: () =>
-      res = super
-      res.custom_fields = @custom_fields
-      return res
+ThreeNodes.Core.addNodeType('Expression', Expression)
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "code" : ""
-        outputs:
-          "out" : {type: "Any", val: null}
-      # merge with custom fields
-      fields = $.extend(true, fields, @custom_fields)
-      return $.extend(true, base_fields, fields)
+class Code extends Expression
+  @node_name = 'Code'
+  @group_name = 'Code'
 
-    compute: () =>
-      code = @fields.getField("code").getValue()
-      # By default, keep last result from a valid code.
-      result = @out
-      if @function != false
-        # Function should simply return a value.
-        # It can access extra fields with this.fields.getField / setField.
-        try
-          result = @function()
-        catch error
-          # do nothing on errors.
-          # todo: maybe display error + line error in code (dispatch even to view).
+  initialize: (options) =>
+    super
 
-      # Assign the new result to @out.
-      @out = result
+  getDynamicFields: () =>
+    return {}
 
-      @fields.setField("out", @out)
+  getFields: =>
+    base_fields = super
+    fields = @getDynamicFields()
+    return $.extend(true, base_fields, fields)
 
-  Code: class Code extends Expression
-    @node_name = 'Code'
-    @group_name = 'Code'
-
-    initialize: (options) =>
-      super
-
-    getDynamicFields: () =>
-      return {}
-
-    getFields: =>
-      base_fields = super
-      fields = @getDynamicFields()
-      return $.extend(true, base_fields, fields)
+ThreeNodes.Core.addNodeType('Code', Code)

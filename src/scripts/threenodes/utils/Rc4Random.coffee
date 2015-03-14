@@ -31,3 +31,5 @@ class Rc4Random
       number += @getRandomByte() * multiplier
       multiplier *= 256
     return number / 18446744073709551616
+
+module.exports = Rc4Random

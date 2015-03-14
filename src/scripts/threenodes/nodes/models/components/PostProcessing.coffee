@@ -2,7 +2,6 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 Utils = require 'threenodes/utils/Utils'
 Node = require 'threenodes/nodes/models/Node'
-namespace = require('libs/namespace').namespace
 
 require 'ShaderVignette'
 require 'HorizontalBlurShader'
@@ -12,225 +11,238 @@ require 'DotScreenPass'
 require 'BloomPass'
 require 'FilmPass'
 
-namespace "ThreeNodes.nodes.models",
-  BloomPass: class BloomPass extends Node
-    @node_name = 'Bloom'
-    @group_name = 'PostProcessing'
+class BloomPass extends Node
+  @node_name = 'Bloom'
+  @group_name = 'PostProcessing'
 
-    initialize: (options) =>
-      super
-      @ob = new THREE.BloomPass(1.6)
-      @cached = @createCacheObject ['kernelSize', 'sigma', 'resolution']
+  initialize: (options) =>
+    super
+    @ob = new THREE.BloomPass(1.6)
+    @cached = @createCacheObject ['kernelSize', 'sigma', 'resolution']
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "strength": 1.6
-          "kernelSize": 25
-          "sigma": 4.0
-          "resolution": 256
-        outputs:
-          "out": {type: "Any", val: @ob}
-      return $.extend(true, base_fields, fields)
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "strength": 1.6
+        "kernelSize": 25
+        "sigma": 4.0
+        "resolution": 256
+      outputs:
+        "out": {type: "Any", val: @ob}
+    return $.extend(true, base_fields, fields)
 
-    remove: () =>
-      delete @ob
-      delete @cached
-      super
+  remove: () =>
+    delete @ob
+    delete @cached
+    super
 
-    value_has_changed: (vals) =>
-      newvals = @createCacheObject vals
-      if Utils.flatArraysAreEquals(newvals, @cached) == false
-        @cached = newvals
-        return true
-      false
+  value_has_changed: (vals) =>
+    newvals = @createCacheObject vals
+    if Utils.flatArraysAreEquals(newvals, @cached) == false
+      @cached = newvals
+      return true
+    false
 
-    compute: =>
-      if @value_has_changed(['kernelSize', 'sigma', 'resolution']) == true
-        @ob = new THREE.BloomPass(@fields.getField("strength").getValue(), @fields.getField('kernelSize').getValue(), @fields.getField('sigma').getValue(), @fields.getField('resolution').getValue())
-      @ob.copyUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
-      @fields.setField("out", @ob)
+  compute: =>
+    if @value_has_changed(['kernelSize', 'sigma', 'resolution']) == true
+      @ob = new THREE.BloomPass(@fields.getField("strength").getValue(), @fields.getField('kernelSize').getValue(), @fields.getField('sigma').getValue(), @fields.getField('resolution').getValue())
+    @ob.copyUniforms[ "opacity" ].value = @fields.getField("strength").getValue()
+    @fields.setField("out", @ob)
 
-  DotScreenPass: class DotScreenPass extends Node
-    @node_name = 'DotScreen'
-    @group_name = 'PostProcessing'
+ThreeNodes.Core.addNodeType('BloomPass', BloomPass)
 
-    initialize: (options) =>
-      super
-      @ob = new THREE.DotScreenPass(new THREE.Vector2( 0.5, 0.5 ))
-      @cached = @createCacheObject ['center', 'angle', 'scale']
+class DotScreenPass extends Node
+  @node_name = 'DotScreen'
+  @group_name = 'PostProcessing'
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "center": {type: "Vector2", val: new THREE.Vector2( 0.5, 0.5 )}
-          "angle": 1.57
-          "scale": 1.0
-        outputs:
-          "out": {type: "Any", val: @ob}
-      return $.extend(true, base_fields, fields)
+  initialize: (options) =>
+    super
+    @ob = new THREE.DotScreenPass(new THREE.Vector2( 0.5, 0.5 ))
+    @cached = @createCacheObject ['center', 'angle', 'scale']
 
-    remove: () =>
-      delete @ob
-      delete @cached
-      super
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "center": {type: "Vector2", val: new THREE.Vector2( 0.5, 0.5 )}
+        "angle": 1.57
+        "scale": 1.0
+      outputs:
+        "out": {type: "Any", val: @ob}
+    return $.extend(true, base_fields, fields)
 
-    value_has_changed: (vals) =>
-      newvals = @createCacheObject vals
-      if Utils.flatArraysAreEquals(newvals, @cached) == false
-        @cached = newvals
-        return true
-      false
+  remove: () =>
+    delete @ob
+    delete @cached
+    super
 
-    compute: =>
-      if @value_has_changed(['center', 'angle', 'scale']) == true
-        @ob = new THREE.DotScreenPass(@fields.getField("center").getValue(), @fields.getField('angle').getValue(), @fields.getField('scale').getValue())
-      @fields.setField("out", @ob)
+  value_has_changed: (vals) =>
+    newvals = @createCacheObject vals
+    if Utils.flatArraysAreEquals(newvals, @cached) == false
+      @cached = newvals
+      return true
+    false
 
-  FilmPass: class FilmPass extends Node
-    @node_name = 'Film'
-    @group_name = 'PostProcessing'
+  compute: =>
+    if @value_has_changed(['center', 'angle', 'scale']) == true
+      @ob = new THREE.DotScreenPass(@fields.getField("center").getValue(), @fields.getField('angle').getValue(), @fields.getField('scale').getValue())
+    @fields.setField("out", @ob)
 
-    initialize: (options) =>
-      super
-      @ob = new THREE.FilmPass( 0.5, 0.125, 2048, false )
-      @cached = @createCacheObject ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
+ThreeNodes.Core.addNodeType('DotScreenPass', DotScreenPass)
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "noiseIntensity": 0.5
-          "scanlinesIntensity": 0.125
-          "scanlinesCount": 2048
-          "grayscale": false
-        outputs:
-          "out": {type: "Any", val: @ob}
-      return $.extend(true, base_fields, fields)
+class FilmPass extends Node
+  @node_name = 'Film'
+  @group_name = 'PostProcessing'
 
-    remove: () =>
-      delete @ob
-      delete @cached
-      super
+  initialize: (options) =>
+    super
+    @ob = new THREE.FilmPass( 0.5, 0.125, 2048, false )
+    @cached = @createCacheObject ['noiseIntensity', 'scanlinesIntensity', 'scanlinesCount', 'grayscale']
 
-    value_has_changed: (vals) =>
-      newvals = @createCacheObject vals
-      if Utils.flatArraysAreEquals(newvals, @cached) == false
-        @cached = newvals
-        return true
-      false
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "noiseIntensity": 0.5
+        "scanlinesIntensity": 0.125
+        "scanlinesCount": 2048
+        "grayscale": false
+      outputs:
+        "out": {type: "Any", val: @ob}
+    return $.extend(true, base_fields, fields)
 
-    compute: =>
-      @ob.uniforms.grayscale.value = @fields.getField("grayscale").getValue()
-      @ob.uniforms.nIntensity.value = @fields.getField("noiseIntensity").getValue()
-      @ob.uniforms.sIntensity.value = @fields.getField("scanlinesIntensity").getValue()
-      @ob.uniforms.sCount.value = @fields.getField("scanlinesCount").getValue()
-      @fields.setField("out", @ob)
+  remove: () =>
+    delete @ob
+    delete @cached
+    super
 
-  VignettePass: class VignettePass extends Node
-    @node_name = 'Vignette'
-    @group_name = 'PostProcessing'
+  value_has_changed: (vals) =>
+    newvals = @createCacheObject vals
+    if Utils.flatArraysAreEquals(newvals, @cached) == false
+      @cached = newvals
+      return true
+    false
 
-    initialize: (options) =>
-      super
-      shader = THREE.VignetteShader
-      @ob = new THREE.ShaderPass( shader )
+  compute: =>
+    @ob.uniforms.grayscale.value = @fields.getField("grayscale").getValue()
+    @ob.uniforms.nIntensity.value = @fields.getField("noiseIntensity").getValue()
+    @ob.uniforms.sIntensity.value = @fields.getField("scanlinesIntensity").getValue()
+    @ob.uniforms.sCount.value = @fields.getField("scanlinesCount").getValue()
+    @fields.setField("out", @ob)
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "offset": 1.0
-          "darkness": 1.0
-        outputs:
-          "out": {type: "Any", val: @ob}
-      return $.extend(true, base_fields, fields)
+ThreeNodes.Core.addNodeType('FilmPass', FilmPass)
 
-    remove: () =>
-      delete @ob
-      super
+class VignettePass extends Node
+  @node_name = 'Vignette'
+  @group_name = 'PostProcessing'
 
-    compute: =>
-      @ob.uniforms[ "offset" ].value = @fields.getField("offset").getValue()
-      @ob.uniforms[ "darkness" ].value = @fields.getField("darkness").getValue()
-      @fields.setField("out", @ob)
+  initialize: (options) =>
+    super
+    shader = THREE.VignetteShader
+    @ob = new THREE.ShaderPass( shader )
 
-  HorizontalBlurPass: class HorizontalBlurPass extends Node
-    @node_name = 'HorizontalBlur'
-    @group_name = 'PostProcessing'
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "offset": 1.0
+        "darkness": 1.0
+      outputs:
+        "out": {type: "Any", val: @ob}
+    return $.extend(true, base_fields, fields)
 
-    initialize: (options) =>
-      super
-      shader = THREE.HorizontalBlurShader
-      @ob = new THREE.ShaderPass( shader )
+  remove: () =>
+    delete @ob
+    super
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "delta": 1.0 / 512.0
-        outputs:
-          "out": {type: "Any", val: @ob}
-      return $.extend(true, base_fields, fields)
+  compute: =>
+    @ob.uniforms[ "offset" ].value = @fields.getField("offset").getValue()
+    @ob.uniforms[ "darkness" ].value = @fields.getField("darkness").getValue()
+    @fields.setField("out", @ob)
 
-    remove: () =>
-      delete @ob
-      super
+ThreeNodes.Core.addNodeType('VignettePass', VignettePass)
 
-    compute: =>
-      @ob.uniforms[ "h" ].value = @fields.getField("delta").getValue()
-      @fields.setField("out", @ob)
+class HorizontalBlurPass extends Node
+  @node_name = 'HorizontalBlur'
+  @group_name = 'PostProcessing'
 
-  VerticalBlurPass: class VerticalBlurPass extends Node
-    @node_name = 'VerticalBlur'
-    @group_name = 'PostProcessing'
+  initialize: (options) =>
+    super
+    shader = THREE.HorizontalBlurShader
+    @ob = new THREE.ShaderPass( shader )
 
-    initialize: (options) =>
-      super
-      shader = THREE.VerticalBlurShader
-      @ob = new THREE.ShaderPass( shader )
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "delta": 1.0 / 512.0
+      outputs:
+        "out": {type: "Any", val: @ob}
+    return $.extend(true, base_fields, fields)
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "delta": 1.0 / 512.0
-        outputs:
-          "out": {type: "Any", val: @ob}
-      return $.extend(true, base_fields, fields)
+  remove: () =>
+    delete @ob
+    super
 
-    remove: () =>
-      delete @ob
-      super
+  compute: =>
+    @ob.uniforms[ "h" ].value = @fields.getField("delta").getValue()
+    @fields.setField("out", @ob)
 
-    compute: =>
-      @ob.uniforms[ "v" ].value = @fields.getField("delta").getValue()
-      @fields.setField("out", @ob)
+ThreeNodes.Core.addNodeType('HorizontalBlurPass', HorizontalBlurPass)
 
-  BleachPass: class BleachPass extends Node
-    @node_name = 'Bleach'
-    @group_name = 'PostProcessing'
+class VerticalBlurPass extends Node
+  @node_name = 'VerticalBlur'
+  @group_name = 'PostProcessing'
 
-    initialize: (options) =>
-      super
-      shader = THREE.BleachBypassShader
-      @ob = new THREE.ShaderPass( shader )
+  initialize: (options) =>
+    super
+    shader = THREE.VerticalBlurShader
+    @ob = new THREE.ShaderPass( shader )
 
-    getFields: =>
-      base_fields = super
-      fields =
-        inputs:
-          "opacity": 0.95
-        outputs:
-          "out": {type: "Any", val: @ob}
-      return $.extend(true, base_fields, fields)
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "delta": 1.0 / 512.0
+      outputs:
+        "out": {type: "Any", val: @ob}
+    return $.extend(true, base_fields, fields)
 
-    remove: () =>
-      delete @ob
-      super
+  remove: () =>
+    delete @ob
+    super
 
-    compute: =>
-      @ob.uniforms[ "opacity" ].value = @fields.getField("opacity").getValue()
-      @fields.setField("out", @ob)
+  compute: =>
+    @ob.uniforms[ "v" ].value = @fields.getField("delta").getValue()
+    @fields.setField("out", @ob)
+
+ThreeNodes.Core.addNodeType('VerticalBlurPass', VerticalBlurPass)
+
+class BleachPass extends Node
+  @node_name = 'Bleach'
+  @group_name = 'PostProcessing'
+
+  initialize: (options) =>
+    super
+    shader = THREE.BleachBypassShader
+    @ob = new THREE.ShaderPass( shader )
+
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "opacity": 0.95
+      outputs:
+        "out": {type: "Any", val: @ob}
+    return $.extend(true, base_fields, fields)
+
+  remove: () =>
+    delete @ob
+    super
+
+  compute: =>
+    @ob.uniforms[ "opacity" ].value = @fields.getField("opacity").getValue()
+    @fields.setField("out", @ob)
+
+ThreeNodes.Core.addNodeType('BleachPass', BleachPass)

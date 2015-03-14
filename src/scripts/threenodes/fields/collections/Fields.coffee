@@ -113,7 +113,7 @@ class Fields extends Backbone.Collection
     field_is_out = (direction != "inputs")
     if $.type(value) != "object"
       value = @getFieldValueObject(value)
-    field = new ThreeNodes.fields[value.type]
+    field = new ThreeNodes.Core.fields.models[value.type]
       name: name
       value: value.val
       possibilities: value.values

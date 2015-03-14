@@ -198,4 +198,6 @@ class NodeView extends Backbone.View
         self.renderConnections()
     return @
 
+ThreeNodes.Core.addNodeView('NodeView', NodeView)
+
 module.exports = NodeView

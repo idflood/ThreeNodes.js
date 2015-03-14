@@ -75,3 +75,5 @@ class CodeExporter
     res += "};\n"
     res += "var connection_#{connection.id} = nodes.createConnectionFromObject(connection_#{connection.id}_data);\n"
     res
+
+module.exports = CodeExporter

@@ -60,3 +60,5 @@ class GroupDefinition extends Backbone.Model
     # todo: export group definition to code
     res = ""
     res
+
+module.exports = GroupDefinition

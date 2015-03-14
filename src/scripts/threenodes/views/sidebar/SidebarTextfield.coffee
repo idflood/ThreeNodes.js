@@ -77,3 +77,5 @@ class SidebarTextfield extends Backbone.View
   addTextfieldSlider: () =>
     slider = new DraggableNumber(@$input.get(0))
     return slider
+
+module.exports = SidebarTextfield

@@ -29,3 +29,5 @@ class AppWebsocket
   onWebsocketMessage: (data) =>
     messg = data.data
     #ThreeNodes.flash_sound_value = jQuery.parseJSON(messg)
+
+module.exports = AppWebsocket

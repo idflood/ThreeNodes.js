@@ -49,3 +49,5 @@ class TreeView extends Backbone.View
       selectable.refresh()
       selectable._mouseStop(null)
     return this
+
+module.exports = TreeView

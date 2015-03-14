@@ -1,6 +1,6 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-UI = require 'threenodes/views/UI'
+UIView = require 'threenodes/views/UIView'
 _view_node_field_in = require '../templates/node_field_input.tmpl.html'
 _view_node_field_out = require '../templates/node_field_output.tmpl.html'
 _view_field_context_menu = require '../templates/field_context_menu.tmpl.html'
@@ -85,17 +85,17 @@ class FieldButton extends Backbone.View
         start_offset_x = $("#container-wrapper").scrollLeft()
         start_offset_y = $("#container-wrapper").scrollTop()
         highlight_possible_targets()
-        if UI.connecting_line then UI.connecting_line.attr({opacity: 1})
+        if UIView.connecting_line then UIView.connecting_line.attr({opacity: 1})
       stop: (event, ui) ->
         $(".field").removeClass "field-possible-target"
-        if UI.connecting_line then UI.connecting_line.attr({opacity: 0})
+        if UIView.connecting_line then UIView.connecting_line.attr({opacity: 0})
       drag: (event, ui) ->
-        if UI.connecting_line
+        if UIView.connecting_line
           pos = $(this).position()
           node_pos =
             left: field.node.get("x")
             top: field.node.get("y")
-          UI.connecting_line.attr
+          UIView.connecting_line.attr
             path: getPath(pos, ui.position, node_pos)
           return true
 
@@ -124,3 +124,5 @@ class FieldButton extends Backbone.View
           field.node.createConnection(field, field2)
 
     return this
+
+module.exports = FieldButton

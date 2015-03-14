@@ -2,8 +2,8 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
 
-require 'timeline'
-require 'timeline-gui'
+#require 'timeline'
+#require 'timeline-gui'
 
 ### Timeline View ###
 class AppTimeline extends Backbone.View
@@ -14,6 +14,7 @@ class AppTimeline extends Backbone.View
 
     @$el.html("")
     self = this
+
     @timeline = new Timeline
       element: @el
       displayOnlySelected: true
@@ -94,3 +95,5 @@ class AppTimeline extends Backbone.View
       dt = n - @time
       @timeline.update(dt / 1000)
     @time = n
+
+module.exports = AppTimeline
