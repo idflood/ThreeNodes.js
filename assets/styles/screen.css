@@ -1797,7 +1797,7 @@ a.ui-dialog-titlebar-close span {
 }
 
 /* line 19, ../../src/styles/modules/_nodes.sass */
-.width-200, .node-Group, .node-LFO, .node-Mp3Input, .type-Three, .type-Materials {
+.width-200, .node-Group, .node-LFO, .node-Mp3Input, .type-Three, .type-Materials, .type-Geometry {
   width: 200px;
 }
 
@@ -1816,11 +1816,11 @@ a.ui-dialog-titlebar-close span {
 }
 
 /* line 32, ../../src/styles/modules/_nodes.sass */
-.ratio-80-20 .inputs, .type-Three .inputs, .type-Materials .inputs, .node-ThreeMesh .inputs, .node-Camera .inputs, .node.node-Texture .inputs, .type-Lights .inputs, .type-Particle .inputs, .type-PostProcessing .inputs {
+.ratio-80-20 .inputs, .type-Three .inputs, .type-Materials .inputs, .type-Geometry .inputs, .node-ThreeMesh .inputs, .node-Camera .inputs, .node.node-Texture .inputs, .type-Lights .inputs, .type-Particle .inputs, .type-PostProcessing .inputs {
   width: 80%;
 }
 /* line 34, ../../src/styles/modules/_nodes.sass */
-.ratio-80-20 .outputs, .type-Three .outputs, .type-Materials .outputs, .node-ThreeMesh .outputs, .node-Camera .outputs, .node.node-Texture .outputs, .type-Lights .outputs, .type-Particle .outputs, .type-PostProcessing .outputs {
+.ratio-80-20 .outputs, .type-Three .outputs, .type-Materials .outputs, .type-Geometry .outputs, .node-ThreeMesh .outputs, .node-Camera .outputs, .node.node-Texture .outputs, .type-Lights .outputs, .type-Particle .outputs, .type-PostProcessing .outputs {
   width: 20%;
 }
 
