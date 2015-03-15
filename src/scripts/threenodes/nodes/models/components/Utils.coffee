@@ -491,6 +491,9 @@ class Font extends Node
     #    @ob =
     #      font: font
     #      weight: weight
+    @ob =
+      font: font
+      weight: weight
 
     @fontcache = findex
     @weightcache = windex
