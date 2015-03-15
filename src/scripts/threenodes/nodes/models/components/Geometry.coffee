@@ -336,7 +336,10 @@ class TextGeometry extends Node
     super
 
   get_cache_array: =>
-    [@fields.getField("font").getValue(), @fields.getField("text").getValue(), @fields.getField("size").getValue(), @fields.getField("height").getValue(), @fields.getField("curveSegments").getValue(),
+    font_obj = @fields.getField("font").getValue()
+    if !font_obj.font then font_obj.font = ''
+    if !font_obj.weight then font_obj.weight = ''
+    [font_obj.font, font_obj.weight, @fields.getField("text").getValue(), @fields.getField("size").getValue(), @fields.getField("height").getValue(), @fields.getField("curveSegments").getValue(),
       @fields.getField("bevelEnabled").getValue(), @fields.getField("bevelThickness").getValue(), @fields.getField("bevelSize").getValue()]
 
   compute: =>
@@ -362,7 +365,7 @@ class TextGeometry extends Node
       @ob.computeBoundingBox()
       @ob.computeVertexNormals()
 
-      @cached = new_cache
+    @cached = new_cache
 
     @fields.setField("out", @ob)
 
