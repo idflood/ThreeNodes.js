@@ -192,18 +192,18 @@ class Mp3Input extends Node
   @node_name = 'Mp3Input'
   @group_name = 'Utils'
 
-  is_chrome: => navigator.userAgent.toLowerCase().indexOf('chrome') > -1
-
   initialize: (options) =>
     super
     @auto_evaluate = true
     @counter = 0
+    @playing = false
 
     # TODO: move this in a view
-    if @is_chrome()
-      @audioContext = new window.webkitAudioContext()
+    window.AudioContext = window.AudioContext || window.webkitAudioContext
+    if AudioContext
+      @audioContext = new AudioContext()
     else
-      $(".options", @main_view).prepend('<p class="warning">This node currently require chrome.</p>')
+      $(".options", @main_view).prepend('<p class="warning">This node currently require a webaudio capable browser.</p>')
     @url_cache = ""
 
   getFields: =>
@@ -231,16 +231,19 @@ class Mp3Input extends Node
       @loadAudio(@fields.getField("url").getValue())
 
   stopSound: () ->
-    if @source
-      @source.noteOff(0.0)
+    if !@source then return false
+
+    if @playing == true
+      @source.stop(0.0)
       @source.disconnect(0)
-      console.log "stop sound"
+      @playing = false
 
   playSound: (time) ->
     if @source && @audioContext && @audioBuffer
       @stopSound()
       @source = @createSound()
-      @source.noteGrainOn(0, time, @audioBuffer.duration - time)
+      @source.start(0, time, @audioBuffer.duration - time)
+      @playing = true
 
   finishLoad: () =>
     @source.buffer = @audioBuffer
@@ -279,9 +282,14 @@ class Mp3Input extends Node
     request = new XMLHttpRequest()
     request.open("GET", url, true)
     request.responseType = "arraybuffer"
-    request.onload = () =>
-      @audioBuffer = @audioContext.createBuffer(request.response, false )
+    onDecoded = (buffer) =>
+      @audioBuffer = buffer
       @finishLoad()
+
+    request.onload = () =>
+      #@audioBuffer = @audioContext.createBuffer(request.response, false )
+      @audioContext.decodeAudioData(request.response, onDecoded)
+
     request.send()
     this
 
@@ -303,7 +311,7 @@ class Mp3Input extends Node
   remove: () =>
     super
     if @source
-      @source.noteOff(0.0)
+      @source.stop(0.0)
       @source.disconnect()
     @freqByteData = false
     @timeByteData = false
@@ -313,12 +321,12 @@ class Mp3Input extends Node
 
 
   compute: () =>
-    if !@is_chrome()
+    if !window.AudioContext
       return
     if @url_cache != @fields.getField("url").getValue()
       @url_cache = @fields.getField("url").getValue()
       @loadAudio(@url_cache)
-    if @analyser
+    if @analyser && @freqByteData
       @analyser.smoothingTimeConstant = @fields.getField("smoothingTime").getValue()
       @analyser.getByteFrequencyData(@freqByteData)
       @analyser.getByteTimeDomainData(@timeByteData)
