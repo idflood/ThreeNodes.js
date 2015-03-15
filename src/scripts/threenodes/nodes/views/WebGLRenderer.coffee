@@ -7,7 +7,6 @@ NodeView = require './NodeView'
 class WebGLRenderer extends NodeView
   initialize: (options) =>
     super
-    console.log this
     @preview_mode = true
     @creating_popup = false
     @win = false
@@ -114,6 +113,7 @@ class WebGLRenderer extends NodeView
     h = @model.fields.getField('height').getValue()
     dw = w
     dh = h
+
     if @win == false && @model.settings.player_mode == false
       maxw = 220
       r = w / h
@@ -121,11 +121,10 @@ class WebGLRenderer extends NodeView
       dh = dw / r
     if dw != @model.width || dh != @model.height || force_refresh
       @model.ob.setSize(dw, dh)
+
       if @win && @win != false
-        console.log "..."
-        # todo: implement the same with ".innerWidth =" and ".innerHeight =" when chrome support this
-        # resize to beacame buggy on some chrome versions
-        #@win.resizeTo(dw, dh + 52)
+        @win.resizeTo(dw, dh + 52)
+
     @model.width = dw
     @model.height = dh
 

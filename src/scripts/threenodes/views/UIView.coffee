@@ -182,7 +182,6 @@ class UIView extends Backbone.View
       $("#display-mode-switch").html("player mode")
 
     $("#display-mode-switch").toggleClass("icon-pencil", is_player)
-
     @settings.player_mode = is_player
     if is_player == false
       @trigger("renderConnections")

@@ -24,7 +24,7 @@ class Core
 
     # Initialize some core classes
     @group_definitions = new GroupDefinitions([])
-    @nodes = new Nodes([], {settings: settings})
+    @nodes = new Nodes([], {settings: @settings})
     #@socket = new AppWebsocket(websocket_enabled)
 
     # Create a group node when selected nodes are grouped
