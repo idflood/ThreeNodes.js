@@ -21,26 +21,6 @@ module.exports = (grunt) ->
           fontsDir: "assets/fonts"
           bundleExec: true
 
-    # https://github.com/jrburke/r.js/blob/master/build/example.build.js
-    requirejs:
-      compile:
-        options:
-          baseUrl: 'src/scripts'
-          mainConfigFile: 'src/scripts/require-config.js'
-          name: "boot"
-          out: "assets/scripts/boot.js"
-          #optimize: "uglify2"
-          optimize: "none"
-          inlineText: true
-          preserveLicenseComments: false
-          include: "requireLib"
-          paths:
-            requireLib: "libs/require/require"
-          exclude: ['coffee-script']
-          stubModules: ['cs']
-          pragmasOnSave:
-            excludeCoffeeScript: true
-
     webpack:
       options: require("./webpack.config.js")
 
@@ -132,4 +112,4 @@ module.exports = (grunt) ->
   grunt.registerTask "init", ["compass:clean", "compass:dev", "scripts:dev"]
   grunt.registerTask "default", ["compass:clean", "compass:dev", "scripts:dev", "watch"]
   grunt.registerTask "scripts", ["webpack:dev"]
-  grunt.registerTask "build", ["clean", "compass:clean", "copy", "imagemin", "compass:build", "requirejs", "notify:build"]
+  grunt.registerTask "build", ["clean", "compass:clean", "copy", "imagemin", "compass:build", "scripts:dev", "notify:build"]
