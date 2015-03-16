@@ -1,4 +1,3 @@
-#AppWebsocket = require './utils/AppWebsocket'
 Nodes = require './nodes/collections/Nodes'
 GroupDefinitions = require './collections/GroupDefinitions'
 #GroupDefinitionView = require './views/GroupDefinitionView'
@@ -18,14 +17,9 @@ class Core
       player_mode: false
     @settings = $.extend({}, settings, options)
 
-    # Disable websocket by default since this makes firefox sometimes throw an exception if the server isn't available
-    # this makes the soundinput node not working
-    websocket_enabled = false
-
     # Initialize some core classes
     @group_definitions = new GroupDefinitions([])
     @nodes = new Nodes([], {settings: @settings})
-    #@socket = new AppWebsocket(websocket_enabled)
 
     # Create a group node when selected nodes are grouped
     @group_definitions.bind("definition:created", @nodes.createGroup)
