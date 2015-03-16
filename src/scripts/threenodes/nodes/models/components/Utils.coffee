@@ -369,6 +369,42 @@ class Mouse extends Node
 
 ThreeNodes.Core.addNodeType('Mouse', Mouse)
 
+class Screen extends Node
+  @node_name = 'Screen'
+  @group_name = 'Utils'
+
+  @width: 0
+  @height: 0
+
+  @onResize: (e) ->
+    Screen.width = $(window).width()
+    Screen.height = $(window).height()
+
+
+  initialize: (options) =>
+    super
+    @auto_evaluate = true
+    $(window).on("resize.threenodes", Screen.onResize)
+    Screen.onResize()
+
+  remove: () =>
+    super
+    $(window).off("resize.threenodes")
+
+  getFields: =>
+    base_fields = super
+    fields =
+      outputs:
+        "width" : Screen.width
+        "height" : Screen.height
+    return $.extend(true, base_fields, fields)
+
+  compute: =>
+    @fields.setField("width", Screen.width)
+    @fields.setField("height", Screen.height)
+
+ThreeNodes.Core.addNodeType('Screen', Screen)
+
 class Timer extends Node
   @node_name = 'Timer'
   @group_name = 'Utils'

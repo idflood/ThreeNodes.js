@@ -911,7 +911,7 @@ body.player-mode #webgl-window {
   left: 0 !important;
   bottom: 0 !important;
   text-align: center;
-  padding: 20px;
+  padding: 0;
 }
 /* line 144, ../../src/styles/layout/_layout.sass */
 body.player-mode #webgl-window canvas {
