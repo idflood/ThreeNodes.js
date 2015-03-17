@@ -1,6 +1,5 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-UIView = require 'threenodes/views/UIView'
 
 require 'jquery.ui'
 
@@ -9,7 +8,7 @@ class ConnectionView extends Backbone.View
   initialize: (options) ->
     super
     @container = $("#graph")
-    @line = UIView.svg.path().attr
+    @line = ThreeNodes.UI.UIView.svg.path().attr
       stroke: "#555"
       fill: "none"
     # set the dom element
@@ -19,13 +18,13 @@ class ConnectionView extends Backbone.View
     @render()
 
   remove: ->
-    if UIView.svg && @line
+    if ThreeNodes.UI.UIView.svg && @line
       @line.remove()
       delete @line
     return true
 
   render: () ->
-    if UIView.svg && @line && @line.attrs
+    if UIThreeNodes.UI.View.svg && @line && @line.attrs
       @line.attr
         path: @getPath()
     @

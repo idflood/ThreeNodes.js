@@ -146,6 +146,7 @@ class UI
     #@initTimeline()
 
 UI.nodes = {}
+UI.UIView = UIView
 UI.nodes.NodeView = NodeView
 UI.nodes.Color = NodeViewColor
 UI.nodes.WebGLRenderer = NodeViewWebgl
