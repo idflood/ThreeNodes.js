@@ -73,6 +73,9 @@ class Nodes extends Backbone.Collection
     @timeline.on("startSound", @startSound)
     @timeline.on("stopSound", @stopSound)
 
+  find: (node_name) =>
+    return this.where({name: node_name})
+
   createNode: (options) =>
     # If not is a string instead of an object then take the option as the node type
     if $.type(options) == "string"
@@ -137,7 +140,6 @@ class Nodes extends Backbone.Collection
     true
 
   createConnectionFromObject: (connection) =>
-
     # Get variables from their id
     from_gid = if connection.from_node_gid then connection.from_node_gid.toString() else "-1"
     from_node = @getNodeByNid(connection.from_node.toString(), from_gid)

@@ -27,7 +27,7 @@ class UI
     #@webgl = new WebglBase()
 
     @url_handler = new UrlHandler()
-    @file_handler = new FileHandler(@core.nodes, @core.group_definitions)
+    @file_handler = new FileHandler(@core)
 
     # File and url events
     @file_handler.on("ClearWorkspace", () => @clearWorkspace())

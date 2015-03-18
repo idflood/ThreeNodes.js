@@ -43,4 +43,33 @@ class Core
     Core.nodes.views[viewName] = nodeView
     return true
 
+  setNodes: (json_object) ->
+    @nodes.removeAll()
+    # First recreate the group definitions
+    if json_object.groups
+      for grp_def in json_object.groups
+        @group_definitions.create(grp_def)
+
+    # Create the nodes
+    for node in json_object.nodes
+      if node.type != "Group"
+        # Create a simple node
+        @nodes.createNode(node)
+      else
+        # If the node is a group we first need to get the previously created group definition
+        def = @group_definitions.getByGid(node.definition_id)
+        if def
+          node.definition = def
+          grp = @nodes.createGroup(node)
+        else
+          console.log "can't find the GroupDefinition: #{node.definition_id}"
+
+    # Create the connections
+    for connection in json_object.connections
+      @nodes.createConnectionFromObject(connection)
+
+    @nodes.indexer.uid = json_object.uid
+    delay = (ms, func) -> setTimeout func, ms
+    delay 1, => @nodes.renderAllConnections()
+
 module.exports = Core

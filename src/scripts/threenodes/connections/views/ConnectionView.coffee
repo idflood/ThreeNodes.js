@@ -24,7 +24,7 @@ class ConnectionView extends Backbone.View
     return true
 
   render: () ->
-    if UIThreeNodes.UI.View.svg && @line && @line.attrs
+    if ThreeNodes.UI.UIView.svg && @line && @line.attrs
       @line.attr
         path: @getPath()
     @

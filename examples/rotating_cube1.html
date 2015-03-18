@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html;charset=UTF-8" http-equiv="content-type">
+    <title>ThreeNodes.js::0.2.0</title>
+
+    <link href="../assets/styles/screen.css" media="all" rel="stylesheet" type="text/css">
+    <link href="../src/fonts/icomoon/style.css" media="all" rel="stylesheet" type="text/css">
+    <link href="../src/scripts/bower_components/codemirror/lib/codemirror.css" media="all" rel="stylesheet" type="text/css">
+    <link href="../src/scripts/bower_components/codemirror/theme/monokai.css" media="all" rel="stylesheet" type="text/css">
+    <link href="../src/scripts/bower_components/codemirror/addon/lint/lint.css" media="all" rel="stylesheet" type="text/css">
+    <link href="../favicon2.ico" rel="shortcut icon" type="image/x-icon">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+  </head>
+  <body class="hidden-timeline">
+    <header>
+      <div id="logo">
+        <h1>ThreeNodes.js::0.2.0</h1>
+      </div>
+    </header>
+    <footer id="footer">ThreeNodes.js | idflood.com | 2011</footer>
+
+    <!-- ThreeNodes.Core dependencies -->
+    <script src="../src/scripts/libs/jquery-2.0.3.js"></script>
+    <script src="../src/scripts/libs/underscore.js"></script>
+    <script src="../src/scripts/libs/Backbone.js"></script>
+    <script src="../src/scripts/libs/Three.js"></script>
+
+    <!-- Timeline related scripts -->
+    <script src="../src/scripts/libs/timeline.js/timeline.js"></script>
+
+    <!-- ThreeNodes.js -->
+    <script src="../assets/scripts/ThreeNodes.Core.js"></script>
+    <script src="../assets/scripts/ThreeNodes.NodeTypes.js"></script>
+    <script>
+      var core = new ThreeNodes.Core();
+
+
+      $.ajax({
+        url: "rotating_cube1.json",
+        dataType: "json",
+        success: function(data) {
+          core.setNodes(data);
+          core.nodes.render();
+          console.log(core);
+          $("body > header").fadeOut();
+          $("body").addClass('player-mode');
+          var webgl_nodes = core.nodes.find('WebGLRenderer');
+          var webgl_node = webgl_nodes[0];
+          var webgl_renderer = webgl_node.ob;
+
+          $("body").append("<div id='webgl-window'></div>");
+          var webgl_container = $("#webgl-window");
+          webgl_container.css('opacity', 0);
+
+          // Add renderer to dom.
+          webgl_container.append( webgl_renderer.domElement );
+
+          // Set background color
+          var color = webgl_node.fields.getField('bg_color').getValue();
+          webgl_renderer.setClearColor(color, 1);
+          $('body').css({background: "#" + color.getHexString()});
+
+          // Set size
+          var width = webgl_node.fields.getField('width').getValue();
+          var height = webgl_node.fields.getField('height').getValue();
+          webgl_renderer.setSize(width, height);
+          webgl_node.width = width;
+          webgl_node.height = height;
+
+          webgl_container.animate({opacity: 1}, 500);
+
+          var animate = function() {
+            core.nodes.render();
+            window.requestAnimationFrame(animate);
+          };
+          window.requestAnimationFrame(animate);
+        }
+      });
+    </script>
+  </body>
+</html>
