@@ -6,7 +6,7 @@ class Object3D extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.Object3D()
     @vars_shadow_options = ["castShadow", "receiveShadow"]
     @shadow_cache = @createCacheObject(@vars_shadow_options)

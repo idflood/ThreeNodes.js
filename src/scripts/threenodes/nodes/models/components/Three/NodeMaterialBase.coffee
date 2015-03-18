@@ -4,7 +4,7 @@ class NodeMaterialBase extends Node
   initialize: (options) =>
     super
     @ob = false
-    @auto_evaluate = true
+    @auto_evaluate = false
     @material_class = false
     @last_slice_count = -1
     @is_material = true

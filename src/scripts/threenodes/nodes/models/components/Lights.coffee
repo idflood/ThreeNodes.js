@@ -8,7 +8,7 @@ class PointLight extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.PointLight(0xffffff)
 
   getFields: =>
@@ -39,7 +39,7 @@ class SpotLight extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.SpotLight(0xffffff)
 
   getFields: =>
@@ -81,7 +81,7 @@ class DirectionalLight extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.DirectionalLight(0xffffff)
 
   getFields: =>
@@ -112,7 +112,7 @@ class AmbientLight extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.AmbientLight(0xffffff)
 
   getFields: =>

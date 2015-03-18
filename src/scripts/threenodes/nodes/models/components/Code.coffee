@@ -20,7 +20,7 @@ class Expression extends Node
     @loadCustomFields(options)
 
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @out = null
 
     @onCodeUpdate()

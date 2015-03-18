@@ -9,7 +9,7 @@ class PlaneGeometry extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.PlaneGeometry(100, 100, 1, 1, 1)
     @cached = @get_cache_array()
 
@@ -48,7 +48,7 @@ class CubeGeometry extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1)
     @cached = @get_cache_array()
 
@@ -90,7 +90,7 @@ class SphereGeometry extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.SphereGeometry(100, 20, 20)
     @cached = @get_cache_array()
 
@@ -129,7 +129,7 @@ class CylinderGeometry extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.CylinderGeometry(100, 100, 20, 30, 1, false)
     @cached = @get_cache_array()
 
@@ -177,7 +177,7 @@ class TorusGeometry extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.TorusGeometry(100, 40, 8, 6, Math.PI * 2)
     @cached = @get_cache_array()
 
@@ -224,7 +224,7 @@ class TorusKnotGeometry extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.TorusKnotGeometry(200, 40, 64, 8, 2, 3, 1)
     @cached = @get_cache_array()
 
@@ -273,7 +273,7 @@ class OctahedronGeometry extends Node
 
   constructor: () ->
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @ob = new THREE.OctahedronGeometry(100, 0)
     @cached = @get_cache_array()
 

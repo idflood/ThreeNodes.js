@@ -9,7 +9,7 @@ class RandomSpread extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @rnd = false
     @value = false
     @seed = false
@@ -58,7 +58,7 @@ class LinearSpread extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
     @value = false
     @count = false
     @width = false
