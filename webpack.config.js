@@ -33,7 +33,9 @@ module.exports = {
     "jshint": "libs/jshint",
     "Underscore": "_",
     "underscore": "_",
-    "Backbone": "Backbone"
+    "Backbone": "Backbone",
+    "Blob": "Blob",
+    "FileSaver": "FileSaver"
   },
   resolve: {
     alias: {
@@ -49,6 +51,8 @@ module.exports = {
       RequestAnimationFrame: "libs/three-extras/js/RequestAnimationFrame",
       //Raphael: "libs/raphael-min",
       colorpicker: "libs/colorpicker/js/colorpicker",
+      Blob: 'libs/Blob',
+      FileSaver: 'libs/FileSaver.min',
       //Three: "libs/Three",
       ThreeCSG: 'libs/ThreeCSG',
       csg: 'libs/csg',

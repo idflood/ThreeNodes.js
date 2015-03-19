@@ -3,19 +3,18 @@ Backbone = require 'Backbone'
 Utils = require 'threenodes/utils/Utils'
 CodeExporter = require 'threenodes/utils/CodeExporter'
 
-require 'libs/BlobBuilder.min'
-require 'libs/FileSaver.min'
-require 'libs/json2'
+require 'Blob'
+require 'FileSaver'
+#require 'libs/json2'
 
 class FileHandler extends Backbone.Events
   constructor: (@core) ->
     _.extend(FileHandler::, Backbone.Events)
 
   saveLocalFile: () =>
-    bb = new BlobBuilder()
     result_string = @getLocalJson()
-    bb.append(result_string)
-    fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.json")
+    blob = new Blob([result_string], {"text/plain;charset=utf-8"})
+    fileSaver = saveAs(blob, "nodes.json")
 
   exportCode: () =>
     # get the json export and convert it to code
@@ -23,19 +22,18 @@ class FileHandler extends Backbone.Events
     exporter = new CodeExporter()
     res = exporter.toCode(json)
 
-    bb = new BlobBuilder()
-    bb.append(res)
-    fileSaver = saveAs(bb.getBlob("text/plain;charset=utf-8"), "nodes.js")
+    blob = new Blob([res], {"text/plain;charset=utf-8"})
+    fileSaver = saveAs(blob, "nodes.js")
 
   getLocalJson: (stringify = true) =>
     res =
-      uid: @ncore.odes.indexer.getUID(false)
+      uid: @core.nodes.indexer.getUID(false)
       nodes: jQuery.map(@core.nodes.models, (n, i) -> n.toJSON())
       connections: jQuery.map(@core.nodes.connections.models, (c, i) -> c.toJSON())
       groups: jQuery.map(@core.group_definitions.models, (g, i) -> g.toJSON())
 
     if stringify
-      return JSON.stringify(res)
+      return JSON.stringify(res, null, 2)
     else
       return res
 

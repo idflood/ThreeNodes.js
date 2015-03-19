@@ -8,8 +8,8 @@ require 'MaskPass'
 require 'RenderPass'
 require 'ShaderPass'
 require 'CopyShader'
-require 'libs/BlobBuilder.min'
-require 'libs/FileSaver.min'
+require 'Blob'
+require 'FileSaver'
 require 'libs/canvas-toBlob.min'
 
 class WebglBase
