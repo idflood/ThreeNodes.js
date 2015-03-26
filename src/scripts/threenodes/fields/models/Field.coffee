@@ -62,6 +62,7 @@ class NodeField extends Backbone.Model
     # Keep reference to some variables
     @node = options.node
     @subfield = options.subfield
+    @propagateDirty = if options.propagateDirty? then options.propagateDirty else true
     indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER
 
     # Common field variables
@@ -92,18 +93,48 @@ class NodeField extends Backbone.Model
     delete @subfield
     @destroy()
 
+  isEqual: (val, prev) ->
+    if _.isArray(val) && _.isArray(prev)
+      if val.length != prev.length then return false
+      same_array = true
+      for val1, i in val
+        prev1 = prev[i]
+
+        if @isEqual(val1, prev1) == false
+          same_array = false
+          break
+      if same_array == false
+        return false
+      else
+        return true
+
+    else if _.isObject(val) && _.isObject(prev)
+      if val.uuid? && prev.uuid? && val.uuid == prev.uuid
+        return true
+      #if _.isEqual(val, prev) then return true
+      return false
+
+    else if val == prev then return true
+
+    return false
+
   setValue: (v) =>
+    prev_val = @attributes["value"]
+
+    if @isEqual(v, prev_val) then return false
+
     # Set the 'changed' flag on the field and on the node
     @changed = true
+    propagate = @propagateDirty
     # recursive function to set group node dirty if child become dirty
     setNodeDirty = (node) ->
       node.dirty = true
-      if node.parent then setNodeDirty(node.parent)
+      if propagate && node.parent then setNodeDirty(node.parent)
+      #if node.parent then setNodeDirty(node.parent)
 
     if @node then setNodeDirty(@node)
 
     # Define references to the previous and current value
-    prev_val = @attributes["value"]
     new_val = @onValueChanged(v)
 
     # remove all null values from the array
@@ -194,7 +225,7 @@ class NodeField extends Backbone.Model
     true
 
   computeValue : (val) =>
-    val
+    return val
 
   addConnection: (c) =>
     if @connections.indexOf(c) == -1
@@ -202,7 +233,7 @@ class NodeField extends Backbone.Model
       if @get("is_output") == true
         @node.addOutConnection(c, this)
       @node.disablePropertyAnim(this)
-    c
+    return c
 
   unregisterConnection: (c) =>
     @node.removeConnection(c)
@@ -216,6 +247,7 @@ class NodeField extends Backbone.Model
   # remove all connections
   removeConnections: () =>
     @connections[0].remove() while @connections.length > 0
+    return this
 
   onValueChanged: (val) =>
     self = this
@@ -239,9 +271,9 @@ class Array extends NodeField
     if !val || val == false
       return []
     if $.type(val) == "array"
-      val
+      return val
     else
-      [val]
+      return [val]
 
   removeConnections: () =>
     super

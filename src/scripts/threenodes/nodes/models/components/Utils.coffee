@@ -130,7 +130,8 @@ class Merge extends Node
 
   initialize: (options) =>
     super
-    @auto_evaluate = true
+    @auto_evaluate = false
+
 
   getFields: =>
     # Don't extend with base fields
@@ -149,16 +150,21 @@ class Merge extends Node
 
   compute: =>
     result = []
+    changed = false
     for f of @fields.inputs
       field = @fields.inputs[f]
-      if field.get("value") != null && field.connections.length > 0
-        subval = field.get("value")
+      subval = field.get("value")
+      if subval != null && field.connections.length > 0 && field.changed == true
+        changed = true
+        #console.log("change")
+
         # if subvalue is an array append it to the result
         if jQuery.type(subval) == "array"
           result = result.concat(subval)
         else
           result[result.length] = subval
-    @fields.setField("out", result)
+    if changed
+      @fields.setField("out", result)
 
 ThreeNodes.Core.addNodeType('Merge', Merge)
 

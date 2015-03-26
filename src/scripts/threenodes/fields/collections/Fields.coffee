@@ -113,6 +113,9 @@ class Fields extends Backbone.Collection
     field_is_out = (direction != "inputs")
     if $.type(value) != "object"
       value = @getFieldValueObject(value)
+    if !value.propagateDirty?
+      value.propagateDirty = true
+
     field = new ThreeNodes.Core.fields.models[value.type]
       name: name
       value: value.val
@@ -122,6 +125,7 @@ class Fields extends Backbone.Collection
       default: value.default
       subfield: value.subfield
       indexer: @indexer
+      propagateDirty: value.propagateDirty
 
     target = if field.get("is_output") == false then "inputs" else "outputs"
     field_index = field.get("name")

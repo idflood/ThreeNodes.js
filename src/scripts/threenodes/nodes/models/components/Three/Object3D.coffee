@@ -17,10 +17,10 @@ class Object3D extends Node
     # so don't call super neither extend fields with base_fields
     fields =
       inputs:
-        "children": {type: "Object3D", val: [], default: []}
-        "position": {type: "Vector3", val: new THREE.Vector3()}
-        "rotation": {type: "Any", val: new THREE.Euler()}
-        "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1)}
+        "children": {type: "Object3D", val: [], default: [], propagateDirty: false}
+        "position": {type: "Vector3", val: new THREE.Vector3(), propagateDirty: false}
+        "rotation": {type: "Any", val: new THREE.Euler(), propagateDirty: false}
+        "scale": {type: "Vector3", val: new THREE.Vector3(1, 1, 1), propagateDirty: false}
         "visible": true
         "castShadow": false
         "receiveShadow": false
@@ -53,7 +53,10 @@ class Object3D extends Node
     return childs
 
   apply_children: =>
-    if !@fields.getField("children") then return false
+    children = @fields.getField("children")
+    if !children then return false
+    if !children.changed then return
+    #console.log "changed"
 
     # no connections means no children
     if @fields.getField("children").connections.length == 0 && @ob.children.length != 0
@@ -62,22 +65,36 @@ class Object3D extends Node
 
     childs_in = @get_children_array()
     # remove old childs
-    for child in @ob.children
-      ind = childs_in.indexOf(child)
-      if child && ind == -1
-        #console.log "object remove child"
+    i = @ob.children.length
+
+    # webglrender node trigger apply_children on each frame..
+    # when removing objects, every items are removed first
+    # if setting from 300 > 20 items, remove 300 then add 20, should remove 280
+
+    #for child in @ob.children
+    while i--
+      child = @ob.children[i]
+
+      #ind = childs_in.indexOf(child)
+      item = _.find(childs_in, (item) ->
+        item.uuid == child.uuid
+      )
+      if !item
+        console.log "object remove child"
         @ob.remove(child)
 
     #add new childs
     for child in childs_in
-      ind = @ob.children.indexOf(child)
-      if child instanceof THREE.Light == true
-        if ind == -1
+      #ind = @ob.children.indexOf(child)
+      item = _.find(@ob.children, (item) -> item.uuid == child.uuid)
+      if !item
+        if child instanceof THREE.Light == true
+          #if ind == -1
           @ob.add(child)
           @trigger("RebuildAllShaders")
-      else
-        if ind == -1
-          #console.log "scene add child"
+        else
+          #if ind == -1
+          console.log "scene add child"
           @ob.add(child)
 
   applyRotation: (target, rotation) =>
