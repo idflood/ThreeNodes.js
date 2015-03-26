@@ -208,13 +208,25 @@ class ThreeMesh extends Object3DwithMeshAndMaterial
 
   compute: =>
     needs_rebuild = false
+    count_change = false
     numItems = @fields.getMaxInputSliceCount()
     new_material_cache = @get_material_cache()
     new_geometry_cache = @get_geometry_cache()
 
     if @last_slice_count != numItems
-      needs_rebuild = true
-      @last_slice_count = numItems
+      count_change = true
+
+      if !@ob?
+        @ob = []
+
+      if @last_slice_count > numItems
+        # Remove extra items.
+        @ob = @ob.slice(0, numItems)
+      else
+        # Add new items.
+        for i in [@ob.length..numItems]
+          item = new THREE.Mesh(@fields.getField('geometry').getValue(i), @fields.getField('material').getValue(i))
+          @ob[i] = item
 
     if @inputValueHasChanged(@vars_shadow_options, @shadow_cache)
       needs_rebuild = true
@@ -225,21 +237,22 @@ class ThreeMesh extends Object3DwithMeshAndMaterial
 
     if @geometry_cache != new_geometry_cache || @material_cache != new_material_cache || needs_rebuild
       @ob = []
-      for i in [0..numItems]
+      for i in [0..numItems - 1]
         item = new THREE.Mesh(@fields.getField('geometry').getValue(i), @fields.getField('material').getValue(i))
         @ob[i] = item
 
-    for i in [0..numItems]
+    for i in [0..@ob.length - 1]
       @applyFieldsToVal(@fields.inputs, @ob[i], ['children', 'geometry', 'material', 'rotation'], i)
       rotation = @fields.getField('rotation').getValue(i)
       @applyRotation(@ob[i], rotation)
 
-    if needs_rebuild == true
+    if needs_rebuild == true || count_change
       @trigger("RebuildAllShaders")
 
     @shadow_cache = @createCacheObject(@vars_shadow_options)
     @geometry_cache = @get_geometry_cache()
     @material_cache = @get_material_cache()
+    @last_slice_count = numItems
     @fields.setField("out", @ob)
 
 ThreeNodes.Core.addNodeType('ThreeMesh', ThreeMesh)
