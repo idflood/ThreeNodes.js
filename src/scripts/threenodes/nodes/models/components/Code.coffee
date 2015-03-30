@@ -20,20 +20,20 @@ class Expression extends Node
     @loadCustomFields(options)
 
     super
-    @auto_evaluate = false
+    @auto_evaluate = true
     @out = null
 
-    @onCodeUpdate()
     field = @fields.getField("code")
-
     field.on "value_updated", @onCodeUpdate
+
+    @onCodeUpdate(field.getValue())
 
   loadCustomFields: (options) =>
     if !options.custom_fields then return
     @custom_fields = $.extend(true, @custom_fields, options.custom_fields)
 
   onCodeUpdate: (code = "") =>
-    console.log code
+    #console.log code
     try
       @function = new Function(code)
     catch error
@@ -46,7 +46,8 @@ class Expression extends Node
     @custom_fields[direction][key] = field
 
     value = false
-    @fields.addField(key, {value: value, type: type, default: false}, direction)
+    instance = @fields.addField(key, {value: value, type: type, default: false}, direction)
+    return instance
 
   toJSON: () =>
     res = super

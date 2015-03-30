@@ -16,7 +16,8 @@ class NodeCodeView extends NodeView
     field = @getCenterField()
 
     container = $("<div><textarea data-fid='#{field.get('fid')}' spellcheck='false'></textarea></div>")
-    container.insertAfter($(".options", @$el))
+    #container.insertAfter($(".options", @$el))
+    @$el.find('.options .center').append(container)
     f_in = $("textarea", container)
 
     field.on_value_update_hooks.update_center_textfield = (v) ->
@@ -28,7 +29,7 @@ class NodeCodeView extends NodeView
       mode: "javascript"
       theme: 'monokai'
       tabSize: 2
-      lineNumbers: true
+      lineNumbers: false
       gutters: ["CodeMirror-lint-markers"]
       lint: true
 
@@ -36,7 +37,7 @@ class NodeCodeView extends NodeView
     @$el.resizable
       minHeight: 50
       minWidth: 220
-      ghost: true
+      ghost: false
       resize: (event, ui) ->
         size = ui.size
         editor.setSize(null, size.height - 37)
@@ -53,7 +54,7 @@ class NodeCodeView extends NodeView
       e.stopPropagation()
 
     if @model.get('height')
-      editor.setSize(null, @model.get('height'))
+      editor.setSize(null, @model.get('height') - 37 + 13)
 
     if field.get("is_output") == true
       f_in.attr("disabled", "disabled")

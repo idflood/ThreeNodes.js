@@ -1825,11 +1825,11 @@ a.ui-dialog-titlebar-close span {
 }
 
 /* line 38, ../../src/styles/modules/_nodes.sass */
-.ratio-25-50-25 .inputs, .node-Number .inputs, .node-String .inputs, .node-Random .inputs, .node-Timer .inputs, .node-LFO .inputs, .type-Code .inputs, .ratio-25-50-25 .outputs, .node-Number .outputs, .node-String .outputs, .node-Random .outputs, .node-Timer .outputs, .node-LFO .outputs, .type-Code .outputs {
+.ratio-25-50-25 .inputs, .node-Number .inputs, .node-String .inputs, .node-Random .inputs, .node-Timer .inputs, .node-LFO .inputs, .ratio-25-50-25 .outputs, .node-Number .outputs, .node-String .outputs, .node-Random .outputs, .node-Timer .outputs, .node-LFO .outputs {
   width: 25%;
 }
 /* line 40, ../../src/styles/modules/_nodes.sass */
-.ratio-25-50-25 .center, .node-Number .center, .node-String .center, .node-Random .center, .node-Timer .center, .node-LFO .center, .type-Code .center {
+.ratio-25-50-25 .center, .node-Number .center, .node-String .center, .node-Random .center, .node-Timer .center, .node-LFO .center {
   width: 50%;
 }
 
@@ -2003,35 +2003,43 @@ a.ui-dialog-titlebar-close span {
 .type-Code {
   width: auto;
 }
-/* line 215, ../../src/styles/modules/_nodes.sass */
+/* line 214, ../../src/styles/modules/_nodes.sass */
+.type-Code .inputs {
+  width: 80px;
+}
+/* line 217, ../../src/styles/modules/_nodes.sass */
+.type-Code .outputs {
+  width: 60px;
+}
+/* line 220, ../../src/styles/modules/_nodes.sass */
+.type-Code .center {
+  width: calc(100% - 140px);
+}
+/* line 223, ../../src/styles/modules/_nodes.sass */
 .type-Code textarea {
   min-height: 5em;
   font-size: 13px;
 }
-/* line 219, ../../src/styles/modules/_nodes.sass */
-.type-Code .CodeMirror {
-  min-width: 300px;
-}
 
-/* line 225, ../../src/styles/modules/_nodes.sass */
+/* line 230, ../../src/styles/modules/_nodes.sass */
 .node-WebGLRenderer .inputs {
   width: 100%;
 }
-/* line 227, ../../src/styles/modules/_nodes.sass */
+/* line 232, ../../src/styles/modules/_nodes.sass */
 .node-WebGLRenderer .outputs {
   display: none;
   visibility: hidden;
 }
 
-/* line 237, ../../src/styles/modules/_nodes.sass */
+/* line 242, ../../src/styles/modules/_nodes.sass */
 .node-Color .inputs, .node-Color .outputs {
   width: 35%;
 }
-/* line 239, ../../src/styles/modules/_nodes.sass */
+/* line 244, ../../src/styles/modules/_nodes.sass */
 .node-Color .center {
   width: 30%;
 }
-/* line 243, ../../src/styles/modules/_nodes.sass */
+/* line 248, ../../src/styles/modules/_nodes.sass */
 .node-Color .center .color_preview {
   width: 17px;
   height: 17px;
@@ -2387,6 +2395,11 @@ a.ui-dialog-titlebar-close span {
 }
 
 /* line 1, ../../src/styles/modules/_codemirror.sass */
+.cm-s-monokai.CodeMirror {
+  line-height: 1.3em;
+}
+
+/* line 4, ../../src/styles/modules/_codemirror.sass */
 .cm-s-monokai.CodeMirror,
 .cm-s-monokai .CodeMirror-gutters {
   background: #222728 !important;

@@ -35,9 +35,6 @@ class NodeSidebarView extends Backbone.View
     @$el.html("<h2>#{@model.get('name')}</h2>")
     @displayFields(@model.fields.inputs)
 
-    # Display custom fields if needed.
-    if @model.custom_fields then @displayFields(@model.custom_fields.inputs)
-
     # Special case for code nodes, add buttons to add inputs/outputs.
     # Todo: find a way to define a sidebarview class by nodetypes and
     # refactor this (CodeSidebarView extends NodeSidebarView)
@@ -54,13 +51,17 @@ class NodeSidebarView extends Backbone.View
         e.preventDefault()
         $form = $(this)
         $key = $(this).find('[name="key"]')
-        $type = 'Any'
+        $type = $(this).find('[name="type"]')
+        type = 'Any'
+        if $.trim($type.val()) != ''
+          type = $.trim($type.val())
         key = $.trim($key.val())
         if key != ''
           # add this to the model custom fields definition and rerender the view.
-          self.model.addCustomField(key, 'Any', 'inputs')
+          self.model.addCustomField(key, type, 'inputs')
           # Reset form.
           $key.val('')
+          $type.val('')
 
           # Simply rerender the sidebar.
           # todo: maybe do something like remove the render.

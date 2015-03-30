@@ -210,14 +210,19 @@ $animation_color: #f00
 // code
 .type-Code
   width: auto
-  @extend .ratio-25-50-25
+  //@extend .ratio-25-50-25
+  .inputs
+    width: 80px
+
+  .outputs
+    width: 60px
+
+  .center
+    width: calc(100% - 140px)
 
   textarea
     min-height: 5em
     font-size: 13px
-
-  .CodeMirror
-    min-width: 300px
 
 // special nodes
 .node-WebGLRenderer
