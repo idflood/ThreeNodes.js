@@ -1,7 +1,6 @@
 Nodes = require './nodes/collections/Nodes'
 GroupDefinitions = require './collections/GroupDefinitions'
 #GroupDefinitionView = require './views/GroupDefinitionView'
-#WebglBase = require './utils/WebglBase'
 
 #require 'jquery'
 

@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     "Core": "./threenodes/Core.coffee",
     "NodeTypes": "./NodeTypes.coffee",
+    "NodeTypes.Three": "./NodeTypes.Three.coffee",
     "UI": "./threenodes/UI.coffee"
   },
   output: {

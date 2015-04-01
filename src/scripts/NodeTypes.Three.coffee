@@ -1,0 +1,7 @@
+require 'threenodes/nodes/models/components/Geometry'
+require 'threenodes/nodes/models/components/Lights'
+require 'threenodes/nodes/models/components/Materials'
+require 'threenodes/nodes/models/components/PostProcessing'
+require 'threenodes/nodes/models/components/Three'
+require 'threenodes/nodes/models/components/ConstructiveSolidGeometry'
+require 'threenodes/nodes/models/components/Particle'
