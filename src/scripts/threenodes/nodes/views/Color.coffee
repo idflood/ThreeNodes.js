@@ -9,6 +9,8 @@ require 'colorpicker'
 class Color extends NodeView
   initialize: (options) =>
     super
+    # Need to compute rgb before adding the preview.
+    this.model.compute()
     @init_preview()
 
   init_preview: () =>
@@ -16,7 +18,8 @@ class Color extends NodeView
     @$picker_el = $("<div class='color_preview'></div>")
     col = fields.getField("rgb", true).getValue(0)
     @$picker_el.ColorPicker
-      color: {r: col.r * 255, g: col.g * 255, b: col.b * 255}
+      color: {r: Math.ceil(col.r * 255), g: Math.ceil(col.g * 255), b: Math.ceil(col.b * 255)}
+      livePreview: false
       onChange: (hsb, hex, rgb) =>
         fields.getField("r").setValue(rgb.r / 255)
         fields.getField("g").setValue(rgb.g / 255)

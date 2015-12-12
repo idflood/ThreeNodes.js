@@ -3,6 +3,7 @@ Backbone = require 'Backbone'
 Node = require 'threenodes/nodes/models/Node'
 NodeNumberSimple = require 'threenodes/nodes/models/NodeNumberSimple'
 NodeWithCenterTextfield = require 'threenodes/nodes/views/NodeWithCenterTextfield'
+NodeColorView = require 'threenodes/nodes/views/Color'
 
 class Number extends NodeWithCenterTextfield
 ThreeNodes.Core.addNodeView('Number', Number)
@@ -10,6 +11,9 @@ ThreeNodes.Core.addNodeView('Number', Number)
 class String extends NodeWithCenterTextfield
   getCenterField: () => @model.fields.getField("string")
 ThreeNodes.Core.addNodeView('String', String)
+
+class Color extends NodeColorView
+ThreeNodes.Core.addNodeView('Color', Color)
 
 class Number extends NodeNumberSimple
   @node_name = 'Number'
