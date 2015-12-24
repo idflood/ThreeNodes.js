@@ -32,10 +32,6 @@ class WebGLRenderer extends NodeView
       return
 
     @creating_popup = false
-    if @win != false
-      if @win.closed && @preview_mode == false
-        @preview_mode = true
-        @win = false
     if !@model.settings.test
       @add_renderer_to_dom()
 
@@ -72,6 +68,16 @@ class WebGLRenderer extends NodeView
     $("*", $(@win.document)).css
       padding: 0
       margin: 0
+
+    @win.onbeforeunload = () =>
+      @preview_mode = true
+      @win.onbeforeunload = false
+      @win = false
+      @webgl_container.append( @model.ob.domElement )
+      @apply_bg_color(true)
+      @apply_size(true)
+      return
+
     @apply_bg_color(true)
     @apply_size(true)
     @add_mouse_handler()
