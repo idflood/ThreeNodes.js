@@ -50,8 +50,8 @@ $c: 100
 .node
   @extend .ratio-50-50
   +clearfix
-  +border-radius(4px)
-  +box-shadow(0px 1px 2px 0px rgba(#000, 0.2))
+  border-radius: 4px
+  box-shadow: 0px 1px 2px 0px rgba(#000, 0.2)
   position: absolute !important
   padding: 4px
   border: 1px solid transparent
@@ -85,7 +85,7 @@ $c: 100
       width: $field-button-size
       height: $field-button-size
       background: #555
-      +border-radius($field-button-size)
+      border-radius: $field-button-size
 
     &:hover
       color: #fff
@@ -126,7 +126,7 @@ $c: 100
 .node .node
   position: relative !important
   padding: 0
-  +border-radius(0px)
+  border-radius: 0px
   width: 100% !important
   left: auto !important
   top: auto !important
@@ -135,7 +135,7 @@ $c: 100
 
 $animation_color: #f00
 .node-has-animation
-  +box-shadow($animation_color 0 0 1px inset)
+  box-shadow: $animation_color 0 0 1px inset
 
 .has-animation
   color: $animation_color

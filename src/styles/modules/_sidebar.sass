@@ -47,17 +47,17 @@
       padding: 0
       margin: 0
       background: $background_color
-      +background-image(linear-gradient(lighten($background_color, 2%), darken($background_color, 2%)))
+      background-image: linear-gradient(lighten($background_color, 2%), darken($background_color, 2%))
       border-right: 1px solid lighten($background_color, 3%)
       border-top: 1px solid lighten($background_color, 8%)
       z-index: 10
       //&:first-child
       //  +border-radius(4px 0 0 0)
       &:last-child
-        +border-radius(0 4px 0 0)
+        border-radius: 0 4px 0 0
 
       a
-        +inline-block
+        display: inline-block
         padding: .4em 10px .5em 10px
         outline: 0
         letter-spacing: 1px
@@ -65,7 +65,7 @@
       &.ui-tabs-active
         //+box-shadow(0px 0px 2px 0px rgba(#000, 0.25))
         background: lighten($background_color, 5%)
-        +background-image(linear-gradient(lighten($background_color, 7%), lighten($background_color, 2%)))
+        background-image: linear-gradient(lighten($background_color, 7%), lighten($background_color, 2%))
         z-index: 20
         a
           color: #eee
@@ -138,7 +138,7 @@
     vertical-align: top
 
   .field-wrapper
-    +box-sizing(border-box)
+    box-sizing: border-box
     display: table
     width: 100%
     padding: 0 5px 8px 5px
@@ -149,7 +149,7 @@
       vertical-align: top
 
   input[type="text"]
-    +box-sizing(border-box)
+    box-sizing: border-box
     width: 100%
     position: relative
     top: -6px
@@ -193,4 +193,3 @@
     background: lighten($background_color, 4%)
   &:hover
     border: darken($border_color, 2%)
-

@@ -2,25 +2,24 @@
 module.exports = (grunt) ->
   "use strict"
   grunt.initConfig
-    compass:
-      clean:
+    sass:
+      options:
+        sourceMap: true
+      dist:
+        files:
+          'assets/styles/screen.css': 'src/styles/screen.sass'
+          'assets/styles/qunit-git.css': 'src/styles/qunit-git.scss'
+          'assets/styles/reset_test.css': 'src/styles/reset_test.sass'
+          'assets/styles/test.css': 'src/styles/test.sass'
+    postcss:
         options:
-          clean: true
-
-      dev:
-        options:
-          debugInfo: false
-          bundleExec: true
-
-      build:
-        options:
-          environment: "production"
-          outputStyle: "compressed"
-          noLineComments: true
-          imagesDir: "assets/images"
-          fontsDir: "assets/fonts"
-          bundleExec: true
-
+          map: true
+          processors: [
+            require('autoprefixer')({browsers: 'last 2 versions'}),
+            require('cssnano')()
+          ]
+        dist:
+          src: 'assets/styles/screen.css'
     webpack:
       options: require("./webpack.config.js")
 
@@ -31,7 +30,7 @@ module.exports = (grunt) ->
     watch:
       sass:
         files: ["src/styles/**"]
-        tasks: ["compass:dev"]
+        tasks: ["sass", "postcss"]
 
       js:
         files: ["src/scripts/**", "!src/scripts/bower_components/**"]
@@ -100,7 +99,6 @@ module.exports = (grunt) ->
   # Load necessary plugins
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-watch"
-  grunt.loadNpmTasks "grunt-contrib-compass"
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-imagemin"
   grunt.loadNpmTasks "grunt-contrib-copy"
@@ -108,8 +106,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-requirejs"
   grunt.loadNpmTasks "grunt-notify"
   grunt.loadNpmTasks "grunt-webpack"
+  grunt.loadNpmTasks "grunt-sass"
+  grunt.loadNpmTasks "grunt-postcss"
 
-  grunt.registerTask "init", ["compass:clean", "compass:dev", "scripts:dev"]
-  grunt.registerTask "default", ["compass:clean", "compass:dev", "scripts:dev", "watch"]
+  grunt.registerTask "init", ["sass", "postcss", "scripts:dev"]
+  grunt.registerTask "default", ["sass", "postcss", "scripts:dev", "watch"]
   grunt.registerTask "scripts", ["webpack:dev"]
-  grunt.registerTask "build", ["clean", "compass:clean", "copy", "imagemin", "compass:build", "scripts:dev", "notify:build"]
+  grunt.registerTask "build", ["clean", "copy", "imagemin", "sass", "postcss", "scripts:dev", "notify:build"]

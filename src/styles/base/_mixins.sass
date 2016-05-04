@@ -28,3 +28,24 @@
 .inline-float
   display: inline !important
   float: left
+
+@mixin clearfix
+  &:after
+    content: ""
+    display: table
+    clear: both
+
+@mixin reset-box-model()
+  display: block
+  margin: 0
+  padding: 0
+
+@mixin no-bullet()
+  list-style-image: none
+  list-style-type: none
+  margin-left: 0
+
+@mixin no-bullets()
+  list-style: none
+  li
+    +no-bullet
