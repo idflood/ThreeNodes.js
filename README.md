@@ -1,5 +1,7 @@
 # ThreeNodes.js
 
+[![Join the chat at https://gitter.im/idflood/ThreeNodes.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/idflood/ThreeNodes.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
 ![screenshot_version_0.1.0](public/misc/screenshot1.jpg)
