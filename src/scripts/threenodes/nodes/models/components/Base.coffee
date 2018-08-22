@@ -5,6 +5,7 @@ NodeNumberSimple = require 'threenodes/nodes/models/NodeNumberSimple'
 NodeWithCenterTextfield = require 'threenodes/nodes/views/NodeWithCenterTextfield'
 NodeColorView = require 'threenodes/nodes/views/Color'
 
+
 class Number extends NodeWithCenterTextfield
 ThreeNodes.Core.addNodeView('Number', Number)
 
@@ -43,6 +44,36 @@ class Boolean extends Node
 
 ThreeNodes.Core.addNodeType('Boolean', Boolean)
 
+class URL extends Node
+  @node_name = 'URL'
+  @group_name = 'Base'
+
+  initialize: (options) =>
+    super
+    @value = ""
+
+  getFields: =>
+    base_fields = super
+    fields =
+      inputs:
+        "string": ""
+      outputs:
+        "out": {type: "Any", val: @value}
+    return $.extend(true, base_fields, fields)
+
+  compute: =>
+
+    url_text = @fields.getField("string").getValue()
+    if url_text == ""
+      return
+    the_fields = @fields
+
+    result = $.get(url_text, (f, s) ->  the_fields.setField("out", f)).fail( (e) -> the_fields.setField("out", "ERROR") )
+    #the_fields.setField("out", "ERROR")
+
+
+ThreeNodes.Core.addNodeType('URL', URL)
+
 class String extends Node
   @node_name = 'String'
   @group_name = 'Base'
@@ -61,9 +92,11 @@ class String extends Node
     return $.extend(true, base_fields, fields)
 
   compute: =>
+
     @fields.setField("out", @fields.getField("string").getValue())
 
 ThreeNodes.Core.addNodeType('String', String)
+
 
 class Vector2 extends Node
   @node_name = 'Vector2'
