@@ -7,7 +7,7 @@
 ## Experimental
 This is an experiment to make something like "vvvv" in javascript, html and webgl.
 
-Live demo: http://idflood.github.com/ThreeNodes.js/
+Live demo: https://idflood.github.io/ThreeNodes.js/
 
 ## Key principles
 - modular
